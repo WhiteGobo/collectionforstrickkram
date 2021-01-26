@@ -1,19 +1,50 @@
+"""
+main function here is tomanual
+:todo: support for load_stitchinfo. support seems not complete because example
+        character_dictionary
+"""
 import networkx as netx
+from . import load_stitchinfo as stitchinfo
 
-def tomanual( strickgraph ):
-    rows = find_rows( strickgraph )
+
+def tomanual( strickgraph, manual_type="thread" ):
+    """
+    text a manual for the given complete strickgraph
+    :todo: rewrite to remove reversing of rows and pass on manual_type 
+            to strickgraph.get_rows
+    """
+    startside = strickgraph.get_startside()
+    #rows = find_rows( strickgraph )
+    rows = strickgraph.get_rows( presentation_type="thread" )
     nodeattributes = netx.get_node_attributes( strickgraph, "stitchtype" )
-    #print(rows)
-    print(nodeattributes)
 
     text = ""
     for tmprow in rows:
         newline = transform_rowtomanualline( tmprow, nodeattributes )
         text = text + newline + "\n"
+
+    text_matrix = [ x.split() for x in text.splitlines() ]
+    if startside=="left":
+        _reverse_every_row( text_matrix )
+
+    if manual_type == "machine":
+        _reverse_every_second_row( text_matrix )
+    text_list = [ " ".join(x) for x in text_matrix ]
+    text = "\n".join(text_list)
     return text
     
-character_dictionary={"knit":"k", "firstrow":"r", "lastrow":"l", "k2tog":"k"}
+def _reverse_every_row( manual ):
+    for i in range( int(len(manual)) ):
+        manual[ i ].reverse()
+def _reverse_every_second_row( manual ):
+    for i in range( int(len(manual)/2) ):
+        manual[ 2*i+1 ].reverse()
+
+character_dictionary={}
+character_dictionary.update( stitchinfo.symbol )
 def transform_rowtomanualline( row, stitchtypes_dictionary ):
+    character_dictionary.update( stitchinfo.symbol ) #ensure up-to-date
+
     line = ""
     lastcharacter = stitchtypes_dictionary[ row.pop(0) ]
     times = 1
@@ -29,13 +60,11 @@ def transform_rowtomanualline( row, stitchtypes_dictionary ):
     line = _transrtm_addline( line, times, lastcharacter )
     return line
 
+
 def _transrtm_addline( line, times, lastcharacter ):
     line = line + " %d%s"%( times, character_dictionary[ lastcharacter ] )
     return line
 
-
-
-    
 
 def find_rows( strickgraph ):
     alledges = netx.get_edge_attributes( strickgraph, "edgetype" )
@@ -49,6 +78,7 @@ def find_rows( strickgraph ):
 
     rows = []
     currentrow = []
+    visited = set()
     rows.append( currentrow )
     tmpnode = "start"
     nextnode = tmpdict[ tmpnode ]
@@ -57,18 +87,11 @@ def find_rows( strickgraph ):
             currentrow = []
             rows.append( currentrow )
         currentrow.append( nextnode )
+        if nextnode in visited:
+            print(rows)
+            print(nextnode)
+            raise Exception("loop found")
+        visited.add( nextnode )
         tmpnode = nextnode
         nextnode = tmpdict[ tmpnode ]
     return rows
-
-
-if __name__=="__main__":
-    #for testing
-    import strickgraph_fromgrid as qq
-    mygraph = netx.grid_2d_graph( 4,4 )
-    firstrow = [ x for x in mygraph.nodes() if x[0] == 0 ]
-    asd = qq.create_strickgraph_from_gridgraph( mygraph, firstrow )
-    print("transform following edges:", asd.edges, "\n")
-
-    manual = tomanual( asd ) 
-    print( "mymanual:\n", manual )

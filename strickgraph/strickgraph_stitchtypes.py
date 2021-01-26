@@ -1,3 +1,7 @@
+"""
+OBSOLETE
+replaced via load_stitchinfo
+"""
 stitchtypes=[
     "knit",
     "yarn_over",

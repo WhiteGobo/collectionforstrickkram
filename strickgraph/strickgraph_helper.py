@@ -1,3 +1,8 @@
+"""
+All functions here should be elementary functions, which are explanatory-named
+"""
+import networkx as netx
+
 def fetch_neighbour_to_row( graph, row ):
     neighbours = []
     for node in row:
@@ -8,19 +13,25 @@ def fetch_neighbour_to_row( graph, row ):
     return neighbours
 
 def fetch_next_node( strickgraph, node ):
-    nodeedges = strickgraph.edges( node )
-    nodeattributes = netx.get_node_attributes( strickgraph, "edgetype")
-    for tmpedge in nodeedges:
-        if tmpedge[0] == node and nodeattributes[ tmpedge ] == "next":
+    edges = strickgraph.edges( node )
+    edgeattributes = netx.get_edge_attributes( strickgraph, "edgetype")
+    used_edges = []
+    for tmpedge in edges:
+        if edgeattributes[ (tmpedge[0],tmpedge[1],used_edges.count( tmpedge ))]\
+                                == "next":
             nextnode = tmpedge[1]
+        used_edges.append( tmpedge )
     return nextnode
 
 def fetch_previous_node( strickgraph, node ):
-    nodeedges = strickgraph.edges( node )
+    nodeedges = strickgraph.in_edges( node )
     nodeattributes = netx.get_node_attributes( strickgraph, "edgetype")
+    used_edges = []
     for tmpedge in nodeedges:
-        if tmpedge[1] == node and nodeattributes[ tmpedge ] == "next":
+        if edgeattributes[ (tmpedge[1],tmpedge[0],used_edges.count( tmpedge ))]\
+                                == "next":
             nextnode = tmpedge[0]
+        used_edges.append( tmpedge )
     return nextnode
 
 _keep_right = 0
@@ -30,22 +41,25 @@ def descend_row_keepright( strickgraph, node ):
     """
     return the node below the given node on the right
     :type strickgraph: strickgraph
+    :todo: Remove this funciton; obsolete because of the function 
+            strickgraph_replacesubgraph.follow_cached_path
     """
-    nodetype = netx.get_node_attributes( strickgraph, "nodetype" )[ node ]
-    return _descend_library[ ( _keep_right, nodetype ) ]( strickgraph, node )
+    nodetype = netx.get_node_attributes( strickgraph, "stitchtype" )[ node ]
+    return _descend_library[ (nodetype, _keep_right ) ]( strickgraph, node )
 
 def _knit_descend_row_keepright( strickgraph, node ):
     """
     like for _knit_descend_row_keepright
     :param node: has to be of nodetype knit
     """
-    nodeedges = strickgraph.edges( node )
-    nodeattributes = netx.get_node_attributes( strickgraph, "edgetype")
-    possible_edges = []
-    for tmpedge in nodeedges:
-        if tmpedge[1] == node and nodeattributes[ tmpedge ] == "up":
-            return tmpedge
-
+    edges = strickgraph.in_edges( node )
+    edgeattributes = netx.get_edge_attributes( strickgraph, "edgetype")
+    used_edges = []
+    for tmpedge in edges:
+        if edgeattributes[ (*tmpedge, used_edges.count(tmpedge)) ] == "up":
+            return tmpedge[0]
+        used_edges.append( tmpedge )
+    raise Exception()
 
 _descend_library.update({ ("knit", _keep_right):_knit_descend_row_keepright} )
     

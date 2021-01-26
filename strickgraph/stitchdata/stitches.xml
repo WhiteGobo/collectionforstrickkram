@@ -1,0 +1,32 @@
+<stitches xmlns='whitegobosstitchtypes'>
+	<stitchtype name="knit"
+		manualchar="k"
+		upedges="1"
+		downedges="1"
+	/>
+	<stitchtype name="yarnover"
+		manualchar="yo"
+		upedges="1"
+		downedges="0"
+	/>
+	<stitchtype name="purl"
+		manualchar="p"
+		upedges="1"
+		downedges="1"
+	/>
+	<stitchtype name="bindoff"
+		manualchar="bo"
+		upedges="0"
+		downedges="1"
+	/>
+	<stitchtype name="k2tog"
+		manualchar="k2tog"
+		upedges="1"
+		downedges="2"
+	/>
+	<stitchtype name="testextrainfos"
+		manualchar="bubu"
+		upedges="0"
+		downedges="0"
+	><extraoption key="mark" value="startingpoint"/></stitchtype>
+</stitches>

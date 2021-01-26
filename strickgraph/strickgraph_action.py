@@ -1,6 +1,12 @@
+"""
+These functions are for manipulating single stitches
+These functions are obsolete. There should be only graph-substitution
+:todo: substitue all these functions with graph-substitution
+"""
 import networkx as netx
-import strickgraph_stitchtypes as stitchtypes
-from networkx.classes.reportview import InEdgeView, OutEdgeView
+from . import strickgraph_stitchtypes as stitchtypes
+from networkx.classes.reportviews import InEdgeView, OutEdgeView
+from . import strickgraph_helper as helper
 
 def sanity_check( strickgraph ):
     """
@@ -10,21 +16,30 @@ def sanity_check( strickgraph ):
     return True
 
 
-def insert_node( insertedge, strickgraph, nodetype, nodeidentifier=None ):
+def insert_node( insertnode1, insertnode2, strickgraph, nodetype, \
+                                        nodeidentifier=None ):
+    """
+    :todo:remake error throwing for only the baseclass strickgraph
+    """
+    insertedge = (insertnode1, insertnode2)
     if nodetype not in stitchtypes.stitchtypes:
         raise Exception( "stitchtype %s is not implemented" %(repr(nodetype)))
-    edgetype = netx.get_edge_attributes( strickgraph, "edgetype" )[insertedge]
+    try:
+        edgetype = netx.get_edge_attributes( strickgraph,"edgetype")[(*insertedge,0)]
+    except KeyError:
+        insertedge = (insertedge[1], insertedge[0])
+        edgetype = netx.get_edge_attributes( strickgraph,"edgetype")[(*insertedge,0)]
     if edgetype != "next":
         raise Exception( "can only insert at edgetype next" )
 
     if None == nodeidentifier:
         nodeidentifier = find_newnodename( strickgraph )
     
-    strickgraph.remove_edge( insertedge )
+    strickgraph.remove_edge( insertedge[0], insertedge[1] )
     strickgraph.add_node( nodeidentifier, nodetype=nodetype )
     strickgraph.add_edge( insertedge[0], nodeidentifier, edgetype="next" )
     strickgraph.add_edge( nodeidentifier, insertedge[1], edgetype="next" )
-    return nodeidentifer
+    return nodeidentifier
 
 def cut_node( node, strickgraph ):
     prevnode, nextnode = None, None
@@ -46,25 +61,30 @@ def find_newnodename( strickgraph ):
 
 
 def insert_column_onlyknits( strickgraph, topleftnode, deep ):
+    if topleftnode not in strickgraph.nodes():
+        raise Exception("node where to insert is not in graph, node:%s" \
+                %( repr(topleftnode) ))
     edges = netx.get_node_attributes( strickgraph, "edgetype" )
     nextedges = [ x for x in edges if edges[x] == "next" ]
     areatobeworkedon = []
     toprightnode  = helper.fetch_next_node( strickgraph, topleftnode )
-    areatobeworkdon.append( (topleftnode, toprightnode) )
+    areatobeworkedon.append( (topleftnode, toprightnode) )
+    tmpnode1, tmpnode2 = toprightnode, topleftnode
     for dy in range( 1, deep ):
-        tmpnode1 = helper.descend_row_keepright( strickgraph, toprightnode )
-        tmpnode2 = helper.descend_row_keepright( strickgraph, topleftnode )
-        areatobeworkdon.append( (tmpnode1, tmpnode2) )
+        tmpnode1 = helper.descend_row_keepright( strickgraph, tmpnode1 )
+        tmpnode2 = helper.descend_row_keepright( strickgraph, tmpnode2 )
+        areatobeworkedon.append( (tmpnode1, tmpnode2) )
     #deep-1 equals -1:
-    lastnode = insertnode( strickgraph, areatobeworkedon[-1][0], \
-                                        areatobeworkedon[-1][1] )
+    lastnode = insert_node( areatobeworkedon[-1][0], areatobeworkedon[-1][1],\
+                            strickgraph, "knit" )
     thisnode = None
     for dy in range( 1, deep-1 ):
-        thisnode = insertnode( strickgraph, areatobeworkedon[-1-dy][0], \
-                                            areatobeworkedon[-1-dy][1] )
+        thisnode = insert_node( areatobeworkedon[-1-dy][0], \
+                        areatobeworkedon[-1-dy][1],strickgraph, "knit" )
         strickgraph.add_edge( lastnode, thisnode, edgetype = "up" )
         lastnode = thisnode
-    netx.set_node_attributes( strickgraph, topleftnode, nodetype="k2tog" )
+    netx.set_node_attributes( strickgraph, {topleftnode:"k2tog"}, "nodetype" )
     strickgraph.add_edge( lastnode, topleftnode, edgetype = "up" )
+
 
 
