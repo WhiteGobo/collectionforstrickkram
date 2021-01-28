@@ -45,6 +45,24 @@ class surfacemap():
                 = self.create_gradient_tensors_from_griddata( \
                                     xyshape, pos_array, 
                                     griddata_x, griddata_y, griddata_z)
+        self.maxdistance = self.calc_max_distance_with_grad(  \
+                                        griddata_x, griddata_y, griddata_z )
+
+    def grad_maxdistance( self ):
+        return self.maxdistance
+
+    def calc_max_distance_with_grad( self, data_x, data_y, data_z ):
+        maximal_error = 0.1
+
+        max_divgrad_hv = 0
+        for data in ( data_x, data_y, data_z ):
+            grad1, grad2 = np.gradient( data )
+            for grad in (grad2, grad2):
+                divgrad1, divgrad2 = np.gradient( grad )
+                for i in itertools.chain( *divgrad1, *divgrad2 ):
+                    max_divgrad_hv = max( max_divgrad_hv, np.abs( i ) )
+        
+        return np.sqrt( maximal_error/max_divgrad_hv )
 
     def create_gradient_tensors_from_griddata( self, xyshape, pos_array, \
                                         data_x, data_y, data_z):
@@ -157,6 +175,10 @@ class surfacemap():
         def griddata_z( posv, posh ):
             #posv = min( max( 0.0, posv),maxx)
             #posh = min( max( 0.0, posh),maxh)
+            #if posh > maxh:
+            #    print( posh, maxh, maxx )
+            #if posv > maxx:
+            #    print( posv, maxx, maxh )
 
             factor = np.remainder( posh, 1 )
             s_lower = posv + (maxx+1)*(posh - factor)

@@ -1,5 +1,5 @@
 from .create_surfacemap import get_surfacemap
-from .gridrelaxator import gridrelaxator, InstabilityError
+from .gridrelaxator import gridrelaxator
 import networkx as netx
 import io
 
@@ -25,19 +25,14 @@ def relax_strickgraph_on_surface( strickgraph, wavefrontfilename,
     gridgraph = prepare_gridcopy( strickgraph )
 
     no_solution = True
-    strengthmult =  2.0
     maximal_error = 1e-6 #this should be caculated
     # maximal error can be estimated with consideration of strength to movement
     # and maximal Spiel(german) of each node
     while no_solution:
-        try:
-            myrelaxator = gridrelaxator( gridgraph, surfacemap, border,\
-                                    strengthmultiplier=strengthmult, \
-                                    numba_support =numba_support )
-            myrelaxator.relax( maximal_error )
-            no_solution = False
-        except InstabilityError:
-            strengthmult = strengthmult * 0.7
+        myrelaxator = gridrelaxator( gridgraph, surfacemap, border )
+        myrelaxator.relax()
+
+        no_solution = False
     return myrelaxator.get_positiongrid()
 
 
@@ -75,10 +70,11 @@ def ququq_generate_tension_graph( strickgraph, surfacemap ):
 
 
 def weave_positiongraph_into_strickgraph( strickgraph, positiongraph ):
-    for nodeattr in [ "x", "y", "z" ]:
+    for nodeattr in [ "x", "y", "z", "tension" ]:
         attribute_dictionary = netx.get_node_attributes( positiongraph, \
                                                                     nodeattr )
         netx.set_node_attributes( strickgraph, attribute_dictionary, nodeattr)
+    return
 
     for edgeattr in [ "tension", "currentlength" ]:
         attribute_dictionary = netx.get_edge_attributes( positiongraph, \
