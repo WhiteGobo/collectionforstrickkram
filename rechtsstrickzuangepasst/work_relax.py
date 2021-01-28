@@ -84,18 +84,20 @@ def find_outerline_lowtension_symmetry( grid ):
     stitches is to big
     :todo: second while-loop seems bad
     """
-    tensiondict = netx.get_edge_attributes( grid, "tension" )
+    tensiondict = netx.get_edge_attributes( grid, "currentlength" )
     rows = grid.get_rows()
     up, down, left, right = grid.get_borders()
     i = 0
     startindex, endindex = None,None
-    while not tension_on_both_sides_too_low( rows[i], tensiondict ):
+    #while not tension_on_both_sides_too_low( rows[i], tensiondict ):
+    while not length_on_both_sides_too_low( rows[i], tensiondict ):
         i = i + 1
         if i == len(rows):
             return None, None
     startindex = i
     while i < len( rows ) - 1: #only test second statement, if this
-        if tension_on_both_sides_too_low( rows[i], tensiondict ):
+        #if tension_on_both_sides_too_low( rows[i], tensiondict ):
+        if length_on_both_sides_too_low( rows[i], tensiondict ):
             i = i + 1
         else:
             break
@@ -108,50 +110,76 @@ def find_outerline_tension_symmetry( grid ):
     stitches is to big
     :todo: second while-loop seems bad
     """
-    tensiondict = netx.get_edge_attributes( grid, "tension" )
+    #tensiondict = netx.get_edge_attributes( grid, "tension" )
+    tensiondict = netx.get_edge_attributes( grid, "currentlength" )
+    raise Exception( grid.edges( data=True ) )
     rows = grid.get_rows()
     up, down, left, right = grid.get_borders()
     i = 0
     startindex, endindex = None,None
-    while not tension_on_both_sides_too_large( rows[i], tensiondict ):
+    #while not tension_on_both_sides_too_large( rows[i], tensiondict ):
+    while not length_on_both_sides_too_large( rows[i], tensiondict ):
         i = i + 1
         if i == len(rows):
             return None, None
     startindex = i
     while i < len( rows ) -1:
-        if tension_on_both_sides_too_large( rows[i], tensiondict ):
+        #if tension_on_both_sides_too_large( rows[i], tensiondict ):
+        if length_on_both_sides_too_large( rows[i], tensiondict ):
             i = i + 1
         else:
             break
     endindex = i
     return startindex, endindex
 
-def tension_on_both_sides_too_low( row, tensiondict ):
-    minimal_tension = 0.05
+def length_on_both_sides_too_low( row, lengthdict, minimal_length=0.01 ):
+    l = lengthdict
+    minl = minimal_length
+    tmp = [ l[( row[i], row[i+1], 0 )] for i in range(0,4) ]
+    print( l )
+    cond1 = any( [ i < minl for i in tmp ])
+    tmp = [ l[( row[i], row[i+1], 0 )] for i in range(-5,-1) ]
+    cond2 = any( [ i < minl for i in tmp ])
+    return cond1 and cond2
 
+
+def length_on_both_sides_too_large( row, lengthdict, maximal_length=0.02 ):
+    l = lengthdict
+    print( l )
+    maxl = maximal_length
+    tmp = [ l[( row[i], row[i+1], 0 )] for i in range(0,4) ]
+    print( tmp )
+    cond1 = any( [ i > maxl for i in tmp ])
+    tmp = [ l[( row[i], row[i+1], 0 )] for i in range(-5,-1) ]
+    print( tmp )
+    cond2 = any( [ i > maxl for i in tmp ])
+    return cond1 and cond2
+
+def tension_on_both_sides_too_low( row, tensiondict ):
+    """
+    :todo: this function alwas fails
+    """
+    minimal_tension = 0.0
+
+    tens = tensiondict
+    min_tens = minimal_tension
     # fails if side==left
-    try:
-        cond1 = tensiondict[ (row[1], row[2], 0) ] < minimal_tension
-        cond2 = tensiondict[ (row[-3], row[-2],0) ] < minimal_tension
-        return cond1 and cond2
-    except KeyError:
-        pass
-    cond1 = tensiondict[ (row[2], row[1], 0) ] < minimal_tension
-    cond2 = tensiondict[ (row[-2], row[-3],0) ] < minimal_tension
+    cond1 = any( [ tens[ row[i] ] < min_tens \
+                    for i in range(1,5) ] )
+    cond2 = any( [ tens[ row[i] ] < min_tens \
+                    for i in range(-1,-5, -1) ] )
     return cond1 and cond2
 
 def tension_on_both_sides_too_large( row, tensiondict ):
-    maximal_tension = 0.1
+    maximal_tension = 0.5
 
+    tens = tensiondict
+    max_tens = maximal_tension
     # fails if side==left
-    try:
-        cond1 = tensiondict[ (row[1], row[2], 0) ] > maximal_tension
-        cond2 = tensiondict[ (row[-3], row[-2],0) ] > maximal_tension
-        return cond1 and cond2
-    except KeyError:
-        pass
-    cond1 = tensiondict[ (row[2], row[1], 0) ] > maximal_tension
-    cond2 = tensiondict[ (row[-2], row[-3],0) ] > maximal_tension
+    cond1 = any( [ tens[ row[i] ] > max_tens \
+                    for i in range(1,5) ] )
+    cond2 = any( [ tens[ row[i] ]>max_tens \
+                    for i in range(-1,-5, -1) ] )
     return cond1 and cond2
 
 def control_columnlongenough( rows, bottom, top ):

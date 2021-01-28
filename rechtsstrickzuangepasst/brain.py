@@ -38,7 +38,7 @@ def main( grid, surfacemap ):
         mybrain.tick_tock( \
                     period_ms = 500, \
                     #number_of_iterations = pyt.trees.CONTINUOUS_TICK_TOCK, \
-                    number_of_iterations = 7,\
+                    number_of_iterations = 2,\
                     pre_tick_handler = None, \
                     post_tick_handler = mumu, \
                     )
