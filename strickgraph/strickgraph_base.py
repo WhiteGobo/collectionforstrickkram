@@ -11,6 +11,9 @@ class strickgraph( _netx.MultiDiGraph ):
         self.supergraph = self
         super().__init__( *args, **argv )
 
+    def give_real_graph( self ):
+        return self.subgraph( set(self.nodes()).difference(["start", "end"]))
+
     def subgraph( self, *args, **argv ):
         tmpsubgraph = super().subgraph( *args, **argv )
         tmpsubgraph.supergraph = self
