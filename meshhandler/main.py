@@ -2,6 +2,7 @@ from .create_surfacemap import get_surfacemap
 from .gridrelaxator import gridrelaxator
 import networkx as netx
 import io
+import numpy as np
 
 from .create_surfacemap import surfacemap as type_surfacemap
 
@@ -18,6 +19,7 @@ def relax_strickgraph_on_surface( strickgraph, wavefrontfilename,
     :param strickgraph: selfexplanatroy
     :todo: calculate the error margin
     """
+    default_length = 0.1
     #surfacemap =get_surfacemap( wavefrontfilename, numba_support=numba_support)
     surfacemap =meshinterpreter_dict[type(wavefrontfilename)](wavefrontfilename)
     border = strickgraph.get_borders()
@@ -33,7 +35,24 @@ def relax_strickgraph_on_surface( strickgraph, wavefrontfilename,
         myrelaxator.relax()
 
         no_solution = False
-    return myrelaxator.get_positiongrid()
+    returngraph = myrelaxator.get_positiongrid()
+    add_edgelength( returngraph, default_length )
+    return returngraph
+
+
+def add_edgelength( graph, default_length ):
+    length_dict = {}
+    x = netx.get_node_attributes( graph, "x" )
+    y = netx.get_node_attributes( graph, "y" )
+    z = netx.get_node_attributes( graph, "z" )
+    for edge in graph.edges( keys=True ):
+        node1, node2 = edge[0], edge[1]
+        pos1 = ( x[ node1 ], y[ node1 ], z[ node1 ] )
+        pos2 = ( x[ node2 ], y[ node2 ], z[ node2 ] )
+        length = np.linalg.norm( np.subtract( pos1, pos2 ) )
+        length_dict.update({ edge: length })
+    netx.set_edge_attributes( graph, length_dict, "currentlength" )
+
 
 
 def prepare_gridcopy( strickgraph ):
@@ -74,9 +93,8 @@ def weave_positiongraph_into_strickgraph( strickgraph, positiongraph ):
         attribute_dictionary = netx.get_node_attributes( positiongraph, \
                                                                     nodeattr )
         netx.set_node_attributes( strickgraph, attribute_dictionary, nodeattr)
-    return
 
-    for edgeattr in [ "tension", "currentlength" ]:
+    for edgeattr in [ "currentlength" ]:
         attribute_dictionary = netx.get_edge_attributes( positiongraph, \
                                                                     edgeattr)
         # identify the attributes by the points, orderindependent

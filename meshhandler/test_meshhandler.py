@@ -63,7 +63,7 @@ class TestMeshhandlerMethods( unittest.TestCase ):
                                                     numba_support=False )
         filename.close()
         #print( netx.get_node_attributes( datagraph, "vertF" ) )
-        myvis3d( datagraph )
+        #myvis3d( datagraph )
         asd.update( datagraph )
     
         vergleichsnodes = testnodes1

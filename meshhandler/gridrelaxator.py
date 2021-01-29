@@ -126,7 +126,7 @@ class masspoint( nodefunctioncontainer ):
     def __init__( self, a, b, x, y, z, maxdelta, \
                         surfacemap_x, surfacemap_y, surfacemap_z,\
                         surf_gradhx, surf_gradhy, surf_gradhz, \
-                        surf_gradvx, surf_gradvy, surf_gradvz,  ):
+                        surf_gradvx, surf_gradvy, surf_gradvz, ):
         super().__init__()
         self.save_surfacemap( surfacemap_x, surfacemap_y, surfacemap_z,\
                                 surf_gradhx, surf_gradhy, surf_gradhz, \
