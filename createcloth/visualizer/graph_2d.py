@@ -3,7 +3,12 @@ import matplotlib.pyplot as plt
 
 mysize = 50
 
-def easygraph( mygrid, show=True, ax = None, marked_nodes=None ):
+def easygraph( mygrid, myplotinfo=None, show=True, ax = None, marked_nodes=None ):
+
+    if myplotinfo:
+        myplotinfo.clear_nodes()
+    else:
+        myplotinfo = plotinfo()
     if ax == None:
         plt.figure()
     plt.axis("off") # ?
@@ -11,14 +16,15 @@ def easygraph( mygrid, show=True, ax = None, marked_nodes=None ):
     #initpos = netx.spring_layout( mygrid, k=.01, iterations=50, pos=initpos )
     #netx.draw( mygrid, initpos )
     draw_every_edgetype_different( mygrid, initpos, ax = ax )
-    draw_every_stitchtype_different( mygrid, initpos, ax = ax )
+    draw_every_stitchtype_different( mygrid, initpos, myplotinfo, ax = ax )
 
     if None != marked_nodes:
         draw_marked_nodes( mygrid, initpos, marked_nodes, ax = ax )
     #netx.draw_networkx_edges( mygrid, initpos )
-    plt.legend()
     if show:
+        plt.legend()
         plt.show()
+    return myplotinfo
 
 
 from matplotlib.colors import TABLEAU_COLORS as colorpalett
@@ -62,20 +68,20 @@ def draw_marked_nodes( mygrid, pos, marked_nodes, **argv ):
                             node_shape="x", node_color=colorpalett["tab:cyan"])
 
 
-
-def draw_every_stitchtype_different( mygrid, pos, ax=None ):
-    asd = {}
+def draw_every_stitchtype_different( mygrid, pos, myplotinfo, ax=None ):
+    #asd = {}
     stitchtypes = netx.get_node_attributes( mygrid, "stitchtype" )
     stitchtypes.update({"start":"custom", "end":"custom"})
     for node in list( mygrid.nodes() ):
-        mylist = asd.setdefault( stitchtypes[ node ], list() )
-        mylist.append( node )
-    keylist = list( asd.keys() )
+        #mylist = asd.setdefault( stitchtypes[ node ], list() )
+        #mylist.append( node )
+        myplotinfo.add_node( node, stitchtypes[ node ] )
+    #keylist = list( asd.keys() )
     
-    for i in range( len( asd )):
+    for stitchtype, nodelist, mystyle in myplotinfo.get_allplotinfo():
         netx.draw_networkx_nodes( mygrid, pos, ax=ax, node_size=mysize,\
-                                nodelist = asd[ keylist[i] ], \
-                                **stitch_style[i], label= keylist[i] )
+                                nodelist = nodelist, \
+                                **mystyle, label= stitchtype )
 
 
 
@@ -95,3 +101,45 @@ def give_init_positions( mystrickgraph ):
     init_positions.update({"start":(-1.0,0.0)})
     return init_positions
 
+class plotinfo():
+    def __init__( self ):
+        self._stitchtype_to_nodes = dict()
+        self._iter_next_nodestyle = iter( stitch_style )
+        self._stitchtype_to_nodestyle = dict()
+
+    def _list_stitchtypes( self ):
+        return tuple( self._stitchtype_to_nodes.keys() )
+    stitchtypes = property( fget = _list_stitchtypes )
+
+    def add_stitchtype( self, stitchtype ):
+        if stitchtype not in self._stitchtype_to_nodes.keys():
+            self._stitchtype_to_nodes[ stitchtype ] = list()
+            self._stitchtype_to_nodestyle[ stitchtype ] \
+                    = self._iter_next_nodestyle.__next__()
+
+    def nodes_to_stitchtypes( self ):
+        return self._stitchtype_to_nodes
+
+    def get_allplotinfo( self ):
+        asd = [ (stitchtype, nodelist) for stitchtype, nodelist in self.nodes_to_stitchtypes().items() ]
+        nodestyle = self._stitchtype_to_nodestyle
+        asd = [ (stitchtype, nodelist, nodestyle[ stitchtype ] )\
+                for stitchtype, nodelist in asd \
+                if nodelist ]
+        return asd
+
+    def add_node( self, node, stitchtype ):
+        if type( stitchtype ) != str:
+            raise Exception()
+
+        if stitchtype not in self.stitchtypes:
+            self.add_stitchtype( stitchtype )
+        self._stitchtype_to_nodes[ stitchtype ].append( node )
+
+    def _get_stitchstyle( self ):
+        return self._stitchtype_to_nodestyle
+    stitchstyle = property( fget = _get_stitchstyle )
+
+    def clear_nodes( self ):
+        for nodelist in self._stitchtype_to_nodes.values():
+            nodelist.clear()

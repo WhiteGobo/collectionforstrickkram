@@ -8,7 +8,7 @@ from ..strickgraph.strickgraph_toknitmanual import tomanual
 from ..strickgraph.strickgraph_base import strickgraph
 
 import networkx as netx
-from ..strickgraph import load_stitchinfo as stitchinfo
+from ..strickgraph.load_stitchinfo import myasd as stitchinfo
 import extrasfornetworkx
 from extrasfornetworkx import multiverbesserer
 
@@ -58,7 +58,7 @@ class test_manualtoverbesserung( unittest.TestCase ):
                             "resourcestest/simplegrid_markstitch.knitmanual" \
                             ).decode("utf-8")
 
-        asd = manualtoersetzer( old_manual_str, new_manual_str, \
+        asd = manualtoersetzer( old_manual_str, new_manual_str, stitchinfo, \
                                 startside="right" )
 
         

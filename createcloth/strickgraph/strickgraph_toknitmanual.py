@@ -4,10 +4,9 @@ main function here is tomanual
         character_dictionary
 """
 import networkx as netx
-from . import load_stitchinfo as stitchinfo
 
 
-def tomanual( strickgraph, manual_type="thread" ):
+def tomanual( strickgraph, stitchinfo, manual_type="thread" ):
     """
     text a manual for the given complete strickgraph
     :todo: rewrite to remove reversing of rows and pass on manual_type 
@@ -20,7 +19,7 @@ def tomanual( strickgraph, manual_type="thread" ):
 
     text = ""
     for tmprow in rows:
-        newline = transform_rowtomanualline( tmprow, nodeattributes )
+        newline = transform_rowtomanualline( tmprow, nodeattributes, stitchinfo)
         text = text + newline + "\n"
 
     text_matrix = [ x.split() for x in text.splitlines() ]
@@ -41,9 +40,10 @@ def _reverse_every_second_row( manual ):
         manual[ 2*i+1 ].reverse()
 
 character_dictionary={}
-character_dictionary.update( stitchinfo.symbol )
-def transform_rowtomanualline( row, stitchtypes_dictionary ):
+#character_dictionary.update( stitchinfo.symbol )
+def transform_rowtomanualline( row, stitchtypes_dictionary, stitchinfo ):
     character_dictionary.update( stitchinfo.symbol ) #ensure up-to-date
+    mycharacter_dictionary = character_dictionary
 
     line = ""
     lastcharacter = stitchtypes_dictionary[ row.pop(0) ]
@@ -54,15 +54,17 @@ def transform_rowtomanualline( row, stitchtypes_dictionary ):
             if lastcharacter == newcharacter:
                 times = times + 1
             else:
-                line = _transrtm_addline( line, times, lastcharacter )
+                line = _transrtm_addline( line, times, lastcharacter, \
+                                                mycharacter_dictionary )
                 times = 1
                 lastcharacter = newcharacter
-    line = _transrtm_addline( line, times, lastcharacter )
+    line = _transrtm_addline( line, times, lastcharacter, \
+                                                mycharacter_dictionary )
     return line
 
 
-def _transrtm_addline( line, times, lastcharacter ):
-    line = line + " %d%s"%( times, character_dictionary[ lastcharacter ] )
+def _transrtm_addline( line, times, lastcharacter, mycharacter_dictionary ):
+    line = line + " %d%s"%( times, mycharacter_dictionary[ lastcharacter ] )
     return line
 
 

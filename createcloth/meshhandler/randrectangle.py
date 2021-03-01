@@ -1,6 +1,8 @@
 import pywavefront
 import numpy as np
+from collections import Counter
 from scipy.interpolate import griddata as myinterp
+import networkx as netx
 #from pythonsimplecycles.findrand import find_rand
 
 class randrectangle():
@@ -121,33 +123,27 @@ class randrectangle_points(randrectangle):
 
 def myfindrand( mesh ):
     randedges = findrandedges( mesh )
-    rand_linelist = findrandarrays( randedges )
-
-    if len(rand_linelist)>1 or rand_linelist[0][0]!=rand_linelist[0][-1]:
-        raise Exception("mesh hat keinen eindeutigen vollstaendigen rand")
-    rand = rand_linelist[0]
-    rand.pop()
-    return rand
+    return find_single_rand( randedges )
 
 def findrandedges( mesh ):
-    randedges = None #set()
-    rand = []
-    foundedges = []
-    foundedges_twice = []
-
+    listedges = []
     for face in mesh.faces:
         for i in range(len(face)):
-            edge = set([ face[i], face[i-1] ])
-            if edge in foundedges:
-                foundedges_twice.append( edge )
-            else:
-                foundedges.append( edge )
-    for edge in foundedges_twice:
-        foundedges.remove( edge )
-    #randedges = list( set(foundedges).difference( foundedges_twice ) )
-    return foundedges
+            edge = frozenset(( face[i], face[i-1] ))
+            listedges.append( edge )
+    edgecount = Counter( listedges )
+    randedges = [ edge for edge, count in edgecount.items() if count==1 ]
+    return randedges
 
-def findrandarrays( randedges ):
+def find_single_rand( randedges ):
+    asd = netx.Graph( randedges )
+    #asd.add_edges_from( randedges )
+    randpath = netx.cycle_basis( asd )
+    if len( list( randpath ) )!= 1:
+        raise Exception( "cant handle surfaces with more than one closed "\
+                        "border")
+    return list( randpath )[0]
+
     tmponerand = []
     rand = [tmponerand]
     tmppoint = list( randedges[0] )[0]

@@ -1,0 +1,68 @@
+import pkg_resources
+import copy
+from extrasfornetworkx import multiverbesserer
+import argparse
+
+from .verbesserer_class import manualtoersetzer, verbessererfromxml, verbesserungtoxml
+from .multiverbesserer import strick_multiverbessererfromxml
+from .manualtoverbesserung import _start_at_marked
+
+from ..strickgraph.load_stitchinfo import myasd as stitchinfo
+from ..strickgraph.strickgraph_base import stricksubgraph as mygraphtype
+from ..strickgraph.fromknitmanual import frommanual
+
+def tryoldtranslator( translatorlist, startside, oldmanstr, newmanstr, \
+                                        stitchinfo, reverse=False ):
+    trystrick = frommanual( oldmanstr, stitchinfo, manual_type="machine", \
+                                startside = startside, reversed=reverse )
+    startpoint = _start_at_marked( trystrick )
+    targetstrick = frommanual( newmanstr, stitchinfo, manual_type="machine", \
+                                startside = startside, reversed=reverse )
+    _start_at_marked( targetstrick ) #just to replace marked stitches
+    for trans in translatorlist:
+        asd = copy.deepcopy( trystrick )
+        succ, info = trans.replace_in_graph_withinfo( asd, startpoint )
+        if succ:
+            if asd == targetstrick:
+                return trans
+    return None
+
+def main( pairlist, reverse=False, side="both", oldtranslatorlist=[] ):
+    if side == "both":
+        usedsides = ("left", "right")
+    elif side == "right":
+        usedsides = ("right", )
+    elif side == "left":
+        usedsides = ("left", )
+    else:
+        raise KeyError( "'side' must be 'both', 'right' or 'left'." )
+
+    markedstitches = pkg_resources.resource_string( __name__, \
+                            "markstitches.xml" ).decode("utf-8")
+    stitchinfo.add_additional_resources( markedstitches )
+    ersetzerlist = []
+    for old_manual_str, new_manual_str in pairlist:
+        for myside in usedsides:
+            try:
+                if oldtranslatorlist:
+                    foundtranslator = tryoldtranslator( oldtranslatorlist, \
+                                                myside,\
+                                                old_manual_str, new_manual_str,\
+                                                stitchinfo, reverse=reverse )
+                else:
+                    foundtranslator = None
+                if foundtranslator:
+                    ersetzerlist.append( foundtranslator )
+                else:
+                    ersetzerlist.append(\
+                            manualtoersetzer( old_manual_str, new_manual_str, \
+                            stitchinfo, \
+                            startside=myside, reversed = reverse )
+                            )
+            except Exception as err:
+                err.args = ( *err.args, "happend at %s" %( \
+                            repr((old_manual_str, new_manual_str)) ) )
+                raise err
+
+    myersetzer = multiverbesserer( ersetzerlist )
+    return myersetzer

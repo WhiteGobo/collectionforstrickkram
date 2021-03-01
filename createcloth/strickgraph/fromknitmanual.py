@@ -7,7 +7,6 @@ look at stitchnodeid for more information
 
 import regex
 from .strickgraph_base import strickgraph
-from . import load_stitchinfo as stitchinfo
 from .strickgraph_fromgrid import turn
 from . import handknitting_terms
 from . import machine_terms
@@ -16,12 +15,13 @@ class BrokenManual( Exception ):
     pass
 
 
-def frommanual( manual, manual_type="thread", startside="right", \
+def frommanual( manual, stitchinfo, manual_type="thread", startside="right", \
                 reversed=False ):
     """
     :todo: implement machine- and follow_thread-layout
     """
     manual = transform_manual_to_listform( manual )
+    mystitchinfo = stitchinfo
     if manual_type in handknitting_terms:
         _reverse_every_second_row( manual )
     elif manual_type in machine_terms:
@@ -32,8 +32,8 @@ def frommanual( manual, manual_type="thread", startside="right", \
     if reversed:
         _reverse_every_row( manual )
     manual = transform_to_single_key( manual )
-    manual = symbol_to_stitchid( manual )
-    mystrickgraph = list_to_strickgraph( manual, startside )
+    manual = symbol_to_stitchid( manual, mystitchinfo )
+    mystrickgraph = list_to_strickgraph( manual, startside, mystitchinfo )
     return mystrickgraph
 
 def _reverse_every_row( manual ):
@@ -44,8 +44,8 @@ def _reverse_every_second_row( manual ):
     for i in range( int(len(manual)/2) ):
         manual[ 2*i+1 ].reverse()
 
-def symbol_to_stitchid( manual ):
-    namedict = { stitchinfo.symbol[x]:x for x in stitchinfo.symbol }
+def symbol_to_stitchid( manual, mystitchinfo ):
+    namedict = { mystitchinfo.symbol[x]:x for x in mystitchinfo.symbol }
     for i in range( len(manual)):
         try:
             manual[i] = [ namedict[x] for x in manual[i] ]
@@ -70,7 +70,7 @@ def stitchnodeid( rowindex, columnindex, stitchtype ):
     """
     return ( rowindex, columnindex )
 
-def list_to_strickgraph( manual, startside ):
+def list_to_strickgraph( manual, startside, mystitchinfo ):
     """
     :rtype: strickgraph
     """
@@ -88,9 +88,9 @@ def list_to_strickgraph( manual, startside ):
         for j in _range_depend_on_side[current_side]( len(row) ):
             single = row[j]
             nodeid = stitchnodeid(i,j,single)
-            downknots = stitchinfo.downedges[ single ]
-            upknots = stitchinfo.upedges[ single ]
-            extrainfo = stitchinfo.extrainfo[ single ]
+            downknots = mystitchinfo.downedges[ single ]
+            upknots = mystitchinfo.upedges[ single ]
+            extrainfo = mystitchinfo.extrainfo[ single ]
 
             graph.add_node( nodeid, stitchtype=single, side=current_side, \
                                                         **extrainfo )

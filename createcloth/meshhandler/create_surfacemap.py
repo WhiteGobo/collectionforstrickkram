@@ -214,6 +214,8 @@ class surfacemap():
         zreal = self.surfacemap_z( x, y )
         return xreal, yreal, zreal
 
+
+
 def get_surfacemap( filename, numba_support=False, force_new=False ):
     """
     this generates a 2d mapping of a surface retrieved from the file filename
@@ -331,7 +333,7 @@ def create_surfacemap_data( som ):
                             )
     return surfacemap_x, surfacemap_y, surfacemap_z, (0,xsize), (0,ysize)
 
-def load_mesh( file_name, lengthfactor=0.1 ):
+def load_mesh( file_name, lengthfactor=1.2 ):
     """
     uses wavefront-file for meshloading
     :type file_name: path or file-like

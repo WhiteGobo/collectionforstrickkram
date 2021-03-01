@@ -230,7 +230,8 @@ def pathfrom_xmlelement( xmlelement ):
     return path
 
 
-def manualtoersetzer( manual_old, manual_new, start_at="bottomleft", \
+def manualtoersetzer( manual_old, manual_new, stitchinfo, \
+                                start_at="bottomleft", \
                                 manual_type="machine", startside="right",\
                                 startpoint_method="marked", reversed=False):
     """
@@ -257,9 +258,9 @@ def manualtoersetzer( manual_old, manual_new, start_at="bottomleft", \
             currently only mark information is removed and this only works 
             via extra if function. This has to be optimised somehow
     """
-    old_graph = frommanual( manual_old, manual_type=manual_type, \
+    old_graph = frommanual( manual_old, stitchinfo, manual_type=manual_type, \
                                     startside=startside,reversed=reversed )
-    new_graph = frommanual( manual_new, manual_type=manual_type, \
+    new_graph = frommanual( manual_new, stitchinfo, manual_type=manual_type, \
                                     startside=startside, reversed=reversed )
 
 
@@ -366,7 +367,7 @@ def frommanual_without_startandend( manual_new, manual_type=None, \
     :todo: this function may be obsolete because the node start and end should
     not be in the subgraph that will be replaced
     """
-    graph = frommanual( manual_new, manual_type=manual_type, \
+    graph = frommanual( manual_new, stitchinfo, manual_type=manual_type, \
                                                         startside=startside )
     #graph_nodes = set( graph).difference([ "start", "end" ])
     graph_nodes = set( graph).difference([])

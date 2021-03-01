@@ -1,11 +1,13 @@
 from .strickgraph_helper import fetch_neighbour_to_row, separate_to_rows, \
                                 sort_rows_as_snake
 from .strickgraph_helper import strick_NotImplementedError, strick_NotFoundError
-from . import load_stitchinfo as stitchinfo
+#from . import load_stitchinfo as stitchinfo
+#from .load_stitchinfo import myasd as stitchinfo
 from . import strickgraph_base  as base
 import networkx as netx
 
-def create_strickgraph_from_gridgraph( graph, firstrow, startside="right" ):
+def create_strickgraph_from_gridgraph( graph, firstrow, stitchinfo, \
+                                        startside="right" ):
     """
     This method takes a grid and converts it to a strickgraph
     :param graph: must be convertable to a snake
@@ -19,7 +21,7 @@ def create_strickgraph_from_gridgraph( graph, firstrow, startside="right" ):
     #strickgraph = netx.MultiDiGraph( graph )
     strickgraph = base.strickgraph( graph )
     strickgraph.clear_edges()
-    _managestitches( strickgraph, rows, graph, startside )
+    _managestitches( strickgraph, rows, graph, startside, stitchinfo )
     return strickgraph
 
 
@@ -44,7 +46,7 @@ turndict={ rightside:leftside, leftside:rightside }
 def turn(side):
     return turndict[side]
 
-def _managestitches( strickgraph, rows, graph, startside ):
+def _managestitches( strickgraph, rows, graph, startside, stitchinfo ):
     """
     loops through every node in the graph to construct the strickgraph. 
     what happens with every node is upto my_stitchgenerator
@@ -68,7 +70,7 @@ def _managestitches( strickgraph, rows, graph, startside ):
                 raise Exception("Switched to next row but still no node")
         side = alternatesides[rowindex%2]
         my_stitchgenerator( tmpnode, strickgraph, rows, graph, 
-                            sorted_restrowlist, rowindex, side)
+                            sorted_restrowlist, rowindex, side, stitchinfo )
     strickgraph.add_edge( "start", rows[0][0], edgetype="next" )
     strickgraph.add_edge( rows[-1][-1], "end", edgetype="next" )
 
@@ -80,7 +82,7 @@ def _sortmethod_equaltolist( sortedlist ):
     return sort_method
 
 def my_stitchgenerator( node, strickgraph, rows, graph, sorted_restrowlist, \
-                        rowindex, side ):
+                        rowindex, side, stitchinfo ):
     """
     Is called for every node once.
     manages which generatorfunction is called for each node
@@ -107,23 +109,23 @@ def my_stitchgenerator( node, strickgraph, rows, graph, sorted_restrowlist, \
     zustand[3] = len(tmpnext)
 
     stitch_generator = stitchgenerator_lib[ tuple( zustand ) ]
-    return stitch_generator( strickgraph, node, tmpnext, side )
+    return stitch_generator( strickgraph, node, tmpnext, side, stitchinfo )
 
 
 
 def _make_node_to_stitch( strickgraph, node, stitchtype, nextknot, upknots, \
-                            side, nextbreaksline = False, end = False ):
+                            side, stinfo, nextbreaksline = False, end = False ):
     """
     creates with information from load_stitchinfo the knot
     the graph strickgraph needs to have the node so that this method can create
     the outedges and the the nodes properties
     :todo: more errorthrowing
     """
-    if stitchtype not in stitchinfo.types:
+    if stitchtype not in stinfo.types:
         raise Exception( "stitchtype %s not included" %(stitchtype) )
-    if len(upknots) != stitchinfo.upedges[ stitchtype ]:
+    if len(upknots) != stinfo.upedges[ stitchtype ]:
         raise Exception( "stitchtype %s has %d upedges not %d"%(stitchtype, \
-                                    stitchinfo.upedges[stitchtype],len(upknots))
+                                    stinfo.upedges[stitchtype],len(upknots))
                                     )
 
     nextattributes = {"edgetype":"next"}
@@ -138,62 +140,62 @@ def _make_node_to_stitch( strickgraph, node, stitchtype, nextknot, upknots, \
         strickgraph.add_edge( node, tmpknot, edgetype="up" )
 
 
-def begin_withyarnover( strickgraph, node, nextneighbours, side ):
+def begin_withyarnover( strickgraph, node, nextneighbours, side, stinfo ):
     """ method for createing yarn over at start of knitthing """
     nextknot = nextneighbours[0]
     upknots = [ nextneighbours[1] ]
     
-    _make_node_to_stitch( strickgraph, node, "yarnover", nextknot, upknots,side)
+    _make_node_to_stitch( strickgraph, node, "yarnover", nextknot, upknots,side, stinfo)
 
 stitchgenerator_lib.update({ (0,0,0,2):begin_withyarnover })
 
-def firstrow_withyarnover( strickgraph, node, nextneighbours, side ):
+def firstrow_withyarnover( strickgraph, node, nextneighbours, side, stinfo ):
     """ method for the first row initializing the knithing with yos """
     nextknot = nextneighbours[0]
     upknots = [ nextneighbours[1] ]
     
-    _make_node_to_stitch( strickgraph, node, "yarnover", nextknot, upknots,side)
+    _make_node_to_stitch( strickgraph, node, "yarnover", nextknot, upknots,side, stinfo)
 
 stitchgenerator_lib.update({ (0,1,1,2):firstrow_withyarnover })
 
-def endfirstrow_withyarnover( strickgraph, node, nextneighbours, side ):
+def endfirstrow_withyarnover( strickgraph, node, nextneighbours, side, stinfo ):
     """ method for the first row initializing the knithing with yos """
     nextknot = nextneighbours[0]
     upknots = [ nextneighbours[0] ]
     
     _make_node_to_stitch( strickgraph, node, "yarnover", nextknot, upknots, \
-                            side, nextbreaksline = True )
+                            side, stinfo, nextbreaksline = True )
 
 stitchgenerator_lib.update({ (0,2,1,1):endfirstrow_withyarnover })
 
 
-def lastrow_withbindoff( strickgraph, node, nextneighbours, side ):
+def lastrow_withbindoff( strickgraph, node, nextneighbours, side, stinfo ):
     """ method for the last row with bindofs """
     nextknot = nextneighbours[0]
     upknots = []
     
     _make_node_to_stitch( strickgraph, node, "bindoff", nextknot, upknots, \
-                            side, nextbreaksline = False )
+                            side, stinfo, nextbreaksline = False )
 
 stitchgenerator_lib.update({
         (2,1,2,1):lastrow_withbindoff,
         (2,0,1,1):lastrow_withbindoff, #the first stitch of the row
         })
 
-def laststitch_withbindoff( strickgraph, node, nextneighbours, side ):
+def laststitch_withbindoff( strickgraph, node, nextneighbours, side, stinfo ):
     """ method for the last row with bindofs """
     nextknot = None
     upknots = []
     
     _make_node_to_stitch( strickgraph, node, "bindoff", nextknot, upknots, \
-                            side, end=True )
+                            side, stinfo, end=True )
 
 stitchgenerator_lib.update({
         (2,2,2,0):laststitch_withbindoff
         })
 
 
-def knit_stitch( strickgraph, node, nextneighbours, side ):
+def knit_stitch( strickgraph, node, nextneighbours, side, stinfo ):
     nextknot = nextneighbours[0]
     nextattributes = {"edgetype":"next"}
     returnvalue = ""
@@ -205,7 +207,8 @@ def knit_stitch( strickgraph, node, nextneighbours, side ):
         returnvalue = "break"
     strickgraph.add_edge( node, upknot, edgetype="up" )
     strickgraph.add_edge( node, nextknot, **nextattributes )
-    netx.set_node_attributes( strickgraph, {node:{"stitchtype":"knit", "side":side}} )
+    netx.set_node_attributes( strickgraph, \
+                                {node:{"stitchtype":"knit", "side":side}} )
     return returnvalue
 
 stitchgenerator_lib.update({

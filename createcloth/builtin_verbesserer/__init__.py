@@ -7,15 +7,17 @@ useddecoding = "utf-8"
 
 
 def load_insertcolumn_left():
-    tmpbytes = pkg_resources.resource_string( __name__, "insertcolumn_left.xml" )
-    insertcolumn = strick_multiverbessererfromxml( tmpbytes.decode( useddecoding ),\
+    tmpbytes = pkg_resources.resource_string( __name__, "insertcolumn_left.xml")
+    insertcolumn = strick_multiverbessererfromxml( \
+                                            tmpbytes.decode( useddecoding ),\
                                             graph_type=mygraphtype)
     return insertcolumn
 
 
 def load_insertcolumn_right():
-    tmpbytes = pkg_resources.resource_string( __name__, "insertcolumn_right.xml" )
-    insertcolumn = strick_multiverbessererfromxml( tmpbytes.decode( useddecoding ),\
+    tmpbytes = pkg_resources.resource_string( __name__,"insertcolumn_right.xml")
+    insertcolumn = strick_multiverbessererfromxml( \
+                                            tmpbytes.decode( useddecoding ),\
                                             graph_type=mygraphtype)
     return insertcolumn
 

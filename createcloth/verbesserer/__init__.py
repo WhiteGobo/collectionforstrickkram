@@ -9,3 +9,4 @@ from .verbesserer_class import manualtoersetzer, verbessererfromxml, verbesserun
 
 from .multiverbesserer import strick_multiverbesserer
 from .multiverbesserer import strick_multiverbessererfromxml
+from .multiverbesserer import StrickgraphVerbessererException

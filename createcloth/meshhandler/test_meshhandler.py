@@ -1,5 +1,6 @@
 import unittest
 from .create_surfacemap import get_surfacemap
+from ..strickgraph.load_stitchinfo import myasd as stinfo
 from .create_surfacemap import load_mesh
 from .main import relax_strickgraph_on_surface
 import pkg_resources
@@ -40,7 +41,7 @@ class TestMeshhandlerMethods( unittest.TestCase ):
                                                             "meshfortests.ply" )
         mygraph = netx.grid_2d_graph( 10,10 )
         firstrow = [ x for x in mygraph.nodes() if x[0] == 0 ]
-        asd = fromgrid.create_strickgraph_from_gridgraph( mygraph, firstrow )
+        asd = fromgrid.create_strickgraph_from_gridgraph( mygraph, firstrow, stinfo )
 
         datagraph = relax_strickgraph_on_surface( asd, filename, \
                                                     numba_support=False )
@@ -56,7 +57,7 @@ class TestMeshhandlerMethods( unittest.TestCase ):
                                                             "meshfortests.ply" )
         mygraph = netx.grid_2d_graph( 30,30 )
         firstrow = [ x for x in mygraph.nodes() if x[0] == 0 ]
-        asd = fromgrid.create_strickgraph_from_gridgraph( mygraph, firstrow )
+        asd = fromgrid.create_strickgraph_from_gridgraph( mygraph, firstrow, stinfo )
 
         
         datagraph = relax_strickgraph_on_surface( asd, filename, \

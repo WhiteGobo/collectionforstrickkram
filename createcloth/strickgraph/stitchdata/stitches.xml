@@ -19,6 +19,11 @@
 		upedges="0"
 		downedges="1"
 	/>
+	<stitchtype name="bind2off"
+		manualchar="b2o"
+		upedges="0"
+		downedges="2"
+	/>
 	<stitchtype name="k2tog"
 		manualchar="k2tog"
 		upedges="1"
