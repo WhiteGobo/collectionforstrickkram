@@ -1,0 +1,13 @@
+plainknit describes a strickgraph which is only made from following 
+stitchtypes:
+	yarnover
+	bindof
+	knit
+	k2tog
+
+it is able to fit to various forms though increases (yarnover) and 
+decreases (k2tog). Thus can only occur as third and fifth stitch of 
+the row
+
+the start row has only yarnover
+the end row has only bindof
