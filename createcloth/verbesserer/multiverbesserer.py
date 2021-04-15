@@ -29,14 +29,18 @@ class strick_multiverbesserer( multiverbesserer ):
         else:
             super().__init__( verbessererlist )
 
-    def print_with_matplotlib( self, show = True ):
+    def print_with_matplotlib( self, show = True, useoldgraph=True, \
+                                                        tmpplotinfo=None ):
         nrows = math.ceil( math.sqrt(len( self.verbessererlist)+1) )
         nrows = max( 2, nrows )
         fig, axs = plt.subplots( nrows=nrows, ncols=nrows )
         axs =iter(itertools.chain( *axs ))
-        tmpplotinfo = None
         for verbesserer in self.verbessererlist:
-            tmpplotinfo = easygraph( verbesserer.oldgraph, \
+            if useoldgraph:
+                usedgraph = verbesserer.oldgraph
+            else:
+                usedgraph = verbesserer.newgraph
+            tmpplotinfo = easygraph( usedgraph, \
                             myplotinfo = tmpplotinfo, \
                             show = False, ax = axs.__next__(), \
                             marked_nodes=["0"] )#?
@@ -49,7 +53,7 @@ class strick_multiverbesserer( multiverbesserer ):
         suc, info = self.replace_in_graph_withinfo( mystrickgraph, markednode ) 
         if not suc:
             raise StrickgraphVerbessererException( self, mystrickgraph, \
-                                                            markednode )
+                                                            markednode, info )
 
     def __plot_legend( self, myplotinfo, axis ):
         for stitchname, mystyle in myplotinfo.stitchstyle.items():

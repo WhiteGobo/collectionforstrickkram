@@ -3,6 +3,7 @@ import networkx as _netx
 from extrasfornetworkx import weisfeiler_lehman_graph_hash_multidigraph
 from .constants import machine_terms, handknitting_terms, WrongTermError
 import itertools
+from collections import Counter
 
 from .strickgraph_helper import separate_to_rows
 
@@ -40,7 +41,34 @@ class strickgraph( _netx.MultiDiGraph ):
                             )
         return int( returnv, base=16 )
 
+    def presort( self ):
+        """
+        magic method to know with which other graphs it wont definitly is 
+        unequal
+        :returns: hashable
+        """
+        self.supergraph.create_hashvalues()
+        selfnodecount = Counter([ value for value \
+                    in _netx.get_node_attributes( self, "hashval" ).values() ])
+        trans = { str(e):e for e in selfnodecount.keys()}
+        tmptuple = tuple( sorted( trans.keys() ))
+        second = tuple( selfnodecount[trans[stre]] for stre in tmptuple )
+        return (tmptuple, second)
+
     def __eq__( self, other ):
+        try:
+            self.supergraph.create_hashvalues()
+            selfnodecount = Counter([ value for value \
+                    in _netx.get_node_attributes( self, "hashval" ).values() ])
+
+            other.supergraph.create_hashvalues()
+            othernodecount = Counter([ value for value \
+                    in _netx.get_node_attributes( other, "hashval" ).values() ])
+            if selfnodecount != othernodecount:
+                return False
+        except Exception as err:
+            return False
+
         return self.__hash__() == other.__hash__()
 
     def get_rows( self, presentation_type="machine" ):
@@ -142,7 +170,7 @@ class stricksubgraph( strickgraph ):
         right_nodes = [ node for node in self.nodes \
                         if side_of_nodes[ node ] == "right" ]
 
-        asd =  sort_nodes_downtoup( self.nodes(), next_edges, up_edges )
+        asd =  sort_nodes_downtoup( left_nodes, right_nodes, next_edges, up_edges )
         rows = []
         currentrow = []
         rows.append( currentrow )
@@ -180,13 +208,18 @@ def sort_nodes_via_edges( nodes, edges ):
     return list( ordered_nodes )
 
 
-def sort_nodes_downtoup( nodes, next_edges, up_edges ):
+def sort_nodes_downtoup( left_nodes, right_nodes, next_edges, up_edges ):
+    next_edges = [ edge for edge in next_edges \
+                    if (edge[0] in left_nodes and edge[1] in left_nodes) \
+                    or (edge[0] in right_nodes and edge[1] in right_nodes) ]
+    nodes = set( left_nodes ).union( right_nodes )
     groupgraph = _netx.Graph()
     groupgraph.add_nodes_from( nodes )
     groupgraph.add_edges_from( next_edges )
     horizontal_groups = \
             list( _netx.algorithms.components.connected_components( \
                                 groupgraph ) )
+
 
     horizontal_groups = [ sort_nodes_via_edges( nodes, next_edges ) \
                             for nodes in horizontal_groups ]

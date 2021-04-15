@@ -13,14 +13,19 @@ from scipy.special import erfinv as function_erfinv
 MAXVALUE = np.finfo( np.float64 ).max
 LENGTHDEFAULT = 0.003
 
+from ..physicalhelper.edgelength_helper import standardthreadinfo
+
 class gridrelaxator():
-    def __init__( self, gridgraph, surfacemap, rand, default_length=0.0 ):
+    """
+    :todo: include physicalhelper for edgelength
+    """
+    def __init__( self, gridgraph, surfacemap, rand, \
+                                        mythreadinfo=standardthreadinfo ):
+        default_length = 2*mythreadinfo.thickness
         self.surfacemap = surfacemap
         #self.calcgraph = gridgraph.copy()
         self.calcgraph = netx.MultiDiGraph()
         self.calcgraph.add_nodes_from( gridgraph.nodes() )
-
-
 
         #expand to (surf_x, surf_y, surf_z) via *surf_xyz_tuple
         surf_xyz_tuple = self.surfacemap.singularmaps()
@@ -56,10 +61,10 @@ class gridrelaxator():
 
 def add_startposition_to_nodes( graph, surfacemap, rand ):
     givegraph = netx.Graph( graph )
-    amin = surfacemap.xmin()
-    bmin = surfacemap.ymin()
-    amax = surfacemap.xmax()
-    bmax = surfacemap.ymax()
+    amin = surfacemap.umin()
+    bmin = surfacemap.vmin()
+    amax = surfacemap.umax()
+    bmax = surfacemap.vmax()
     mapa_pos, mapb_pos = solve_gridspringgraph( ((amin, amax),(bmin, bmax)), \
                                                     rand, givegraph)
 

@@ -30,6 +30,21 @@ pairlist = (\
         ("6yo\n6k\n6k\n2bo 1b2o 1bomark 1bo", \
         "6yo\n6k\n6k\n4bo 1bomark 1bo"), \
         \
+        ("6yo\n6k\n6k\n4k 1kmark 1k\n6bo", \
+        "6yo\n6k\n6k\n4k 1yo 1kmark 1k\n3bo 1b2o 2bo"), \
+        \
+        ("5yo\n5k\n3k 1yo 2k\n4k 1kmark 1k\n6bo", \
+        "5yo\n5k\n3k 1yo 2k\n4k 1yo 1kmark 1k\n3bo 1b2o 2bo"), \
+        \
+        ("7yo\n7k\n3k 1k2tog 2k\n4k 1kmark 1k\n6bo", \
+        "7yo\n7k\n3k 1k2tog 2k\n4k 1yo 1kmark 1k\n3bo 1b2o 2bo"), \
+        \
+        ("7yo\n7k\n3k 1k2tog 2k\n2k 1k2tog 1kmark 1k\n5bo", \
+        "7yo\n7k\n3k 1k2tog 2k\n4k 1kmark 1k\n2bo 1b2o 2bo"), \
+        \
+        ("8yo\n4k 1k2tog 2k\n3k 1k2tog 2k\n4k 1kmark 1k\n6k\n6bo", \
+        "8yo\n4k 1k2tog 2k\n3k 1k2tog 2k\n4k 1yo 1kmark 1k\n3k 1k2tog 2k\n6bo"), \
+        \
         ("7yo\n7k\n3k 1k2tog 2k\n2bo 1b2o 1bomark 1bo", \
         "7yo\n7k\n3k 1k2tog 2k\n4bo 1bomark 1bo"), \
         \
@@ -42,8 +57,14 @@ pairlist = (\
         ("7yo\n3k 1k2tog 2k\n4k 1kmark 1k\n6k\n2k 1k2tog 2k\n5bo", \
         "7yo\n3k 1k2tog 2k\n4k 1yo 1kmark 1k\n3k 1k2tog 2k\n2k 1k2tog 2k\n5bo"), \
         \
+        ("8yo\n4k 1k2tog 2k\n3k 1k2tog 1kmark 1k\n6k\n6bo", \
+        "8yo\n4k 1k2tog 2k\n5k 1kmark 1k\n3k 1k2tog 2k\n6bo"), \
+        \
         ("7yo\n7k\n3k 1k2tog 1kmark 1k\n6k\n2k 1k2tog 2k\n5bo", \
         "7yo\n7k\n5k 1kmark 1k\n3k 1k2tog 2k\n2k 1k2tog 2k\n5bo"), \
+        \
+        ("8yo\n4k 1k2tog 2k\n3k 1k2tog 1kmark 1k\n6k\n6k\n6bo", \
+        "8yo\n4k 1k2tog 2k\n5k 1kmark 1k\n3k 1k2tog 2k\n6k\n6bo"), \
         \
         ("7yo\n7k\n3k 1k2tog 2k\n2k 1k2tog 1kmark 1k\n5k\n1k 1k2tog 2k\n4bo", \
         "7yo\n7k\n3k 1k2tog 2k\n4k 1kmark 1k\n2k 1k2tog 2k\n1k 1k2tog 2k\n4bo"), \
@@ -53,6 +74,10 @@ pairlist = (\
         \
         ("6yo\n4k 1yo 2k\n3k 1k2tog 1kmark 1k\n4k 1yo 2k\n7k\n7bo", \
         "6yo\n4k 1yo 2k\n5k 1kmark 1k\n7k\n7k\n7bo"), \
+        ("6yo\n4k 1yo 2k\n3k 1k2tog 1kmark 1k\n4k 1yo 2k\n3k 1k2tog 2k\n6bo", \
+        "6yo\n4k 1yo 2k\n5k 1kmark 1k\n7k\n3k 1k2tog 2k\n6bo"), \
+        ("7yo\n7k\n3k 1k2tog 1kmark 1k\n4k 1yo 2k\n3k 1k2tog 2k\n6bo", \
+        "7yo\n7k\n5k 1kmark 1k\n7k\n3k 1k2tog 2k\n6bo"), \
         \
         ("6yo\n4k 1yo 2k\n3k 1k2tog 1kmark 1k\n6k\n2k 1k2tog 2k\n5bo", \
         "6yo\n4k 1yo 2k\n5k 1kmark 1k\n3k 1k2tog 2k\n2k 1k2tog 2k\n5bo"), \

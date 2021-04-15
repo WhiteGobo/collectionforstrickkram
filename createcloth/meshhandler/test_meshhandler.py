@@ -20,16 +20,16 @@ class TestMeshhandlerMethods( unittest.TestCase ):
         pass
     def test_loadmesh( self ):
         filename = pkg_resources.resource_stream( __name__, \
-                                                            "meshfortests.ply" )
+                                                        "meshfortests.ply" )
         mesh, edges = load_mesh( filename, lengthfactor=1.5 )
         self.assertEqual( tuple( edges), (123, 130, 107, 104) )
         filename.close()
 
     def test_create_surfacemap( self ):
         filename = pkg_resources.resource_stream( __name__, \
-                                                            "meshfortests.ply" )
+                                                        "meshfortests.ply" )
         surfacemaps = get_surfacemap( filename, numba_support=True,
-                                                force_new = True )
+                                                        force_new = True )
         (x, y, z) = surfacemaps.singularmaps()
         x(0,0)
         y(0,0)
@@ -38,30 +38,32 @@ class TestMeshhandlerMethods( unittest.TestCase ):
 
     def test_relax_strickgraph_withdifferenttypes( self ):
         filename = pkg_resources.resource_stream( __name__, \
-                                                            "meshfortests.ply" )
+                                                        "meshfortests.ply" )
         mygraph = netx.grid_2d_graph( 10,10 )
         firstrow = [ x for x in mygraph.nodes() if x[0] == 0 ]
-        asd = fromgrid.create_strickgraph_from_gridgraph( mygraph, firstrow, stinfo )
+        asd = fromgrid.create_strickgraph_from_gridgraph( mygraph, firstrow, \
+                                                        stinfo )
 
         datagraph = relax_strickgraph_on_surface( asd, filename, \
-                                                    numba_support=False )
+                                                        numba_support=False )
         mysurfacemap = get_surfacemap( filename )
         filename.close()
 
         datagraph = relax_strickgraph_on_surface( asd, mysurfacemap, \
-                                                    numba_support=False )
+                                                        numba_support=False )
 
 
     def test_wholerelaxing( self ):
         filename = pkg_resources.resource_stream( __name__, \
-                                                            "meshfortests.ply" )
+                                                        "meshfortests.ply" )
         mygraph = netx.grid_2d_graph( 30,30 )
         firstrow = [ x for x in mygraph.nodes() if x[0] == 0 ]
-        asd = fromgrid.create_strickgraph_from_gridgraph( mygraph, firstrow, stinfo )
+        asd = fromgrid.create_strickgraph_from_gridgraph( mygraph, firstrow, \
+                                                        stinfo )
 
         
         datagraph = relax_strickgraph_on_surface( asd, filename, \
-                                                    numba_support=False )
+                                                        numba_support=False )
         filename.close()
         #print( netx.get_node_attributes( datagraph, "vertF" ) )
         #myvis3d( datagraph )
@@ -78,14 +80,14 @@ class TestMeshhandlerMethods( unittest.TestCase ):
         #np.set_printoptions( precision=2, threshold=np.inf, linewidth=np.inf )
         #print( repr(np.array( valuearray )).replace('\n       ', '') )
         try:
-            self.assertTrue( np.allclose( valuearray, \
-                                vergleichsarray, atol=0.1 ) )
+            tmpbool = np.allclose( valuearray, vergleichsarray, atol=0.1 )
+            self.assertTrue( tmpbool )
         except AssertionError as err:
             err.args = ( *err.args, "Calculation was totally off" )
             raise err
         try:
-            self.assertTrue( np.allclose( valuearray, \
-                                vergleichsarray, rtol=1e-2 ) )
+            tmpbool = np.allclose(valuearray, vergleichsarray, rtol=1e-2 )
+            self.assertTrue( tmpbool )
         except AssertionError as err:
             err.args = ( *err.args, "Calculation wasnt precise enough" )
             raise err

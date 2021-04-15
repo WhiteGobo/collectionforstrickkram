@@ -199,13 +199,13 @@ class surfacemap():
                 self.surfacemap_gradvx, self.surfacemap_gradvy, \
                 self.surfacemap_gradvz
 
-    def xmin( self ):
+    def umin( self ):
         return self.range_x[0]
-    def ymin( self ):
+    def vmin( self ):
         return self.range_y[0]
-    def xmax( self ):
+    def umax( self ):
         return self.range_x[1]
-    def ymax( self ):
+    def vmax( self ):
         return self.range_y[1]
 
     def __call__( self, x, y ):

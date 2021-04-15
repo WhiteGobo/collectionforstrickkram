@@ -288,7 +288,8 @@ def manualtoersetzer( manual_old, manual_new, stitchinfo, \
             err.args = ( *err.args, "Most likely the oldgraph and newgraph "\
                             + "are not similar or the startpoint is not "\
                             + "chosen as a similar point",\
-                            "the detection of similar graphnodes is still not fully functionable")
+                            "the detection of similar graphnodes is "\
+                            +"still not fully functionable")
         raise err
     return returnv
 

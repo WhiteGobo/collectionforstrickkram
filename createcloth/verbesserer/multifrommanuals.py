@@ -4,7 +4,7 @@ from extrasfornetworkx import multiverbesserer
 import argparse
 
 from .verbesserer_class import manualtoersetzer, verbessererfromxml, verbesserungtoxml
-from .multiverbesserer import strick_multiverbessererfromxml
+from .multiverbesserer import strick_multiverbessererfromxml, strick_multiverbesserer
 from .manualtoverbesserung import _start_at_marked
 
 from ..strickgraph.load_stitchinfo import myasd as stitchinfo
@@ -60,9 +60,9 @@ def main( pairlist, reverse=False, side="both", oldtranslatorlist=[] ):
                             startside=myside, reversed = reverse )
                             )
             except Exception as err:
-                err.args = ( *err.args, "happend at %s" %( \
-                            repr((old_manual_str, new_manual_str)) ) )
-                raise err
+                print( err.args )
+                raise Exception("happend at %s" %( repr((old_manual_str, \
+                                    new_manual_str)) ) ) from err
 
-    myersetzer = multiverbesserer( ersetzerlist )
+    myersetzer = strick_multiverbesserer( ersetzerlist )
     return myersetzer
