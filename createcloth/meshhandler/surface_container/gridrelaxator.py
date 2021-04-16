@@ -13,15 +13,26 @@ from scipy.special import erfinv as function_erfinv
 MAXVALUE = np.finfo( np.float64 ).max
 LENGTHDEFAULT = 0.003
 
-from ..physicalhelper.edgelength_helper import standardthreadinfo
+def main( surfacemap, ulength, vlength ):
+    rand = []
+    rand.append( [(i, 0) for i in range( ulength )] )
+    rand.append( [(i, vlength-1) for i in range( ulength )] )
+    rand.append( [(0, i) for i in range( vlength )] )
+    rand.append( [(ulength-1, i) for i in range( vlength )] )
+
+    gridgraph = netx.grid_2d_graph( ulength, vlength )
+    asd = gridrelaxator( gridgraph, surfacemap, rand )
+    asd.relax( starttime = 30 )
+    mygrid = asd.get_positiongrid()
+    return mygrid
+
 
 class gridrelaxator():
     """
     :todo: include physicalhelper for edgelength
     """
-    def __init__( self, gridgraph, surfacemap, rand, \
-                                        mythreadinfo=standardthreadinfo ):
-        default_length = 2*mythreadinfo.thickness
+    def __init__( self, gridgraph, surfacemap, rand ):
+        default_length = 0.0
         self.surfacemap = surfacemap
         #self.calcgraph = gridgraph.copy()
         self.calcgraph = netx.MultiDiGraph()
