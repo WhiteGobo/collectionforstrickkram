@@ -5,6 +5,8 @@ class DataLoadError( Exception):
     pass
 class InvalidPlyFormat( Exception ):
     pass
+class DatacontainerError( Exception ):
+    pass
 
 
 
@@ -31,7 +33,11 @@ class ObjectSpec:
                 tmpprop = PropertySpec( prop[-1], *prop[:-1] )
                 tmpel.properties.append( tmpprop )
             for singledata in data:
-                tmpel.insert_element_with_data( *singledata )
+                try:
+                    tmpel.insert_element_with_data( *singledata )
+                except DatacontainerError as err:
+                    raise Exception( f"Insert element '{elementname}' failed" )\
+                                                                    from err
         return myobj_spec
 
     def set_load_format( self, myformat ):
@@ -113,8 +119,9 @@ class ElementSpec:
         #produces error when nextdata is read twice. Maybe because of use
         # of iterators.
         if len( nextdata ) != len( self.properties ):
-            raise Exception( ("inserted element must be same length %d"\
-                            "as number of properties(%d)") \
+            raise DatacontainerError( ("inserted element has length %d, "\
+                            "it should have length equal number "\
+                            "of properties (%d)") \
                             %(len( nextdata),len(self.properties)))
         self.data.append( tuple((*nextdata,)) )
 

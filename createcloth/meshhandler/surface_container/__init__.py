@@ -2,6 +2,7 @@ from .. import ply_handler as _ply
 import itertools
 from collections import Counter
 from .create_surfacemap import surfacemap
+import numpy as np
 
 
 class surface():
@@ -12,6 +13,35 @@ class surface():
         self.right = right
         self.down = down
         self.left = left
+
+    def to_plyfile( self, filepath ):
+        #xyzmatrix = [ (ulength,), (vlength,), (x.reshape(x.size),), \
+        #                    (y.reshape(y.size),), (z.reshape(z.size),)]
+        vertexpipeline = ( \
+                            (b"float", b"x"), \
+                            (b"float", b"y"), \
+                            (b"float", b"z"), \
+                            )
+        facespipeline = ((b"list", b"uchar", b"uint", b"vertex_indices" ), )
+        borderpipeline = ( \
+                            (b"uint", b"rightup"), \
+                            (b"uint", b"leftup"), \
+                            (b"uint", b"leftdown"), \
+                            (b"uint", b"rightdown"), \
+                            )
+        vert = np.array( self.vertices )
+        vertexpos = [ vert[:,0], vert[:,1], vert[:,2] ]
+        facesindex = [self.faces, ]
+        lu, ru, rd, ld = get_edgevertices( self.up, self.down )
+        borderindices = [ (lu,), (ru,), (rd,), (ld,) ]
+
+        myobj = _ply.ObjectSpec.from_arrays([ \
+                            ("vertex", vertexpipeline, vertexpos ), \
+                            ("faces", facespipeline, facesindex ), \
+                            ("rand", borderpipeline, borderindices ), \
+                            #("matrix", matrixpipeline, xyzmatrix), \
+                            ])
+        _ply.export_plyfile( filepath , myobj, "ascii" )
 
     @classmethod
     def from_plyfile( cls, filepath ):
@@ -29,9 +59,6 @@ class surface():
 
         return cls( vertex_positions, faces, up, right, down, left )
 
-    def to_plyfile( self, filepath ):
-        raise Exception()
-        _ply.export_plyfile( asdf)
 
 
 def get_rand_array( faces ):
@@ -74,6 +101,12 @@ def get_rand_array( faces ):
         currentnode = nextnode
     return usednodes
 
+def get_edgevertices( up_list, down_list ):
+    leftup = up_list[0]
+    rightup = up_list[-1]
+    rightdown = down_list[0]
+    leftdown = down_list[-1]
+    return leftup, rightup, rightdown, leftdown
 
 def get_border( randnodecycle, leftup_vertex, rightup_vertex, \
                                 rightdown_vertex, leftdown_vertex):
