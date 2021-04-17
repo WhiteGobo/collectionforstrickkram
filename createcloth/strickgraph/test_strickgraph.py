@@ -29,7 +29,7 @@ class TestStringMethods( unittest.TestCase ):
         self.stitchinfo = stinfo
 
     def test_createfromgrid( self ):
-        asd = fromgrid.create_strickgraph_from_gridgraph( self.mygraph, \
+        asd = strickgraph.strickgraph.from_gridgraph(self.mygraph, \
                                                         self.firstrow, \
                                                         self.stitchinfo )
         mynodes = {(0, 1), (0, 0), (0, 2), (0, 3), (1, 0), (1, 1), (1, 2), \
@@ -82,7 +82,7 @@ class TestStringMethods( unittest.TestCase ):
         equal means that in every line everything is equal, when you dont look
         at the spaces and tabs
         """
-        asd = fromgrid.create_strickgraph_from_gridgraph( self.mygraph, \
+        asd = strickgraph.strickgraph.from_gridgraph(self.mygraph, \
                                                             self.firstrow, \
                                                             self.stitchinfo )
         testmessage = [ x.split() for x in "4yo\n4k\n4k\n4bo\n".splitlines() ]

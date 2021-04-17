@@ -4,6 +4,7 @@ from extrasfornetworkx import weisfeiler_lehman_graph_hash_multidigraph
 from .constants import machine_terms, handknitting_terms, WrongTermError
 import itertools
 from collections import Counter
+from . import strickgraph_fromgrid as fromgrid 
 
 from .strickgraph_helper import separate_to_rows
 
@@ -11,6 +12,11 @@ class strickgraph( _netx.MultiDiGraph ):
     def __init__( self, *args, **argv ):
         self.supergraph = self
         super().__init__( *args, **argv )
+
+    @classmethod
+    def from_gridgraph( cls, graph, firstrow, stitchinfo, startside="right" ):
+        return fromgrid.create_strickgraph_from_gridgraph( graph, firstrow, \
+                                                    stitchinfo, startside )
 
     def give_real_graph( self ):
         return self.subgraph( set(self.nodes()).difference(["start", "end"]))
