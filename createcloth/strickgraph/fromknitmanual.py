@@ -6,8 +6,6 @@ look at stitchnodeid for more information
 """
 
 import regex
-from .strickgraph_base import strickgraph
-from .strickgraph_fromgrid import turn
 from . import handknitting_terms
 from . import machine_terms
 
@@ -74,6 +72,8 @@ def list_to_strickgraph( manual, startside, mystitchinfo ):
     """
     :rtype: strickgraph
     """
+    from .strickgraph_base import strickgraph
+    from .strickgraph_fromgrid import turn
     downknots, upknots = None, None
     i,j = None, None
     node_edgefrom, nodeid = None, None

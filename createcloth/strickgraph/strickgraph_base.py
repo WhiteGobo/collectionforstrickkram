@@ -5,6 +5,7 @@ from .constants import machine_terms, handknitting_terms, WrongTermError
 import itertools
 from collections import Counter
 from . import strickgraph_fromgrid as fromgrid 
+from . import strickgraph_toknitmanual as toknitmanual
 
 from .strickgraph_helper import separate_to_rows
 
@@ -150,6 +151,15 @@ class strickgraph( _netx.MultiDiGraph ):
         edges = self.edges( node, data=True )
         nextedges = [ x for x in edges if x[2]["edgetype"] == "next" ]
         return nextedges[0][1]
+
+    def to_manual( self, stitchinfo, manual_type="thread" ):
+        return toknitmanual.tomanual( self, stitchinfo, manual_type)
+
+    @classmethod
+    def from_manual( cls, manual, stitchinfo, manual_type="thread", \
+                                        startside="right", reversed=False ):
+        from . import fromknitmanual as frmman
+        return frmman.frommanual( manual, stitchinfo, manual_type, startside, reversed)
 
 
 def get_neighbours_from( strickgraph, nodelist ):
