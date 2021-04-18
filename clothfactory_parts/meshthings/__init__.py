@@ -2,7 +2,6 @@ from .mesh_to_surfacemap import \
         mesh_to_surfacemap
 
 from .meshtypes import \
-        mesh_pymesh2, \
         generated_from, \
         ply_surface, \
         ply_2dmap

@@ -2,7 +2,6 @@ from .meshthings import \
         use_stitchdata_for_construction, \
         strickgraph_fit_to_mesh, \
         mesh_to_surfacemap, \
-        mesh_pymesh2, \
         generated_from, \
         strickgraph_dummy_from_rand, \
         ply_surface, \

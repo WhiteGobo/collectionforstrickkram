@@ -1,15 +1,6 @@
 from datagraph_factory import datatype, edgetype
 
-class mesh_pymesh2( datatype ):
-    """
-    :type mesh
-    """
-    def __init__( self, mesh, border ):
-        self.mesh = mesh
-        self.border = border
-        #raise Exception() #include later to remove this class
-
-_valid_generated_from = lambda: ((ply_surface,ply_2dmap),)
+_valid_generated_from = lambda: ((ply_2dmap, ply_surface),)
 generated_from = edgetype( _valid_generated_from, \
                             "generated map from mesh", "")
 

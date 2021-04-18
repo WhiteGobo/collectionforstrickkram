@@ -102,6 +102,7 @@ class TestClothfactoryParts( unittest.TestCase ):
         #    print( j)
         #    print()
 
+
     def test_generate_2dmap( self ):
         from createcloth.meshhandler import test_src 
         with importlib.resources.path( test_src, "tester.ply" ) as filepath:
@@ -128,15 +129,40 @@ class TestClothfactoryParts( unittest.TestCase ):
         output = relsurf.relax_strickgraph_on_surface( mymesh=tmpsurf, \
                                 mysurf=tmpmap, inputstrickgraph=mystrigracont )
         self.assertEqual( set(("positiondata",)), output.keys() )
+        self.assertEqual( type(output["positiondata"]), strickgraph_spatialdata)
+        strickpositions = output["positiondata"]
 
-        mystrick = strickgraph_container
-        positions = strickgraph_spatialdata
         output = relsurf.test_if_strickgraph_isrelaxed( mystrick=mystrigracont,\
-                                            positions=output["positiondata"] )
+                                            positions=strickpositions )
         self.assertEqual( set(("havetension",)), output.keys() )
+        tensionpropcont = output["havetension"]
         #output["havepressure"]
         #output["havetension"]
         #output["isrelaxed"]
+
+        #def test_plainknit( self ):
+        from . import strickgraph as strigra
+        tmpgrid = netx.grid_2d_graph(10,10)
+        firstrow = [ node for node in tmpgrid.nodes if node[0]==0 ]
+        tmpstrick = strickgraph.from_gridgraph( tmpgrid, firstrow, \
+                                                    globalstitchinfo )
+        mystrigracont = strigra.strickgraph_container( tmpstrick )
+        from . import plainknit
+        output = plainknit.test_if_strickgraph_is_plainknit( \
+                                                    mystrick=mystrigracont )
+        self.assertEqual( set(("isplainknit",)), output.keys() )
+        plainknitprop = output["isplainknit"]
+
+        from . import plainknit
+        #plainknit.relax_pressure( isrelaxed=output["havepressure"], isplainknit=output["isplainknit"], mystrickgraph=, mymesh= )
+        output = plainknit.relax_tension( isrelaxed = tensionpropcont, \
+                                isplainknit = plainknitprop,\
+                                mystrickgraph = mystrigracont, \
+                                mymesh = tmpmap,\
+                                )
+        self.assertEqual( set(("newstrickgraph",)), output.keys() )
+
+
 
     def test_strickgraphdummy( self ):
         from createcloth.meshhandler import test_src 
@@ -152,25 +178,8 @@ class TestClothfactoryParts( unittest.TestCase ):
         output = meshthings.strickgraph_dummy_from_rand( \
                                     stitchdata=mystitchcont, mymesh=tmpsurf )
         self.assertEqual( output.keys(), set(("roughstrickgraph",)))
+        mystrickgraph = output["roughstrickgraph"]
 
-    def test_plainknit( self ):
-        from . import strickgraph as strigra
-        tmpgrid = netx.grid_2d_graph(10,10)
-        firstrow = [ node for node in tmpgrid.nodes if node[0]==0 ]
-        tmpstrick = strickgraph.from_gridgraph( tmpgrid, firstrow, \
-                                                    globalstitchinfo )
-        mystrigracont = strigra.strickgraph_container( tmpstrick )
-        from . import plainknit
-        output = plainknit.test_if_strickgraph_is_plainknit( \
-                                                    mystrick=mystrigracont )
-        self.assertEqual( set(("isplainknit",)), output.keys() )
-
-
-    def test_plainknitimprover( self ):
-        from . import plainknit
-        plainknit.relax_pressure
-        plainknit.relax_tension
-        #raise Exception()
 
 
     def test_meshhandler( self ):
@@ -203,6 +212,9 @@ class TestClothfactoryParts( unittest.TestCase ):
             mystrigracont.save_to( filepath )
             asd = strigra.strickgraph_container.load_from( filepath )
         self.assertEqual( asd.strickgraph, mystrigracont.strickgraph )
+
+    def test_saveloadstitchdata( self ):
+        raise Exception()
 
 if __name__=="__main__":
     unittest.main()

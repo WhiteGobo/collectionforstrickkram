@@ -47,7 +47,7 @@ del( create_datagraphs )
 def create_datagraphs():
     tmp = datagraph()
     tmp.add_node( "mystrickgraph", strickgraph.strickgraph_container )
-    tmp.add_node( "mymesh", meshthings.mesh_pymesh2 )
+    tmp.add_node( "mymesh", meshthings.ply_surface )
     tmp.add_node( "isrelaxed", strickgraph.strickgraph_property_relaxed )
     tmp.add_node( "isplainknit", strickgraph_property_plainknit )
     tmp.add_edge( "mystrickgraph", "isrelaxed", \

@@ -11,7 +11,7 @@ def create_datagraphs():
     tmp = datagraph()
     tmp.add_node( "mystrick", strickgraph.strickgraph_container )
     tmp.add_node( "positions", strickgraph.strickgraph_spatialdata )
-    tmp.add_edge( "mystrick", "positions", plyford_mesh_handler.stitchposition )
+    tmp.add_edge( "mystrick", "positions", strickgraph.stitchposition )
     prestatus = tmp.copy()
     tmp.add_node( "isrelaxed", strickgraph.strickgraph_property_relaxed )
     tmp.add_node( "havetension", strickgraph.strickgraph_property_relaxed )
