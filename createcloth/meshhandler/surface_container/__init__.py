@@ -3,6 +3,7 @@ import itertools
 from collections import Counter
 from .create_surfacemap import surfacemap
 import numpy as np
+import numpy.linalg
 
 
 class surface():
@@ -13,6 +14,7 @@ class surface():
         self.right = right
         self.down = down
         self.left = left
+
 
     def to_plyfile( self, filepath ):
         #xyzmatrix = [ (ulength,), (vlength,), (x.reshape(x.size),), \
@@ -58,6 +60,31 @@ class surface():
                             rightup_vertex, rightdown_vertex, leftdown_vertex)
 
         return cls( vertex_positions, faces, up, right, down, left )
+
+    def _get_uplengtharray( self ):
+        return self._calc_lengtharray( self.up )
+    uplengtharray = property( fget=_get_uplengtharray )
+    def _get_downlengtharray( self ):
+        return self._calc_lengtharray( self.down )
+    downlengtharray = property( fget=_get_downlengtharray )
+    def _get_rightlengtharray( self ):
+        return self._calc_lengtharray( self.right )
+    rightlengtharray = property( fget=_get_rightlengtharray )
+    def _get_leftlengtharray( self ):
+        return self._calc_lengtharray( self.left )
+    leftlengtharray = property( fget=_get_leftlengtharray )
+        
+
+    def _calc_lengtharray( self, index_arrays ):
+        calc = index_arrays
+        diff_array_indices = [ ( calc[i], calc[i+1] ) \
+                                for i,a in enumerate( calc[:-1] ) ]
+        calc_difference = lambda c: numpy.linalg.norm( \
+                            np.array(self.vertices[c[0]])- self.vertices[c[1]])
+        diff_array = np.array( [calc_difference( ituple ) \
+                                for ituple in diff_array_indices] )
+        l_array = [ sum( diff_array[:i]) for i, tmp in enumerate(diff_array) ]
+        return l_array
 
 
 
