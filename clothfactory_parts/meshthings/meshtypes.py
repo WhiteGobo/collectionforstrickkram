@@ -1,10 +1,5 @@
 from datagraph_factory import datatype, edgetype
 
-_valid_generated_from = lambda: ((ply_2dmap, ply_surface),)
-generated_from = edgetype( _valid_generated_from, \
-                            "generated map from mesh", "")
-
-
 from createcloth.meshhandler.surface_container import surface, surfacemap
 
 class ply_surface( datatype ):
@@ -25,8 +20,10 @@ class ply_surface( datatype ):
 
 
 class ply_2dmap( datatype ):
-    def __init__( self, surfacemap ):
-        self.surfacemap = surfacemap
+    def __init__( self, surfmap ):
+        if type( surfmap ) != surfacemap:
+            raise Exception( "given surfmap is no surfacemap" )
+        self.surfacemap = surfmap
 
     @classmethod
     def load_from( cls, filepath ):

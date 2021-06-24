@@ -1,14 +1,16 @@
 from .meshthings import \
         use_stitchdata_for_construction, \
         strickgraph_fit_to_mesh, \
-        mesh_to_surfacemap, \
-        generated_from, \
         strickgraph_dummy_from_rand, \
         ply_surface, \
-        ply_2dmap
+        ply_2dmap, \
+        mesh_to_surfacemap, \
+        map_to_mesh
 from .physics import \
         relax_strickgraph_on_surface, \
-        test_if_strickgraph_isrelaxed
+        test_if_strickgraph_isrelaxed, \
+        mesh_and_strickgraph_to_mapping_conclusion, \
+        map_for_strickgraph
 from .plainknit import \
         strickgraph_isplainknit, \
         strickgraph_isnotplainknit, \
@@ -26,4 +28,3 @@ from .strickgraph import \
         springs_of_strickgraph_have_pressure, \
         springs_of_strickgraph_are_relaxed, \
         stitchdata_of_strick
-

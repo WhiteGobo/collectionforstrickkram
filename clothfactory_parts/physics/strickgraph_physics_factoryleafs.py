@@ -58,7 +58,6 @@ def call_function( mystrick, positions ):
             hastension.add(i)
         elif overlength < -lengthforextrastitch:
             haspressure.add(i)
-    print( f"\npress: {haspressure}, \n\n tens: {hastension}\n")
     if haspressure and hastension:
         return { "havetension": strickgraph.strickgraph_property_relaxed( \
                                                     tensionrows=hastension), \

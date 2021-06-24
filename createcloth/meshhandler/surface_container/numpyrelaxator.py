@@ -4,6 +4,7 @@ from scipy.ndimage import filters
 def relax_with_numpy( uv_to_xyz, u_array, v_array ):
     from .create_surfacemap import create_surfacemap
     surfmap = create_surfacemap( uv_to_xyz, len( u_array ) , len(v_array) )
+    raise Exception()
     mapdxdu, mapdxdv, mapdydu, mapdydv, mapdzdu, mapdzdv \
             = surfmap.grad_realtomap()
     def surfmap_grad( u, v ):
@@ -21,8 +22,8 @@ def relax_with_numpy( uv_to_xyz, u_array, v_array ):
     #print( uv_grid[0:3,0:3,1], "\n" )
     #for i in range( 100 ):
     #    uv_grid = cycle( uv_grid, surfmap, surfmap_grad )
-    maximal_distance_to_goal, testlength = 1e-1, 20
-    #maximal_distance_to_goal, testlength = 1e-3, 20
+    #maximal_distance_to_goal, testlength = 1e-1, 20
+    maximal_distance_to_goal, testlength = 1e-3, 20
     uv_grid = relax_till( uv_grid, surfmap, surfmap_grad, \
                                 maximal_distance_to_goal, testlength )
     #print( uv_grid[0:3,0:3,1] )

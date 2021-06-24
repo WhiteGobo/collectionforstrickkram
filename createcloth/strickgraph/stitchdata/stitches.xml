@@ -1,4 +1,9 @@
 <stitches xmlns='whitegobosstitchtypes'>
+	<strickdata name="plainknit"
+		stitch="knit"
+		startrow="yarnover"
+		endrow="bindoff"
+	/>
 	<stitchtype name="knit"
 		manualchar="k"
 		upedges="1"

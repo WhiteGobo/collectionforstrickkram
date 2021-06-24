@@ -68,11 +68,9 @@ def call_function( isrelaxed, isplainknit, mystrickgraph, mymesh ):
     tobeextendedrows = isrelaxed.tensionrows
     tmpstrickgraph = mystrickgraph.strickgraph
     try:
-        print("try adding")
         add_columns( tmpstrickgraph, tobeextendedrows )
         return { "newstrickgraph": strickgraph.strickgraph_container( tmpstrickgraph ) }
     except failedOperation as err:
-        print("try extending" )
         extend_columns( tmpstrickgraph, tobeextendedrows )
         return { "newstrickgraph": strickgraph.strickgraph_container( tmpstrickgraph ) }
 relax_tension = factory_leaf( create_datagraphs, call_function, \
@@ -104,11 +102,9 @@ def call_function( isrelaxed, isplainknit, mystrickgraph, mymesh ):
     #newstrickgraph = mystrickgraph.copy()
     tmpstrickgraph = mystrickgraph.strickgraph
     try:
-        print("try removing" )
         remove_columns( tmpstrickgraph, tobeshortendrows )
         return { "newstrickgraph": strickgraph_container( tmpstrickgraph ) }
     except failedOperation as err:
-        print("try insetting")
         extend_columns( tmpstrickgraph, tobeshortenedrows )
         raise Exception() from err
         return None

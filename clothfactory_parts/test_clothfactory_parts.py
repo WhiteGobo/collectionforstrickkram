@@ -1,4 +1,5 @@
 import unittest
+from . import physics
 import pkg_resources as pkr
 #from .strickgraph_datatypes import strickgraph_stitchdata
 from createcloth.strickgraph.load_stitchinfo import myasd as globalstitchinfo
@@ -16,8 +17,11 @@ import itertools
 #from .strickgraph_datatypes import strickgraph_stitchdata, strickgraph_spatialdata, strickgraph_container
 
 from . import __init__ as mainmodule
+
 from . import strickgraph_container, strickgraph_spatialdata, \
             strickgraph_stitchdata
+from . import strickgraph_fit_to_mesh, strickgraph_property_relaxed, springs_of_strickgraph_are_relaxed, strickgraph_property_plainknit,  strickgraph_isplainknit, strickgraph_stitchdata, map_to_mesh, use_stitchdata_for_construction, stitchposition
+
 from . import ply_surface, ply_2dmap
 import importlib.resources
 import tempfile
@@ -55,7 +59,7 @@ class TestClothfactoryParts( unittest.TestCase ):
         #tmp.add_node( "stitchinfo", strickgraph_stitchdata )
         inputgraph = tmp.copy()
         tmp.add_node( "mymesh", mesh_pymesh2 )
-        tmp.add_edge( "mymesh", "filename", generated_from )
+        tmp.add_edge( "mymesh", "filename", map_to_mesh )
         tmp.add_node( "surfacemaps", mesh_2dmap )
         tmp.add_edge( "surfacemaps", "mymesh", map_to_mesh )
         #tmp.add_node( "startstrickgraph", strickgraph_container )
@@ -200,6 +204,7 @@ class TestClothfactoryParts( unittest.TestCase ):
             myfilepath = os.path.join( tmpdir, "asdg" )
             tmpmap.save_as( myfilepath )
 
+
     def test_strickgraphcontainer( self ):
         from . import strickgraph as strigra
         tmpgrid = netx.grid_2d_graph(10,10)
@@ -209,12 +214,110 @@ class TestClothfactoryParts( unittest.TestCase ):
         mystrigracont = strigra.strickgraph_container( tmpstrick )
         with tempfile.TemporaryDirectory() as tmpdir:
             filepath = os.path.join( tmpdir, "tmpfile" )
-            mystrigracont.save_to( filepath )
+            mystrigracont.save_as( filepath )
             asd = strigra.strickgraph_container.load_from( filepath )
         self.assertEqual( asd.strickgraph, mystrigracont.strickgraph )
 
+
     def test_saveloadstitchdata( self ):
-        raise Exception()
+        mystitchinfo = strickgraph_stitchdata( globalstitchinfo, "knit", \
+                                                    "yarnover", "bindoff" )
+        with tempfile.TemporaryDirectory() as tmpdir:
+            filepath = os.path.join( tmpdir, "tmpfile" )
+            mystitchinfo.save_as( filepath )
+            copy_stinfo = strickgraph_stitchdata.load_from( filepath )
+
+
+    def test_completingdatagraph( self ):
+        datatypes, edgetypes, factoryleafs_dict, conclusionleaf_dict \
+                = get_all_datatypes( mainmodule )
+        all_factoryleafs = set( factoryleafs_dict.values() )
+        all_conclusions = set( conclusionleaf_dict.values() )
+
+        flowgraph = create_flowgraph_for_datanodes( all_factoryleafs, \
+                                                        all_conclusions )
+        #from datagraph_factory.visualize import plot_flowgraph
+        #plot_flowgraph( flowgraph )
+        tmp = datagraph()
+
+        tmp.add_node( "mesh", ply_surface )
+        tmp.add_node( "maptomesh", ply_2dmap )
+        tmp.add_node( "strickgraph", strickgraph_container )
+        tmp.add_node( "spat", strickgraph_spatialdata )
+        tmp.add_edge( "strickgraph", "spat", stitchposition )
+        tmp.add_edge( "maptomesh", "mesh", map_to_mesh )
+        tmp.add_edge( "strickgraph", "mesh", strickgraph_fit_to_mesh )
+        tmp.add_edge( "maptomesh", "strickgraph", physics.map_for_strickgraph )
+        tmp.add_node( "isrelaxed" , strickgraph_property_relaxed )
+        tmp.add_node( "isplainknit", strickgraph_property_plainknit )
+        tmp.add_node( "stitchinfo", strickgraph_stitchdata )
+        tmp.add_edge( "stitchinfo", "mesh", use_stitchdata_for_construction )
+        tmp.add_edge( "strickgraph", "isrelaxed", \
+                        springs_of_strickgraph_are_relaxed )
+        tmp.add_edge( "strickgraph", "isplainknit", strickgraph_isplainknit )
+
+        tmp["stitchinfo"] = strickgraph_stitchdata( globalstitchinfo, "knit", \
+                                                    "yarnover", "bindoff" )
+        from createcloth.meshhandler import test_src 
+        with importlib.resources.path( test_src, "tester.ply" ) as filepath:
+            tmpsurf = ply_surface.load_from( filepath )
+        tmp["mesh"] = tmpsurf
+        #with importlib.resources.path( test_src, "tester_surfmap.ply" ) \
+        #                                                        as filepath:
+        #    tmpmap = ply_2dmap.load_from( filepath )
+        #tmp["maptomesh"] = tmpmap
+        from datagraph_factory.automatic_directory.filehandler import \
+                                                    save_graph, load_graph
+        from datagraph_factory.automatic_directory import complete_datagraph
+        from . import meshthings
+        from . import plainknit
+        from . import strickgraph
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            save_graph( tmp, tmpdir, [ meshthings, physics, plainknit, strickgraph] )
+        from datagraph_factory import DataRescueException
+        try:
+            tmp = complete_datagraph( flowgraph, tmp )
+        except DataRescueException as err:
+            mydatarescue( err )
+            raise err
+        #from createcloth.visualizer import plotter
+        #plotter.myvis3d( tmp["spat"].posgraph )
+        with tempfile.TemporaryDirectory() as tmpdir:
+            save_graph( tmp, tmpdir, [ meshthings, physics, plainknit, strickgraph] )
+            #input( tmpdir )
+        self.assertEqual( tmp["strickgraph"].strickgraph.to_manual(globalstitchinfo) , examplestrickman )
+        
+def mydatarescue( err ):
+    from datagraph_factory import DataRescueException
+    from createcloth.verbesserer import StrickgraphVerbessererException
+    print( err.datagraph )
+    print( err.__cause__.args )
+    print("brubru",*( gracon.args for gracon in err.datagraph.values() \
+                if type(gracon) == strickgraph_property_plainknit ))
+    strgras = [ a for a in err.datagraph.values() \
+                if type(a)==strickgraph_container ]
+    strpos = [ a for a in err.datagraph.values() \
+                if type(a)==strickgraph_spatialdata ]
+    from createcloth.visualizer import plotter
+    for tmpstrick_container in strgras:
+        tmpstrick = tmpstrick_container.strickgraph
+        print( tmpstrick.to_manual( globalstitchinfo ) )
+    for tmppos in strpos:
+        plotter.myvis3d( tmppos.posgraph )
+
+    causeerror = err.__cause__
+    if type( causeerror ) == StrickgraphVerbessererException:
+        verb = causeerror.usedverbesserer
+        mystrick = causeerror.usedstrickgraph
+        markednode = causeerror.markednodeinstrickgraph
+        print( mystrick.nodes[markednode] )
+        import traceback
+        print("brubru\n\n\n")
+        traceback.print_exc()
+        verb.print_compare_to_graph_at_position( mystrick, markednode )
+
+examplestrickman = "23yo\n23k\n2k 1yo 19k 1yo 2k\n25k\n25k\n2k 1yo 21k 1yo 2k\n2k 1yo 23k 1yo 2k\n29k\n29k\n29k\n29k\n29k\n29k\n2k 1k2tog 21k 1k2tog 2k\n2k 1k2tog 19k 1k2tog 2k\n25k\n25k\n2k 1k2tog 17k 1k2tog 2k\n23bo"
 
 if __name__=="__main__":
     unittest.main()

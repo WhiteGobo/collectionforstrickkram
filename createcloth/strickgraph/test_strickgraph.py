@@ -3,7 +3,9 @@
 :todo: complete test_findsubgraph
 """
 
+import tempfile
 import unittest
+import importlib.resources
 import networkx as netx
 from . import strickgraph_fromgrid as fromgrid 
 from . import strickgraph_toknitmanual as tomanual
@@ -96,8 +98,41 @@ class TestStringMethods( unittest.TestCase ):
         """
         testing if minimal stitchtype collection is supported
         """
+        stitchinfo = self.stitchinfo
         for stitchtype in ["knit", "yarnover", "bindoff", "k2tog"]:
-            self.assertEqual( True, stitchtype in self.stitchinfo.types )
+            self.assertEqual( True, stitchtype in stitchinfo.types )
+
+        strdat = stitchinfo.strickdata["plainknit"]
+        self.assertEqual( strdat["stitch"], "knit" )
+        self.assertEqual( strdat["startrow"], "yarnover" )
+        self.assertEqual( strdat["endrow"], "bindoff" )
+
+        for stitchtype, symbol, up, down, extrainfo in [\
+                            ("knit", "k", 1,1,{}), \
+                            ("yarnover", "yo",1,0,{}), \
+                            ("bindoff", "bo", 0,1,{}), \
+                            ("k2tog","k2tog",1,2,{}) ]:
+            self.assertEqual( symbol, stitchinfo.symbol[ stitchtype ] )
+            self.assertEqual( up, stitchinfo.upedges[ stitchtype ] )
+            self.assertEqual( down, stitchinfo.downedges[ stitchtype ] )
+            self.assertEqual( extrainfo, stitchinfo.extrainfo[stitchtype])
+
+
+    def test_saveload_stitchdata( self ):
+        from . import stitchdata
+        from .load_stitchinfo import stitchdatacontainer
+        import os.path
+        stitchinfo = self.stitchinfo
+        with tempfile.TemporaryDirectory() as tmpdir:
+            myfilepath = os.path.join( tmpdir, "tmpfile.xml" )
+            stitchinfo.to_xmlfile( myfilepath )
+            loadedstinfo = stitchdatacontainer.from_xmlfile( myfilepath )
+
+        self.assertEqual( self.stitchinfo.symbol, loadedstinfo.symbol )
+        self.assertEqual( self.stitchinfo.upedges, loadedstinfo.upedges )
+        self.assertEqual( self.stitchinfo.downedges, loadedstinfo.downedges )
+        self.assertEqual( self.stitchinfo.extrainfo, loadedstinfo.extrainfo )
+
 
     def test_compare_different_subgraphs( self ):
         graph1 = frommanual( "5yo\n5k\n5k\n5bo", self.stitchinfo )

@@ -15,7 +15,8 @@ def myvis3d( mystrickgraph ):
     y = netx.get_node_attributes( mystrickgraph, "y" )
     z = netx.get_node_attributes( mystrickgraph, "z" )
 
-    graph = mystrickgraph.give_real_graph()
+    #graph = mystrickgraph.give_real_graph()
+    graph = mystrickgraph
 
     myarray = []
     for node in set(mystrickgraph.nodes()).difference(["start", "end"]):
@@ -27,10 +28,13 @@ def myvis3d( mystrickgraph ):
     #length = netx.get_edge_attributes( graph, "tension" )
     length = {}
     for edge in graph.edges():
-        a = (x[edge[0]],z[edge[0]],y[edge[0]])
-        b = (x[edge[1]],z[edge[1]],y[edge[1]])
-        tmp = np.linalg.norm( np.subtract(a, b) )
-        length.update({ edge: tmp })
+        try:
+            a = (x[edge[0]],z[edge[0]],y[edge[0]])
+            b = (x[edge[1]],z[edge[1]],y[edge[1]])
+            tmp = np.linalg.norm( np.subtract(a, b) )
+            length.update({ edge: tmp })
+        except Exception:
+            pass
     listlength = [ value for key, value in length.items() ]
 
     minima, maxima = min( listlength ), max( listlength )

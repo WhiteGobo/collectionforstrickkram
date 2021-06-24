@@ -270,6 +270,16 @@ def inset_columns( mystrickgraph, rows_with_too_much_pressure ):
         raise failedOperation( "extend columns failed" )
 
 
+class InsetError( Exception ):
+    def __init__( self, rowpairs, linepairforinset, linetypes, \
+                            rows_with_too_much_tension, *args ):
+        super().__init__( rowpairs, linepairforinset, linetypes, \
+                            rows_with_too_much_tension, *args )
+        self.rowpairs = rowpairs
+        self.linepairforinset = linepairforinset
+        self.linetypes = linetypes
+        self.rows_with_too_much_tension = rows_with_too_much_tension
+        
 
 def find_row_for_inset( mystrickgraph, rows_with_too_much_tension, \
                                             rows_with_too_much_pressure ):
@@ -288,5 +298,5 @@ def find_row_for_inset( mystrickgraph, rows_with_too_much_tension, \
             insettype = "plane"
         return mylinepairforinset, insettype
     except IndexError as err:
-        err.args = (*err.args, rowpairs, linepairforinset, linetypes )
-        raise err
+        raise InsetError( rowpairs, linepairforinset, linetypes, \
+                            rows_with_too_much_tension, len(mystrickgraph.get_rows()) ) from err

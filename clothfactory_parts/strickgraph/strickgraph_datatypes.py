@@ -20,21 +20,45 @@ class strickgraph_container( datatype ):
                     #manual_type="thread", startside="right", reversed=False )
         return cls( mystrickgraph )
 
-    def save_to( self, filepath, stinfo=globalstitchinfo ):
+    def save_as( self, filepath, stinfo=globalstitchinfo ):
         manualtext = self.strickgraph.to_manual( stinfo )
         with open( filepath, "w" ) as mymanual:
             mymanual.write( manualtext )
 
 class strickgraph_stitchdata( datatype ):
-    def __init__( self, stitchlist, plain_stitch, \
+    def __init__( self, stitchinfo, plain_stitch, \
                     plain_startrow, plain_endrow ):
         self.plain_stitch = plain_stitch
         self.plain_startrow = plain_startrow
         self.plain_endrow = plain_endrow
-        self.stitchlist = stitchlist
+        self.stitchlist = stitchinfo
+        self.stitchinfo = stitchinfo
+    @classmethod
+    def load_from( cls, filepath ):
+        from createcloth.strickgraph.load_stitchinfo import stitchdatacontainer
+        mystitchinfo = stitchdatacontainer.from_xmlfile( filepath )
+        strdat = stitchinfo.strickdata["plainknit"]
+        plain_stitch = strdat["stitch"]
+        plain_startrow = strdat["startrow"]
+        plain_endrow = strdat["endrow"]
+        return cls( mystitchinfo, plain_stitch, plain_startrow, plain_endrow)
+        with open( filepath, "r" ) as file:
+            plain_stitch = file.readline()
+            plain_startrow = file.readline()
+            plain_endrow = file.readline()
+        return cls( globalstitchinfo, plain_stitch, plain_startrow,plain_endrow)
+
+
+    def save_as( self, filepath ):
+        self.stitchinfo.save_toxmlfile( filepath )
+        #with open( filepath, "w" ) as file:
+        #    txt = "\n".join([self.plain_stitch, self.plain_startrow, \
+        #                            self.plain_endrow])
+        #    file.write( txt )
 
 class strickgraph_spatialdata( datatype ):
     def __init__( self, posgraph ):
+        self.posgraph = posgraph
         x_data = netx.get_node_attributes( posgraph, "x" )
         y_data = netx.get_node_attributes( posgraph, "y" )
         z_data = netx.get_node_attributes( posgraph, "z" )

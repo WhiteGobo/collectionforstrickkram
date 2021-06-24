@@ -38,14 +38,6 @@ class TestMeshhandlerMethods( unittest.TestCase ):
             copy_surfmap = surfacemap.from_plyfile( myfilepath )
 
 
-    def test_loadmesh( self ):
-        return
-        filename = pkg_resources.resource_stream( __name__, \
-                                                        "meshfortests.ply" )
-        mesh, edges = load_mesh( filename, lengthfactor=1.5 )
-        self.assertEqual( tuple( edges), (123, 130, 107, 104) )
-        filename.close()
-
     def test_create_surfacemap( self ):
         with importlib.resources.path( test_src, "tester_surfmap.ply" ) as \
                                                                     filepath:
@@ -58,23 +50,6 @@ class TestMeshhandlerMethods( unittest.TestCase ):
                 0.00015575, 0.99217575, 0.0002222500000000037),\
                 rtol=1e-3))
 
-    def test_relax_strickgraph_withdifferenttypes( self ):
-        return
-        filename = pkg_resources.resource_stream( __name__, \
-                                                        "meshfortests.ply" )
-        mygraph = netx.grid_2d_graph( 10,10 )
-        firstrow = [ x for x in mygraph.nodes() if x[0] == 0 ]
-        asd = fromgrid.create_strickgraph_from_gridgraph( mygraph, firstrow, \
-                                                        stinfo )
-
-        datagraph = relax_strickgraph_on_surface( asd, filename, \
-                                                        numba_support=False )
-        mysurfacemap = get_surfacemap( filename )
-        filename.close()
-
-        datagraph = relax_strickgraph_on_surface( asd, mysurfacemap, \
-                                                        numba_support=False )
-
 
     def test_wholerelaxing( self ):
         with importlib.resources.path( test_src, "tester_surfmap.ply" ) as \
@@ -82,9 +57,12 @@ class TestMeshhandlerMethods( unittest.TestCase ):
             mysurfacemap = surfacemap.from_plyfile( filepath )
         #mygraph = netx.grid_2d_graph( 32,32 )
         #for node in mygraph.nodes:
-        #    mygraph.nodes[node]["x"] = mysurfacemap.xyzmatrix[node[0]][node[1]][0]
-        #    mygraph.nodes[node]["y"] = mysurfacemap.xyzmatrix[node[0]][node[1]][1]
-        #    mygraph.nodes[node]["z"] = mysurfacemap.xyzmatrix[node[0]][node[1]][2]
+        #    mygraph.nodes[node]["x"] = mysurfacemap
+        #                                   .xyzmatrix[node[0]][node[1]][0]
+        #    mygraph.nodes[node]["y"] = mysurfacemap
+        #                                    .xyzmatrix[node[0]][node[1]][1]
+        #    mygraph.nodes[node]["z"] = mysurfacemap
+        #                                    .xyzmatrix[node[0]][node[1]][2]
         #myvis3d( mygraph )
         mygraph = netx.grid_2d_graph( 30,30 )
         firstrow = [ x for x in mygraph.nodes() if x[0] == 0 ]
@@ -98,7 +76,8 @@ class TestMeshhandlerMethods( unittest.TestCase ):
 
         no_solution = True
         maximal_error = 1e-6 #this should be caculated
-        # maximal error can be estimated with consideration of strength to movement
+        # maximal error can be estimated with consideration 
+        # of strength to movement
         # and maximal Spiel(german) of each node
         while no_solution:
             myrelaxator = gridrelaxator( gridgraph, mysurfacemap, border )
@@ -118,6 +97,30 @@ class TestMeshhandlerMethods( unittest.TestCase ):
             err.args = ( *err.args, "Calculation was totally off" )
             raise err
 
+    def test_relax_strickgraph_withdifferenttypes( self ):
+        return
+        filename = pkg_resources.resource_stream( __name__, \
+                                                        "meshfortests.ply" )
+        mygraph = netx.grid_2d_graph( 10,10 )
+        firstrow = [ x for x in mygraph.nodes() if x[0] == 0 ]
+        asd = fromgrid.create_strickgraph_from_gridgraph( mygraph, firstrow, \
+                                                        stinfo )
+
+        datagraph = relax_strickgraph_on_surface( asd, filename, \
+                                                        numba_support=False )
+        mysurfacemap = get_surfacemap( filename )
+        filename.close()
+
+        datagraph = relax_strickgraph_on_surface( asd, mysurfacemap, \
+                                                        numba_support=False )
+
+    def test_loadmesh( self ):
+        return
+        filename = pkg_resources.resource_stream( __name__, \
+                                                        "meshfortests.ply" )
+        mesh, edges = load_mesh( filename, lengthfactor=1.5 )
+        self.assertEqual( tuple( edges), (123, 130, 107, 104) )
+        filename.close()
 
 
 def myvis3d( graph ):

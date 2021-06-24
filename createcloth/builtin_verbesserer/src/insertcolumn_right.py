@@ -130,6 +130,12 @@ pairlist = (\
         ("6yo\n6k\n4k 1kmark 1k\n4k 1yo 2k\n7k\n3k 1k2tog 2k\n6bo", \
         "6yo\n6k\n4k 1yo 1kmark 1k\n4k 1k 2k\n7k\n3k 1k2tog 2k\n6bo"), \
         \
+        ("5yo\n5k\n3k 1yo 2k\n2k 1k2tog 1kmark 1k\n5bo", \
+        "5yo\n5k\n3k 1yo 2k\n4k 1kmark 1k\n2bo 1b2o 2bo"), \
+        \
+        ("7yo\n7k\n3k 1k2tog 1kmark 1k\n4k 1yo 2k\n7k\n7bo", \
+        "7yo\n7k\n5k 1kmark 1k\n7k\n7k\n7bo"), \
+        \
         )
 
 

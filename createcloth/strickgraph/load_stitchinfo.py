@@ -14,16 +14,13 @@ extra stitchtypes can be imported via xml(not implemented yet)
 :todo: importing stitches should possible contain prepacked and local files
 """
 import xml.etree.ElementTree as _ET
-import xml.etree.ElementTree as brubru
 import pkg_resources
+import importlib.resources
 import io as __io
-def __sum_all_edges( stitchtype ):
-    return 2+ int( stitchtype.get( "upedges" ) ) \
-            + int( stitchtype.get( "downedges" ) )
 
 namespace = "whitegobosstitchtypes"
 
-class stitchdata():
+class _singlestitchdata():
     def __init__( self, stitchelement ):
         self.stitchelement = stitchelement
 
@@ -48,64 +45,102 @@ class stitchdata():
     sumedges = property( fget = _get_sumedges )
 
     def _get_extrainfo( self ):
-        tmpextras = self.stitchelement.findall("{" + namespace + "}extraoption")
+        tmpextras = self.stitchelement.findall( "{%s}extraoption"% (namespace) )
         tmpstitchextras = {}
         for extra in tmpextras:
             tmpstitchextras.update({ extra.get("key"): extra.get("value")})
         return tmpstitchextras
     extrainfo = property( fget = _get_extrainfo )
 
+class _strickdata():
+    def __init__( self, strickresources ):
+        self.strickresources = strickresources
+        #strickresources.get
+
+    def _get_name( self ):
+        return self.strickresources.get( "name" )
+    name = property( fget=_get_name )
+
+    def keys( self ):
+        return self.strickresources.keys()
+    def __contains__( self, key ):
+        return key in self.strickresources.keys()
+        pass
+    def __getitem__( self, key ):
+        return self.strickresources.get( key )
+    #def __setitem__( self, key, attribute ):
+    #    pass
+
 
 class stitchdatacontainer():
     def __init__( self, myresources ):
-
         if myresources == None:
             myresources = _ET.Element("myresources")
         self.myresources = myresources
-        #self._symbol = symbol
-        #self._types = types
-        #self._upedges = upedges
-        #self._downedges = downedges
-        #self._extrainfo = extrainfo
 
-    def get_symbol( self ):
-        stitchinfo = list( myresources.iter( "{" + namespace + "}stitchtype" ) )
-        mylist = [ stitchdata( stelement ) for stelement in stitchinfo ]
+
+    def _get_strickdata( self ):
+        stitchinfo =list( self.myresources.iter( "{"+namespace +"}strickdata"))
+        mylist = [ _strickdata( stelement ) for stelement in stitchinfo ]
+        mydict = { stdata.name: stdata for stdata in mylist }
+        return mydict
+        #return self._symbol
+    strickdata = property( fget = _get_strickdata )
+
+
+    @classmethod
+    def from_xmlfile( cls, filepath ):
+        root = _ET.parse( filepath )#.getroot()
+        #for i in root.findall( "{" + namespace + "}stitches" ):
+            #print( "a",i)
+        #for i in root.iter( "{" + namespace + "}stitchtype" ):
+        #for i in root.findall( "{" + namespace + "}stitchtype" ):
+        #    print( i.get("name"))
+        return cls( root )
+
+    def to_xmlfile( self, filepath ):
+        _ET.register_namespace( "stitchdata", namespace )
+        self.myresources.write( filepath )
+
+    def _get_symbol( self ):
+        stitchinfo =list( self.myresources.iter( "{"+namespace +"}stitchtype"))
+        mylist = [ _singlestitchdata( stelement ) for stelement in stitchinfo ]
         mydict = { stdata.name: stdata.symbol for stdata in mylist }
         return mydict
         #return self._symbol
-    symbol = property( fget = get_symbol )
+    symbol = property( fget = _get_symbol )
 
-    def get_types( self ):
-        stitchinfo = list( myresources.iter( "{" + namespace + "}stitchtype" ) )
-        mylist = tuple(stitchdata( stelement ).name for stelement in stitchinfo)
+    def _get_types( self ):
+        stitchinfo = list( self.myresources.iter( "{"+namespace+"}stitchtype" ))
+        mylist = tuple(_singlestitchdata( stelement ).name \
+                        for stelement in stitchinfo)
         return mylist
         #return self._types
-    types = property( fget = get_types )
+    types = property( fget = _get_types )
 
-    def get_upedges( self ):
-        stitchinfo = list( myresources.iter( "{" + namespace + "}stitchtype" ) )
-        mylist = [ stitchdata( stelement ) for stelement in stitchinfo ]
+    def _get_upedges( self ):
+        stitchinfo = list( self.myresources.iter( "{"+namespace+"}stitchtype" ))
+        mylist = [ _singlestitchdata( stelement ) for stelement in stitchinfo ]
         mydict = { stdata.name: stdata.upedges for stdata in mylist }
         return mydict
         #return self._upedges
-    upedges = property( fget = get_upedges )
+    upedges = property( fget = _get_upedges )
 
-    def get_downedges( self ):
-        stitchinfo = list( myresources.iter( "{" + namespace + "}stitchtype" ) )
-        mylist = [ stitchdata( stelement ) for stelement in stitchinfo ]
+    def _get_downedges( self ):
+        stitchinfo = list( self.myresources.iter( "{"+namespace+"}stitchtype" ))
+        mylist = [ _singlestitchdata( stelement ) for stelement in stitchinfo ]
         mydict = { stdata.name: stdata.downedges for stdata in mylist }
         return mydict
         #return self._downedges
-    downedges = property( fget = get_downedges )
+    downedges = property( fget = _get_downedges )
 
-    def get_extrainfo( self ):
-        stitchinfo = list( myresources.iter( "{" + namespace + "}stitchtype" ) )
-        mylist = [ stitchdata( stelement ) for stelement in stitchinfo ]
+    def _get_extrainfo( self ):
+        stitchinfo = list( self.myresources.iter( "{"+namespace+"}stitchtype" ))
+        mylist = [ _singlestitchdata( stelement ) for stelement in stitchinfo ]
         mydict = { stdata.name: stdata.extrainfo for stdata in mylist }
         return mydict
         #return self._extrainfo
-    extrainfo = property( fget = get_extrainfo )
+    extrainfo = property( fget = _get_extrainfo )
 
 
     def add_additional_xmlresources( self, xmlstring ):
@@ -113,6 +148,9 @@ class stitchdatacontainer():
 
     def _update_resources():
         raise Exception()
+        def __sum_all_edges( stitchtype ):
+            return 2+ int( stitchtype.get( "upedges" ) ) \
+                    + int( stitchtype.get( "downedges" ) )
         stitchinfo = list( myresources.iter( "{" + namespace + "}stitchtype" ))
 
         types = [ stitchtype.get( "name" ) for stitchtype in __stitchinfo ]
@@ -129,7 +167,8 @@ class stitchdatacontainer():
                         for stitchtype in __stitchinfo }
         extrainfo = {}
         for stitchinfo in __stitchinfo:
-            tmpextras = stitchinfo.findall("{" + namespace + "}extraoption")
+            #tmpextras = stitchinfo.findall("{" + namespace + "}extraoption")
+            tmpextras = stitchinfo.findall( "extraoption", namespace )
             tmpstitchextras = {}
             for extra in tmpextras:
                 tmpstitchextras.update({ extra.get("key"): extra.get("value")})
@@ -145,97 +184,6 @@ class stitchdatacontainer():
         self.myresources.append(_ET.fromstring( xml_string ))
 
 
-def main():
-    global namespace
-    global myresources
-    global __stitchinfo
-
-    myresources = _ET.Element("myresources")
-
-    stream = pkg_resources.resource_stream( __name__,"stitchdata/stitches.xml")
-    #__stitchinfo = _ET.parse( stream ).getroot()
-    #myresources.append(_ET.parse( stream ).getroot())
-
-    add_additional_resources( stream )
-    stream.close()
-    #__stitchinfo = _ET.parse("stitches.xml").getroot()
-
-    update_data()
-
-
-
-def update_data():
-    global types
-    global edges
-    global upedges
-    global downedges
-    global symbol
-    global extrainfo
-
-    types = [ stitchtype.get( "name" ) for stitchtype in __stitchinfo ]
-
-    edges = { stitchtype.get( "name" ):__sum_all_edges(stitchtype) \
-                    for stitchtype in __stitchinfo }
-    upedges = { stitchtype.get( "name" ):int( stitchtype.get( "upedges" ) )
-                    for stitchtype in __stitchinfo }
-    downedges = { stitchtype.get( "name" ):int( stitchtype.get( "downedges" ) )
-                    for stitchtype in __stitchinfo }
-    symbol = { stitchtype.get( "name" ):stitchtype.get( "manualchar" )
-                    for stitchtype in __stitchinfo }
-    extrainfo = {}
-    for stitchinfo in __stitchinfo:
-        tmpextras = stitchinfo.findall("{" + namespace + "}extraoption")
-        tmpstitchextras = {}
-        for extra in tmpextras:
-            tmpstitchextras.update({ extra.get("key"): extra.get("value") })
-        extrainfo.update({ stitchinfo.get("name"): tmpstitchextras })
-
-
-    #extrainfo = { stitchtype.get( "name" ):{}
-    #                for stitchtype in __stitchinfo }
-
-def add_additional_resources( xml ):
-    """
-    :type xml: see _addition_resources_functiondict.keys()
-    """
-    global __stitchinfo
-    _addition_resources_functiondict[ type(xml) ]( xml )
-    __stitchinfo = list( myresources.iter( "{" + namespace + "}stitchtype" ) )
-    update_data()
-
-
-def _add_additional_resources_bufferedReader( xml ):
-    """
-    :type xml: __io.BufferedReader
-    """
-    myresources.append(_ET.parse( xml ).getroot())
-_addition_resources_functiondict={ \
-                __io.BufferedReader:_add_additional_resources_bufferedReader }
-def _add_additional_resources_TextIOWrapper( xml ):
-    """
-    :type xml: __io.TextIOWrapper
-    """
-    myresources.append(_ET.parse( xml ).getroot())
-_addition_resources_functiondict.update({ \
-                __io.TextIOWrapper:_add_additional_resources_TextIOWrapper })
-
-def _add_additional_resources_string( xml ):
-    """
-    :type xml: str
-    """
-    myresources.append( _ET.fromstring( xml ) )
-_addition_resources_functiondict.update({\
-                str: _add_additional_resources_string })
-
-
-happendtest = False
-try:
-    happend
-except NameError:
-    happend = None
-    happendtest = True
-if happendtest:
-    main()
-
-
-myasd = stitchdatacontainer( myresources )
+from . import stitchdata
+with importlib.resources.path( stitchdata, "stitches.xml" ) as filepath:
+    myasd = stitchdatacontainer.from_xmlfile( filepath )
