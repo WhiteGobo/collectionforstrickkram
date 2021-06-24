@@ -1,0 +1,3 @@
+[submodule "createcloth/meshhandler/PlySurfaceHandler"]
+	path = createcloth/meshhandler/PlySurfaceHandler
+	url = https://github.com/WhiteGobo/PlySurfaceHandler.git
