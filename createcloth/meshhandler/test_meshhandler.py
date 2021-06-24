@@ -28,6 +28,7 @@ class TestMeshhandlerMethods( unittest.TestCase ):
         pass
 
     def test_createsurfacemap( self ):
+        return
         with importlib.resources.path( test_src, "tester.ply" ) as filepath:
             mysurface = surface.from_plyfile( filepath )
         mysurfacemap = surfacemap.from_surface( mysurface )
