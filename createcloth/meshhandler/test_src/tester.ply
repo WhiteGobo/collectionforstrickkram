@@ -9,7 +9,7 @@ property float ny
 property float nz
 element face 244
 property list uchar uint vertex_indices
-element rand 1
+element cornerrectangle 1
 property uint rightup
 property uint leftup
 property uint leftdown

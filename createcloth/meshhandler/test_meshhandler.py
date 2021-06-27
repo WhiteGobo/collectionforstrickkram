@@ -21,6 +21,8 @@ import tempfile
 from .surface_container import surface, \
                         surfacemap
 
+from . import PlySurfaceHandler
+
 class TestMeshhandlerMethods( unittest.TestCase ):
     def setUp( self ):
         self.testmeshfilename = "meshfortests.ply"
@@ -28,15 +30,21 @@ class TestMeshhandlerMethods( unittest.TestCase ):
         pass
 
     def test_createsurfacemap( self ):
-        return
         with importlib.resources.path( test_src, "tester.ply" ) as filepath:
-            mysurface = surface.from_plyfile( filepath )
-        mysurfacemap = surfacemap.from_surface( mysurface )
+            #mysurface = surface.from_plyfile( filepath )
+            q = PlySurfaceHandler.plysurfacehandler.load_from_file( filepath )
+        #mysurfacemap = surfacemap.from_surface( mysurface )
+        #surfmap = q.create_surfacemap( 0 )
+        q.complete_surfaces_with_map()
+        mysurfacemap = q.get_surface( 0 ).get_surfacemap()
+        mysurfacemap.visualize_with_matplotlib()
 
         with tempfile.TemporaryDirectory() as tmpdir:
             myfilepath = os.path.join( tmpdir, "surfmap.ply" )
-            mysurfacemap.to_plyfile( myfilepath )
-            copy_surfmap = surfacemap.from_plyfile( myfilepath )
+            q.save_to_file( myfilepath )
+            #mysurfacemap.to_plyfile( myfilepath )
+            #copy_surfmap = surfacemap.from_plyfile( myfilepath )
+
 
 
     def test_create_surfacemap( self ):
@@ -53,9 +61,14 @@ class TestMeshhandlerMethods( unittest.TestCase ):
 
 
     def test_wholerelaxing( self ):
-        with importlib.resources.path( test_src, "tester_surfmap.ply" ) as \
+        #with importlib.resources.path( test_src, "tester_surfmap.ply" ) as \
+        #                                                            filepath:
+        #    mysurfacemap = surfacemap.from_plyfile( filepath )
+        with importlib.resources.path( test_src, "surfmap.ply" ) as \
                                                                     filepath:
-            mysurfacemap = surfacemap.from_plyfile( filepath )
+            q = PlySurfaceHandler.plysurfacehandler.load_from_file( filepath )
+        mysurfacemap = q.get_surface( 0 ).get_surfacemap()
+        mysurfacemap.visualize_with_matplotlib()
         #mygraph = netx.grid_2d_graph( 32,32 )
         #for node in mygraph.nodes:
         #    mygraph.nodes[node]["x"] = mysurfacemap
@@ -71,6 +84,17 @@ class TestMeshhandlerMethods( unittest.TestCase ):
                                                         firstrow, \
                                                         stinfo )
 
+        from .new_gridrelaxator import relax_gridgraph
+        border = gridgraph.get_borders()
+        positions = relax_gridgraph( gridgraph, mysurfacemap )
+        netx.set_node_attributes( gridgraph, positions )
+
+        from ..visualizer import myvis3d
+        myvis3d( gridgraph )
+        asdf = [ (v, data) for v, data in gridgraph.nodes( data=True )  if "x" not in data ]
+        print( asdf )
+
+        return 
 
         default_length = 0.1
         border = gridgraph.get_borders()

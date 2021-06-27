@@ -15,6 +15,31 @@ LENGTHDEFAULT = 0.003
 
 from ..physicalhelper.edgelength_helper import standardthreadinfo
 
+class surfacemap_compatibility_layer():
+    def __init__( self, surfacemap ):
+        self.surfacemap = surfacemap
+        umin, umax = 0, 1
+        vmin, vmax = 0, 1
+
+    def __call__( self, u, v ):
+        surfacemap.get_pos
+
+    def singularmaps( self ):
+        pass
+
+    def grad_realtomap( self ):
+        pass
+
+    def grad_maxdistance( self ):
+        pass
+
+    def calc_max_distance_with_grad( self, data_x, data_y, data_z, \
+                                                    u_array, v_array ):
+        pass
+
+    
+
+
 class gridrelaxator():
     """
     :todo: include physicalhelper for edgelength
