@@ -1,7 +1,7 @@
 import networkx as netx
 from typing import Tuple, Callable, Hashable, Dict
 from scipy.optimize import minimize
-from scipy.sparse import lil_matrix
+from scipy.sparse import lil_matrix, dok_matrix
 from scipy.sparse.linalg import spsolve
 import numpy as np
 from itertools import chain
@@ -61,9 +61,9 @@ def relax_gridgraph( gridgraph:strickgraph, surfacemap ) \
                                 if i not in variablenodes )
     maxindex = max( v.maxindex for v in vertice_indexcontainer_list )
     params = np.zeros( ( maxindex+1, ) )
-    for pos, v in zip( vertice_positions, vertice_indexcontainer_list ):
-        params[ v.u_index ] = pos[ 0 ]
-        params[ v.v_index ] = pos[ 1 ]
+    for v in vertice_indexcontainer_list:
+        i = v.vertexindex
+        params[ v.u_index ], params[ v.v_index ] = vertice_positions[ i ]
     energy, grad_energy_to_params = _get_minimize_function_springenergy(\
                                     vertice_indexcontainer_list, \
                                     vertice_indexcontainer_list_border, \
@@ -72,12 +72,11 @@ def relax_gridgraph( gridgraph:strickgraph, surfacemap ) \
                                     surfacemap )
 
     mybounds = [(0,1)]*len(params)
-    foundparams = minimize( energy, params, #jac = grad_energy_to_params, \
+    foundparams = minimize( energy, params, jac = grad_energy_to_params, \
                                         bounds=mybounds, \
                                         options={ 'gtol':1e-8, 'disp':False },\
                                         )
     foundparams = foundparams.x
-    foundparams = params
     foundpositions = {}
     #for i, v in enumerate( graphnodes_list ):
     for vertice_indices in vertice_indexcontainer_list:
@@ -88,9 +87,9 @@ def relax_gridgraph( gridgraph:strickgraph, surfacemap ) \
         x, y, z = surfacemap.get_value_to_st( s, t )
         data = {}
         foundpositions[ v ] = data
-        data["x"] = 0*x
-        data["y"] = 0*y
-        data["z"] = 0*z
+        data["x"] = x
+        data["y"] = y
+        data["z"] = z
     for vertice_indices in vertice_indexcontainer_list_border:
         i = vertice_indices.vertexindex
         s, t = vertice_positions[ i ]
@@ -112,19 +111,15 @@ def estimate_startpositions( number_vertices, edges_list, \
     max_up_index = len( border_up ) - 1
     for i, vindex in enumerate( border_up ):
         startpositions[ vindex ] = ( i/max_up_index, 1 )
-        print( ( i/max_up_index, 1 ) )
     max_down_index = len( border_down ) - 1
     for i, vindex in enumerate( border_down ):
         startpositions[ vindex ] = ( i/max_down_index, 0 )
-        print(( i/max_down_index, 0 ))
     max_left_index = len( border_left )-1
     for i, vindex in enumerate( border_left ):
         startpositions[ vindex ] = ( 0, i/max_left_index )
-        print( i/max_left_index )
     max_right_index = len( border_right )-1
     for i, vindex in enumerate( border_right ):
         startpositions[ vindex ] = ( 1, i/max_right_index )
-        print( i/max_right_index )
 
     interaction_matrix = lil_matrix( (number_vertices, number_vertices) )
     for v1, v2 in edges_list:
@@ -164,9 +159,12 @@ def _get_minimize_function_springenergy( \
     """
     if not len(vertice_list) + len(vertice_list_border) == len(startpositions):
         raise Exception( "sourcecode error, got different length",\
-                len(vertice_list), len(vertice_list_border), len(startpositions))
+                            len(vertice_list), len(vertice_list_border), \
+                            len(startpositions))
     if not len( edges) == len(edgelength):
         raise Exception( "sourcecode error, got different length" )
+    len_allvertices = len(vertice_list) + len(vertice_list_border)
+    len_params = len( vertice_list ) * 2
     default_position_xyz = np.zeros((len(startpositions),3))
     for v in chain( vertice_list, vertice_list_border ):
         i = v.vertexindex
@@ -183,7 +181,6 @@ def _get_minimize_function_springenergy( \
         matrix_posxyz_to_edgexyz[ edge_index, v1 ] = 1
         matrix_posxyz_to_edgexyz[ edge_index, v2 ] = -1
     def foo( params ):
-        return  0
         position_xyz = np.array( default_position_xyz )
         for vert in vertice_list:
             u = params[ vert.u_index ]
@@ -194,22 +191,34 @@ def _get_minimize_function_springenergy( \
         edge_lengths_square = np.square( np.linalg.norm( edge_xyz, axis=1 ) )
         q = sum( edge_lengths_square )
         return q
+    matrix_u_array_to_params = dok_matrix((len_allvertices, len_params))
+    matrix_v_array_to_params = dok_matrix((len_allvertices, len_params))
+    for vert in vertice_list:
+        i = vert.vertexindex
+        u = vert.u_index
+        v = vert.v_index
+        matrix_u_array_to_params[ i, u ] = 1
+        matrix_v_array_to_params[ i, v ] = 1
+    matrix_u_array_to_params = matrix_u_array_to_params.tocsr()
+    matrix_v_array_to_params = matrix_v_array_to_params.tocsr()
+
     def grad_foo( params ):
         position_xyz = np.array( default_position_xyz )
-        dxyz_dst = np.zeros( (len(vertice_list), 3, 2) )
+        dxyz_dst = np.zeros( (len(startpositions), 2, 3) )
         for vert in vertice_list:
             u = params[ vert.u_index ]
             v = params[ vert.v_index ]
             x, y, z = surfacemap.get_value_to_st( u, v )
             position_xyz[ vert.vertexindex, : ] = (x, y, z)
             dxyz_dst[ vert.vertexindex, :, : ] \
-                            = surfacemap.get_transmatrix_dxyz_to_dst( u, v )
+                            = surfacemap.get_derivate_to_st( u, v )
         edge_xyz = matrix_posxyz_to_edgexyz * position_xyz
-        edge_lengths = np.linalg.norm( edge_xyz, axis=1 )
-        dq_dst = edge_lengths.reshape( (*edge_lengths.shape, 1) )\
-                * (edge_xyz * dxyz_dst)
-        raise Exception( dq_dst )
-        return dq_dst
+        asd = edge_xyz.T * matrix_posxyz_to_edgexyz
+        a = np.sum( dxyz_dst[:,0,:] * asd.T, axis = 1 )
+        b = np.sum( dxyz_dst[:,1,:] * asd.T, axis = 1 )
+        gradparams = a * matrix_u_array_to_params
+        gradparams += b * matrix_v_array_to_params
+        return gradparams
 
     return foo, grad_foo
 

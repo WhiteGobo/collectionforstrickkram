@@ -37,13 +37,14 @@ class TestMeshhandlerMethods( unittest.TestCase ):
         #surfmap = q.create_surfacemap( 0 )
         q.complete_surfaces_with_map()
         mysurfacemap = q.get_surface( 0 ).get_surfacemap()
-        mysurfacemap.visualize_with_matplotlib()
+        #mysurfacemap.visualize_with_matplotlib()
 
         with tempfile.TemporaryDirectory() as tmpdir:
             myfilepath = os.path.join( tmpdir, "surfmap.ply" )
             q.save_to_file( myfilepath )
             #mysurfacemap.to_plyfile( myfilepath )
             #copy_surfmap = surfacemap.from_plyfile( myfilepath )
+            input()
 
 
 
@@ -68,7 +69,6 @@ class TestMeshhandlerMethods( unittest.TestCase ):
                                                                     filepath:
             q = PlySurfaceHandler.plysurfacehandler.load_from_file( filepath )
         mysurfacemap = q.get_surface( 0 ).get_surfacemap()
-        mysurfacemap.visualize_with_matplotlib()
         #mygraph = netx.grid_2d_graph( 32,32 )
         #for node in mygraph.nodes:
         #    mygraph.nodes[node]["x"] = mysurfacemap
@@ -78,7 +78,7 @@ class TestMeshhandlerMethods( unittest.TestCase ):
         #    mygraph.nodes[node]["z"] = mysurfacemap
         #                                    .xyzmatrix[node[0]][node[1]][2]
         #myvis3d( mygraph )
-        mygraph = netx.grid_2d_graph( 30,30 )
+        mygraph = netx.grid_2d_graph( 30, 30 )
         firstrow = [ x for x in mygraph.nodes() if x[0] == 0 ]
         gridgraph = fromgrid.create_strickgraph_from_gridgraph( mygraph, \
                                                         firstrow, \
@@ -89,38 +89,18 @@ class TestMeshhandlerMethods( unittest.TestCase ):
         positions = relax_gridgraph( gridgraph, mysurfacemap )
         netx.set_node_attributes( gridgraph, positions )
 
-        from ..visualizer import myvis3d
-        myvis3d( gridgraph )
-        asdf = [ (v, data) for v, data in gridgraph.nodes( data=True )  if "x" not in data ]
-        print( asdf )
+        if False:
+            from ..visualizer import myvis3d
+            myvis3d( gridgraph )
 
         return 
-
-        default_length = 0.1
-        border = gridgraph.get_borders()
-
-        no_solution = True
-        maximal_error = 1e-6 #this should be caculated
-        # maximal error can be estimated with consideration 
-        # of strength to movement
-        # and maximal Spiel(german) of each node
-        while no_solution:
-            myrelaxator = gridrelaxator( gridgraph, mysurfacemap, border )
-            myrelaxator.relax()
-
-            no_solution = False
-        returngraph = myrelaxator.get_positiongrid()
-        xdict = netx.get_node_attributes( returngraph, "x" )
-        nodes = sorted( set(xdict.keys()).difference(("start", "end")) )
-        xpos = [ xdict[n] for n in nodes ]
-        #myvis3d( returngraph )
-        #print( ",".join("%.3f" %(x) for x in xpos ) )
         try:
             tmpbool = np.allclose( xpos, testdings, atol=0.1 )
             self.assertTrue( tmpbool )
         except AssertionError as err:
             err.args = ( *err.args, "Calculation was totally off" )
             raise err
+
 
     def test_relax_strickgraph_withdifferenttypes( self ):
         return
