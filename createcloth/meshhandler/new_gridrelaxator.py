@@ -6,6 +6,7 @@ from scipy.sparse.linalg import spsolve
 import numpy as np
 from itertools import chain
 from ..strickgraph import strickgraph
+from .PlySurfaceHandler import plysurfacehandler
 
 def uniqueindex_generator():
     i = 0
@@ -25,8 +26,8 @@ class vertice_param_position_container():
         self.maxindex = max( self.u_index, self.v_index )
 
 
-def relax_gridgraph( gridgraph:strickgraph, surfacemap ) \
-                                                        -> Dict[ int, Dict ]:
+def relax_gridgraph( gridgraph:strickgraph, surfacemap: plysurfacehandler ) \
+                                                    -> Dict[ Hashable, Dict ]:
     border = gridgraph.get_borders()
     gridgraph = gridgraph.give_real_graph()
     graphnodes_list: list[ Hashable ]

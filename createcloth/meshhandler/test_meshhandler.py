@@ -5,8 +5,9 @@ import networkx as netx
 import numpy as np
 import tempfile
 
-from . import PlySurfaceHandler
-from .new_gridrelaxator import relax_gridgraph
+#from . import PlySurfaceHandler
+from ..meshhandler import plysurfacehandler, relax_gridgraph
+#from .new_gridrelaxator import relax_gridgraph
 from . import test_src
 
 from ..strickgraph import strickgraph_fromgrid as fromgrid
@@ -19,7 +20,8 @@ class TestMeshhandlerMethods( unittest.TestCase ):
 
     def test_createsurfacemap( self ):
         with importlib.resources.path( test_src, "tester.ply" ) as filepath:
-            q = PlySurfaceHandler.plysurfacehandler.load_from_file( filepath )
+            #q = PlySurfaceHandler.plysurfacehandler.load_from_file( filepath )
+            q = plysurfacehandler.load_from_file( filepath )
         #mysurfacemap = surfacemap.from_surface( mysurface )
         #surfmap = q.create_surfacemap( 0 )
         q.complete_surfaces_with_map()
@@ -35,7 +37,8 @@ class TestMeshhandlerMethods( unittest.TestCase ):
 
     def test_wholerelaxing( self ):
         with importlib.resources.path( test_src, "surfmap.ply" ) as filepath:
-            q = PlySurfaceHandler.plysurfacehandler.load_from_file( filepath )
+            #q = PlySurfaceHandler.plysurfacehandler.load_from_file( filepath )
+            q = plysurfacehandler.load_from_file( filepath )
         mysurfacemap = q.get_surface( 0 ).get_surfacemap()
         mygraph = netx.grid_2d_graph( 30, 30 )
         firstrow = [ x for x in mygraph.nodes() if x[0] == 0 ]
