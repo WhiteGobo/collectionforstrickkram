@@ -286,6 +286,8 @@ class TestClothfactoryParts( unittest.TestCase ):
         with tempfile.TemporaryDirectory() as tmpdir:
             save_graph( tmp, tmpdir, [ meshthings, physics, plainknit, strickgraph] )
             #input( tmpdir )
+        #from createcloth.visualizer import plotter
+        #plotter.myvis3d( tmp["spat"].posgraph )
         self.assertEqual( tmp["strickgraph"].strickgraph.to_manual(globalstitchinfo) , examplestrickman )
         
 def mydatarescue( err ):
@@ -317,7 +319,8 @@ def mydatarescue( err ):
         traceback.print_exc()
         verb.print_compare_to_graph_at_position( mystrick, markednode )
 
-examplestrickman = "23yo\n23k\n2k 1yo 19k 1yo 2k\n25k\n25k\n2k 1yo 21k 1yo 2k\n2k 1yo 23k 1yo 2k\n29k\n29k\n29k\n29k\n29k\n29k\n2k 1k2tog 21k 1k2tog 2k\n2k 1k2tog 19k 1k2tog 2k\n25k\n25k\n2k 1k2tog 17k 1k2tog 2k\n23bo"
+examplestrickman = "20yo\n20k\n2k 1yo 16k 1yo 2k\n2k 1yo 18k 1yo 2k\n24k\n2k 1yo 20k 1yo 2k\n26k\n2k 1yo 22k 1yo 2k\n28k\n2k 1yo 24k 1yo 2k\n30k\n30k\n30k\n30k\n30k\n30k\n30k\n2k 1k2tog 22k 1k2tog 2k\n28k\n2k 1k2tog 20k 1k2tog 2k\n26k\n2k 1k2tog 18k 1k2tog 2k\n24k\n2k 1k2tog 16k 1k2tog 2k\n2k 1k2tog 14k 1k2tog 2k\n20bo"
+
 
 if __name__=="__main__":
     unittest.main()

@@ -15,11 +15,11 @@ def uniqueindex_generator():
         i = i+1
 
 class vertice_param_position_container():
-    nextindex = iter( uniqueindex_generator() )
-    def __init__( self, vertexindex ):
+    def __init__( self, vertexindex, indexgenerator ):
+        nextindex = indexgenerator
         self.vertexindex = vertexindex
-        self.u_index = self.nextindex.__next__()
-        self.v_index = self.nextindex.__next__()
+        self.u_index = nextindex.__next__()
+        self.v_index = nextindex.__next__()
         #self.x_index = nextindex.__next__()
         #self.y_index = nextindex.__next__()
         #self.z_index = nextindex.__next__()
@@ -53,11 +53,13 @@ def relax_gridgraph( gridgraph:strickgraph, surfacemap: plysurfacehandler ) \
     vertice_positions = estimate_startpositions( len(graphnodes_list), \
                                                         edges_list, up, left, \
                                                         down, right )
-    vertice_indexcontainer_list = list( vertice_param_position_container(i) \
+    nextindex = iter( uniqueindex_generator() )
+    vertice_indexcontainer_list = list( \
+                                vertice_param_position_container(i, nextindex) \
                                 for i in range(len( vertice_positions )) \
                                 if i in variablenodes )
     vertice_indexcontainer_list_border = list( \
-                                vertice_param_position_container(i) \
+                                vertice_param_position_container(i, nextindex) \
                                 for i in range(len( vertice_positions )) \
                                 if i not in variablenodes )
     maxindex = max( v.maxindex for v in vertice_indexcontainer_list )

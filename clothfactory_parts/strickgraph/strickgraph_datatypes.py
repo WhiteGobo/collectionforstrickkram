@@ -1,6 +1,6 @@
 from datagraph_factory.datagraph import datatype, edgetype
 from datagraph_factory.processes import DATATYPE, EDGETYPE
-from createcloth.meshhandler.main import add_edgelength
+#from createcloth.meshhandler.main import add_edgelength
 import networkx as netx
 from createcloth.strickgraph import strickgraph as strickgraph_class
 from createcloth.strickgraph.load_stitchinfo import myasd as globalstitchinfo
@@ -67,7 +67,8 @@ class strickgraph_spatialdata( datatype ):
         self._zdict = z_data
 
         default_length = 0.1
-        add_edgelength( posgraph, default_length )
+        #raise Exception( "must include add_edgelength" )
+        #add_edgelength( posgraph, default_length )
         nodetopairset = lambda x,y, d: frozenset((x,y))
         tmp = netx.get_edge_attributes( posgraph, "currentlength" )
         self.edgelengthdict = { nodetopairset(*key) : value \

@@ -4,8 +4,10 @@ from extrasfornetworkx import weisfeiler_lehman_graph_hash_multidigraph
 from .constants import machine_terms, handknitting_terms, WrongTermError
 import itertools
 from collections import Counter
+from typing import Dict, Hashable
 from . import strickgraph_fromgrid as fromgrid 
 from . import strickgraph_toknitmanual as toknitmanual
+import numpy as np
 
 from .strickgraph_helper import separate_to_rows
 
@@ -18,6 +20,24 @@ class strickgraph( _netx.MultiDiGraph ):
     def from_gridgraph( cls, graph, firstrow, stitchinfo, startside="right" ):
         return fromgrid.create_strickgraph_from_gridgraph( graph, firstrow, \
                                                     stitchinfo, startside )
+
+    def set_positions( self, positions: Dict[ Hashable, Dict ] ):
+        realgraph = self.give_real_graph()
+        if set( positions.keys() ) != set( realgraph.nodes() ):
+            raise Exception( "set position needs dictionary with every node" )
+        _netx.set_node_attributes( self, positions )
+        elengths = dict()
+        posarrays = { node: tuple( q[c] for c in ("x", "y", "z")) \
+                            for node, q in positions.items() }
+        length_dictionary = {}
+        for e in realgraph.edges( keys=True ):
+            l = np.linalg.norm( np.subtract(posarrays[e[0]], posarrays[e[1]] ))
+            length_dictionary[e] = l
+        _netx.set_edge_attributes( self, length_dictionary, "currentlength" )
+
+
+
+
 
     def give_real_graph( self ):
         return self.subgraph( set(self.nodes()).difference(["start", "end"]))

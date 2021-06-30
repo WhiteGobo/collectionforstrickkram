@@ -1,7 +1,8 @@
 from datagraph_factory import datagraph, factory_leaf, edgetype, conclusion_leaf
 from .. import meshthings
 from .. import strickgraph
-from createcloth.meshhandler import prepare_gridcopy, gridrelaxator
+from createcloth.meshhandler import relax_gridgraph
+
 
 def create_datagraphs():
     tmp = datagraph()
@@ -23,10 +24,19 @@ def call_function( mysurf, inputstrickgraph ):
     surfacemap = mysurf.surfacemap
     border = mystrickgraph.get_borders()
 
-    gridgraph = prepare_gridcopy( mystrickgraph )
-    myrelaxator = gridrelaxator( gridgraph, surfacemap, border )
-    myrelaxator.relax()
-    returngraph = myrelaxator.get_positiongrid()
+    positiondictionary = relax_gridgraph( mystrickgraph, surfacemap )
+    import copy
+    import networkx as netx
+    returngraph = copy.copy( mystrickgraph )
+    netx.set_node_attributes( returngraph, positiondictionary )
+    returngraph.set_positions( positiondictionary )
+    #from createcloth.visualizer import myvis3d
+    #myvis3d( mystrickgraph )
+
+    #gridgraph = prepare_gridcopy( mystrickgraph )
+    #myrelaxator = gridrelaxator( gridgraph, surfacemap, border )
+    #myrelaxator.relax()
+    #returngraph = myrelaxator.get_positiongrid()
 
     return { "positiondata": strickgraph.strickgraph_spatialdata( returngraph )}
 relax_strickgraph_on_surface \

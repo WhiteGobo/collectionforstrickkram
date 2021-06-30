@@ -2,7 +2,6 @@ from datagraph_factory.processes import factory_leaf
 from datagraph_factory import datagraph
 from . import meshtypes
 #from .. import plystanford
-from createcloth.meshhandler.surface_container import surfacemap
 
 def create_datagraphs():
     tmp = datagraph()
@@ -18,7 +17,7 @@ def call_function( mymesh ):
     mesh 'mymesh'. The surfacemap is framed by the border 'myborder'.
     """
     mysurface = mymesh.surfacemesh
-    mymap = surfacemap.from_surface( mysurface )
-    return { "mysurfacemaps": meshtypes.ply_2dmap( mymap ) }
+    mymap_container = meshtypes.ply_2dmap( mysurface )
+    return { "mysurfacemaps": mymap_container }
 mesh_to_surfacemap = factory_leaf( create_datagraphs, call_function, \
                                     name=__name__+"mesh to surfacemap" )

@@ -1,6 +1,6 @@
 from datagraph_factory import datatype, edgetype
 
-from createcloth.meshhandler.surface_container import surface, surfacemap
+from createcloth.meshhandler import plysurfacehandler, surfacemap
 
 class ply_surface( datatype ):
     """
@@ -15,23 +15,27 @@ class ply_surface( datatype ):
 
     @classmethod
     def load_from( cls, filepath ):
-        mysurface = surface.from_plyfile( filepath )
-        return cls( mysurface )
+        myobject = plysurfacehandler.load_from_file( filepath )
+        return cls( myobject )
 
 
 class ply_2dmap( datatype ):
-    def __init__( self, surfmap ):
-        if type( surfmap ) != surfacemap:
-            raise Exception( "given surfmap is no surfacemap" )
+    def __init__( self, plycontainer:surfacemap ):
+        plycontainer.complete_surfaces_with_map()
+        try:
+            surface = plycontainer.get_surface( 0 )
+        except IndexError as err:
+            raise Exception( "given plyobject has no inherent surfacedata" ) \
+                                                                    from err
+
+        surfmap = surface.get_surfacemap()
         self.surfacemap = surfmap
+        self.uplength = surfmap.uplength[-1]
+        self.downlength = surfmap.downlength[-1]
+        self.leftlength = surfmap.leftlength[-1]
+        self.rightlength = surfmap.rightlength[-1]
 
-    @classmethod
-    def load_from( cls, filepath ):
-        surfmap = surfacemap.from_plyfile( filepath )
-        return cls( surfmap )
 
-    def save_as( self, filepath ):
-        self.surfacemap.to_plyfile( filepath )
 
 
 _valid_map_to_mesh = lambda : tuple(((ply_2dmap, ply_surface),))
