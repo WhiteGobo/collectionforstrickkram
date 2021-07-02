@@ -41,6 +41,7 @@ def relax_gridgraph( gridgraph:strickgraph, surfacemap: plysurfacehandler ) \
     sum_edgelength: Callable
     edgelength: list[ float ]
 
+    number_rows = len( gridgraph.get_rows() )
     graphnodes_list = list( gridgraph.nodes() )
     edges_list = edges_to_vertices_from_graph( graphnodes_list, gridgraph )
     edgelength = [ 0 for e in edges_list ]
@@ -75,7 +76,7 @@ def relax_gridgraph( gridgraph:strickgraph, surfacemap: plysurfacehandler ) \
                                     surfacemap )
 
     mybounds = [(0,1)]*len(params)
-    gtol = _find_gtol()
+    gtol = _find_gtol( number_rows ) #todo: missing row tolerance
     foundparams = minimize( energy, params, jac = grad_energy_to_params, \
                                         bounds=mybounds, \
                                         options={ 'gtol':gtol, 'disp':False },\
