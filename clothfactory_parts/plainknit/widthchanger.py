@@ -161,6 +161,7 @@ def remove_columns( mystrickgraph, rows_with_too_much_pressure ):
         
 def find_removecolumns( mystrickgraph, rows_with_too_much_pressure ):
     linetypes = isplain( mystrickgraph )
+    print( linetypes )
     lineforadd = [ i for i in range( len(linetypes)) \
                     if line_can_be_removed( linetypes, i ) ]
     rows = set( lineforadd ).intersection( rows_with_too_much_pressure )
@@ -179,6 +180,7 @@ def find_removecolumns( mystrickgraph, rows_with_too_much_pressure ):
         currentlist.append(i)
     asdf.sort( key=len )
     longestconnectedlist = asdf[-1]
+    print( longestconnectedlist )
     return longestconnectedlist
 
 

@@ -22,18 +22,20 @@ except ModuleNotFoundError as err:
 
 
 class strick_multiverbesserer( multiverbesserer ):
-    def __init__( self, verbessererlist ):
+    def __init__( self, verbessererlist, name=None ):
         if isinstance( verbessererlist, multiverbesserer ):
             isintruth_a_multiverbesserer = verbessererlist
             super().__init__( isintruth_a_multiverbesserer.verbessererlist )
         else:
             super().__init__( verbessererlist )
+        self.name = name
 
     def print_with_matplotlib( self, show = True, useoldgraph=True, \
                                                         tmpplotinfo=None ):
         nrows = math.ceil( math.sqrt(len( self.verbessererlist)+1) )
         nrows = max( 2, nrows )
         fig, axs = plt.subplots( nrows=nrows, ncols=nrows )
+        fig.suptitle( self.name )
         axs =iter(itertools.chain( *axs ))
         for verbesserer in self.verbessererlist:
             if useoldgraph:
@@ -67,6 +69,6 @@ class strick_multiverbesserer( multiverbesserer ):
         easygraph( graph, marked_nodes =[ marknode ], \
                             myplotinfo = tmpplotinfo )
 
-def strick_multiverbessererfromxml( xmlstr, graph_type=stricksubgraph ):
+def strick_multiverbessererfromxml( xmlstr, graph_type=stricksubgraph, name=None ):
     multi = multiverbessererfromxml( xmlstr, graph_type=graph_type )
-    return strick_multiverbesserer( multi )
+    return strick_multiverbesserer( multi, name )

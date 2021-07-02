@@ -144,7 +144,8 @@ class stitchdatacontainer():
 
 
     def add_additional_xmlresources( self, xmlstring ):
-        self.myresources.append( _ET.parse( xmlstring ).getroot() )
+        root = self.myresources.getroot()
+        root.append( _ET.parse( xmlstring ).getroot() )
 
     def _update_resources():
         raise Exception()
@@ -181,7 +182,8 @@ class stitchdatacontainer():
         self.edges = edges
 
     def add_additional_resources( self, xml_string ):
-        self.myresources.append(_ET.fromstring( xml_string ))
+        root = self.myresources.getroot()
+        root.append(_ET.fromstring( xml_string ))
 
 
 from . import stitchdata

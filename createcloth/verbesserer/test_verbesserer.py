@@ -2,7 +2,8 @@ import unittest
 #from .manualtoverbesserung import main as manualtoverbesserung
 #from .verbesserer_class import manualtoverbesserung, verbesserungtoxml, verbessererfromxml
 from . import manualtoersetzer, verbesserungtoxml, verbessererfromxml
-import pkg_resources
+#import pkg_resources
+import importlib
 from ..strickgraph.strickgraph_fromgrid import create_strickgraph_from_gridgraph as fromgrid
 from ..strickgraph.strickgraph_toknitmanual import tomanual
 from ..strickgraph.strickgraph_base import strickgraph
@@ -11,32 +12,34 @@ import networkx as netx
 from ..strickgraph.load_stitchinfo import myasd as stitchinfo
 import extrasfornetworkx
 from extrasfornetworkx import multiverbesserer
+from . import resourcestest as test_src
 
 class test_manualtoverbesserung( unittest.TestCase ):
     def setUp( self ):
         pass
 
     def test_xmlverbesserung( self ):
-        markedstitches_file = pkg_resources.resource_stream( __name__, \
-                                        "resourcestest/markstitches.xml" )
-        stitchinfo.add_additional_resources( markedstitches_file )
-        markedstitches_file.close()
+        with importlib.resources.path( test_src,"markstitches.xml") as filepath:
+            extraresourcesfile = open( filepath, "r" )
+            xml_string = extraresourcesfile.read()
+            extraresourcesfile.close()
+        stitchinfo.add_additional_resources( xml_string )
 
-        old_manual_file = pkg_resources.resource_stream( __name__, \
-                            "resourcestest/simplegrid_markstitch.knitmanual" )
-        new_manual_file = pkg_resources.resource_stream( __name__, \
-                            "resourcestest/better_markstitch.knitmanual" )
-
-        old_manual = [x[:-1].decode("utf-8") for x in old_manual_file]
-        new_manual = [x[:-1].decode("utf-8") for x in new_manual_file]
-        asd = manualtoersetzer( old_manual, new_manual )
-
-        old_manual_file.close()
-        new_manual_file.close()
+        with importlib.resources.path( test_src,\
+                            "simplegrid_markstitch.knitmanual") as filepath:
+            asdf = open( filepath, "r" )
+            old_manual = asdf.read().splitlines()
+            asdf.close()
+        with importlib.resources.path( test_src,\
+                            "better_markstitch.knitmanual") as filepath:
+            asdf = open( filepath, "r" )
+            new_manual = asdf.read().splitlines()
+            asdf.close()
+        asd = manualtoersetzer( old_manual, new_manual,  stitchinfo )
 
         qwe = asd.create_xml_string()
         #qwe = verbesserungtoxml( asd )
-        remake = extrasfornetworkx.verbessererfromxml( qwe, \
+        remake = extrasfornetworkx.verbessererfromxml( qwe,\
                                                         graph_type=strickgraph )
 
         self.assertEqual( asd, remake )
@@ -46,25 +49,29 @@ class test_manualtoverbesserung( unittest.TestCase ):
         print( "hier ist noch eine todo sache" )
         #markedstitches_file = pkg_resources.resource_stream( __name__, \
         #                                "resourcestest/markstitches.xml" )
-        markedstitches_info = pkg_resources.resource_string( __name__, \
-                                        "resourcestest/markstitches.xml" \
-                                        ).decode("utf-8")
-        stitchinfo.add_additional_resources( markedstitches_info )
-        #markedstitches_file.close()
-        new_manual_str = pkg_resources.resource_string( __name__, \
-                            "resourcestest/better_markstitch.knitmanual" \
-                            ).decode("utf-8")
-        old_manual_str = pkg_resources.resource_string( __name__, \
-                            "resourcestest/simplegrid_markstitch.knitmanual" \
-                            ).decode("utf-8")
+        with importlib.resources.path( test_src,"markstitches.xml") as filepath:
+            extraresourcesfile = open( filepath, "r" )
+            xml_string = extraresourcesfile.read()
+            extraresourcesfile.close()
+        stitchinfo.add_additional_resources( xml_string )
+        with importlib.resources.path( test_src,\
+                            "simplegrid_markstitch.knitmanual") as filepath:
+            asdf = open( filepath, "r" )
+            old_manual = asdf.read().splitlines()
+            asdf.close()
+        with importlib.resources.path( test_src,\
+                            "better_markstitch.knitmanual") as filepath:
+            asdf = open( filepath, "r" )
+            new_manual = asdf.read().splitlines()
+            asdf.close()
 
-        asd = manualtoersetzer( old_manual_str, new_manual_str, stitchinfo, \
+        asd = manualtoersetzer( old_manual, new_manual, stitchinfo, \
                                 startside="right" )
 
         
         mygraph = netx.grid_2d_graph( 6, 5 )
         firstrow = [ x for x in mygraph.nodes() if x[0] == 0 ]
-        mystrick = fromgrid( mygraph, firstrow )
+        mystrick = fromgrid( mygraph, firstrow, stitchinfo )
         # todo try with (1,2) and verbessere fehlerausgabe bis der Fehler
         # dadurch entdeckt werden kann.
         # uer komplizierte graphen reicht eine einfache ausgabe der 
@@ -76,29 +83,32 @@ class test_manualtoverbesserung( unittest.TestCase ):
         self.assertTrue( success )
 
         testoutput ="5yo\n5k\n2k 1yo 3k\n2k 1k2tog 2k\n5k\n5bo"
-        self.assertEqual(tomanual(mystrick), testoutput )
+        self.assertEqual(tomanual(mystrick, stitchinfo), testoutput )
 
 
     def test_multiersetzer( self ):
-        print( "hier ist noch eine todo sache" )
-        markedstitches_file = pkg_resources.resource_stream( __name__, \
-                                        "resourcestest/markstitches.xml" )
-        stitchinfo.add_additional_resources( markedstitches_file )
-        markedstitches_file.close()
+        from . import resourcestest as test_src
+        with importlib.resources.path( test_src,"markstitches.xml") as filepath:
+            extraresourcesfile = open( filepath, "r" )
+            xml_string = extraresourcesfile.read()
+            extraresourcesfile.close()
+        stitchinfo.add_additional_resources( xml_string )
 
-        #old_manual_file = pkg_resources.resource_stream( __name__, \
-        #                    "resourcestest/simplegrid_markstitch.knitmanual" )
-        new_manual_str = pkg_resources.resource_string( __name__, \
-                            "resourcestest/better_markstitch.knitmanual" \
-                            ).decode("utf-8")
-        old_manual_str = pkg_resources.resource_string( __name__, \
-                            "resourcestest/simplegrid_markstitch.knitmanual" \
-                            ).decode("utf-8")
+        with importlib.resources.path( test_src,\
+                            "simplegrid_markstitch.knitmanual") as filepath:
+            asdf = open( filepath, "r" )
+            old_manual = asdf.read().splitlines()
+            asdf.close()
+        with importlib.resources.path( test_src,\
+                            "better_markstitch.knitmanual") as filepath:
+            asdf = open( filepath, "r" )
+            new_manual = asdf.read().splitlines()
+            asdf.close()
 
-        ersetzer1 = manualtoersetzer( old_manual_str, new_manual_str, \
+        ersetzer1 = manualtoersetzer( old_manual, new_manual, stitchinfo, \
                                     manual_type= "machine",\
                                     startside="left" )
-        ersetzer2 = manualtoersetzer( old_manual_str, new_manual_str, \
+        ersetzer2 = manualtoersetzer( old_manual, new_manual, stitchinfo, \
                                     manual_type= "machine",\
                                     startside="right" )
 
@@ -110,7 +120,8 @@ class test_manualtoverbesserung( unittest.TestCase ):
             # create testgraph
             mygraph = netx.grid_2d_graph( 6, 5 )
             firstrow = [ x for x in mygraph.nodes() if x[0] == 0 ]
-            mystrick = fromgrid( mygraph, firstrow, startside=startside )
+            mystrick = fromgrid( mygraph, firstrow,stitchinfo, \
+                                    startside=startside )
 
             # this is the work to be done, the replacement
             success = myersetzer.replace_in_graph( mystrick, (2,2) )
@@ -118,5 +129,5 @@ class test_manualtoverbesserung( unittest.TestCase ):
             # test results
             self.assertTrue( success )
             testoutput ="5yo\n5k\n2k 1yo 3k\n2k 1k2tog 2k\n5k\n5bo"
-            self.assertEqual( tomanual(mystrick, manual_type="machine"), \
-                                testoutput )
+            controloutput = tomanual(mystrick, stitchinfo,manual_type="machine")
+            self.assertEqual( controloutput, testoutput )

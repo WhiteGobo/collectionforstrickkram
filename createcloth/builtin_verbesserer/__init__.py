@@ -10,7 +10,8 @@ def load_builtinverbesserer( savename ):
     tmpbytes = pkg_resources.resource_string( __name__, savename )
     myverb = strick_multiverbessererfromxml( \
                                             tmpbytes.decode( useddecoding ),\
-                                            graph_type=mygraphtype)
+                                            graph_type=mygraphtype, \
+                                            name = savename )
     return myverb
 
 

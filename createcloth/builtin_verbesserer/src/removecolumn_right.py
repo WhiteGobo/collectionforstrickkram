@@ -22,9 +22,9 @@ def parse_arguments():
 
 pairlist = (\
         ("6yo\n6k\n4k 1kmark 1k\n6k\n6k\n6bo", \
-        "6yo\n6k\n2k 1k2tog 1kmark 1k\n2k 1yo 3k\n6k\n6bo"), \
+        "6yo\n6k\n2k 1k2tog 1kmark 1k\n3k 1yo 2k\n6k\n6bo"), \
         ("7yo\n3k 1k2tog 2k\n4k 1kmark 1k\n6k\n6k\n6bo", \
-        "7yo\n3k 1k2tog 2k\n2k 1k2tog 1kmark 1k\n2k 1yo 3k\n6k\n6bo"), \
+        "7yo\n3k 1k2tog 2k\n2k 1k2tog 1kmark 1k\n3k 1yo 2k\n6k\n6bo"), \
         ("6yo\n6k\n4k 1kmark 1k\n2k 1k2tog 2k\n5k\n5bo", \
         "6yo\n6k\n2k 1k2tog 1kmark 1k\n5k\n5k\n5bo"), \
         ("7yo\n3k 1k2tog 2k\n4k 1kmark 1k\n2k 1k2tog 2k\n5k\n5bo", \
@@ -38,19 +38,34 @@ pairlist = (\
         ("5yo\n3k 1yo 2k\n4k 1kmark 1k\n6k\n6k\n6bo", \
         "5yo\n3k 1yo 2k\n2k 1k2tog 1kmark 1k\n3k 1yo 2k\n6k\n6bo"), \
         ("5yo\n3k 1yo 2k\n4k 1kmark 1k\n6k\n2k 1k2tog 2k\n5bo", \
-        "5yo\n3k 1yo 2k\n2k 1k2tog 1kmark 1k\n2k 1yo 3k\n2k 1k2tog 2k\n5bo"), \
+        "5yo\n3k 1yo 2k\n2k 1k2tog 1kmark 1k\n3k 1yo 2k\n2k 1k2tog 2k\n5bo"), \
         ("5yo\n3k 1yo 2k\n4k 1kmark 1k\n2k 1k2tog 2k\n1k 1k2tog 2k\n4bo", \
         "5yo\n3k 1yo 2k\n2k 1k2tog 1kmark 1k\n5k\n1k 1k2tog 2k\n4bo"), \
+        \
+        ("5yo\n5k\n3k 1yo 1kmark 1k\n2k 1k2tog 2k\n5k\n5bo", \
+        "5yo\n5k\n3k 1kmark 1k\n5k\n5k\n5bo"), \
+        ("4yo\n2k 1yo 2k\n3k 1yo 1kmark 1k\n2k 1k2tog 2k\n5k\n5bo", \
+        "4yo\n2k 1yo 2k\n3k 1kmark 1k\n5k\n5k\n5bo"), \
+        ("5yo\n5k\n3k 1yo 1kmark 1k\n2k 1k2tog 2k\n1k 1k2tog 2k\n4bo", \
+        "5yo\n5k\n3k 1kmark 1k\n5k\n1k 1k2tog 2k\n4bo"), \
+        ("4yo\n2k 1yo 2k\n3k 1yo 1kmark 1k\n2k 1k2tog 2k\n1k 1k2tog 2k\n4bo", \
+        "4yo\n2k 1yo 2k\n3k 1kmark 1k\n5k\n1k 1k2tog 2k\n4bo"), \
         \
         ("6yo\n6k\n4k 1kmark 1k\n6k\n6bo", \
         "6yo\n6k\n2k 1k2tog 1kmark 1k\n3k 1yo 2k\n6bo"), \
         ("6yo\n6k\n2k 1k2tog 2k\n3k 1yo 1kmark 1k\n2bo 1b2o 2bo", \
         "6yo\n6k\n2k 1k2tog 2k\n3k 1kmark 1k\n5bo"), \
+        ("6yo\n6k\n2k 1k2tog 2k\n3k 1yo 1kmark 1k\n6k\n6bo", \
+        "6yo\n6k\n2k 1k2tog 2k\n3k 1kmark 1k\n3k 1yo 2k\n6bo"), \
+        ("6yo\n6k\n2k 1k2tog 2k\n3k 1yo 1kmark 1k\n6k\n6k\n6bo", \
+        "6yo\n6k\n2k 1k2tog 2k\n3k 1kmark 1k\n3k 1yo 2k\n6k\n6bo"), \
         \
         ("4yo 1yomark 1yo\n6k\n6k\n6bo", \
         "3yo 1yomark 1yo\n3k 1yo 2k\n6k\n6bo"), \
         ("6yo\n4k 1kmark 1k\n6k\n6bo", \
         "6yo\n2k 1k2tog 1kmark 1k\n3k 1yo 2k\n6bo"), \
+        ("6yo\n4k 1kmark 1k\n6k\n6k\n6bo", \
+        "6yo\n2k 1k2tog 1kmark 1k\n3k 1yo 2k\n6k\n6bo"), \
         \
         ("5yo\n3k 1yo 1kmark 1k\n6k\n6bo", \
         "5yo\n3k 1kmark 1k\n3k 1yo 2k\n6bo"), \
@@ -60,6 +75,8 @@ pairlist = (\
         "5yo\n5k\n3k 1kmark 1k\n3k 1yo 2k\n6bo"), \
         ("5yo\n5k\n3k 1yo 1kmark 1k\n6k\n6k\n6bo", \
         "5yo\n5k\n3k 1kmark 1k\n3k 1yo 2k\n6k\n6bo"), \
+        ("5yo\n5k\n3k 1yo 1kmark 1k\n6k\n4k 1yo 2k\n7bo", \
+        "5yo\n5k\n3k 1kmark 1k\n3k 1yo 2k\n4k 1yo 2k\n7bo"), \
         ("5yo\n5k\n3k 1yo 1kmark 1k\n4k 1kmark 1k\n6k\n6bo", \
         "5yo\n5k\n3k 1yo 1kmark 1k\n2k 1k2tog 1kmark 1k\n3k 1yo 2k\n6bo"), \
         )
