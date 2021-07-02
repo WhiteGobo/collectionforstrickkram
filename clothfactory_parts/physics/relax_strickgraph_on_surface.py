@@ -31,7 +31,7 @@ def call_function( mysurf, inputstrickgraph ):
     netx.set_node_attributes( returngraph, positiondictionary )
     returngraph.set_positions( positiondictionary )
     #from createcloth.visualizer import myvis3d
-    #myvis3d( mystrickgraph )
+    #myvis3d( returngraph )
 
     #gridgraph = prepare_gridcopy( mystrickgraph )
     #myrelaxator = gridrelaxator( gridgraph, surfacemap, border )

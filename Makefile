@@ -20,9 +20,7 @@ create_verbesserung_for_rechtsstrickzuangepasst:
 	python -m createcloth.rechtsstrickzuangepasst.src.compile_verbesserer
 
 test_clothfactory:
-	#python -m unittest clothfactory_parts.test_clothfactory_parts.TestClothfactoryParts.test_completingdatagraph
-	python -m unittest clothfactory_parts.test_clothfactory_parts
-	#python -m unittest clothfactory_parts.test_clothfactory_parts.TestClothfactoryParts.test_meshhandler
+	python -m unittest clothfactory_parts.test_clothfactory_parts -k 
 
 test_strickgraph:
 	python -m unittest createcloth.strickgraph.test_strickgraph
@@ -50,7 +48,8 @@ test_toedgetension:
 
 
 test_myprogram:
-	python -m myprogram.asd createcloth/meshhandler/meshfortests.ply
+	#python -m myprogram.asd createcloth/meshhandler/test_src/surfmap.ply
+	python -m myprogram.asd myprogram/testbody.ply
 
 test_rechtsstrickzuangepasst:
 	python -m unittest createcloth.rechtsstrickzuangepasst.test_rechtstrickzuangepasst

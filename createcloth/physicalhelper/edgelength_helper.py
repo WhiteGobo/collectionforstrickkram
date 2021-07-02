@@ -17,7 +17,7 @@ class threadinfo():
     plainknit_normalstitchwidth = property( fget=_get_knitradius )
     plainknit_stitchheight = property( fget=_get_knitradius )
 
-standardthreadinfo = threadinfo( 0.03, 1.0 )
+standardthreadinfo = threadinfo( 0.01, 1.0 )
 
 def relaxedgelength_to_strickgraph( mystrickgraph, \
                                     mythreadinfo=standardthreadinfo ):

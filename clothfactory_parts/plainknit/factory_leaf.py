@@ -103,7 +103,7 @@ def call_function( isrelaxed, isplainknit, mystrickgraph, mymesh ):
     tmpstrickgraph = mystrickgraph.strickgraph
     try:
         remove_columns( tmpstrickgraph, tobeshortendrows )
-        return { "newstrickgraph": strickgraph_container( tmpstrickgraph ) }
+        return { "newstrickgraph": strickgraph.strickgraph_container( tmpstrickgraph ) }
     except failedOperation as err:
         extend_columns( tmpstrickgraph, tobeshortenedrows )
         raise Exception() from err

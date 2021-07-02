@@ -1,7 +1,6 @@
 from . import meshtypes
 from datagraph_factory import datagraph, factory_leaf, edgetype
 from .. import strickgraph
-#from createcloth.strickgraph.load_stitchinfo import myasd as mythreadinfo
 from createcloth.physicalhelper import standardthreadinfo as mythreadinfo
 import networkx as netx
 from createcloth.strickgraph import strickgraph_fromgrid as fromgrid 

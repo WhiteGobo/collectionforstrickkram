@@ -49,6 +49,9 @@ pairlist = (\
         \
         ("4yo 1yomark 1yo\n6k\n6k\n6bo", \
         "3yo 1yomark 1yo\n3k 1yo 2k\n6k\n6bo"), \
+        ("6yo\n4k 1kmark 1k\n6k\n6bo", \
+        "6yo\n2k 1k2tog 1kmark 1k\n3k 1yo 2k\n6bo"), \
+        \
         ("5yo\n3k 1yo 1kmark 1k\n6k\n6bo", \
         "5yo\n3k 1kmark 1k\n3k 1yo 2k\n6bo"), \
         ("5yo\n3k 1yo 1kmark 1k\n6k\n6k\n6bo", \

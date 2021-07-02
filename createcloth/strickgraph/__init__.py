@@ -9,3 +9,4 @@ from .strickgraph_replacesubgraph \
         import create_pathforhashing, follow_cached_path
 
 from .constants import handknitting_terms, machine_terms
+from .load_stitchinfo import stitchdatacontainer

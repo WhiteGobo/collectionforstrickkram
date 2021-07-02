@@ -35,7 +35,8 @@ class strickgraph_stitchdata( datatype ):
         self.stitchinfo = stitchinfo
     @classmethod
     def load_from( cls, filepath ):
-        from createcloth.strickgraph.load_stitchinfo import stitchdatacontainer
+        from createcloth.strickgraph import stitchdatacontainer
+        #from createcloth.strickgraph.load_stitchinfo import stitchdatacontainer
         mystitchinfo = stitchdatacontainer.from_xmlfile( filepath )
         strdat = stitchinfo.strickdata["plainknit"]
         plain_stitch = strdat["stitch"]
@@ -66,7 +67,7 @@ class strickgraph_spatialdata( datatype ):
         self._ydict = y_data
         self._zdict = z_data
 
-        default_length = 0.1
+        #default_length = 0.1
         #raise Exception( "must include add_edgelength" )
         #add_edgelength( posgraph, default_length )
         nodetopairset = lambda x,y, d: frozenset((x,y))
