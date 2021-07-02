@@ -53,7 +53,7 @@ class strick_multiverbesserer( multiverbesserer ):
         suc, info = self.replace_in_graph_withinfo( mystrickgraph, markednode ) 
         if not suc:
             raise StrickgraphVerbessererException( self, mystrickgraph, \
-                                                            markednode, info )
+                                                            markednode)#, info )
 
     def __plot_legend( self, myplotinfo, axis ):
         for stitchname, mystyle in myplotinfo.stitchstyle.items():
