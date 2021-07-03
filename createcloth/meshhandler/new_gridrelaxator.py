@@ -29,6 +29,7 @@ class vertice_param_position_container():
 def relax_gridgraph( gridgraph:strickgraph, surfacemap: plysurfacehandler ) \
                                                     -> Dict[ Hashable, Dict ]:
     border = gridgraph.get_borders()
+    number_rows = len( gridgraph.get_rows() )
     gridgraph = gridgraph.give_real_graph()
     graphnodes_list: list[ Hashable ]
     edges_list: list[ Tuple[ int, int ]]
@@ -41,7 +42,6 @@ def relax_gridgraph( gridgraph:strickgraph, surfacemap: plysurfacehandler ) \
     sum_edgelength: Callable
     edgelength: list[ float ]
 
-    number_rows = len( gridgraph.get_rows() )
     graphnodes_list = list( gridgraph.nodes() )
     edges_list = edges_to_vertices_from_graph( graphnodes_list, gridgraph )
     edgelength = [ 0 for e in edges_list ]
@@ -77,7 +77,9 @@ def relax_gridgraph( gridgraph:strickgraph, surfacemap: plysurfacehandler ) \
 
     mybounds = [(0,1)]*len(params)
     gtol = _find_gtol( number_rows ) #todo: missing row tolerance
+    gtol = 1e-3
     foundparams = minimize( energy, params, jac = grad_energy_to_params, \
+                                        #method='Newton-CG', \
                                         bounds=mybounds, \
                                         options={ 'gtol':gtol, 'disp':False },\
                                         )

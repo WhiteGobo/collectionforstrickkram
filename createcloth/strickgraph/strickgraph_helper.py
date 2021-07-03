@@ -114,12 +114,14 @@ class strick_NotValid( Exception ):
 
 
 def separate_to_rows( graph, firstrow ):
-    visited = [x for x in firstrow] #copy
+    #visited = [x for x in firstrow] #copy
+    visited = set( firstrow )
     rows = [ firstrow ]
     nextrow = fetch_neighbour_to_row( graph, firstrow )
     while len( nextrow )>0:
         rows.append(nextrow)
-        visited = visited + nextrow
+        #visited = visited + nextrow
+        visited.update( nextrow )
         nextrow = fetch_neighbour_to_row( graph, visited )
     return rows
 

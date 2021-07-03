@@ -6,6 +6,7 @@ import networkx as netx
 from createcloth.strickgraph import strickgraph_fromgrid as fromgrid 
 
 from .. import strickgraph
+
 tmpvalid = lambda: (\
             (strickgraph.strickgraph_stitchdata, meshtypes.ply_surface), \
             )
