@@ -1,4 +1,5 @@
 import pkg_resources
+import os.path
 from ...verbesserer import manualtoersetzer, verbesserungtoxml, \
                         verbessererfromxml, strick_multiverbessererfromxml
 from ...verbesserer.manualtoverbesserung import _start_at_marked
@@ -53,9 +54,13 @@ pairlist = (\
         \
         ("6yo\n6k\n4k 1kmark 1k\n6k\n2k 1k2tog 2k\n5bo", \
         "6yo\n6k\n4k 1yo 1kmark 1k\n3k 1k2tog 2k\n2k 1k2tog 2k\n5bo"), \
+        ("6yo\n6k\n6k\n4k 1kmark 1k\n6k\n2k 1k2tog 2k\n5k\n5bo", \
+        "6yo\n6k\n6k\n4k 1yo 1kmark 1k\n3k 1k2tog 2k\n2k 1k2tog 2k\n5k\n5bo"), \
         \
         ("7yo\n3k 1k2tog 2k\n4k 1kmark 1k\n6k\n2k 1k2tog 2k\n5bo", \
         "7yo\n3k 1k2tog 2k\n4k 1yo 1kmark 1k\n3k 1k2tog 2k\n2k 1k2tog 2k\n5bo"), \
+        ("6yo\n6k\n4k 1kmark 1k\n6k\n2k 1k2tog 2k\n5bo", \
+        "6yo\n6k\n4k 1yo 1kmark 1k\n3k 1k2tog 2k\n2k 1k2tog 2k\n5bo"), \
         \
         ("8yo\n4k 1k2tog 2k\n3k 1k2tog 1kmark 1k\n6k\n6bo", \
         "8yo\n4k 1k2tog 2k\n5k 1kmark 1k\n3k 1k2tog 2k\n6bo"), \
@@ -159,7 +164,7 @@ pairlist = (\
 if __name__=="__main__":
 
     filename, reversed = parse_arguments()
-    if filename:
+    if os.path.isfile( filename ):
         myfile = open( filename, "r" )
         mytext = "".join( myfile.readlines() )
         myfile.close()

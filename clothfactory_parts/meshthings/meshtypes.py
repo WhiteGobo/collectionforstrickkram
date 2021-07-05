@@ -11,7 +11,7 @@ class ply_surface( datatype ):
         self.surfacemesh = mesh
 
     def save_as( self, filepath ):
-        self.surfacemesh.to_plyfile( filepath )
+        self.surfacemesh.save_to_file( filepath )#, use_ascii=True, use_bigendian=False )
 
     @classmethod
     def load_from( cls, filepath ):

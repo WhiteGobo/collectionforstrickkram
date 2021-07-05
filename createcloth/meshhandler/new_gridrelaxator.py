@@ -76,7 +76,6 @@ def relax_gridgraph( gridgraph:strickgraph, surfacemap: plysurfacehandler ) \
                                     surfacemap )
 
     mybounds = [(0,1)]*len(params)
-    gtol = _find_gtol( number_rows ) #todo: missing row tolerance
     gtol = 1e-3
     foundparams = minimize( energy, params, jac = grad_energy_to_params, \
                                         #method='Newton-CG', \
@@ -109,9 +108,6 @@ def relax_gridgraph( gridgraph:strickgraph, surfacemap: plysurfacehandler ) \
         data["z"] = z
     return foundpositions
 
-
-def _find_gtol( max_array_length:int ):
-    return 1e-2 / max_array_length
 
 def estimate_startpositions( number_vertices, edges_list, \
                                                     border_up, border_left, \

@@ -2,6 +2,7 @@ from datagraph_factory import datagraph, factory_leaf, edgetype, conclusion_leaf
 from .. import meshthings
 from .. import strickgraph
 from createcloth.meshhandler import relax_gridgraph
+from createcloth.physicalhelper import standardthreadinfo as mythreadinfo
 
 
 def create_datagraphs():
@@ -21,6 +22,7 @@ def create_datagraphs():
     return prestatus, poststatus
 def call_function( mysurf, inputstrickgraph ):
     mystrickgraph = inputstrickgraph.strickgraph
+    mystrickgraph.set_calmlength( mythreadinfo )
     surfacemap = mysurf.surfacemap
     border = mystrickgraph.get_borders()
 
@@ -30,6 +32,8 @@ def call_function( mysurf, inputstrickgraph ):
     returngraph = copy.copy( mystrickgraph )
     netx.set_node_attributes( returngraph, positiondictionary )
     returngraph.set_positions( positiondictionary )
+    #ensure edgeattribute length is set according to calmlength
+
     #from createcloth.visualizer import myvis3d
     #myvis3d( returngraph )
 

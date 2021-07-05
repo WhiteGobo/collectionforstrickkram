@@ -29,34 +29,34 @@ def call_function( mystrick, positions ):
     y = positions.yposition
     z = positions.zposition
     l = positions.edgelengthdict
-    lcalm = positions.calmlengthdict
-    lengthgraph = relaxedgelength_to_strickgraph( mystrick.strickgraph )
-    #edge_to_calmlength = lambda e: lengthgraph[e]["calmlength"]
-    edge_to_calmlength = netx.get_edge_attributes( lengthgraph, "calmlength" )
-    edge_to_calmlength = { frozenset(key): value \
-                            for key, value in edge_to_calmlength.items() }
+    edge_to_calmlength = positions.calmlengthdict
+    #lengthgraph = relaxedgelength_to_strickgraph( mystrick.strickgraph )
+    ##edge_to_calmlength = lambda e: lengthgraph[e]["calmlength"]
+    #edge_to_calmlength = netx.get_edge_attributes( lengthgraph, "calmlength" )
+    #edge_to_calmlength = { frozenset(key): value \
+    #                        for key, value in edge_to_calmlength.items() }
     lengthforextrastitch = singleedge_length( "knit", "knit", "next", \
                                                 mythreadinfo )
 
     rows = mystrick.strickgraph.get_rows()
-    qwer = lambda q: list(q)[0:5] + list(q)[-6:-1]
-    asdf = lambda row: qwer(itertools.zip_longest( row[0:-2], row[1:-1] ))
+    #qwer = lambda q: list(q)[0:5] + list(q)[-6:-1]
+    #asdf = lambda row: qwer( zip( row[0:-2], row[1:-1] ))
+    vertline_to_edges = lambda verts: list( zip( verts[:-2], verts[1:] ) )
 
-    valueable_edges = [ asdf( row ) for row in rows ]
+    #valueable_edges = [ asdf( row ) for row in rows ]
     haspressure, hastension = set(), set()
-    for i in range(len(valueable_edges)):
-        myedges = list( valueable_edges[i] )
+    for i, row in enumerate( rows ):
+        edges_in_row = len(row) - 1
+        myedges = vertline_to_edges(row[:3]) + vertline_to_edges(row[-3:])
         overlength = 0.0 #total length - sum of all length of edges
         for e1, e2 in myedges:
             edge = frozenset(( e1, e2 ))
             overlength += l[edge] - edge_to_calmlength[ edge ]
-            #if l[edge]-0.1 > lengthforextrastitch:
-            #    hastension.add(i)
-            #elif l[edge]-0.1 < -lengthforextrastitch:
-            #    haspressure.add(i)
-        if overlength > lengthforextrastitch:
+        overlength_per_stitch = overlength / len(myedges)
+        length_for_extrastitch_per_stitch = lengthforextrastitch/ edges_in_row
+        if overlength_per_stitch > length_for_extrastitch_per_stitch:
             hastension.add(i)
-        elif overlength < -lengthforextrastitch:
+        elif overlength_per_stitch < length_for_extrastitch_per_stitch:
             haspressure.add(i)
     if haspressure and hastension:
         return { "havetension": strickgraph.strickgraph_property_relaxed( \

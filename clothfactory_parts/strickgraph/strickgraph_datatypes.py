@@ -51,7 +51,7 @@ class strickgraph_stitchdata( datatype ):
 
 
     def save_as( self, filepath ):
-        self.stitchinfo.save_toxmlfile( filepath )
+        self.stitchinfo.to_xmlfile( filepath )
         #with open( filepath, "w" ) as file:
         #    txt = "\n".join([self.plain_stitch, self.plain_startrow, \
         #                            self.plain_endrow])
@@ -74,6 +74,7 @@ class strickgraph_spatialdata( datatype ):
         tmp = netx.get_edge_attributes( posgraph, "currentlength" )
         self.edgelengthdict = { nodetopairset(*key) : value \
                                 for key, value in tmp.items() }
+        #tmp = netx.get_edge_attributes( posgraph, "calmlength" ) #works also??
         tmp = netx.get_edge_attributes( posgraph, "length" )
         self.calmlengthdict = { nodetopairset(*key) : value \
                                 for key, value in tmp.items() }

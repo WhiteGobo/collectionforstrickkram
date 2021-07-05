@@ -20,7 +20,7 @@ create_verbesserung_for_rechtsstrickzuangepasst:
 	python -m createcloth.rechtsstrickzuangepasst.src.compile_verbesserer
 
 test_clothfactory:
-	python -m unittest clothfactory_parts.test_clothfactory_parts -k 
+	python -m unittest clothfactory_parts.test_clothfactory_parts
 
 test_strickgraph:
 	python -m unittest createcloth.strickgraph.test_strickgraph

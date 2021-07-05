@@ -84,6 +84,12 @@ def linepair_can_be_extended( linetypes, lowlinenumber, highlinenumber ):
         if extend_condition( linetypes, lowlinenumber, highlinenumber ):
             return True
     return False
+def linepair_can_be_inseted( linetypes, lowlinenumber, highlinenumber ):
+    raise Exception( "ui not made dingsi" )
+    for extend_condition in extend_condition_list:
+        if extend_condition( linetypes, lowlinenumber, highlinenumber ):
+            return True
+    return False
 
 def _remove_condition1( linetypes, linenumber ):
     i = linenumber
@@ -206,8 +212,8 @@ def find_addcolumns( mystrickgraph, rows_with_too_much_tension ):
 
 
 def extend_columns( mystrickgraph, rows_with_too_much_tension ):
-    rowpair, insettype = find_row_for_inset( mystrickgraph, \
-                                                rows_with_too_much_tension, [] )
+    rowpair, insettype = find_row_for_extend( mystrickgraph, \
+                                                rows_with_too_much_tension, [])
     if rowpair:
         myrows = mystrickgraph.get_rows()
         i, j = rowpair
@@ -240,7 +246,7 @@ def extend_columns( mystrickgraph, rows_with_too_much_tension ):
 
 def inset_columns( mystrickgraph, rows_with_too_much_pressure ):
     rowpair, insettype = find_row_for_inset( mystrickgraph, \
-                                            rows_with_too_much_pressure, [] )
+                                            [], rows_with_too_much_pressure )
     if rowpair:
         myrows = mystrickgraph.get_rows()
         i, j = rowpair
@@ -281,7 +287,7 @@ class InsetError( Exception ):
         self.rows_with_too_much_tension = rows_with_too_much_tension
         
 
-def find_row_for_inset( mystrickgraph, rows_with_too_much_tension, \
+def find_row_for_extend( mystrickgraph, rows_with_too_much_tension, \
                                             rows_with_too_much_pressure ):
     rowpairs = [ (i, i+1) for i in rows_with_too_much_tension \
                         if i+1 not in rows_with_too_much_pressure ]
@@ -299,4 +305,26 @@ def find_row_for_inset( mystrickgraph, rows_with_too_much_tension, \
         return mylinepairforinset, insettype
     except IndexError as err:
         raise InsetError( rowpairs, linepairforinset, linetypes, \
-                            rows_with_too_much_tension, len(mystrickgraph.get_rows()) ) from err
+                            rows_with_too_much_tension, \
+                            len(mystrickgraph.get_rows()) ) from err
+
+def find_row_for_inset( mystrickgraph, rows_with_too_much_tension, \
+                                            rows_with_too_much_pressure ):
+    rowpairs = [ (i, i+1) for i in rows_with_too_much_pressure \
+                        if i+1 not in rows_with_too_much_tension ]
+    rowpairs += [ (i-1, i) for i in rows_with_too_much_pressure \
+                        if i-1 not in rows_with_too_much_tension ]
+    linetypes = isplain( mystrickgraph )
+    linepairforinset = [ (i,j) for i,j in rowpairs \
+                        if linepair_can_be_inset( linetypes, i, j ) ]
+    try:
+        mylinepairforinset = linepairforinset[-1]
+        if "decrease" in set(( linetypes[i] for i in mylinepairforinset )):
+            insettype = "plane"
+        else:
+            insettype = "eaves"
+        return mylinepairforinset, insettype
+    except IndexError as err:
+        raise InsetError( rowpairs, linepairforinset, linetypes, \
+                            rows_with_too_much_tension, \
+                            len(mystrickgraph.get_rows()) ) from err

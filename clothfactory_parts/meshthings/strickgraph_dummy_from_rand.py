@@ -51,10 +51,11 @@ def call_function( stitchdata, mymesh, mysurface ):
                                                     mygridgraph, firstrow, \
                                                     stitchdata.stitchlist )
 
-    lengthdict = {}
-    for e in mystrickgraph.edges( keys=True ):
-        lengthdict[ e ] = upstitchlength
-    netx.set_edge_attributes( mystrickgraph, lengthdict, "length" )
+    #lengthdict = {}
+    #for e in mystrickgraph.edges( keys=True ):
+    #    lengthdict[ e ] = upstitchlength
+    #netx.set_edge_attributes( mystrickgraph, lengthdict, "length" )
+    mystrickgraph.set_calmlength( mythreadinfo )
 
     return { "roughstrickgraph": strickgraph.strickgraph_container( mystrickgraph ) }
 strickgraph_dummy_from_rand= factory_leaf( create_datagraphs, call_function,\

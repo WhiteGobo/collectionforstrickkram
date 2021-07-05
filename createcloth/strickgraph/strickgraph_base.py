@@ -36,9 +36,6 @@ class strickgraph( _netx.MultiDiGraph ):
         _netx.set_edge_attributes( self, length_dictionary, "currentlength" )
 
 
-
-
-
     def give_real_graph( self ):
         return self.subgraph( set(self.nodes()).difference(["start", "end"]))
 
@@ -52,6 +49,19 @@ class strickgraph( _netx.MultiDiGraph ):
         b = _netx.get_node_attributes( self, "side" )
         hashattributes = { key: a[key]+b[key] for key in a }
         _netx.set_node_attributes( self, hashattributes, "hashval" )
+
+    def set_calmlength( self, mythreadinfo ):
+        """
+        :param mythreadinfo: createcloth.physicalhelper.threadinfo
+        """
+        downstitchlength = mythreadinfo.plainknit_startstitchwidth
+        upstitchlength = mythreadinfo.plainknit_endstitchwidth
+        sidestitchlength = mythreadinfo.plainknit_stitchheight
+        lengthdict = {}
+        #realdings = self.get_real_graph
+        for e in self.edges( keys=True ):
+            lengthdict[ e ] = upstitchlength
+        _netx.set_edge_attributes( self, lengthdict, "length" )
 
 
     def __hash__( self ):
