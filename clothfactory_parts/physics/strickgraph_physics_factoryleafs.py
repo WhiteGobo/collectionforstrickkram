@@ -7,6 +7,9 @@ from createcloth.physicalhelper import relaxedgelength_to_strickgraph, \
                                         singleedge_length, \
                                         standardthreadinfo as mythreadinfo
 
+import logging
+logger = logging.getLogger( __name__ )
+
 def create_datagraphs():
     tmp = datagraph()
     tmp.add_node( "mystrick", strickgraph.strickgraph_container )
@@ -47,7 +50,7 @@ def call_function( mystrick, positions ):
     haspressure, hastension = set(), set()
     for i, row in enumerate( rows ):
         edges_in_row = len(row) - 1
-        myedges = vertline_to_edges(row[:3]) + vertline_to_edges(row[-3:])
+        myedges = vertline_to_edges(row) #+ vertline_to_edges(row[-3:])
         overlength = 0.0 #total length - sum of all length of edges
         for e1, e2 in myedges:
             edge = frozenset(( e1, e2 ))
@@ -56,8 +59,9 @@ def call_function( mystrick, positions ):
         length_for_extrastitch_per_stitch = lengthforextrastitch/ edges_in_row
         if overlength_per_stitch > length_for_extrastitch_per_stitch:
             hastension.add(i)
-        elif overlength_per_stitch < length_for_extrastitch_per_stitch:
+        elif overlength_per_stitch < -length_for_extrastitch_per_stitch:
             haspressure.add(i)
+    logger.debug( "brubru", hastension, haspressure )
     if haspressure and hastension:
         return { "havetension": strickgraph.strickgraph_property_relaxed( \
                                                     tensionrows=hastension), \

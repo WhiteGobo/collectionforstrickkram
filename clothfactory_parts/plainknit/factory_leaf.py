@@ -5,7 +5,7 @@ from .factory_datatype import strickgraph_property_plainknit, \
         strickgraph_isnotplainknit
 from .. import meshthings
 from .widthchanger import add_columns, remove_columns, \
-                            failedOperation, extend_columns
+                            failedOperation, extend_columns, inset_columns
 
 import networkx as netx
 from .plain_identifier import isplain, notplainException, \
@@ -67,12 +67,16 @@ def create_datagraphs():
 def call_function( isrelaxed, isplainknit, mystrickgraph, mymesh ):
     tobeextendedrows = isrelaxed.tensionrows
     tmpstrickgraph = mystrickgraph.strickgraph
+    rows = tmpstrickgraph.get_rows()
+    if len(rows)-1 in tobeextendedrows:
+        tobeextendedrows.add( len(rows)-2 )
+    if 0 in tobeextendedrows:
+        tobeextendedrows.add( 1 )
     try:
         add_columns( tmpstrickgraph, tobeextendedrows )
-        return { "newstrickgraph": strickgraph.strickgraph_container( tmpstrickgraph ) }
     except failedOperation as err:
         extend_columns( tmpstrickgraph, tobeextendedrows )
-        return { "newstrickgraph": strickgraph.strickgraph_container( tmpstrickgraph ) }
+    return { "newstrickgraph": strickgraph.strickgraph_container( tmpstrickgraph ) }
 relax_tension = factory_leaf( create_datagraphs, call_function, \
                             name = __name__+".improve strickgraph tension" )
 
@@ -98,15 +102,18 @@ def create_datagraphs():
     poststatus = tmp.copy()
     return prestatus, poststatus
 def call_function( isrelaxed, isplainknit, mystrickgraph, mymesh ):
-    tobeshortendrows = isrelaxed.pressurerows
-    #newstrickgraph = mystrickgraph.copy()
+    tobeshortenedrows = isrelaxed.pressurerows
     tmpstrickgraph = mystrickgraph.strickgraph
+    rows = tmpstrickgraph.get_rows()
+    if len(rows)-1 in tobeshortenedrows:
+        tobeshortenedrows.add( len(rows)-2 )
+    if 0 in tobeshortenedrows:
+        tobeshortenedrows.add( 1 )
+    #newstrickgraph = mystrickgraph.copy()
     try:
-        remove_columns( tmpstrickgraph, tobeshortendrows )
-        return { "newstrickgraph": strickgraph.strickgraph_container( tmpstrickgraph ) }
+        remove_columns( tmpstrickgraph, tobeshortenedrows )
     except failedOperation as err:
-        extend_columns( tmpstrickgraph, tobeshortenedrows )
-        raise Exception() from err
-        return None
+        inset_columns( tmpstrickgraph, tobeshortenedrows )
+    return { "newstrickgraph": strickgraph.strickgraph_container( tmpstrickgraph ) }
 relax_pressure = factory_leaf( create_datagraphs, call_function, \
-                            name = __name__ + "improvestrickgraph pressure")
+                            name = __name__ + ".improvestrickgraph pressure")

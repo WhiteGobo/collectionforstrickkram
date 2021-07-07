@@ -147,11 +147,20 @@ def getplainknit_linetypes( mystrickgraph ):
                             failedline=[stitchtypes_to_node[e] for e in row])
         linetype.append( tmp )
 
+    #check if planes are on both sides
     for i in range( len(linetype) ):
         a = linetype[i]
         if a in ("leftplane", "rightplane"):
             if not( linetype[i+1] in ("leftplane", "rightplane") \
                         or linetype[i-1] in ("leftplane", "rightplane")):
+                raise notplainException( linetype, \
+                            failedlinesequence=linetype[i-1:i+2] )
+    #check if eaves are on both sides
+    for i in range( len(linetype) ):
+        a = linetype[i]
+        if a in ("lefteaves", "righteaves"):
+            if not( linetype[i+1] in ("lefteaves", "righteaves") \
+                        or linetype[i-1] in ("lefteaves", "righteaves")):
                 raise notplainException( linetype, \
                             failedlinesequence=linetype[i-1:i+2] )
     return linetype

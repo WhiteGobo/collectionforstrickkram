@@ -21,7 +21,7 @@ def parse_arguments():
     args = parser.parse_args()
     return args.filename, args.reversed
 
-pairlist = ( \
+pairlist1 = ( \
         ("6yo\n1k 1kmark 1k2tog 2k\n1k 1k2tog 2k\n4bo", \
         "6yo\n1k 1kmark 2k 2bo\n4k\n4bo"), \
         ("6yo\n1k 1kmark 1k2tog 2k\n1k 1k2tog 2k\n1k2tog 2k\n3bo", \
@@ -50,11 +50,26 @@ pairlist = ( \
         "7yo\n7k\n7k\n2k 1kmark 2k 2bo\n5k\n5k\n5bo"), \
         ("8yo\n8k\n4k 1k2tog 2k\n3k 1kmark 1k 2bo\n5k\n5k\n5bo", \
         "8yo\n8k\n8k\n3k 1kmark 1k 3bo\n5k\n5k\n5bo"), \
+        ("7yo\n7k\n7k\n3k 1kmark 1k 2bo\n5k\n5k\n5bo", \
+        "7yo\n7k\n5k 1yo 2k\n3k 1kmark 1k 3bo\n5k\n5k\n5bo"), \
         ("9yo\n9k\n5k 1k2tog 2k\n4k 1kmark 3bo\n5k\n5k\n5bo", \
         "9yo\n9k\n9k\n4k 1kmark 4bo\n5k\n5k\n5bo"), \
         #("6yo\n6k\n1k 1kmark 1k2tog 2k\n5k\n5k\n5bo", \
         #"6yo\n6k\n1k 1kmark 2k 2bo\n5k\n5k\n5bo"), \
         )
+
+pairlist2 = (\
+        ("4yo\n4k\n4k\n4k\n2k 1kmark 1k 2yo\n6k\n6k\n6bo", \
+        "4yo\n4k\n4k\n2k 1yo 2k\n2k 1kmark 2k 1yo\n6k\n6k\n6bo"), \
+        ("4yo\n4k\n4k\n4k\n2yo 1k 1kmark 2k\n6k\n6k\n6bo", \
+        "4yo\n4k\n4k\n2k 1yo 2k\n1yo 2k 1kmark 2k\n6k\n6k\n6bo"), \
+        ("6yo\n6k\n2k 1k2tog 2k\n3k 1kmark 1k 2yo\n7k\n7k\n7bo", \
+        "6yo\n6k\n6k\n3k 1kmark 2k 1yo\n7k\n7k\n7bo"), \
+        ("3yo\n3k\n1k 1yo 2k\n2k 1kmark 1k 2yo\n6k\n6k\n6bo", \
+        "3yo\n3k\n1k 1yo 2k\n2k 1kmark 1k 1yo\n5k\n3k 1yo 2k\n6bo"), \
+        )
+
+pairlist = pairlist1 + pairlist2
 
 if __name__=="__main__":
     filename, reversed = parse_arguments()

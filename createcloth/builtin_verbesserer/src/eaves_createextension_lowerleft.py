@@ -26,6 +26,12 @@ pairlist = ( \
         #"4yo\n1k 1kmark 2k 2yo\n6k\n4k 1yo 2k\n7bo"), \
         ("3yo\n3k\n1k 1yo 2k\n1k 1kmark 1yo 2k\n3k 1yo 2k\n6k\n6bo", \
         "3yo\n3k\n1k 1yo 2k\n1k 1kmark 2k 2yo\n6k\n6k\n6bo"), \
+        ("3yo\n3k\n1k 1yo 2k\n1k 1kmark 1yo 2k\n3k 1yo 2k\n4k 1yo 2k\n7bo", \
+        "3yo\n3k\n1k 1yo 2k\n1k 1kmark 2k 2yo\n6k\n4k 1yo 2k\n7bo"), \
+        ("3yo\n3k\n1k 1yo 2k\n1k 1kmark 1yo 2k\n3k 1yo 2k\n4k 1yo 2k\n7bo", \
+        "3yo\n3k\n1k 1yo 2k\n1k 1kmark 2k 2yo\n6k\n4k 1yo 2k\n7bo"), \
+        ("3yo\n3k\n1k 1yo 2k\n1k 1kmark 1yo 2k\n3k 1yo 2k\n6bo", \
+        "3yo\n3k\n1k 1yo 2k\n1k 1kmark 2k 2yo\n6k\n6bo"), \
         \
         ("4yo\n1k 1kmark 1yo 2k\n3k 1yo 2k\n6k\n6k\n6bo", \
         "4yo\n1k 1kmark 2k 2yo\n6k\n6k\n6k\n6bo"), \
@@ -50,10 +56,10 @@ if __name__=="__main__":
         except FileNotFoundError as err:
             pass
 
-    side = "right"
+    side = "left"
     if reversed:
-        side = "left"
-    reversed = not reversed
+        side = "right"
+    #reversed = not reversed
 
     
     myersetzer = manstomulti( pairlist, reverse=reversed, side=side, \

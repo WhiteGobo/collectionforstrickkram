@@ -121,9 +121,9 @@ def mydatarescue( err ):
                 if type(a)==clop.strickgraph_container ]
     strpos = [ a for a in err.datagraph.values() \
                 if type(a)==clop.strickgraph_spatialdata ]
-    #for tmpstrick_container in strgras:
-    #    tmpstrick = tmpstrick_container.strickgraph
-    #    print( tmpstrick.to_manual( globalstitchinfo ) )
+    for tmpstrick_container in strgras:
+        tmpstrick = tmpstrick_container.strickgraph
+        print( tmpstrick.to_manual( globalstitchinfo ) )
     causeerror = err.__cause__
     if type( causeerror ) == StrickgraphVerbessererException:
         verb = causeerror.usedverbesserer

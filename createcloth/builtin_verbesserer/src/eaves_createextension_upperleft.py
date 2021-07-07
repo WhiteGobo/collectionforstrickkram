@@ -41,6 +41,21 @@ pairlist = ( \
         "3yo\n3k\n1k 1kmark 1k 2yo\n5k\n5k\n5bo"), \
         ("3yo\n1k 1yo 2k\n1k 1kmark 1yo 2k\n3k 1yo 2k\n6k\n6bo", \
         "3yo\n3k\n1k 1kmark 1k 2yo\n3k 1yo 2k\n6k\n6bo"), \
+        ("3yo\n1k 1yo 2k\n1k 1kmark 1yo 2k\n3k 1yo 2k\n6bo", \
+        "3yo\n3k\n1k 1kmark 1k 2yo\n3k 1yo 2k\n6bo"), \
+        ("3yo\n3k\n1k 1yo 2k\n1k 1kmark 1yo 2k\n5bo", \
+        "3yo\n3k\n3k\n1k 1kmark 1k 2yo\n5bo"), \
+        ("3yo\n1k 1yo 2k\n1k 1kmark 1yo 2k\n3k 1yo 2k\n6bo", \
+        "3yo\n3k\n1k 1kmark 1k 2yo\n3k 1yo 2k\n6bo"), \
+        ("3yo\n3k\n1k 1yo 2k\n1k 1kmark 1yo 2k\n3k 1yo 2k\n6bo", \
+        "3yo\n3k\n3k\n1k 1kmark 1k 2yo\n3k 1yo 2k\n6bo"), \
+        ("4yo\n4k\n4k\n2k 1yo 2k\n2k 1kmark 1yo 2k\n4k 1yo 2k\n7bo", \
+        "4yo\n4k\n4k\n4k\n2k 1kmark 1k 2yo\n4k 1yo 2k\n7bo"), \
+        ("4yo\n4k\n2k 1yo 2k\n2k 1kmark 1yo 2k\n6bo", \
+        "4yo\n4k\n4k\n2k 1kmark 1k 2yo\n6bo"), \
+        ("3yo\n1k 1yo 2k\n1k 1kmark 1yo 2k\n3k 1yo 2k\n6k\n6bo", \
+        "3yo\n3k\n1k 1kmark 1k 2yo\n3k 1yo 2k\n6k\n6bo"), \
+        \
         )
 
 if __name__=="__main__":
@@ -62,10 +77,10 @@ if __name__=="__main__":
             pass
 
     if reversed:
-        side = "right"
-    else:
         side = "left"
-    reversed = not reversed
+    else:
+        side = "right"
+    #reversed = not reversed
 
     myersetzer = manstomulti( pairlist, reverse=reversed, side=side, \
                                 oldtranslatorlist = oldtranslatorlist )

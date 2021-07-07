@@ -49,7 +49,11 @@ test_toedgetension:
 
 test_myprogram:
 	#python -m myprogram.asd createcloth/meshhandler/test_src/surfmap.ply
-	python -m myprogram.asd myprogram/testbody.ply
+	#python -m myprogram.asd myprogram/testbody.ply
+	python -m myprogram.asd myprogram/test.ply
+
+test_plainknit:
+	python -m unittest createcloth.plainknit.test_plainknit
 
 test_rechtsstrickzuangepasst:
 	python -m unittest createcloth.rechtsstrickzuangepasst.test_rechtstrickzuangepasst
