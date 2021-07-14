@@ -7,11 +7,8 @@ import tempfile
 import unittest
 import importlib.resources
 import networkx as netx
-from . import strickgraph_fromgrid as fromgrid 
-from . import strickgraph_toknitmanual as tomanual
 from .load_stitchinfo import myasd as stinfo
-from . import strickgraph_action as action
-from .fromknitmanual import frommanual, BrokenManual
+from .fromknitmanual import BrokenManual
 
 from extrasfornetworkx import create_pathforhashing
 from extrasfornetworkx import follow_cached_path
@@ -88,7 +85,7 @@ class TestStringMethods( unittest.TestCase ):
                                                             self.firstrow, \
                                                             self.stitchinfo )
         testmessage = [ x.split() for x in "4yo\n4k\n4k\n4bo\n".splitlines() ]
-        manual = tomanual.tomanual( asd, self.stitchinfo ) 
+        manual = asd.to_manual( self.stitchinfo )
         manual = [ x.split() for x in manual.splitlines() ]
         #this removes the spaces and tabs
         for i in range(len(testmessage)):
@@ -135,8 +132,8 @@ class TestStringMethods( unittest.TestCase ):
 
 
     def test_compare_different_subgraphs( self ):
-        graph1 = frommanual( "5yo\n5k\n5k\n5bo", self.stitchinfo )
-        graph2 = frommanual( "6yo\n2k 1k2tog 2k\n5k\n5bo", self.stitchinfo )
+        graph1 = strickgraph.strickgraph.from_manual( "5yo\n5k\n5k\n5bo", self.stitchinfo)
+        graph2 = strickgraph.strickgraph.from_manual( "6yo\n2k 1k2tog 2k\n5k\n5bo", self.stitchinfo )
         common_nodes1 = ((0,0), (0,1), (1,0), (1,1), (2,0), (2,1), (2,2), \
                         (2,3), (2,4), (3,0), (3,1), (3,2), (3,3), (3,4), \
                         (1,3), (1,4), (0,3), (0,4) )
@@ -154,7 +151,7 @@ class TestStringMethods( unittest.TestCase ):
         pass
 
     def test_insertcolumn( self ):
-        asd = fromgrid.create_strickgraph_from_gridgraph( self.insertgraph, \
+        asd = strickgraph.strickgraph.from_gridgraph( self.insertgraph, \
                                                         self.insertfirstrow, \
                                                         self.stitchinfo )
         oldnodes = { *asd.nodes() }
@@ -174,7 +171,7 @@ class TestStringMethods( unittest.TestCase ):
                             or (x, (2,2)) in asd.edges(x) )
 
     def test_insertcolumn( self ):
-        asd = fromgrid.create_strickgraph_from_gridgraph( self.mygraph, \
+        asd = strickgraph.strickgraph.from_gridgraph( self.mygraph, \
                                                             self.firstrow, \
                                                             self.stitchinfo )
         subasd = netx.subgraph( asd, [(0,0),(1,0),(0,2),(0,1),(2,0)] )
@@ -185,7 +182,7 @@ class TestStringMethods( unittest.TestCase ):
 
 
     def test_findsubgraph( self ):
-        asd = fromgrid.create_strickgraph_from_gridgraph( self.mygraph, \
+        asd = strickgraph.strickgraph.from_gridgraph( self.mygraph, \
                                                             self.firstrow, \
                                                             self.stitchinfo )
         path = [(0, 'out', 'next', 1), (0, 'out', 'up', 2), (2, 'out', 'up', 3), (1, 'out', 'next', 4)]
@@ -196,10 +193,10 @@ class TestStringMethods( unittest.TestCase ):
         #    print(x.edges())
 
     def test_strickgraphhash( self ):
-        asd1 = fromgrid.create_strickgraph_from_gridgraph( self.minigraph, \
+        asd1 = strickgraph.strickgraph.from_gridgraph( self.minigraph, \
                                                             self.minifirstrow, \
                                                             self.stitchinfo )
-        asd2 = fromgrid.create_strickgraph_from_gridgraph( self.minigraph, \
+        asd2 = strickgraph.strickgraph.from_gridgraph( self.minigraph, \
                                                             self.minifirstrow, \
                                                             self.stitchinfo )
         asd1 = strickgraph.strickgraph( asd1 )
@@ -207,10 +204,10 @@ class TestStringMethods( unittest.TestCase ):
         self.assertEqual( asd1.__hash__(), asd2.__hash__() )
 
     def test_refindsubgraph( self ):
-        asd1 = fromgrid.create_strickgraph_from_gridgraph( self.biggraph, \
+        asd1 = strickgraph.strickgraph.from_gridgraph( self.biggraph, \
                                                             self.bigrow, \
                                                             self.stitchinfo )
-        asd2 = fromgrid.create_strickgraph_from_gridgraph( self.biggraph, \
+        asd2 = strickgraph.strickgraph.from_gridgraph( self.biggraph, \
                                                             self.bigrow, \
                                                             self.stitchinfo )
         asd1 = strickgraph.strickgraph( asd1 )
@@ -230,7 +227,7 @@ class TestStringMethods( unittest.TestCase ):
             self.assertFalse( set(foundpaths[0]) == set(subgraph1.nodes()) )
 
     def test_graphml( self ):
-        asd = fromgrid.create_strickgraph_from_gridgraph( self.mygraph, \
+        asd = strickgraph.strickgraph.from_gridgraph( self.mygraph, \
                                                             self.firstrow, \
                                                             self.stitchinfo )
         asd = strickgraph.strickgraph( asd )
@@ -243,7 +240,7 @@ class TestStringMethods( unittest.TestCase ):
         self.assertEqual( asd, qwe )
 
     def test_strickgraph_findborder( self ):
-        asd = fromgrid.create_strickgraph_from_gridgraph( self.mygraph, \
+        asd = strickgraph.strickgraph.from_gridgraph( self.mygraph, \
                                                             self.firstrow, \
                                                             self.stitchinfo )
         asd = strickgraph.strickgraph( asd )
@@ -255,8 +252,8 @@ class TestStringMethods( unittest.TestCase ):
 
     def test_frommanual( self ):
         testmanual = "4yo\n2k yo 2 k\n2k, 1k2tog, 1k\n4bo\n"
-        asd = frommanual( testmanual, self.stitchinfo )
-        manual = tomanual.tomanual( asd, self.stitchinfo )
+        asd = strickgraph.strickgraph.from_manual( testmanual, self.stitchinfo )
+        manual = asd.to_manual( self.stitchinfo )
         manual = [ x.split() for x in manual.splitlines() ]
         testmanual = [x.split() for x \
                         in "4yo\n2k 1yo 2k\n2k 1k2tog 1k\n4bo\n".splitlines()]
@@ -266,13 +263,13 @@ class TestStringMethods( unittest.TestCase ):
 
         def testbrokenmanual():
             testmanual = "4yo\n2k 1yo 1k\n2k, 1k2tog, 1k\n4bo\n"
-            frommanual( testmanual, self.stitchinfo )
+            strickgraph.strickgraph.from_manual( testmanual, self.stitchinfo )
         self.assertRaises( BrokenManual, testbrokenmanual )
 
         testmanual = [x.split() for x in \
                             "4yo\n2k yo 2k\n2k 1k2tog 1k\n4bo\n".splitlines()]
-        asd = frommanual( testmanual, self.stitchinfo )
-        manual = tomanual.tomanual( asd, self.stitchinfo )
+        asd = strickgraph.strickgraph.from_manual( testmanual, self.stitchinfo )
+        manual = asd.to_manual( self.stitchinfo )
         manual = [ x.split() for x in manual.splitlines() ]
         testmanual = [x.split() for x \
                         in "4yo\n2k 1yo 2k\n2k 1k2tog 1k\n4bo\n".splitlines()]
@@ -282,8 +279,8 @@ class TestStringMethods( unittest.TestCase ):
 
 
         testmanual = "2yo\n k p\n k p\n 2bo\n"
-        asd = frommanual( testmanual, self.stitchinfo )
-        manual = tomanual.tomanual( asd, self.stitchinfo )
+        asd = strickgraph.strickgraph.from_manual( testmanual, self.stitchinfo )
+        manual = asd.to_manual( self.stitchinfo )
         manual = [ x.split() for x in manual.splitlines() ]
         testmanual = [x.split() for x \
                         in "2yo\n 1k 1p\n 1k 1p\n 2bo\n".splitlines()]
@@ -293,21 +290,21 @@ class TestStringMethods( unittest.TestCase ):
 
     def test_manualtype_machine_and_thread( self ):
         testmanual = "2yo\n k p\n k p\n 2bo\n"
-        asd = frommanual( testmanual, self.stitchinfo, manual_type="machine" )
+        asd = strickgraph.strickgraph.from_manual( testmanual, self.stitchinfo, manual_type="machine" )
         attr = netx.get_node_attributes( asd, "stitchtype" )
         self.assertEqual( attr[(1,0)], attr[(2,0)] )
 
-        asd2 = frommanual( testmanual, self.stitchinfo, manual_type="thread" )
+        asd2 = strickgraph.strickgraph.from_manual( testmanual, self.stitchinfo, manual_type="thread" )
         attr = netx.get_node_attributes( asd2, "stitchtype" )
         self.assertEqual( attr[(1,0)], attr[(2,1)] )
 
     def test_manual_withstartside( self ):
         testmanual = "2yo\n k p\n k p\n 2bo\n"
         #test if upedge differs from nextedge
-        asd = frommanual( testmanual, self.stitchinfo, manual_type="machine", startside="right" )
+        asd = strickgraph.strickgraph.from_manual( testmanual, self.stitchinfo, manual_type="machine", startside="right" )
         self.assertEqual( set(asd.neighbors((1,1))), {(1,0),(2,1)} )
         #test if upedge equals nextedge
-        asd = frommanual( testmanual, self.stitchinfo, manual_type="machine", startside="left" )
+        asd = strickgraph.strickgraph.from_manual( testmanual, self.stitchinfo, manual_type="machine", startside="left" )
         self.assertEqual( set(asd.neighbors((1,1))), {(2,1)} )
 
 

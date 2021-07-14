@@ -6,6 +6,17 @@ main function here is tomanual
 import networkx as netx
 
 
+class strick_manualhelper:
+    def to_manual( self, stitchinfo, manual_type="thread" ):
+        return tomanual( self, stitchinfo, manual_type)
+
+    @classmethod
+    def from_manual( cls, manual, stitchinfo, manual_type="thread", \
+                                        startside="right", reversed=False ):
+        from . import fromknitmanual as frmman
+        return frmman.frommanual( manual, stitchinfo, manual_type, startside, reversed)
+
+
 def tomanual( strickgraph, stitchinfo, manual_type="thread" ):
     """
     text a manual for the given complete strickgraph
@@ -97,3 +108,4 @@ def find_rows( strickgraph ):
         tmpnode = nextnode
         nextnode = tmpdict[ tmpnode ]
     return rows
+

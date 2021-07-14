@@ -3,26 +3,8 @@ from .strickgraph_helper import fetch_neighbour_to_row, separate_to_rows, \
 from .strickgraph_helper import strick_NotImplementedError, strick_NotFoundError
 #from . import load_stitchinfo as stitchinfo
 #from .load_stitchinfo import myasd as stitchinfo
-from . import strickgraph_base  as base
 import networkx as netx
 
-def create_strickgraph_from_gridgraph( graph, firstrow, stitchinfo, \
-                                        startside="right" ):
-    """
-    This method takes a grid and converts it to a strickgraph
-    :param graph: must be convertable to a snake
-    :type graph: networkx.Graph
-    :param firstrow: defines the first row of the graph. is a list of connected
-                    nodes from graph:
-                        firstrow[i] in graph.nodes()
-    :type firstrow: list, elements==hashable
-    """
-    rows = _rowmanagment( graph, firstrow )
-    #strickgraph = netx.MultiDiGraph( graph )
-    strickgraph = base.strickgraph( graph )
-    strickgraph.clear_edges()
-    _managestitches( strickgraph, rows, graph, startside, stitchinfo )
-    return strickgraph
 
 
 def _rowmanagment( graph, firstrow ):
@@ -216,4 +198,24 @@ stitchgenerator_lib.update({
         (1,2,2,1):knit_stitch, #the first stitch of the row
         (1,0,1,2):knit_stitch, #the last stitch of the row
         })
+
+
+class strick_fromgrid:
+    @classmethod
+    def from_gridgraph( cls, graph, firstrow, stitchinfo, startside="right" ):
+        """
+        This method takes a grid and converts it to a strickgraph
+        :param graph: must be convertable to a snake
+        :type graph: networkx.Graph
+        :param firstrow: defines the first row of the graph. 
+                        is a list of connected nodes from graph:
+                            firstrow[i] in graph.nodes()
+        :type firstrow: list, elements==hashable
+        """
+        rows = _rowmanagment( graph, firstrow )
+        #strickgraph = netx.MultiDiGraph( graph )
+        strickgraph = cls( graph )
+        strickgraph.clear_edges()
+        _managestitches( strickgraph, rows, graph, startside, stitchinfo )
+        return strickgraph
 

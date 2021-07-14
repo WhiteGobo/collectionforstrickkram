@@ -1,9 +1,9 @@
 import networkx as netx
 
-class strickgraph( netx.MultiDiGraph ):
+class strickgraph_container():
     def __init__( self, *args, **argv ):
         self.supergraph = self
-        super().__init__( *args, **argv )
+        self.__datacontainer = netx.MultiDiGraph( *args, **argv )
 
     #@classmethod
     #def from_gridgraph( cls, graph, firstrow, stitchinfo, startside="right" ):
@@ -11,10 +11,10 @@ class strickgraph( netx.MultiDiGraph ):
     #                                                stitchinfo, startside )
 
     def give_real_graph( self ):
-        return self.subgraph( set(self.nodes()).difference(["start", "end"]))
+        return self.__datacontainer.subgraph( set(self.nodes()).difference(["start", "end"]))
 
     def subgraph( self, *args, **argv ):
-        tmpsubgraph = super().subgraph( *args, **argv )
+        tmpsubgraph = self.__datacontainer.subgraph( *args, **argv )
         tmpsubgraph.supergraph = self
         return tmpsubgraph
 
@@ -27,7 +27,7 @@ class strickgraph( netx.MultiDiGraph ):
             firststitch = self.give_next_node_to( currentrow[-1] )
         if presentation_type in machine_terms:
             #tmprows = [] #dont need this
-            node_side = _netx.get_node_attributes( self, "side" )
+            node_side = netx.get_node_attributes( self.__datacontainer, "side" )
             for row in rows:
                 if node_side[ row[0] ] == "right":
                     pass
@@ -64,7 +64,7 @@ class strickgraph( netx.MultiDiGraph ):
     def get_startside( self ):
         firststitch = self.give_next_node_to( "start" )
         firstrow = self.find_following_row( firststitch )
-        nodeattr = _netx.get_node_attributes( self, "side" )
+        nodeattr = netx.get_node_attributes( self.__datacontainer, "side" )
         return nodeattr[ firstrow[0] ]
 
     def find_following_row( self, firstnode ):
@@ -73,7 +73,7 @@ class strickgraph( netx.MultiDiGraph ):
         itself
         :todo: i dont like breaks
         """
-        node_side = _netx.get_node_attributes( self, "side" )
+        node_side = netx.get_node_attributes( self.__datacontainer, "side" )
         rowside = node_side[ firstnode ]
 
         row = []
@@ -88,13 +88,19 @@ class strickgraph( netx.MultiDiGraph ):
 
 
     def give_next_node_to( self, node ):
-        edges = self.edges( node, data=True )
+        edges = self.datacontainer.edges( node, data=True )
         nextedges = [ x for x in edges if x[2]["edgetype"] == "next" ]
         return nextedges[0][1]
 
+
+class strickgraph_manualtransformator:
+    #needed methods
+
+    #export to own class
     def to_manual( self, stitchinfo, manual_type="thread" ):
         return toknitmanual.tomanual( self, stitchinfo, manual_type)
 
+    #export to own class
     @classmethod
     def from_manual( cls, manual, stitchinfo, manual_type="thread", \
                                         startside="right", reversed=False ):

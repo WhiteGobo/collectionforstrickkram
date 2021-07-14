@@ -9,18 +9,10 @@ from . import strickgraph_fromgrid as fromgrid
 from . import strickgraph_toknitmanual as toknitmanual
 import numpy as np
 
-from .strickgraph_helper import separate_to_rows
+#from .strickgraph_helper import separate_to_rows
 
-class strickgraph( _netx.MultiDiGraph ):
-    def __init__( self, *args, **argv ):
-        self.supergraph = self
-        super().__init__( *args, **argv )
 
-    @classmethod
-    def from_gridgraph( cls, graph, firstrow, stitchinfo, startside="right" ):
-        return fromgrid.create_strickgraph_from_gridgraph( graph, firstrow, \
-                                                    stitchinfo, startside )
-
+class strick_physic_forceproperties:
     def set_positions( self, positions: Dict[ Hashable, Dict ] ):
         realgraph = self.give_real_graph()
         if set( positions.keys() ) != set( realgraph.nodes() ):
@@ -36,20 +28,6 @@ class strickgraph( _netx.MultiDiGraph ):
         _netx.set_edge_attributes( self, length_dictionary, "currentlength" )
 
 
-    def give_real_graph( self ):
-        return self.subgraph( set(self.nodes()).difference(["start", "end"]))
-
-    def subgraph( self, *args, **argv ):
-        tmpsubgraph = super().subgraph( *args, **argv )
-        tmpsubgraph.supergraph = self
-        return tmpsubgraph
-
-    def create_hashvalues( self ):
-        a = _netx.get_node_attributes( self, "stitchtype" )
-        b = _netx.get_node_attributes( self, "side" )
-        hashattributes = { key: a[key]+b[key] for key in a }
-        _netx.set_node_attributes( self, hashattributes, "hashval" )
-
     def set_calmlength( self, mythreadinfo ):
         """
         :param mythreadinfo: createcloth.physicalhelper.threadinfo
@@ -63,6 +41,13 @@ class strickgraph( _netx.MultiDiGraph ):
             lengthdict[ e ] = upstitchlength
         _netx.set_edge_attributes( self, lengthdict, "length" )
 
+
+class strick_compare:
+    def create_hashvalues( self ):
+        a = _netx.get_node_attributes( self, "stitchtype" )
+        b = _netx.get_node_attributes( self, "side" )
+        hashattributes = { key: a[key]+b[key] for key in a }
+        _netx.set_node_attributes( self, hashattributes, "hashval" )
 
     def __hash__( self ):
         self.supergraph.create_hashvalues()
@@ -107,6 +92,16 @@ class strickgraph( _netx.MultiDiGraph ):
             return False
 
         return self.__hash__() == other.__hash__()
+
+
+
+class strick_datacontainer( _netx.MultiDiGraph ):
+    def __init__( self, *args, **argv ):
+        """
+        Use .from_gridgraph, .from_manual
+        """
+        self.supergraph = self
+        super().__init__( *args, **argv )
 
     def get_rows( self, presentation_type="machine" ):
         rows = []
@@ -176,20 +171,30 @@ class strickgraph( _netx.MultiDiGraph ):
 
         return row
 
-
     def give_next_node_to( self, node ):
         edges = self.edges( node, data=True )
         nextedges = [ x for x in edges if x[2]["edgetype"] == "next" ]
         return nextedges[0][1]
 
-    def to_manual( self, stitchinfo, manual_type="thread" ):
-        return toknitmanual.tomanual( self, stitchinfo, manual_type)
 
-    @classmethod
-    def from_manual( cls, manual, stitchinfo, manual_type="thread", \
-                                        startside="right", reversed=False ):
-        from . import fromknitmanual as frmman
-        return frmman.frommanual( manual, stitchinfo, manual_type, startside, reversed)
+class strickgraph( strick_datacontainer, fromgrid.strick_fromgrid, \
+                        strick_compare, \
+                        strick_physic_forceproperties, \
+                        toknitmanual.strick_manualhelper ):
+    def __init__( self, *args, **argv ):
+        strick_datacontainer.__init__( self, *args, **argv )
+
+    def give_real_graph( self ):
+        return self.subgraph( set(self.nodes()).difference(["start", "end"]))
+
+    def subgraph( self, *args, **argv ):
+        tmpsubgraph = super().subgraph( *args, **argv )
+        tmpsubgraph.supergraph = self
+        return tmpsubgraph
+
+
+    def __hash__( self ):
+        return super( strick_compare ).__hash__()
 
 
 def get_neighbours_from( strickgraph, nodelist ):
@@ -208,15 +213,16 @@ class stricksubgraph( strickgraph ):
         side_of_nodes = _netx.get_node_attributes( self, "side" )
         all_edges = self.edges( data=True, keys=True )
         up_edges = [ (edge[0],edge[1]) for edge in all_edges \
-                    if edge[3]["edgetype"]=="up"]
+                        if edge[3]["edgetype"]=="up"]
         next_edges = [ (edge[0], edge[1]) for edge in all_edges \
-                    if edge[3]["edgetype"]=="next"]
+                        if edge[3]["edgetype"]=="next"]
         left_nodes = [ node for node in self.nodes \
                         if side_of_nodes[ node ] == "left" ]
         right_nodes = [ node for node in self.nodes \
                         if side_of_nodes[ node ] == "right" ]
 
-        asd =  sort_nodes_downtoup( left_nodes, right_nodes, next_edges, up_edges )
+        asd =  sort_nodes_downtoup( left_nodes, right_nodes, \
+                                    next_edges, up_edges )
         rows = []
         currentrow = []
         rows.append( currentrow )
@@ -231,7 +237,8 @@ class stricksubgraph( strickgraph ):
                 left = (node in left_nodes)
             currentrow.append( node )
         if presentation_type in machine_terms:
-            rows = reverse_every_second_row( rows, firstside= side_of_nodes[ rows[0][0] ] )
+            rows = reverse_every_second_row( rows, \
+                                    firstside= side_of_nodes[ rows[0][0] ] )
 
         return rows
 
