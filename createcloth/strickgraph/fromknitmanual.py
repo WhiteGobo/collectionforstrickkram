@@ -8,6 +8,8 @@ look at stitchnodeid for more information
 import regex
 from . import handknitting_terms
 from . import machine_terms
+import logging
+logger = logging.getLogger( __name__ )
 
 class BrokenManual( Exception ):
     pass
@@ -31,7 +33,11 @@ def frommanual( manual, stitchinfo, manual_type="thread", startside="right", \
         _reverse_every_row( manual )
     manual = transform_to_single_key( manual )
     manual = symbol_to_stitchid( manual, mystitchinfo )
-    mystrickgraph = list_to_strickgraph( manual, startside, mystitchinfo )
+    try:
+        mystrickgraph = list_to_strickgraph( manual, startside, mystitchinfo )
+    except BrokenManual:
+        logger.error( manual )
+        raise
     return mystrickgraph
 
 def _reverse_every_row( manual ):
@@ -43,11 +49,13 @@ def _reverse_every_second_row( manual ):
         manual[ 2*i+1 ].reverse()
 
 def symbol_to_stitchid( manual, mystitchinfo ):
-    namedict = { mystitchinfo.symbol[x]:x for x in mystitchinfo.symbol }
+    #namedict = { mystitchinfo.symbol[x]:x for x in mystitchinfo.symbol }
+    namedict = mystitchinfo.symbol_to_stitchid
     for i in range( len(manual)):
         try:
             manual[i] = [ namedict[x] for x in manual[i] ]
         except KeyError as err:
+            print( mystitchinfo.symbol )
             err.args = (*err.args, \
                             "manual contains keys, that are not supported")
             raise err

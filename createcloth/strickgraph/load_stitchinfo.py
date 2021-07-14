@@ -110,6 +110,14 @@ class stitchdatacontainer():
         #return self._symbol
     symbol = property( fget = _get_symbol )
 
+    def _get_antisymbol( self ):
+        antisymbol = dict()
+        for stitchid, symbol in self.symbol.items():
+            antisymbol[stitchid] = stitchid
+            antisymbol[symbol] = stitchid
+        return antisymbol
+    symbol_to_stitchid = property( fget = _get_antisymbol )
+
     def _get_types( self ):
         stitchinfo = list( self.myresources.iter( "{"+namespace+"}stitchtype" ))
         mylist = tuple(_singlestitchdata( stelement ).name \
