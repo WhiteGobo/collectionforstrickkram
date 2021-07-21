@@ -12,7 +12,15 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../'))
+sys.path.insert(0, os.path.abspath('../../'))
+print( sys.path )
+import networkx
+import createcloth.strickgraph.strickgraph_fromgrid
+import createcloth.strickgraph.strickgraph_base
+from createcloth.strickgraph.strickgraph_fromgrid import strick_fromgrid
+from createcloth.meshhandler import relax_gridgraph
+import createcloth.meshhandler
+import createcloth.verbesserer
 
 
 # -- Project information -----------------------------------------------------
