@@ -15,67 +15,6 @@ from extrasfornetworkx import verbesserer
 class FindError( Exception ):
     pass
 
-class verbesserer():
-    """
-    :todo: implement startpoint as getter and setter so the findgraph is
-            automaticly searched
-            try to initialise with only the subgraphs
-    """
-    def __init__( self, oldgraph, newgraph, oldgraph_nodes, \
-                    newgraph_nodes, startpoint, oldgraph_identificationpath, \
-                    oldgraph_nodeinfoonpath, \
-                    nodeattributes=["stitchtype", "side"], \
-                    edgeattributes=["edgetype"] ):
-        self.oldgraph = oldgraph
-        self.newgraph = newgraph
-        self.oldgraph_nodes = oldgraph_nodes
-        self.newgraph_nodes = newgraph_nodes
-        self.startpoint = startpoint
-        self.oldgraph_identificationpath = oldgraph_identificationpath
-        self.oldgraph_nodeinfoonpath = oldgraph_nodeinfoonpath
-
-    def __eq__( self, other ):
-        """
-        :todo: add starting_point to verification process
-        """
-        if not isinstance( other, type(self) ):
-            return False
-        a = self.oldgraph.subgraph( self.oldgraph_nodes ) \
-                == other.oldgraph.subgraph( other.oldgraph_nodes )
-        b = self.newgraph.subgraph( self.newgraph_nodes ) \
-                == other.newgraph.subgraph( other.newgraph_nodes )
-        #c = self.startpoint == other.startpoint #this doesnt work
-        #because the identifier of the startpoint could be different
-        return a and b
-
-    def replace_in_graph( self, graph, startnode ):
-        # find subgraph to replace
-        try:
-            foundsubgraph, foundtranslator = _replace_findsubgraph_in_original(\
-                graph, startnode, \
-                self.oldgraph_identificationpath, self.oldgraph_nodeinfoonpath,\
-                self.oldgraph.subgraph( self.oldgraph_nodes ))
-        except KeyError as err:
-            print( err.args )
-            raise err
-            return False
-
-        uniquetranslator = tounique_translator( graph.nodes(), \
-                                                list(self.oldgraph.nodes()) \
-                                                + list(self.newgraph.nodes()) )
-        uniquetranslator.update( foundtranslator )
-
-        oldgraph, oldgraph_nodes, newgraph, newgraph_nodes =\
-                    _create_update_graphs( self.oldgraph, self.oldgraph_nodes,\
-                                            self.newgraph, self.newgraph_nodes,\
-                                            uniquetranslator )
-
-        nodes_to_remove = set(oldgraph_nodes).difference(newgraph_nodes)
-        remove_edges = oldgraph.subgraph(oldgraph_nodes ).edges()
-        graph.remove_edges_from( remove_edges )
-        graph.remove_nodes_from( nodes_to_remove )
-        graph.update( newgraph.subgraph( newgraph_nodes ) )
-        return True
 
 def _create_update_graphs( oldgraph, oldgraph_nodes, newgraph, newgraph_nodes, \
                                 translator):
