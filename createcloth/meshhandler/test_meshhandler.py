@@ -10,7 +10,8 @@ from ..meshhandler import plysurfacehandler, relax_gridgraph
 #from .new_gridrelaxator import relax_gridgraph
 from . import test_src
 
-from ..strickgraph import strickgraph_fromgrid as fromgrid
+#from ..strickgraph import strickgraph_fromgrid as fromgrid
+from ..strickgraph import strickgraph
 from ..strickgraph.load_stitchinfo import myasd as stinfo
 
 class TestMeshhandlerMethods( unittest.TestCase ):
@@ -42,9 +43,10 @@ class TestMeshhandlerMethods( unittest.TestCase ):
         mysurfacemap = q.get_surface( 0 ).get_surfacemap()
         mygraph = netx.grid_2d_graph( 30, 30 )
         firstrow = [ x for x in mygraph.nodes() if x[0] == 0 ]
-        gridgraph = fromgrid.create_strickgraph_from_gridgraph( mygraph, \
-                                                        firstrow, \
-                                                        stinfo )
+        gridgraph = strickgraph.from_gridgraph( mygraph, firstrow, stinfo )
+        #gridgraph = fromgrid.create_strickgraph_from_gridgraph( mygraph, \
+        #                                                firstrow, \
+        #                                                stinfo )
 
         border = gridgraph.get_borders()
         positions = relax_gridgraph( gridgraph, mysurfacemap )

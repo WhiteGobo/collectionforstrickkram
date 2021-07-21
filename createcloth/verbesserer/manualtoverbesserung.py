@@ -6,7 +6,7 @@ from ..strickgraph.strickgraph_replacesubgraph import create_pathforhashing
 from . import xml_config
 import xml.etree.ElementTree as ET
 #from lxml import etree as ET
-from extrasfornetworkx import generate_verbesserer_from_graph_difference
+from extrasfornetworkx import verbesserer
 
 class manualtoverbesserung_Exception( Exception ):
     pass
@@ -35,7 +35,7 @@ def main( manual_old, manual_new, start_at="bottomleft", \
                                         manual_type="machine" )
     new_graph = frommanual( manual_new, startside = start_side, \
                                         manual_type="machine" )
-    return generate_verbesserer_from_graph_difference( \
+    return verbesserer.from_graph_difference( \
                                             old_graph, new_graph, \
                                             "start", "start", \
                                             "edgetype", ["stitchtype", "side"] )

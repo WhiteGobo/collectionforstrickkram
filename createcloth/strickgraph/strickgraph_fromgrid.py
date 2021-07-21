@@ -200,17 +200,18 @@ stitchgenerator_lib.update({
         })
 
 
+from typing import Iterable, Hashable
 class strick_fromgrid:
     @classmethod
-    def from_gridgraph( cls, graph, firstrow, stitchinfo, startside="right" ):
-        """
-        This method takes a grid and converts it to a strickgraph
+    def from_gridgraph( cls, graph, firstrow:Iterable[Hashable], stitchinfo, startside="right" ):
+        """ This method takes a grid and converts it to a strickgraph
+
         :param graph: must be convertable to a snake
         :type graph: networkx.Graph
         :param firstrow: defines the first row of the graph. 
-                        is a list of connected nodes from graph:
-                            firstrow[i] in graph.nodes()
-        :type firstrow: list, elements==hashable
+                        is a list of connected nodes from graph: 
+                        firstrow[i] in graph.nodes()
+        :type firstrow: Iterable[ Hashable ]
         """
         rows = _rowmanagment( graph, firstrow )
         #strickgraph = netx.MultiDiGraph( graph )

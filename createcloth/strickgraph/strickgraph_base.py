@@ -1,6 +1,6 @@
 import networkx as _netx
 #from . import strickgraph_weisfeiler_lehman_graph_hash as myhash
-from extrasfornetworkx import weisfeiler_lehman_graph_hash_multidigraph
+from extrasfornetworkx import weisfeiler_lehman_graph_hash
 from .constants import machine_terms, handknitting_terms, WrongTermError
 import itertools
 from collections import Counter
@@ -53,14 +53,12 @@ class strick_compare:
         self.supergraph.create_hashvalues()
 
         subgraph = self.subgraph( set(self.nodes())-{"start", "end"})
-        #returnv  = int( myhash.weisfeiler_lehman_graph_hash( subgraph ),
-        #                                            base = 16 )
-        #return returnv
-        returnv = weisfeiler_lehman_graph_hash_multidigraph( subgraph, \
-                            #node_attr_list=["stitchtype", "side"], \
-                            node_attr="hashval", \
-                            edge_attr="edgetype",\
-                            )
+        nodelabels = { n:str( data["hashval"] )
+                        for n, data in subgraph.nodes(data=True) }
+        edges = [ ( v1, v2, str( data["edgetype"] ) )
+                        for v1, v2, i, data \
+                        in subgraph.edges(data=True, keys=True) ]
+        returnv = weisfeiler_lehman_graph_hash( nodelabels, edges )
         return int( returnv, base=16 )
 
     def presort( self ):
@@ -181,7 +179,15 @@ class strickgraph( strick_datacontainer, fromgrid.strick_fromgrid, \
                         strick_compare, \
                         strick_physic_forceproperties, \
                         toknitmanual.strick_manualhelper ):
+    """QWERQWER
+
+    asdf
+    this is something
+    """
     def __init__( self, *args, **argv ):
+        """
+        myinit
+        """
         strick_datacontainer.__init__( self, *args, **argv )
 
     def give_real_graph( self ):

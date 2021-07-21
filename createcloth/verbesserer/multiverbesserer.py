@@ -1,5 +1,4 @@
 from extrasfornetworkx import multiverbesserer
-from extrasfornetworkx import multiverbessererfromxml
 from ..strickgraph.strickgraph_base import stricksubgraph
 import itertools
 import math
@@ -32,6 +31,9 @@ class strick_multiverbesserer( multiverbesserer ):
 
     def print_with_matplotlib( self, show = True, useoldgraph=True, \
                                                         tmpplotinfo=None ):
+        """visualize with matplot"""
+        import matplotlib.pyplot as plt
+        from ..visualizer.graph_2d import easygraph
         nrows = math.ceil( math.sqrt(len( self.verbessererlist)+1) )
         nrows = max( 2, nrows )
         fig, axs = plt.subplots( nrows=nrows, ncols=nrows )
@@ -52,6 +54,10 @@ class strick_multiverbesserer( multiverbesserer ):
         return tmpplotinfo
 
     def replace_in_graph_with_exception( self, mystrickgraph, markednode ):
+        """replace in graph
+
+        :raises: StrickgraphVerbessererException
+        """
         suc, info = self.replace_in_graph_withinfo( mystrickgraph, markednode ) 
         if not suc:
             raise StrickgraphVerbessererException( self, mystrickgraph, \
@@ -65,10 +71,17 @@ class strick_multiverbesserer( multiverbesserer ):
         axis.legend()
 
     def print_compare_to_graph_at_position( self, graph, marknode ):
+        """plot helping to understand problems"""
         tmpplotinfo = self.print_with_matplotlib( show = False )
         easygraph( graph, marked_nodes =[ marknode ], \
                             myplotinfo = tmpplotinfo )
+    @classmethod
+    def from_xmlstring( cls, xmlstr: str,graph_type=stricksubgraph, name=None ):
+        """Create multiverbesserer from xml string"""
+        multi = multiverbesserer.from_xml( xmlstr, graph_type=graph_type )
+        return cls( multi, name )
+
 
 def strick_multiverbessererfromxml( xmlstr, graph_type=stricksubgraph, name=None ):
-    multi = multiverbessererfromxml( xmlstr, graph_type=graph_type )
+    multi = multiverbesserer.from_xml( xmlstr, graph_type=graph_type )
     return strick_multiverbesserer( multi, name )

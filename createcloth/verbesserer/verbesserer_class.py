@@ -9,8 +9,8 @@ import xml.etree.ElementTree as ET
 from .manualtoverbesserung import generate_replacement_from_graphs, find_startpoint_dictionary, replace_nodenames_for_samenames, replace_nodes_in_list, build_xmlElement
 import copy
 import io
-from extrasfornetworkx import generate_verbesserer_from_graph_difference
 import extrasfornetworkx
+from extrasfornetworkx import verbesserer
 
 class FindError( Exception ):
     pass
@@ -234,19 +234,17 @@ def manualtoersetzer( manual_old, manual_new, stitchinfo, \
                                 start_at="bottomleft", \
                                 manual_type="machine", startside="right",\
                                 startpoint_method="marked", reversed=False):
-    """
-    generates everything i need for replacing a subgraph
-    :param startpoint_method: keyword for finding the startpoint for 
-                                replacement
-    :param nodes_to_consider: state which nodes should be searched for, when
-                        replacing a subgraph. if none equals automated
+    """generates everything i need for replacing a subgraph
+
+    :param startpoint_method: keyword for finding the startpoint for replacement
+    :param nodes_to_consider: state which nodes should be searched for, when replacing a subgraph. if none equals automated
     :type nodes_to_consider: none, networkx.graph or list
     :param manual_old: the graph where the subgraph is to be searched for
     :param manual_new: the target graph
     :param start_at: string to determine which node should be starting node for
                     the search later in the replacement
                     possible options are given by:
-                        find_startpoint_dictionary.keys()
+                    find_startpoint_dictionary.keys()
                     extra options can be added, see find_startpoint_dictionary
     :type start_at: str
     :todo: remake xml to contain which attributes are used in path generation
@@ -278,7 +276,7 @@ def manualtoersetzer( manual_old, manual_new, stitchinfo, \
     #old_graph, startold, map_old = nodestosimplenames( old_graph, startold )
     #new_graph, startnew, map_new = nodestosimplenames( new_graph, startnew )
     try:
-        returnv= extrasfornetworkx.generate_verbesserer_from_graph_difference(
+        returnv = extrasfornetworkx.verbesserer.from_graph_difference( \
                                             old_graph, new_graph,\
                                             startold,\
                                             startnew,\
@@ -295,7 +293,7 @@ def manualtoersetzer( manual_old, manual_new, stitchinfo, \
 
 
 
-    generate_verbesserer_from_graph_difference( \
+    verbesserer.from_graph_difference( \
                                             old_graph, new_graph, \
                                             startold, startnew, \
                                             "edgetype", ["stitchtype", "side"] )
