@@ -67,7 +67,6 @@ class test_manualtoverbesserung( unittest.TestCase ):
 
 
     def test_multiersetzer( self ):
-        from . import resourcestest as test_src
         from importlib.resources import read_text
         xml_string = read_text( test_src, "markstitches.xml" )
         stitchinfo.add_additional_resources( xml_string )
