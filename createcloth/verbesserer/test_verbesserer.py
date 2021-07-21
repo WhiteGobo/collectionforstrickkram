@@ -68,22 +68,14 @@ class test_manualtoverbesserung( unittest.TestCase ):
 
     def test_multiersetzer( self ):
         from . import resourcestest as test_src
-        with importlib.resources.path( test_src,"markstitches.xml") as filepath:
-            extraresourcesfile = open( filepath, "r" )
-            xml_string = extraresourcesfile.read()
-            extraresourcesfile.close()
+        from importlib.resources import read_text
+        xml_string = read_text( test_src, "markstitches.xml" )
         stitchinfo.add_additional_resources( xml_string )
 
-        with importlib.resources.path( test_src,\
-                            "simplegrid_markstitch.knitmanual") as filepath:
-            asdf = open( filepath, "r" )
-            old_manual = asdf.read().splitlines()
-            asdf.close()
-        with importlib.resources.path( test_src,\
-                            "better_markstitch.knitmanual") as filepath:
-            asdf = open( filepath, "r" )
-            new_manual = asdf.read().splitlines()
-            asdf.close()
+        old_manual = read_text( test_src, \
+                            "simplegrid_markstitch.knitmanual").splitlines()
+        new_manual = read_text( test_src, \
+                            "better_markstitch.knitmanual").splitlines()
 
         ersetzer1 = manualtoersetzer( old_manual, new_manual, stitchinfo, \
                                     manual_type= "machine",\
