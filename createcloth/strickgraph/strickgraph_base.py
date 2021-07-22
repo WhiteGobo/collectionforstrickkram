@@ -64,6 +64,7 @@ class strick_compare:
     def presort( self ) -> Hashable:
         """magic method to know with which other graphs it wont definitly 
         is unequal
+
         :returns: Hashable
         """
         self.supergraph.create_hashvalues()
