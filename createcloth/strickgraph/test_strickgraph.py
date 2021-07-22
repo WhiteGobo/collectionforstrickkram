@@ -148,7 +148,17 @@ class TestStringMethods( unittest.TestCase ):
         test if i can add succesfully new stitchtypes via xml-file
         :todo: write this method
         """
-        pass
+        myman = "6yo\n1k 1kmark 1k2tog 2k\n1k 1k2tog 2k\n4bo"
+        from copy import deepcopy
+        stitchinfo = deepcopy( self.stitchinfo )
+        from . import stitchdata
+        from importlib.resources import read_text
+        xml_string = read_text( stitchdata, "markstitches.xml" )
+        stitchinfo.add_additional_resources( xml_string )
+
+        asd = strickgraph.strickgraph.from_manual( myman, stitchinfo )
+        asd.get_alternative_stitchtypes()
+        asd.copy_with_alternative_stitchtype()
 
     def test_insertcolumn( self ):
         asd = strickgraph.strickgraph.from_gridgraph( self.insertgraph, \

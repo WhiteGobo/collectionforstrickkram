@@ -105,7 +105,7 @@ class alternative_stitchtype_support():
         :return: Return dictionary with node to stitchtype
         :rtype: Dict[ Hashable, str ]
         """
-        return netx.get_node_attributes( self, "alternative_stitchtype" )
+        return _netx.get_node_attributes( self, "alternative_stitchtype" )
 
     def copy_with_alternative_stitchtype( self ):
         """Returns another strickgraph with replaced stitchtypes with 
@@ -116,9 +116,9 @@ class alternative_stitchtype_support():
         :rtype: type( self )
         """
         selfcopy = self.copy()
-        newstitchtypes = netx.get_node_attributes( selfcopy, \
+        newstitchtypes = _netx.get_node_attributes( selfcopy, \
                                                     "alternative_stitchtype" )
-        netx.set_node_attributes( selfcopy, newstitchtypes, "stitchtype" )
+        _netx.set_node_attributes( selfcopy, newstitchtypes, "stitchtype" )
         return selfcopy
 
 
@@ -204,7 +204,7 @@ class strick_datacontainer( _netx.MultiDiGraph ):
 
 
 class strickgraph( strick_datacontainer, fromgrid.strick_fromgrid, \
-                        strick_compare, \
+                        strick_compare, alternative_stitchtype_support, \
                         strick_physic_forceproperties, \
                         toknitmanual.strick_manualhelper ):
     """QWERQWER
@@ -217,6 +217,7 @@ class strickgraph( strick_datacontainer, fromgrid.strick_fromgrid, \
         myinit
         """
         strick_datacontainer.__init__( self, *args, **argv )
+        self.supergraph = self
 
     def give_real_graph( self ):
         return self.subgraph( set(self.nodes()).difference(["start", "end"]))
