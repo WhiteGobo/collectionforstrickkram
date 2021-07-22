@@ -96,7 +96,7 @@ class strick_compare:
 class strick_datacontainer( _netx.MultiDiGraph ):
     def __init__( self, *args, **argv ):
         """Use .from_gridgraph, .from_manual"""
-        self.supergraph = self
+        Use .from_gridgraph, .from_manual
         super().__init__( *args, **argv )
 
     def get_rows( self, presentation_type="machine" ):
@@ -128,8 +128,8 @@ class strick_datacontainer( _netx.MultiDiGraph ):
         #return rows
 
     def get_borders( self ):
-        """
-        gives the borders as lists
+        """gives the borders as lists
+
         :todo: from a single row multiple stitches can contribute to each border
         :rtype down, up, left, right: list, list, list, list
         :return: down, up, left, right
@@ -143,15 +143,16 @@ class strick_datacontainer( _netx.MultiDiGraph ):
         return down, up, left, right
 
     def get_startside( self ):
+        """Get startside"""
         firststitch = self.give_next_node_to( "start" )
         firstrow = self.find_following_row( firststitch )
         nodeattr = _netx.get_node_attributes( self, "side" )
         return nodeattr[ firstrow[0] ]
 
     def find_following_row( self, firstnode ):
-        """
-        return the row of this node, the start of the row will be the node
-        itself
+        """return the row of this node, the start of the row will be the 
+        node itself.
+
         :todo: i dont like breaks
         """
         node_side = _netx.get_node_attributes( self, "side" )
@@ -210,9 +211,7 @@ def get_neighbours_from( strickgraph, nodelist ):
     return neighbours
 
 class stricksubgraph( strickgraph ):
-    """
-    this class is extra for strickgraph patches
-    """
+    """this class is extra for strickgraph patches"""
     def get_rows( self, presentation_type="thread" ):
         side_of_nodes = _netx.get_node_attributes( self, "side" )
         all_edges = self.edges( data=True, keys=True )
