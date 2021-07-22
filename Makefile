@@ -16,6 +16,9 @@ build:
 	-rm dist/*
 	-python -m pep517.build .
 
+documentation:
+	cd doc && $(MAKE) html
+
 create_verbesserung_for_rechtsstrickzuangepasst:
 	python -m createcloth.rechtsstrickzuangepasst.src.compile_verbesserer
 
