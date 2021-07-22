@@ -6,26 +6,16 @@ Strickgraph Utils
 
    **classes:**
 
-   ..autoclass:: verbesserer
+   .. autoclass:: strickalterator
+       :members:
+       :inherited-members:
 
-   **methods:**
-
-   .. autofunction:: manualtoersetzer
-   .. autofunction:: verbessererfromxml
-   .. autofunction:: verbesserungtoxml
+   .. autoclass:: strick_multiverbesserer
+       :members:
+       :inherited-members:
 
 
    **Exceptions:**
 
    .. autoclass:: FindError
-
-   **Multithingis:**
-
-   .. autofunction:: multifrommanuals
-
-   .. autoclass:: strick_multiverbesserer
-       :members:
-
-   .. autofunction:: strick_multiverbessererfromxml
-
    .. autoclass:: StrickgraphVerbessererException
