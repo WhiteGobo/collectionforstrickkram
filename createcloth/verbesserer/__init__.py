@@ -8,4 +8,4 @@ from .verbesserer_class import FindError
 from .multiverbesserer import strick_multiverbesserer
 from .multiverbesserer import StrickgraphVerbessererException
 
-#from .multifrommanuals import main as multifrommanuals
+from .manualtoverbesserung import _start_at_marked

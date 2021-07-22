@@ -1,7 +1,6 @@
 import pkg_resources
 import copy
 from extrasfornetworkx import multiverbesserer
-import argparse
 
 from .verbesserer_class import strickalterator
 from .multiverbesserer import strick_multiverbesserer

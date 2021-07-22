@@ -2,6 +2,7 @@ from extrasfornetworkx import multiverbesserer
 from ..strickgraph.strickgraph_base import stricksubgraph
 import itertools
 import math
+from .verbesserer_class import strickalterator
 
 class StrickgraphVerbessererException( Exception ):
     def __init__( self, mymultiverbesserer, mystrickgraph, markednode, *args ):
@@ -80,6 +81,80 @@ class strick_multiverbesserer( multiverbesserer ):
         """Create multiverbesserer from xml string"""
         multi = multiverbesserer.from_xml( xmlstr, graph_type=graph_type )
         return cls( multi, name )
+
+
+    @classmethod
+    def from_manuals( cls, pairlist, reverse=False, side="both", \
+                        oldtranslatorlist=[] ):
+        if side == "both":
+            usedsides = ("left", "right")
+        elif side == "right":
+            usedsides = ("right", )
+        elif side == "left":
+            usedsides = ("left", )
+        else:
+            raise KeyError( "'side' must be 'both', 'right' or 'left'." )
+
+        from importlib.resources import read_text
+        from .. import verbesserer as main
+        from ..strickgraph.load_stitchinfo import myasd as stitchinfo
+        xml_string = read_text( main, "markstitches.xml" )
+        stitchinfo.add_additional_resources( xml_string )
+        ersetzerlist = []
+        for old_manual_str, new_manual_str in pairlist:
+            for myside in usedsides:
+                try:
+                    if oldtranslatorlist:
+                        foundtranslator = _tryoldtranslator( oldtranslatorlist,\
+                                                myside,\
+                                                old_manual_str, new_manual_str,\
+                                                stitchinfo, reverse=reverse )
+                    else:
+                        foundtranslator = None
+                    if foundtranslator:
+                        ersetzerlist.append( foundtranslator )
+                    else:
+                        ersetzerlist.append(\
+                                strickalterator.from_manuals( \
+                                old_manual_str, new_manual_str, \
+                                stitchinfo, \
+                                startside=myside, reversed = reverse )
+                                )
+                except Exception as err:
+                    print( err.args )
+                    raise Exception("happend at %s" %( repr((old_manual_str, \
+                                        new_manual_str)) ) ) from err
+
+        return cls( ersetzerlist )
+
+
+def _tryoldtranslator( translatorlist, startside, oldmanstr, newmanstr, \
+                                        stitchinfo, reverse=False ):
+    trystrick = frommanual( oldmanstr, stitchinfo, manual_type="machine", \
+                                startside = startside, reversed=reverse )
+    startpoint = _start_at_marked( trystrick )
+    targetstrick = frommanual( newmanstr, stitchinfo, manual_type="machine", \
+                                startside = startside, reversed=reverse )
+    _start_at_marked( targetstrick ) #just to replace marked stitches
+    for trans in translatorlist:
+        asd = copy.deepcopy( trystrick )
+        succ, info = trans.replace_in_graph_withinfo( asd, startpoint )
+        if succ:
+            if asd == targetstrick:
+                return trans
+    return None
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def strick_multiverbessererfromxml( xmlstr, graph_type=stricksubgraph, name=None ):

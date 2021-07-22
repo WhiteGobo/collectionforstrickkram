@@ -7,6 +7,7 @@ import networkx as netx
 from ..strickgraph.load_stitchinfo import myasd as stitchinfo
 import extrasfornetworkx
 from extrasfornetworkx import multiverbesserer, verbesserer
+from .multiverbesserer import strick_multiverbesserer
 from . import resourcestest as test_src
 from .verbesserer_class import strickalterator
 
@@ -63,6 +64,19 @@ class test_manualtoverbesserung( unittest.TestCase ):
         testoutput ="5yo\n5k\n2k 1yo 3k\n2k 1k2tog 2k\n5k\n5bo"
         #self.assertEqual( mystrick.to_manual( stitchinfo), testoutput )
 
+    def test_multifrommanuals( self ):
+        pairlist = (( \
+                "6yo\n1k 1kmark 1k2tog 2k\n1k 1k2tog 2k\n4bo", \
+                "6yo\n1k 1kmark 2k 2bo\n4k\n4bo" \
+                ), )
+        myersetzer = strick_multiverbesserer.from_manuals( \
+                                pairlist, reverse=reversed, side="left", \
+                                oldtranslatorlist = [] )
+        mygraph = strickgraph.from_manual( pairlist[0][0] )
+        mygraph2 = strickgraph.from_manual( pairlist[0][1] )
+        success = myersetzer.replace_in_graph( mygraph, (1,1) )
+        self.assertTrue( success )
+        self.assertEqual( mygraph, mygraph2 )
 
     def test_multiersetzer( self ):
         from importlib.resources import read_text

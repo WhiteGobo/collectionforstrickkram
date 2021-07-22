@@ -64,14 +64,19 @@ class strickalterator( extrasfornetworkx.verbesserer ):
                                                 "side"] )
         except KeyError as err:
             if err.args[0] in [ "start", "end" ]:
-                err.args = ( *err.args, "Most likely the oldgraph and newgraph"\
+                raise NotSimilarError() from err
+            raise Exception( "This shouldnt happen" ) from err
+        return returnv
+
+class NotSimilarError( Exception ):
+    """Error, when graphs are not similar"""
+    def __init__( self, *args ):
+        extradescription = "Most likely the oldgraph and newgraph"\
                                 +" are not similar or the startpoint is not "\
                                 + "chosen as a similar point",\
                                 "the detection of similar graphnodes is "\
-                                +"still not fully functionable")
-            raise err
-        return returnv
-
+                                +"still not fully functionable"
+        super().__init__( self, *args, extradescription )
 
 class FindError( Exception ):
     pass

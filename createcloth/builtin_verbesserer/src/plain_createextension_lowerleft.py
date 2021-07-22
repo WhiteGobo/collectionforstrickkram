@@ -1,15 +1,13 @@
 import pkg_resources
-from ...verbesserer import manualtoersetzer, verbesserungtoxml, \
-                        verbessererfromxml, strick_multiverbessererfromxml
-from ...verbesserer.manualtoverbesserung import _start_at_marked
+#from ...verbesserer import manualtoersetzer, verbesserungtoxml, \
+#                        verbessererfromxml, strick_multiverbessererfromxml
+from ...verbesserer import strick_multiverbesserer, strickalterator
 import copy
 
 from ...strickgraph.load_stitchinfo import myasd as stitchinfo
 from ...strickgraph.strickgraph_base import stricksubgraph as mygraphtype
 from extrasfornetworkx import multiverbesserer
 import argparse
-from ...strickgraph.fromknitmanual import frommanual
-from ...verbesserer.multifrommanuals import main as manstomulti
 
 def parse_arguments():
     parser = argparse.ArgumentParser()
@@ -80,8 +78,8 @@ if __name__=="__main__":
                 mytext = "".join( myfile.readlines() )
                 myfile.close()
                 try:
-                    insertcolumn = strick_multiverbessererfromxml( mytext, \
-                                                    graph_type=mygraphtype)
+                    insertcolumn = strickalterator.from_xml( mytext, \
+                                                    graph_type=mygraphtype )
                     oldtranslatorlist = insertcolumn.verbessererlist
                 except Exception:
                     oldtranslatorlist = []
@@ -93,16 +91,18 @@ if __name__=="__main__":
     if reversed:
         side = "right"
 
-    myersetzer = manstomulti( pairlist, reverse=reversed, side=side, \
+    #myersetzer = manstomulti( pairlist, reverse=reversed, side=side, \
+    myersetzer = strick_multiverbesserer.from_manuals( \
+                                pairlist, reverse=reversed, side=side, \
                                 oldtranslatorlist = oldtranslatorlist )
 
     
     if filename:
 
         myfile = open( filename, "w" )
-        myfile.write( myersetzer.toxml_string() )
+        myfile.write( myersetzer.to_xml() )
         myfile.close()
 
     else:
-        print( myersetzer.toxml_string() )
+        print( myersetzer.to_xml() )
         print( len( myersetzer.verbessererlist ) )
