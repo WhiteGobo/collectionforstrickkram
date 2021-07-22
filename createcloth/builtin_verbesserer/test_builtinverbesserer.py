@@ -1,6 +1,6 @@
 import unittest
 
-from . import insertcolumn
+from . import eaves_extension_lowerright
 
 
 class test_builtinverbesserer( unittest.TestCase ):
@@ -8,5 +8,5 @@ class test_builtinverbesserer( unittest.TestCase ):
         pass
 
     def test_linecontinuation( self ):
-        print( insertcolumn )
+        print( eaves_extension_lowerright )
         pass

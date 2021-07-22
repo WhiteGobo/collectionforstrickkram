@@ -1,7 +1,4 @@
 import unittest
-#from .manualtoverbesserung import main as manualtoverbesserung
-#from .verbesserer_class import manualtoverbesserung, verbesserungtoxml, verbessererfromxml
-from . import manualtoersetzer, verbesserungtoxml, verbessererfromxml
 #import pkg_resources
 import importlib
 from ..strickgraph import strickgraph
@@ -11,6 +8,7 @@ from ..strickgraph.load_stitchinfo import myasd as stitchinfo
 import extrasfornetworkx
 from extrasfornetworkx import multiverbesserer, verbesserer
 from . import resourcestest as test_src
+from .verbesserer_class import strickalterator
 
 class test_manualtoverbesserung( unittest.TestCase ):
     def setUp( self ):
@@ -26,10 +24,9 @@ class test_manualtoverbesserung( unittest.TestCase ):
         new_manual = read_text( test_src, \
                             "better_markstitch.knitmanual").splitlines()
 
-        asd = manualtoersetzer( old_manual, new_manual,  stitchinfo )
+        asd = strickalterator.from_manuals( old_manual, new_manual, stitchinfo)
 
         qwe = asd.to_xml()
-        #qwe = verbesserungtoxml( asd )
         remake = verbesserer.from_xmlstr( qwe, graph_type=strickgraph )
 
         self.assertEqual( asd, remake )
@@ -45,8 +42,8 @@ class test_manualtoverbesserung( unittest.TestCase ):
         new_manual = read_text( test_src, \
                             "better_markstitch.knitmanual").splitlines()
 
-        asd = manualtoersetzer( old_manual, new_manual, stitchinfo, \
-                                startside="right" )
+        asd = strickalterator.from_manuals( old_manual, new_manual, \
+                                stitchinfo, startside="right" )
 
         
         mygraph = netx.grid_2d_graph( 6, 5 )
@@ -60,6 +57,7 @@ class test_manualtoverbesserung( unittest.TestCase ):
         success, extrainfo = asd.replace_in_graph_withinfo( mystrick, (2,2) )
         if not success:
             print( extrainfo )
+
         self.assertTrue( success )
 
         testoutput ="5yo\n5k\n2k 1yo 3k\n2k 1k2tog 2k\n5k\n5bo"
@@ -76,13 +74,14 @@ class test_manualtoverbesserung( unittest.TestCase ):
         new_manual = read_text( test_src, \
                             "better_markstitch.knitmanual").splitlines()
 
-        ersetzer1 = manualtoersetzer( old_manual, new_manual, stitchinfo, \
+        ersetzer1 = strickalterator.from_manuals( old_manual, new_manual, \
+                                    stitchinfo, \
                                     manual_type= "machine",\
                                     startside="left" )
-        ersetzer2 = manualtoersetzer( old_manual, new_manual, stitchinfo, \
+        ersetzer2 = strickalterator.from_manuals( old_manual, new_manual, \
+                                    stitchinfo, \
                                     manual_type= "machine",\
                                     startside="right" )
-
 
         myersetzer = multiverbesserer([ ersetzer1, ersetzer2 ])
 
@@ -91,8 +90,8 @@ class test_manualtoverbesserung( unittest.TestCase ):
             # create testgraph
             mygraph = netx.grid_2d_graph( 6, 5 )
             firstrow = [ x for x in mygraph.nodes() if x[0] == 0 ]
-            mystrick = strickgraph.from_gridgraph( mygraph, firstrow,stitchinfo, \
-                                    startside=startside )
+            mystrick = strickgraph.from_gridgraph( mygraph, firstrow, \
+                                    stitchinfo, startside=startside )
 
             # this is the work to be done, the replacement
             success = myersetzer.replace_in_graph( mystrick, (2,2) )

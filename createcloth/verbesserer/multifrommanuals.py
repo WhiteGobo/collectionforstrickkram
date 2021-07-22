@@ -3,8 +3,8 @@ import copy
 from extrasfornetworkx import multiverbesserer
 import argparse
 
-from .verbesserer_class import manualtoersetzer, verbessererfromxml, verbesserungtoxml
-from .multiverbesserer import strick_multiverbessererfromxml, strick_multiverbesserer
+from .verbesserer_class import strickalterator
+from .multiverbesserer import strick_multiverbesserer
 from .manualtoverbesserung import _start_at_marked
 
 from ..strickgraph.load_stitchinfo import myasd as stitchinfo
@@ -55,7 +55,8 @@ def main( pairlist, reverse=False, side="both", oldtranslatorlist=[] ):
                     ersetzerlist.append( foundtranslator )
                 else:
                     ersetzerlist.append(\
-                            manualtoersetzer( old_manual_str, new_manual_str, \
+                            strickalterator.from_manuals( \
+                            old_manual_str, new_manual_str, \
                             stitchinfo, \
                             startside=myside, reversed = reverse )
                             )
