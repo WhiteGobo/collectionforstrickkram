@@ -95,9 +95,7 @@ class strick_compare:
 
 class strick_datacontainer( _netx.MultiDiGraph ):
     def __init__( self, *args, **argv ):
-        """
-        Use .from_gridgraph, .from_manual
-        """
+        """Use .from_gridgraph, .from_manual"""
         self.supergraph = self
         super().__init__( *args, **argv )
 
