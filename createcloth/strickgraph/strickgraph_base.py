@@ -61,11 +61,10 @@ class strick_compare:
         returnv = weisfeiler_lehman_graph_hash( nodelabels, edges )
         return int( returnv, base=16 )
 
-    def presort( self ):
-        """
-        magic method to know with which other graphs it wont definitly is 
-        unequal
-        :returns: hashable
+    def presort( self ) -> Hashable:
+        """magic method to know with which other graphs it wont definitly 
+        is unequal
+        :returns: Hashable
         """
         self.supergraph.create_hashvalues()
         selfnodecount = Counter([ value for value \
@@ -92,11 +91,40 @@ class strick_compare:
         return self.__hash__() == other.__hash__()
 
 
+class alternative_stitchtype_support():
+    """
+
+    :todo: Implement alternative stitchtype via this __init__
+    """
+    #def __init__( self ):
+    def get_alternative_stitchtypes( self ):
+        """Return alternative stitchtypes to stitches. Only returns nodes with
+        alternative stitchtype
+
+        :return: Return dictionary with node to stitchtype
+        :rtype: Dict[ Hashable, str ]
+        """
+        return netx.get_node_attributes( self, "alternative_stitchtype" )
+
+    def copy_with_alternative_stitchtype( self ):
+        """Returns another strickgraph with replaced stitchtypes with 
+        alternative stitchtypes
+
+        :return: Returns strickgraph with same type as this object. Copy has \
+                alternative stitchtype
+        :rtype: type( self )
+        """
+        selfcopy = self.copy()
+        newstitchtypes = netx.get_node_attributes( selfcopy, \
+                                                    "alternative_stitchtype" )
+        netx.set_node_attributes( selfcopy, newstitchtypes, "stitchtype" )
+        return selfcopy
+
+
 
 class strick_datacontainer( _netx.MultiDiGraph ):
     def __init__( self, *args, **argv ):
         """Use .from_gridgraph, .from_manual"""
-        Use .from_gridgraph, .from_manual
         super().__init__( *args, **argv )
 
     def get_rows( self, presentation_type="machine" ):
@@ -197,9 +225,8 @@ class strickgraph( strick_datacontainer, fromgrid.strick_fromgrid, \
         tmpsubgraph.supergraph = self
         return tmpsubgraph
 
-
-    def __hash__( self ):
-        return super( strick_compare ).__hash__()
+    #def __hash__( self ):
+    #    return strick_compare.__hash__( self )
 
 
 def get_neighbours_from( strickgraph, nodelist ):
