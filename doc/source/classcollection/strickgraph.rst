@@ -27,4 +27,8 @@ Strickgraph
    .. automethod:: give_next_node_to
    .. automethod:: create_hashvalues
    .. automethod:: presort
-   
+
+   **Sttchinfo-thingies**
+
+   .. automethod:: get_alternative_stitchtypes
+   .. automethod:: copy_with_alternative_stitchtype
