@@ -85,7 +85,7 @@ class strick_multiverbesserer( multiverbesserer ):
 
     @classmethod
     def from_manuals( cls, pairlist, reverse=False, side="both", \
-                        oldtranslatorlist=[] ):
+                        oldtranslatorlist=[], manual_type="machine" ):
         if side == "both":
             usedsides = ("left", "right")
         elif side == "right":
@@ -117,7 +117,7 @@ class strick_multiverbesserer( multiverbesserer ):
                         ersetzerlist.append(\
                                 strickalterator.from_manuals( \
                                 old_manual_str, new_manual_str, \
-                                stitchinfo, \
+                                stitchinfo, manual_type=manual_type,\
                                 startside=myside, reversed = reverse )
                                 )
                 except Exception as err:
