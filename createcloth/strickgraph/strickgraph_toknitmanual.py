@@ -11,10 +11,11 @@ class strick_manualhelper:
         return tomanual( self, stitchinfo, manual_type)
 
     @classmethod
-    def from_manual( cls, manual, stitchinfo, manual_type="thread", \
-                                        startside="right", reversed=False ):
+    def from_manual( cls, manual, stitchinfo, manual_type="machine", \
+                                        startside="right", reverse=False ):
         from . import fromknitmanual as frmman
-        return frmman.frommanual( manual, stitchinfo, manual_type, startside, reversed)
+        return frmman.frommanual( manual, stitchinfo, manual_type, \
+                                    startside, reverse=reverse )
 
 
 def tomanual( strickgraph, stitchinfo, manual_type="thread" ):
