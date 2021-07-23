@@ -17,6 +17,8 @@ Welcome to Createcloth's documentation!
    classcollection/visualizer
    classcollection/meshhandler
 
+   howto/strickgraph
+
 
 
 Indices and tables
