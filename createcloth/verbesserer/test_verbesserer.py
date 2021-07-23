@@ -11,6 +11,10 @@ from .multiverbesserer import strick_multiverbesserer
 from . import resourcestest as test_src
 from .verbesserer_class import strickalterator
 
+import logging
+logger = logging.getLogger( __name__ )
+logging.basicConfig( level = logging.DEBUG )
+
 class test_manualtoverbesserung( unittest.TestCase ):
     def setUp( self ):
         pass
@@ -66,16 +70,24 @@ class test_manualtoverbesserung( unittest.TestCase ):
 
     def test_multifrommanuals( self ):
         pairlist = (( \
-                "6yo\n1k 1kmark 1k2tog 2k\n1k 1k2tog 2k\n4bo", \
-                "6yo\n1k 1kmark 2k 2bo\n4k\n4bo" \
+                "7yo\n2k 1kmark 1k2tog 2k\n2k 1k2tog 2k\n5bo", \
+                "7yo\n2k 1kmark 2k 2bo\n5k\n5bo" \
                 ), )
-        myersetzer = strick_multiverbesserer.from_manuals( \
-                                pairlist, reverse=reversed, side="left", \
-                                oldtranslatorlist = [] )
-        mygraph = strickgraph.from_manual( pairlist[0][0] )
-        mygraph2 = strickgraph.from_manual( pairlist[0][1] )
-        success = myersetzer.replace_in_graph( mygraph, (1,1) )
+        myersetzer = strick_multiverbesserer.from_manuals( pairlist, \
+                                                            side="right" )
+        #single = myersetzer.verbessererlist[0]
+        #print( single.oldgraph.nodes(data=True), single.oldgraph_nodes )
+        #raise Exception()
+        mygraph = strickgraph.from_manual( pairlist[0][0], stitchinfo )
+        mygraph = mygraph.copy_with_alternative_stitchtype()
+        mygraph2 = strickgraph.from_manual( pairlist[0][1], stitchinfo )
+        mygraph2 = mygraph2.copy_with_alternative_stitchtype()
+        success = myersetzer.replace_in_graph_withinfo( mygraph, (1,1) )
+        if not success:
+            myersetzer.print_compare_to_graph_at_position( mygraph, (1,1) )
         self.assertTrue( success )
+        #print( mygraph2.to_manual( stitchinfo ) )
+        print( mygraph.to_manual( stitchinfo ) )
         self.assertEqual( mygraph, mygraph2 )
 
     def test_multiersetzer( self ):
