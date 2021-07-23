@@ -569,27 +569,7 @@
   <grml:key id="d1" for="node" attr.name="side" attr.type="string" />
   <grml:key id="d0" for="node" attr.name="stitchtype" attr.type="string" />
   <grml:graph edgedefault="directed">
-    <grml:node id="3">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
-    <grml:node id="8">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
-    </grml:node>
-    <grml:node id="1">
-      <grml:data key="d0">k2tog</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">k2togright</grml:data>
-    </grml:node>
-    <grml:node id="5">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
-    <grml:node id="6">
+    <grml:node id="10">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
@@ -599,30 +579,40 @@
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
-    <grml:node id="9">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
+    <grml:node id="1">
+      <grml:data key="d0">k2tog</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">k2togright</grml:data>
     </grml:node>
-    <grml:node id="10">
+    <grml:node id="8">
       <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
     </grml:node>
     <grml:node id="7">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">knitright</grml:data>
     </grml:node>
+    <grml:node id="4">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
+    <grml:node id="2">
+      <grml:data key="d0">k2tog</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">k2togleft</grml:data>
+    </grml:node>
     <grml:node id="11">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
-    <grml:node id="4">
+    <grml:node id="6">
       <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
     </grml:node>
     <grml:node id="0">
       <grml:data key="d0">knit</grml:data>
@@ -631,15 +621,31 @@
       <grml:data key="d4">knit</grml:data>
       <grml:data key="d2">knitright</grml:data>
     </grml:node>
-    <grml:node id="2">
-      <grml:data key="d0">k2tog</grml:data>
+    <grml:node id="3">
+      <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">k2togleft</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
     </grml:node>
-    <grml:edge source="8" target="7" id="0">
+    <grml:node id="5">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="9">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:edge source="10" target="11" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
-    <grml:edge source="8" target="5" id="0">
+    <grml:edge source="10" target="1" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="12" target="9" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="12" target="7" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="1" target="8" id="0">
@@ -648,28 +654,10 @@
     <grml:edge source="1" target="2" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
-    <grml:edge source="5" target="2" id="0">
+    <grml:edge source="8" target="7" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
-    <grml:edge source="6" target="5" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="12" target="9" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="12" target="7" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="9" target="10" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="9" target="8" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="10" target="11" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="10" target="1" id="0">
+    <grml:edge source="8" target="5" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="7" target="6" id="0">
@@ -679,8 +667,17 @@
     <grml:edge source="7" target="6" id="1">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
+    <grml:edge source="2" target="3" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="2" target="4" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
     <grml:edge source="11" target="1" id="0">
       <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="6" target="5" id="0">
+      <grml:data key="d5">next</grml:data>
     </grml:edge>
     <grml:edge source="0" target="1" id="0">
       <grml:data key="d5">next</grml:data>
@@ -688,10 +685,13 @@
     <grml:edge source="0" target="2" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
-    <grml:edge source="2" target="3" id="0">
+    <grml:edge source="5" target="2" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
-    <grml:edge source="2" target="4" id="0">
+    <grml:edge source="9" target="10" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="9" target="8" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
   </grml:graph>
@@ -703,42 +703,7 @@
   <grml:key id="d1" for="node" attr.name="side" attr.type="string" />
   <grml:key id="d0" for="node" attr.name="stitchtype" attr.type="string" />
   <grml:graph edgedefault="directed">
-    <grml:node id="3">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
-    <grml:node id="(3, 4)">
-      <grml:data key="d0">bindoff</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">bindoffright</grml:data>
-    </grml:node>
-    <grml:node id="(3, 3)">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
-    </grml:node>
-    <grml:node id="5">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
-    <grml:node id="6">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
-    <grml:node id="12">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
     <grml:node id="(4, 1)">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
-    <grml:node id="9">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
@@ -748,10 +713,20 @@
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
-    <grml:node id="(3, 5)">
-      <grml:data key="d0">bindoff</grml:data>
+    <grml:node id="12">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="(3, 3)">
+      <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">bindoffright</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
+    <grml:node id="(3, 2)">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
     </grml:node>
     <grml:node id="11">
       <grml:data key="d0">knit</grml:data>
@@ -763,6 +738,21 @@
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">knitright</grml:data>
     </grml:node>
+    <grml:node id="6">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="(3, 5)">
+      <grml:data key="d0">bindoff</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">bindoffright</grml:data>
+    </grml:node>
+    <grml:node id="(3, 4)">
+      <grml:data key="d0">bindoff</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">bindoffright</grml:data>
+    </grml:node>
     <grml:node id="0">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">right</grml:data>
@@ -770,42 +760,25 @@
       <grml:data key="d4">knit</grml:data>
       <grml:data key="d2">knitright</grml:data>
     </grml:node>
-    <grml:node id="(3, 2)">
+    <grml:node id="3">
       <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
     </grml:node>
-    <grml:edge source="(3, 4)" target="(3, 5)" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="(3, 3)" target="(3, 4)" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="(3, 3)" target="6" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="5" target="(4, 1)" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="6" target="5" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="12" target="9" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="12" target="(3, 5)" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
+    <grml:node id="5">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="9">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
     <grml:edge source="(4, 1)" target="3" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
     <grml:edge source="(4, 1)" target="4" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="9" target="10" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="9" target="(3, 4)" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="10" target="11" id="0">
@@ -814,11 +787,35 @@
     <grml:edge source="10" target="(3, 3)" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
-    <grml:edge source="(3, 5)" target="6" id="0">
+    <grml:edge source="12" target="9" id="0">
       <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="12" target="(3, 5)" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 3)" target="(3, 4)" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 3)" target="6" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 2)" target="(3, 3)" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 2)" target="5" id="0">
+      <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="11" target="(3, 2)" id="0">
       <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="6" target="5" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 5)" target="6" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 4)" target="(3, 5)" id="0">
+      <grml:data key="d5">next</grml:data>
     </grml:edge>
     <grml:edge source="0" target="(3, 2)" id="0">
       <grml:data key="d5">next</grml:data>
@@ -826,10 +823,13 @@
     <grml:edge source="0" target="(4, 1)" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
-    <grml:edge source="(3, 2)" target="(3, 3)" id="0">
+    <grml:edge source="5" target="(4, 1)" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
-    <grml:edge source="(3, 2)" target="5" id="0">
+    <grml:edge source="9" target="10" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="9" target="(3, 4)" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
   </grml:graph>
@@ -842,27 +842,7 @@
   <grml:key id="d1" for="node" attr.name="side" attr.type="string" />
   <grml:key id="d0" for="node" attr.name="stitchtype" attr.type="string" />
   <grml:graph edgedefault="directed">
-    <grml:node id="3">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
-    <grml:node id="8">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
-    </grml:node>
-    <grml:node id="1">
-      <grml:data key="d0">k2tog</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">k2togright</grml:data>
-    </grml:node>
-    <grml:node id="5">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
-    <grml:node id="6">
+    <grml:node id="10">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
@@ -872,30 +852,40 @@
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
-    <grml:node id="9">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
+    <grml:node id="1">
+      <grml:data key="d0">k2tog</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">k2togright</grml:data>
     </grml:node>
-    <grml:node id="10">
+    <grml:node id="8">
       <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
     </grml:node>
     <grml:node id="7">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">knitright</grml:data>
     </grml:node>
+    <grml:node id="4">
+      <grml:data key="d0">bindoff</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">bindoffright</grml:data>
+    </grml:node>
+    <grml:node id="2">
+      <grml:data key="d0">k2tog</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">k2togleft</grml:data>
+    </grml:node>
     <grml:node id="11">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
-    <grml:node id="4">
-      <grml:data key="d0">bindoff</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">bindoffright</grml:data>
+    <grml:node id="6">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
     </grml:node>
     <grml:node id="0">
       <grml:data key="d0">knit</grml:data>
@@ -904,15 +894,31 @@
       <grml:data key="d4">knit</grml:data>
       <grml:data key="d2">knitright</grml:data>
     </grml:node>
-    <grml:node id="2">
-      <grml:data key="d0">k2tog</grml:data>
+    <grml:node id="3">
+      <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">k2togleft</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
     </grml:node>
-    <grml:edge source="8" target="7" id="0">
+    <grml:node id="5">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="9">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:edge source="10" target="11" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
-    <grml:edge source="8" target="5" id="0">
+    <grml:edge source="10" target="1" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="12" target="9" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="12" target="7" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="1" target="8" id="0">
@@ -921,28 +927,10 @@
     <grml:edge source="1" target="2" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
-    <grml:edge source="5" target="2" id="0">
+    <grml:edge source="8" target="7" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
-    <grml:edge source="6" target="5" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="12" target="9" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="12" target="7" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="9" target="10" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="9" target="8" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="10" target="11" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="10" target="1" id="0">
+    <grml:edge source="8" target="5" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="7" target="6" id="0">
@@ -952,8 +940,17 @@
     <grml:edge source="7" target="6" id="1">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
+    <grml:edge source="2" target="3" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="2" target="4" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
     <grml:edge source="11" target="1" id="0">
       <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="6" target="5" id="0">
+      <grml:data key="d5">next</grml:data>
     </grml:edge>
     <grml:edge source="0" target="1" id="0">
       <grml:data key="d5">next</grml:data>
@@ -961,10 +958,13 @@
     <grml:edge source="0" target="2" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
-    <grml:edge source="2" target="3" id="0">
+    <grml:edge source="5" target="2" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
-    <grml:edge source="2" target="4" id="0">
+    <grml:edge source="9" target="10" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="9" target="8" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
   </grml:graph>
@@ -976,42 +976,7 @@
   <grml:key id="d1" for="node" attr.name="side" attr.type="string" />
   <grml:key id="d0" for="node" attr.name="stitchtype" attr.type="string" />
   <grml:graph edgedefault="directed">
-    <grml:node id="3">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
-    <grml:node id="(3, 4)">
-      <grml:data key="d0">bindoff</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">bindoffright</grml:data>
-    </grml:node>
-    <grml:node id="(3, 3)">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
-    </grml:node>
-    <grml:node id="5">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
-    <grml:node id="6">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
-    <grml:node id="12">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
     <grml:node id="(4, 1)">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
-    <grml:node id="9">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
@@ -1021,10 +986,20 @@
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
-    <grml:node id="(3, 5)">
-      <grml:data key="d0">bindoff</grml:data>
+    <grml:node id="12">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="(3, 3)">
+      <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">bindoffright</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
+    <grml:node id="(3, 2)">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
     </grml:node>
     <grml:node id="11">
       <grml:data key="d0">knit</grml:data>
@@ -1036,6 +1011,21 @@
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">bindoffright</grml:data>
     </grml:node>
+    <grml:node id="6">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="(3, 5)">
+      <grml:data key="d0">bindoff</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">bindoffright</grml:data>
+    </grml:node>
+    <grml:node id="(3, 4)">
+      <grml:data key="d0">bindoff</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">bindoffright</grml:data>
+    </grml:node>
     <grml:node id="0">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">right</grml:data>
@@ -1043,42 +1033,25 @@
       <grml:data key="d4">knit</grml:data>
       <grml:data key="d2">knitright</grml:data>
     </grml:node>
-    <grml:node id="(3, 2)">
+    <grml:node id="3">
       <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
     </grml:node>
-    <grml:edge source="(3, 4)" target="(3, 5)" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="(3, 3)" target="(3, 4)" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="(3, 3)" target="6" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="5" target="(4, 1)" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="6" target="5" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="12" target="9" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="12" target="(3, 5)" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
+    <grml:node id="5">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="9">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
     <grml:edge source="(4, 1)" target="3" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
     <grml:edge source="(4, 1)" target="4" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="9" target="10" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="9" target="(3, 4)" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="10" target="11" id="0">
@@ -1087,11 +1060,35 @@
     <grml:edge source="10" target="(3, 3)" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
-    <grml:edge source="(3, 5)" target="6" id="0">
+    <grml:edge source="12" target="9" id="0">
       <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="12" target="(3, 5)" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 3)" target="(3, 4)" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 3)" target="6" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 2)" target="(3, 3)" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 2)" target="5" id="0">
+      <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="11" target="(3, 2)" id="0">
       <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="6" target="5" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 5)" target="6" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 4)" target="(3, 5)" id="0">
+      <grml:data key="d5">next</grml:data>
     </grml:edge>
     <grml:edge source="0" target="(3, 2)" id="0">
       <grml:data key="d5">next</grml:data>
@@ -1099,10 +1096,13 @@
     <grml:edge source="0" target="(4, 1)" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
-    <grml:edge source="(3, 2)" target="(3, 3)" id="0">
+    <grml:edge source="5" target="(4, 1)" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
-    <grml:edge source="(3, 2)" target="5" id="0">
+    <grml:edge source="9" target="10" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="9" target="(3, 4)" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
   </grml:graph>
@@ -1115,27 +1115,7 @@
   <grml:key id="d1" for="node" attr.name="side" attr.type="string" />
   <grml:key id="d0" for="node" attr.name="stitchtype" attr.type="string" />
   <grml:graph edgedefault="directed">
-    <grml:node id="3">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
-    <grml:node id="8">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
-    </grml:node>
-    <grml:node id="1">
-      <grml:data key="d0">k2tog</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">k2togright</grml:data>
-    </grml:node>
-    <grml:node id="5">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
-    <grml:node id="6">
+    <grml:node id="10">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
@@ -1145,30 +1125,40 @@
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
-    <grml:node id="9">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
+    <grml:node id="1">
+      <grml:data key="d0">k2tog</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">k2togright</grml:data>
     </grml:node>
-    <grml:node id="10">
+    <grml:node id="8">
       <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
     </grml:node>
     <grml:node id="7">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">knitright</grml:data>
     </grml:node>
+    <grml:node id="4">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
+    <grml:node id="2">
+      <grml:data key="d0">k2tog</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">k2togleft</grml:data>
+    </grml:node>
     <grml:node id="11">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
-    <grml:node id="4">
+    <grml:node id="6">
       <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
     </grml:node>
     <grml:node id="0">
       <grml:data key="d0">knit</grml:data>
@@ -1177,15 +1167,31 @@
       <grml:data key="d4">knit</grml:data>
       <grml:data key="d2">knitright</grml:data>
     </grml:node>
-    <grml:node id="2">
-      <grml:data key="d0">k2tog</grml:data>
+    <grml:node id="3">
+      <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">k2togleft</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
     </grml:node>
-    <grml:edge source="8" target="7" id="0">
+    <grml:node id="5">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="9">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:edge source="10" target="11" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
-    <grml:edge source="8" target="5" id="0">
+    <grml:edge source="10" target="1" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="12" target="9" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="12" target="7" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="1" target="8" id="0">
@@ -1194,28 +1200,10 @@
     <grml:edge source="1" target="2" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
-    <grml:edge source="5" target="2" id="0">
+    <grml:edge source="8" target="7" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
-    <grml:edge source="6" target="5" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="12" target="9" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="12" target="7" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="9" target="10" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="9" target="8" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="10" target="11" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="10" target="1" id="0">
+    <grml:edge source="8" target="5" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="7" target="6" id="0">
@@ -1225,8 +1213,17 @@
     <grml:edge source="7" target="6" id="1">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
+    <grml:edge source="2" target="3" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="2" target="4" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
     <grml:edge source="11" target="1" id="0">
       <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="6" target="5" id="0">
+      <grml:data key="d5">next</grml:data>
     </grml:edge>
     <grml:edge source="0" target="1" id="0">
       <grml:data key="d5">next</grml:data>
@@ -1234,10 +1231,13 @@
     <grml:edge source="0" target="2" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
-    <grml:edge source="2" target="3" id="0">
+    <grml:edge source="5" target="2" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
-    <grml:edge source="2" target="4" id="0">
+    <grml:edge source="9" target="10" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="9" target="8" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
   </grml:graph>
@@ -1249,42 +1249,7 @@
   <grml:key id="d1" for="node" attr.name="side" attr.type="string" />
   <grml:key id="d0" for="node" attr.name="stitchtype" attr.type="string" />
   <grml:graph edgedefault="directed">
-    <grml:node id="3">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
-    <grml:node id="(3, 4)">
-      <grml:data key="d0">bindoff</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">bindoffright</grml:data>
-    </grml:node>
-    <grml:node id="(3, 3)">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
-    </grml:node>
-    <grml:node id="5">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
-    <grml:node id="6">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
-    <grml:node id="12">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
     <grml:node id="(4, 1)">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
-    <grml:node id="9">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
@@ -1294,10 +1259,20 @@
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
-    <grml:node id="(3, 5)">
-      <grml:data key="d0">bindoff</grml:data>
+    <grml:node id="12">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="(3, 3)">
+      <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">bindoffright</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
+    <grml:node id="(3, 2)">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
     </grml:node>
     <grml:node id="11">
       <grml:data key="d0">knit</grml:data>
@@ -1309,6 +1284,21 @@
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">knitright</grml:data>
     </grml:node>
+    <grml:node id="6">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="(3, 5)">
+      <grml:data key="d0">bindoff</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">bindoffright</grml:data>
+    </grml:node>
+    <grml:node id="(3, 4)">
+      <grml:data key="d0">bindoff</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">bindoffright</grml:data>
+    </grml:node>
     <grml:node id="0">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">right</grml:data>
@@ -1316,42 +1306,25 @@
       <grml:data key="d4">knit</grml:data>
       <grml:data key="d2">knitright</grml:data>
     </grml:node>
-    <grml:node id="(3, 2)">
+    <grml:node id="3">
       <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
     </grml:node>
-    <grml:edge source="(3, 4)" target="(3, 5)" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="(3, 3)" target="(3, 4)" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="(3, 3)" target="6" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="5" target="(4, 1)" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="6" target="5" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="12" target="9" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="12" target="(3, 5)" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
+    <grml:node id="5">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="9">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
     <grml:edge source="(4, 1)" target="3" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
     <grml:edge source="(4, 1)" target="4" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="9" target="10" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="9" target="(3, 4)" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="10" target="11" id="0">
@@ -1360,11 +1333,35 @@
     <grml:edge source="10" target="(3, 3)" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
-    <grml:edge source="(3, 5)" target="6" id="0">
+    <grml:edge source="12" target="9" id="0">
       <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="12" target="(3, 5)" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 3)" target="(3, 4)" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 3)" target="6" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 2)" target="(3, 3)" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 2)" target="5" id="0">
+      <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="11" target="(3, 2)" id="0">
       <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="6" target="5" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 5)" target="6" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 4)" target="(3, 5)" id="0">
+      <grml:data key="d5">next</grml:data>
     </grml:edge>
     <grml:edge source="0" target="(3, 2)" id="0">
       <grml:data key="d5">next</grml:data>
@@ -1372,10 +1369,13 @@
     <grml:edge source="0" target="(4, 1)" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
-    <grml:edge source="(3, 2)" target="(3, 3)" id="0">
+    <grml:edge source="5" target="(4, 1)" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
-    <grml:edge source="(3, 2)" target="5" id="0">
+    <grml:edge source="9" target="10" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="9" target="(3, 4)" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
   </grml:graph>
@@ -1388,12 +1388,7 @@
   <grml:key id="d1" for="node" attr.name="side" attr.type="string" />
   <grml:key id="d0" for="node" attr.name="stitchtype" attr.type="string" />
   <grml:graph edgedefault="directed">
-    <grml:node id="3">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
-    </grml:node>
-    <grml:node id="8">
+    <grml:node id="10">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
@@ -1403,27 +1398,22 @@
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">k2togright</grml:data>
     </grml:node>
-    <grml:node id="5">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
-    <grml:node id="6">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
-    <grml:node id="9">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
-    <grml:node id="10">
+    <grml:node id="8">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
     <grml:node id="7">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="2">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
+    <grml:node id="6">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
@@ -1440,16 +1430,28 @@
       <grml:data key="d4">knit</grml:data>
       <grml:data key="d2">knitright</grml:data>
     </grml:node>
-    <grml:node id="2">
+    <grml:node id="3">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">knitright</grml:data>
     </grml:node>
-    <grml:edge source="3" target="4" id="0">
-      <grml:data key="d5">next</grml:data>
-      <grml:data key="d6">True</grml:data>
+    <grml:node id="5">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="9">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:edge source="10" target="1" id="0">
+      <grml:data key="d5">up</grml:data>
     </grml:edge>
-    <grml:edge source="3" target="4" id="1">
+    <grml:edge source="1" target="2" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="1" target="6" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="8" target="9" id="0">
@@ -1458,10 +1460,29 @@
     <grml:edge source="8" target="2" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
-    <grml:edge source="1" target="2" id="0">
+    <grml:edge source="7" target="8" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
-    <grml:edge source="1" target="6" id="0">
+    <grml:edge source="7" target="3" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="2" target="3" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="2" target="5" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="4" target="5" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="0" target="1" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="3" target="4" id="0">
+      <grml:data key="d5">next</grml:data>
+      <grml:data key="d6">True</grml:data>
+    </grml:edge>
+    <grml:edge source="3" target="4" id="1">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="5" target="6" id="0">
@@ -1473,27 +1494,6 @@
     <grml:edge source="9" target="1" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
-    <grml:edge source="10" target="1" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="7" target="8" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="7" target="3" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="4" target="5" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="0" target="1" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="2" target="3" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="2" target="5" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
   </grml:graph>
 </grml:graphml></asd:oldgraph><asd:newgraph><grml:graphml xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
   <grml:key id="d5" for="edge" attr.name="edgetype" attr.type="string" />
@@ -1503,37 +1503,22 @@
   <grml:key id="d1" for="node" attr.name="side" attr.type="string" />
   <grml:key id="d0" for="node" attr.name="stitchtype" attr.type="string" />
   <grml:graph edgedefault="directed">
-    <grml:node id="8">
+    <grml:node id="10">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
-    <grml:node id="(3, 4)">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
     </grml:node>
     <grml:node id="(3, 3)">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">knitright</grml:data>
     </grml:node>
-    <grml:node id="5">
+    <grml:node id="(3, 2)">
       <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
     </grml:node>
-    <grml:node id="6">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
-    <grml:node id="9">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
-    <grml:node id="10">
+    <grml:node id="8">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
@@ -1543,10 +1528,20 @@
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
+    <grml:node id="6">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
     <grml:node id="(3, 5)">
       <grml:data key="d0">bindoff</grml:data>
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">bindoffright</grml:data>
+    </grml:node>
+    <grml:node id="(3, 4)">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
     </grml:node>
     <grml:node id="4">
       <grml:data key="d0">knit</grml:data>
@@ -1560,21 +1555,17 @@
       <grml:data key="d4">knit</grml:data>
       <grml:data key="d2">knitright</grml:data>
     </grml:node>
-    <grml:node id="(3, 2)">
+    <grml:node id="5">
       <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
     </grml:node>
-    <grml:edge source="8" target="9" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="8" target="(3, 4)" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="(3, 4)" target="(3, 5)" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="(3, 4)" target="4" id="0">
+    <grml:node id="9">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:edge source="10" target="(3, 2)" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="(3, 3)" target="(3, 4)" id="0">
@@ -1583,16 +1574,16 @@
     <grml:edge source="(3, 3)" target="5" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
-    <grml:edge source="5" target="6" id="0">
+    <grml:edge source="(3, 2)" target="(3, 3)" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
-    <grml:edge source="9" target="10" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="9" target="(3, 3)" id="0">
+    <grml:edge source="(3, 2)" target="6" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
-    <grml:edge source="10" target="(3, 2)" id="0">
+    <grml:edge source="8" target="9" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="8" target="(3, 4)" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="7" target="8" id="0">
@@ -1604,16 +1595,25 @@
     <grml:edge source="(3, 5)" target="4" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
+    <grml:edge source="(3, 4)" target="(3, 5)" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 4)" target="4" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
     <grml:edge source="4" target="5" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
     <grml:edge source="0" target="(3, 2)" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
-    <grml:edge source="(3, 2)" target="(3, 3)" id="0">
+    <grml:edge source="5" target="6" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
-    <grml:edge source="(3, 2)" target="6" id="0">
+    <grml:edge source="9" target="10" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="9" target="(3, 3)" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
   </grml:graph>
@@ -1625,40 +1625,25 @@
   <grml:key id="d1" for="node" attr.name="side" attr.type="string" />
   <grml:key id="d0" for="node" attr.name="stitchtype" attr.type="string" />
   <grml:graph edgedefault="directed">
-    <grml:node id="3">
+    <grml:node id="1">
       <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
     </grml:node>
     <grml:node id="8">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
-    <grml:node id="1">
+    <grml:node id="7">
       <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
-    </grml:node>
-    <grml:node id="5">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
     </grml:node>
     <grml:node id="6">
       <grml:data key="d0">bindoff</grml:data>
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">bindoffright</grml:data>
-    </grml:node>
-    <grml:node id="9">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
-    </grml:node>
-    <grml:node id="7">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
     </grml:node>
     <grml:node id="4">
       <grml:data key="d0">knit</grml:data>
@@ -1672,36 +1657,36 @@
       <grml:data key="d4">knit</grml:data>
       <grml:data key="d2">knitright</grml:data>
     </grml:node>
+    <grml:node id="3">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="5">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
+    <grml:node id="9">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
     <grml:node id="2">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
-    <grml:edge source="3" target="2" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="3" target="1" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
     <grml:edge source="1" target="5" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
     <grml:edge source="1" target="8" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
-    <grml:edge source="5" target="6" id="0">
+    <grml:edge source="7" target="8" id="0">
       <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="5" target="7" id="0">
-      <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="6" target="7" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="9" target="3" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="7" target="8" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
     <grml:edge source="4" target="3" id="0">
@@ -1712,6 +1697,21 @@
     </grml:edge>
     <grml:edge source="0" target="1" id="0">
       <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="3" target="2" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="3" target="1" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="5" target="6" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="5" target="7" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="9" target="3" id="0">
+      <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="2" target="0" id="0">
       <grml:data key="d5">up</grml:data>
@@ -1725,17 +1725,59 @@
   <grml:key id="d1" for="node" attr.name="side" attr.type="string" />
   <grml:key id="d0" for="node" attr.name="stitchtype" attr.type="string" />
   <grml:graph edgedefault="directed">
-    <grml:node id="(2, 3)">
-      <grml:data key="d0">knit</grml:data>
+    <grml:node id="(2, 4)">
+      <grml:data key="d0">yarnover</grml:data>
       <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
+      <grml:data key="d2">yarnoverleft</grml:data>
     </grml:node>
     <grml:node id="8">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
+    <grml:node id="7">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="4">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="2">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="6">
+      <grml:data key="d0">bindoff</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">bindoffright</grml:data>
+    </grml:node>
+    <grml:node id="(3, 5)">
+      <grml:data key="d0">bindoff</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">bindoffright</grml:data>
+    </grml:node>
     <grml:node id="(3, 4)">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
+    <grml:node id="0">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d3">startingpoint</grml:data>
+      <grml:data key="d4">knit</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
+    <grml:node id="(2, 3)">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="9">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">knitright</grml:data>
@@ -1745,82 +1787,13 @@
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">knitright</grml:data>
     </grml:node>
-    <grml:node id="6">
-      <grml:data key="d0">bindoff</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">bindoffright</grml:data>
-    </grml:node>
-    <grml:node id="9">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
-    </grml:node>
-    <grml:node id="7">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
-    <grml:node id="(2, 4)">
-      <grml:data key="d0">yarnover</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">yarnoverleft</grml:data>
-    </grml:node>
-    <grml:node id="(3, 5)">
-      <grml:data key="d0">bindoff</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">bindoffright</grml:data>
-    </grml:node>
-    <grml:node id="4">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
-    <grml:node id="0">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d3">startingpoint</grml:data>
-      <grml:data key="d4">knit</grml:data>
-      <grml:data key="d2">knitright</grml:data>
-    </grml:node>
-    <grml:node id="2">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
-    <grml:edge source="(2, 3)" target="2" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="(2, 3)" target="(3, 3)" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="(3, 4)" target="(3, 5)" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="(3, 4)" target="7" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="(3, 3)" target="(3, 4)" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="(3, 3)" target="8" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="6" target="7" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="9" target="(2, 3)" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="7" target="8" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
     <grml:edge source="(2, 4)" target="(2, 3)" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
     <grml:edge source="(2, 4)" target="(3, 4)" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
-    <grml:edge source="(3, 5)" target="6" id="0">
+    <grml:edge source="7" target="8" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
     <grml:edge source="4" target="(2, 4)" id="0">
@@ -1829,10 +1802,37 @@
     <grml:edge source="4" target="(3, 5)" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
+    <grml:edge source="2" target="0" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="6" target="7" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 5)" target="6" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 4)" target="(3, 5)" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 4)" target="7" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
     <grml:edge source="0" target="(3, 3)" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
-    <grml:edge source="2" target="0" id="0">
+    <grml:edge source="(2, 3)" target="2" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(2, 3)" target="(3, 3)" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="9" target="(2, 3)" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 3)" target="(3, 4)" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 3)" target="8" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
   </grml:graph>
@@ -1844,22 +1844,7 @@
   <grml:key id="d1" for="node" attr.name="side" attr.type="string" />
   <grml:key id="d0" for="node" attr.name="stitchtype" attr.type="string" />
   <grml:graph edgedefault="directed">
-    <grml:node id="3">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
     <grml:node id="1">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
-    </grml:node>
-    <grml:node id="5">
-      <grml:data key="d0">bindoff</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">bindoffright</grml:data>
-    </grml:node>
-    <grml:node id="6">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">knitright</grml:data>
@@ -1874,6 +1859,11 @@
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
+    <grml:node id="6">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
     <grml:node id="0">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">right</grml:data>
@@ -1881,24 +1871,25 @@
       <grml:data key="d4">knit</grml:data>
       <grml:data key="d2">knitright</grml:data>
     </grml:node>
+    <grml:node id="3">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="5">
+      <grml:data key="d0">bindoff</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">bindoffright</grml:data>
+    </grml:node>
     <grml:node id="2">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
-    <grml:edge source="3" target="2" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="3" target="1" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
     <grml:edge source="1" target="5" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
     <grml:edge source="1" target="7" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="6" target="3" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="4" target="3" id="0">
@@ -1907,8 +1898,17 @@
     <grml:edge source="4" target="5" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
+    <grml:edge source="6" target="3" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
     <grml:edge source="0" target="1" id="0">
       <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="3" target="2" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="3" target="1" id="0">
+      <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="2" target="0" id="0">
       <grml:data key="d5">up</grml:data>
@@ -1922,45 +1922,35 @@
   <grml:key id="d1" for="node" attr.name="side" attr.type="string" />
   <grml:key id="d0" for="node" attr.name="stitchtype" attr.type="string" />
   <grml:graph edgedefault="directed">
-    <grml:node id="(2, 5)">
-      <grml:data key="d0">yarnover</grml:data>
+    <grml:node id="(2, 4)">
+      <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">yarnoverleft</grml:data>
-    </grml:node>
-    <grml:node id="(3, 4)">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
-    </grml:node>
-    <grml:node id="5">
-      <grml:data key="d0">bindoff</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">bindoffright</grml:data>
-    </grml:node>
-    <grml:node id="6">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
     </grml:node>
     <grml:node id="7">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
-    <grml:node id="(2, 4)">
+    <grml:node id="4">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="6">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
     </grml:node>
     <grml:node id="(3, 5)">
       <grml:data key="d0">bindoff</grml:data>
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">bindoffright</grml:data>
     </grml:node>
-    <grml:node id="4">
+    <grml:node id="(3, 4)">
       <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
     </grml:node>
     <grml:node id="0">
       <grml:data key="d0">knit</grml:data>
@@ -1969,34 +1959,26 @@
       <grml:data key="d4">knit</grml:data>
       <grml:data key="d2">knitright</grml:data>
     </grml:node>
+    <grml:node id="(2, 5)">
+      <grml:data key="d0">yarnover</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">yarnoverleft</grml:data>
+    </grml:node>
+    <grml:node id="5">
+      <grml:data key="d0">bindoff</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">bindoffright</grml:data>
+    </grml:node>
     <grml:node id="2">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
-    <grml:edge source="(2, 5)" target="(2, 4)" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="(2, 5)" target="(3, 5)" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="(3, 4)" target="(3, 5)" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="(3, 4)" target="7" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="6" target="(2, 4)" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
     <grml:edge source="(2, 4)" target="2" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
     <grml:edge source="(2, 4)" target="(3, 4)" id="0">
       <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="(3, 5)" target="5" id="0">
-      <grml:data key="d5">next</grml:data>
     </grml:edge>
     <grml:edge source="4" target="(2, 5)" id="0">
       <grml:data key="d5">next</grml:data>
@@ -2004,8 +1986,26 @@
     <grml:edge source="4" target="5" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
+    <grml:edge source="6" target="(2, 4)" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 5)" target="5" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 4)" target="(3, 5)" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 4)" target="7" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
     <grml:edge source="0" target="(3, 4)" id="0">
       <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(2, 5)" target="(2, 4)" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(2, 5)" target="(3, 5)" id="0">
+      <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="2" target="0" id="0">
       <grml:data key="d5">up</grml:data>
@@ -2019,30 +2019,20 @@
   <grml:key id="d1" for="node" attr.name="side" attr.type="string" />
   <grml:key id="d0" for="node" attr.name="stitchtype" attr.type="string" />
   <grml:graph edgedefault="directed">
-    <grml:node id="3">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
     <grml:node id="1">
       <grml:data key="d0">bindoff</grml:data>
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">bindoffright</grml:data>
     </grml:node>
-    <grml:node id="5">
-      <grml:data key="d0">bindoff</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">bindoffright</grml:data>
+    <grml:node id="4">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
     </grml:node>
     <grml:node id="6">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">knitright</grml:data>
-    </grml:node>
-    <grml:node id="4">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
     </grml:node>
     <grml:node id="0">
       <grml:data key="d0">knit</grml:data>
@@ -2051,22 +2041,23 @@
       <grml:data key="d4">knit</grml:data>
       <grml:data key="d2">knitright</grml:data>
     </grml:node>
+    <grml:node id="3">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="5">
+      <grml:data key="d0">bindoff</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">bindoffright</grml:data>
+    </grml:node>
     <grml:node id="2">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
-    <grml:edge source="3" target="2" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="3" target="1" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
     <grml:edge source="1" target="5" id="0">
       <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="6" target="3" id="0">
-      <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="4" target="3" id="0">
       <grml:data key="d5">next</grml:data>
@@ -2074,8 +2065,17 @@
     <grml:edge source="4" target="5" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
+    <grml:edge source="6" target="3" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
     <grml:edge source="0" target="1" id="0">
       <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="3" target="2" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="3" target="1" id="0">
+      <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="2" target="0" id="0">
       <grml:data key="d5">up</grml:data>
@@ -2094,27 +2094,7 @@
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">yarnoverleft</grml:data>
     </grml:node>
-    <grml:node id="(2, 5)">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
-    <grml:node id="5">
-      <grml:data key="d0">bindoff</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">bindoffright</grml:data>
-    </grml:node>
-    <grml:node id="6">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
-    </grml:node>
     <grml:node id="(3, 6)">
-      <grml:data key="d0">bindoff</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">bindoffright</grml:data>
-    </grml:node>
-    <grml:node id="(3, 5)">
       <grml:data key="d0">bindoff</grml:data>
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">bindoffright</grml:data>
@@ -2124,12 +2104,32 @@
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
+    <grml:node id="6">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
+    <grml:node id="(3, 5)">
+      <grml:data key="d0">bindoff</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">bindoffright</grml:data>
+    </grml:node>
     <grml:node id="0">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">right</grml:data>
       <grml:data key="d3">startingpoint</grml:data>
       <grml:data key="d4">knit</grml:data>
       <grml:data key="d2">knitright</grml:data>
+    </grml:node>
+    <grml:node id="(2, 5)">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="5">
+      <grml:data key="d0">bindoff</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">bindoffright</grml:data>
     </grml:node>
     <grml:node id="2">
       <grml:data key="d0">knit</grml:data>
@@ -2142,19 +2142,7 @@
     <grml:edge source="(2, 6)" target="(3, 6)" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
-    <grml:edge source="(2, 5)" target="2" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="(2, 5)" target="(3, 5)" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="6" target="(2, 5)" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
     <grml:edge source="(3, 6)" target="5" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="(3, 5)" target="(3, 6)" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
     <grml:edge source="4" target="(2, 6)" id="0">
@@ -2163,8 +2151,20 @@
     <grml:edge source="4" target="5" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
+    <grml:edge source="6" target="(2, 5)" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 5)" target="(3, 6)" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
     <grml:edge source="0" target="(3, 5)" id="0">
       <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(2, 5)" target="2" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(2, 5)" target="(3, 5)" id="0">
+      <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="2" target="0" id="0">
       <grml:data key="d5">up</grml:data>
@@ -2178,17 +2178,7 @@
   <grml:key id="d1" for="node" attr.name="side" attr.type="string" />
   <grml:key id="d0" for="node" attr.name="stitchtype" attr.type="string" />
   <grml:graph edgedefault="directed">
-    <grml:node id="3">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
     <grml:node id="1">
-      <grml:data key="d0">bindoff</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">bindoffright</grml:data>
-    </grml:node>
-    <grml:node id="5">
       <grml:data key="d0">bindoff</grml:data>
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">bindoffright</grml:data>
@@ -2210,17 +2200,21 @@
       <grml:data key="d4">bindoff</grml:data>
       <grml:data key="d2">bindoffright</grml:data>
     </grml:node>
+    <grml:node id="3">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="5">
+      <grml:data key="d0">bindoff</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">bindoffright</grml:data>
+    </grml:node>
     <grml:node id="2">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
-    <grml:edge source="3" target="2" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="3" target="1" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
     <grml:edge source="1" target="5" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
@@ -2236,6 +2230,12 @@
     <grml:edge source="0" target="1" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
+    <grml:edge source="3" target="2" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="3" target="1" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
     <grml:edge source="2" target="0" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
@@ -2248,25 +2248,10 @@
   <grml:key id="d1" for="node" attr.name="side" attr.type="string" />
   <grml:key id="d0" for="node" attr.name="stitchtype" attr.type="string" />
   <grml:graph edgedefault="directed">
-    <grml:node id="(3, 7)">
-      <grml:data key="d0">bindoff</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">bindoffright</grml:data>
-    </grml:node>
     <grml:node id="(2, 6)">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
-    <grml:node id="5">
-      <grml:data key="d0">bindoff</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">bindoffright</grml:data>
-    </grml:node>
-    <grml:node id="6">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
     </grml:node>
     <grml:node id="(3, 6)">
       <grml:data key="d0">bindoff</grml:data>
@@ -2277,6 +2262,16 @@
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="6">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
+    <grml:node id="(3, 7)">
+      <grml:data key="d0">bindoff</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">bindoffright</grml:data>
     </grml:node>
     <grml:node id="0">
       <grml:data key="d0">bindoff</grml:data>
@@ -2290,21 +2285,20 @@
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">yarnoverleft</grml:data>
     </grml:node>
+    <grml:node id="5">
+      <grml:data key="d0">bindoff</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">bindoffright</grml:data>
+    </grml:node>
     <grml:node id="2">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
-    <grml:edge source="(3, 7)" target="5" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
     <grml:edge source="(2, 6)" target="2" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
     <grml:edge source="(2, 6)" target="(3, 6)" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="6" target="(2, 6)" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="(3, 6)" target="(3, 7)" id="0">
@@ -2315,6 +2309,12 @@
     </grml:edge>
     <grml:edge source="4" target="5" id="0">
       <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="6" target="(2, 6)" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 7)" target="5" id="0">
+      <grml:data key="d5">next</grml:data>
     </grml:edge>
     <grml:edge source="0" target="(3, 6)" id="0">
       <grml:data key="d5">next</grml:data>
@@ -2337,30 +2337,20 @@
   <grml:key id="d1" for="node" attr.name="side" attr.type="string" />
   <grml:key id="d0" for="node" attr.name="stitchtype" attr.type="string" />
   <grml:graph edgedefault="directed">
-    <grml:node id="3">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
     <grml:node id="1">
       <grml:data key="d0">bindoff</grml:data>
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">bindoffright</grml:data>
     </grml:node>
-    <grml:node id="5">
-      <grml:data key="d0">bindoff</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">bindoffright</grml:data>
+    <grml:node id="4">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
     </grml:node>
     <grml:node id="6">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">knitright</grml:data>
-    </grml:node>
-    <grml:node id="4">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
     </grml:node>
     <grml:node id="0">
       <grml:data key="d0">bindoff</grml:data>
@@ -2369,22 +2359,23 @@
       <grml:data key="d4">bindoff</grml:data>
       <grml:data key="d2">bindoffright</grml:data>
     </grml:node>
+    <grml:node id="3">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="5">
+      <grml:data key="d0">bindoff</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">bindoffright</grml:data>
+    </grml:node>
     <grml:node id="2">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
-    <grml:edge source="3" target="2" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="3" target="1" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
     <grml:edge source="1" target="5" id="0">
       <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="6" target="3" id="0">
-      <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="4" target="3" id="0">
       <grml:data key="d5">next</grml:data>
@@ -2392,8 +2383,17 @@
     <grml:edge source="4" target="5" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
+    <grml:edge source="6" target="3" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
     <grml:edge source="0" target="1" id="0">
       <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="3" target="2" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="3" target="1" id="0">
+      <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="2" target="0" id="0">
       <grml:data key="d5">up</grml:data>
@@ -2407,27 +2407,22 @@
   <grml:key id="d1" for="node" attr.name="side" attr.type="string" />
   <grml:key id="d0" for="node" attr.name="stitchtype" attr.type="string" />
   <grml:graph edgedefault="directed">
-    <grml:node id="(3, 7)">
+    <grml:node id="(3, 8)">
       <grml:data key="d0">bindoff</grml:data>
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">bindoffright</grml:data>
     </grml:node>
-    <grml:node id="(2, 6)">
-      <grml:data key="d0">knit</grml:data>
+    <grml:node id="(2, 8)">
+      <grml:data key="d0">yarnover</grml:data>
       <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
-    <grml:node id="5">
-      <grml:data key="d0">bindoff</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">bindoffright</grml:data>
+      <grml:data key="d2">yarnoverleft</grml:data>
     </grml:node>
     <grml:node id="6">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">knitright</grml:data>
     </grml:node>
-    <grml:node id="(3, 6)">
+    <grml:node id="(3, 7)">
       <grml:data key="d0">bindoff</grml:data>
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">bindoffright</grml:data>
@@ -2445,40 +2440,45 @@
       <grml:data key="d2">bindoffright</grml:data>
     </grml:node>
     <grml:node id="(2, 7)">
-      <grml:data key="d0">yarnover</grml:data>
+      <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">yarnoverleft</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="5">
+      <grml:data key="d0">bindoff</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">bindoffright</grml:data>
     </grml:node>
     <grml:node id="2">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
-    <grml:edge source="(3, 7)" target="5" id="0">
+    <grml:edge source="(3, 8)" target="5" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
-    <grml:edge source="(2, 6)" target="2" id="0">
+    <grml:edge source="(2, 8)" target="(2, 7)" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
-    <grml:edge source="(2, 6)" target="(3, 6)" id="0">
+    <grml:edge source="(2, 8)" target="(3, 8)" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
-    <grml:edge source="6" target="(2, 6)" id="0">
+    <grml:edge source="6" target="(2, 7)" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
-    <grml:edge source="(3, 6)" target="(3, 7)" id="0">
+    <grml:edge source="(3, 7)" target="(3, 8)" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
-    <grml:edge source="4" target="(2, 7)" id="0">
+    <grml:edge source="4" target="(2, 8)" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
     <grml:edge source="4" target="5" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
-    <grml:edge source="0" target="(3, 6)" id="0">
+    <grml:edge source="0" target="(3, 7)" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
-    <grml:edge source="(2, 7)" target="(2, 6)" id="0">
+    <grml:edge source="(2, 7)" target="2" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
     <grml:edge source="(2, 7)" target="(3, 7)" id="0">
@@ -2496,45 +2496,35 @@
   <grml:key id="d1" for="node" attr.name="side" attr.type="string" />
   <grml:key id="d0" for="node" attr.name="stitchtype" attr.type="string" />
   <grml:graph edgedefault="directed">
-    <grml:node id="3">
-      <grml:data key="d0">k2tog</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">k2togleft</grml:data>
+    <grml:node id="10">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
+    <grml:node id="1">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
     </grml:node>
     <grml:node id="8">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
-    <grml:node id="1">
+    <grml:node id="7">
       <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
     </grml:node>
-    <grml:node id="5">
+    <grml:node id="2">
       <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
     </grml:node>
     <grml:node id="6">
       <grml:data key="d0">bindoff</grml:data>
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">bindoffright</grml:data>
-    </grml:node>
-    <grml:node id="9">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
-    </grml:node>
-    <grml:node id="10">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
-    </grml:node>
-    <grml:node id="7">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
     </grml:node>
     <grml:node id="4">
       <grml:data key="d0">knit</grml:data>
@@ -2548,15 +2538,25 @@
       <grml:data key="d4">knit</grml:data>
       <grml:data key="d2">knitright</grml:data>
     </grml:node>
-    <grml:node id="2">
-      <grml:data key="d0">knit</grml:data>
+    <grml:node id="3">
+      <grml:data key="d0">k2tog</grml:data>
       <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
+      <grml:data key="d2">k2togleft</grml:data>
     </grml:node>
-    <grml:edge source="3" target="2" id="0">
+    <grml:node id="5">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
+    <grml:node id="9">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
+    <grml:edge source="10" target="9" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
-    <grml:edge source="3" target="1" id="0">
+    <grml:edge source="10" target="3" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="1" target="5" id="0">
@@ -2565,25 +2565,13 @@
     <grml:edge source="1" target="8" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
-    <grml:edge source="5" target="6" id="0">
+    <grml:edge source="7" target="8" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
-    <grml:edge source="5" target="7" id="0">
+    <grml:edge source="2" target="0" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="6" target="7" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="9" target="3" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="10" target="9" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="10" target="3" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="7" target="8" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
     <grml:edge source="4" target="3" id="0">
@@ -2595,7 +2583,19 @@
     <grml:edge source="0" target="1" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
-    <grml:edge source="2" target="0" id="0">
+    <grml:edge source="3" target="2" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="3" target="1" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="5" target="6" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="5" target="7" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="9" target="3" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
   </grml:graph>
@@ -2607,60 +2607,55 @@
   <grml:key id="d1" for="node" attr.name="side" attr.type="string" />
   <grml:key id="d0" for="node" attr.name="stitchtype" attr.type="string" />
   <grml:graph edgedefault="directed">
-    <grml:node id="(2, 3)">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
-    <grml:node id="8">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
-    <grml:node id="(3, 4)">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
-    </grml:node>
-    <grml:node id="(3, 3)">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
-    </grml:node>
-    <grml:node id="6">
-      <grml:data key="d0">bindoff</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">bindoffright</grml:data>
-    </grml:node>
-    <grml:node id="9">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
-    </grml:node>
     <grml:node id="10">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">knitright</grml:data>
-    </grml:node>
-    <grml:node id="7">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
     </grml:node>
     <grml:node id="(2, 4)">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
-    <grml:node id="(3, 5)">
-      <grml:data key="d0">bindoff</grml:data>
+    <grml:node id="(3, 3)">
+      <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">bindoffright</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
+    <grml:node id="8">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="7">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
     </grml:node>
     <grml:node id="4">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="2">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="6">
+      <grml:data key="d0">bindoff</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">bindoffright</grml:data>
+    </grml:node>
+    <grml:node id="(3, 5)">
+      <grml:data key="d0">bindoff</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">bindoffright</grml:data>
+    </grml:node>
+    <grml:node id="(3, 4)">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
     </grml:node>
     <grml:node id="0">
       <grml:data key="d0">knit</grml:data>
@@ -2669,21 +2664,26 @@
       <grml:data key="d4">knit</grml:data>
       <grml:data key="d2">knitright</grml:data>
     </grml:node>
-    <grml:node id="2">
+    <grml:node id="(2, 3)">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
-    <grml:edge source="(2, 3)" target="2" id="0">
+    <grml:node id="9">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
+    <grml:edge source="10" target="9" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
-    <grml:edge source="(2, 3)" target="(3, 3)" id="0">
+    <grml:edge source="10" target="(2, 3)" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
-    <grml:edge source="(3, 4)" target="(3, 5)" id="0">
+    <grml:edge source="(2, 4)" target="(2, 3)" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
-    <grml:edge source="(3, 4)" target="7" id="0">
+    <grml:edge source="(2, 4)" target="(3, 4)" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="(3, 3)" target="(3, 4)" id="0">
@@ -2692,28 +2692,7 @@
     <grml:edge source="(3, 3)" target="8" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
-    <grml:edge source="6" target="7" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="9" target="(2, 4)" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="10" target="9" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="10" target="(2, 3)" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
     <grml:edge source="7" target="8" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="(2, 4)" target="(2, 3)" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="(2, 4)" target="(3, 4)" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="(3, 5)" target="6" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
     <grml:edge source="4" target="(2, 4)" id="0">
@@ -2722,10 +2701,31 @@
     <grml:edge source="4" target="(3, 5)" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
+    <grml:edge source="2" target="0" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="6" target="7" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 5)" target="6" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 4)" target="(3, 5)" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 4)" target="7" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
     <grml:edge source="0" target="(3, 3)" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
-    <grml:edge source="2" target="0" id="0">
+    <grml:edge source="(2, 3)" target="2" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(2, 3)" target="(3, 3)" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="9" target="(2, 4)" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
   </grml:graph>
@@ -2737,30 +2737,15 @@
   <grml:key id="d1" for="node" attr.name="side" attr.type="string" />
   <grml:key id="d0" for="node" attr.name="stitchtype" attr.type="string" />
   <grml:graph edgedefault="directed">
-    <grml:node id="3">
-      <grml:data key="d0">k2tog</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">k2togleft</grml:data>
-    </grml:node>
-    <grml:node id="8">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
     <grml:node id="1">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">knitright</grml:data>
     </grml:node>
-    <grml:node id="5">
-      <grml:data key="d0">bindoff</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">bindoffright</grml:data>
-    </grml:node>
-    <grml:node id="6">
+    <grml:node id="8">
       <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
     </grml:node>
     <grml:node id="7">
       <grml:data key="d0">knit</grml:data>
@@ -2772,6 +2757,11 @@
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
+    <grml:node id="6">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
     <grml:node id="0">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">right</grml:data>
@@ -2779,24 +2769,25 @@
       <grml:data key="d4">knit</grml:data>
       <grml:data key="d2">knitright</grml:data>
     </grml:node>
+    <grml:node id="3">
+      <grml:data key="d0">k2tog</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">k2togleft</grml:data>
+    </grml:node>
+    <grml:node id="5">
+      <grml:data key="d0">bindoff</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">bindoffright</grml:data>
+    </grml:node>
     <grml:node id="2">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
-    <grml:edge source="3" target="2" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="3" target="1" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
     <grml:edge source="1" target="5" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
     <grml:edge source="1" target="8" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="6" target="3" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="7" target="6" id="0">
@@ -2811,8 +2802,17 @@
     <grml:edge source="4" target="5" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
+    <grml:edge source="6" target="3" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
     <grml:edge source="0" target="1" id="0">
       <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="3" target="2" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="3" target="1" id="0">
+      <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="2" target="0" id="0">
       <grml:data key="d5">up</grml:data>
@@ -2826,7 +2826,7 @@
   <grml:key id="d1" for="node" attr.name="side" attr.type="string" />
   <grml:key id="d0" for="node" attr.name="stitchtype" attr.type="string" />
   <grml:graph edgedefault="directed">
-    <grml:node id="(2, 5)">
+    <grml:node id="(2, 4)">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
@@ -2836,40 +2836,30 @@
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
-    <grml:node id="(3, 4)">
+    <grml:node id="7">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">knitright</grml:data>
     </grml:node>
-    <grml:node id="5">
-      <grml:data key="d0">bindoff</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">bindoffright</grml:data>
+    <grml:node id="4">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
     </grml:node>
     <grml:node id="6">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">knitright</grml:data>
     </grml:node>
-    <grml:node id="7">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
-    </grml:node>
-    <grml:node id="(2, 4)">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
     <grml:node id="(3, 5)">
       <grml:data key="d0">bindoff</grml:data>
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">bindoffright</grml:data>
     </grml:node>
-    <grml:node id="4">
+    <grml:node id="(3, 4)">
       <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
     </grml:node>
     <grml:node id="0">
       <grml:data key="d0">knit</grml:data>
@@ -2878,24 +2868,25 @@
       <grml:data key="d4">knit</grml:data>
       <grml:data key="d2">knitright</grml:data>
     </grml:node>
+    <grml:node id="(2, 5)">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="5">
+      <grml:data key="d0">bindoff</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">bindoffright</grml:data>
+    </grml:node>
     <grml:node id="2">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
-    <grml:edge source="(2, 5)" target="(2, 4)" id="0">
+    <grml:edge source="(2, 4)" target="2" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
-    <grml:edge source="(2, 5)" target="(3, 5)" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="(3, 4)" target="(3, 5)" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="(3, 4)" target="8" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="6" target="(2, 5)" id="0">
+    <grml:edge source="(2, 4)" target="(3, 4)" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="7" target="6" id="0">
@@ -2904,23 +2895,32 @@
     <grml:edge source="7" target="(2, 4)" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
-    <grml:edge source="(2, 4)" target="2" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="(2, 4)" target="(3, 4)" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="(3, 5)" target="5" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
     <grml:edge source="4" target="(2, 5)" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
     <grml:edge source="4" target="5" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
+    <grml:edge source="6" target="(2, 5)" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 5)" target="5" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 4)" target="(3, 5)" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 4)" target="8" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
     <grml:edge source="0" target="(3, 4)" id="0">
       <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(2, 5)" target="(2, 4)" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(2, 5)" target="(3, 5)" id="0">
+      <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="2" target="0" id="0">
       <grml:data key="d5">up</grml:data>
@@ -2934,22 +2934,7 @@
   <grml:key id="d1" for="node" attr.name="side" attr.type="string" />
   <grml:key id="d0" for="node" attr.name="stitchtype" attr.type="string" />
   <grml:graph edgedefault="directed">
-    <grml:node id="3">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
     <grml:node id="1">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
-    </grml:node>
-    <grml:node id="5">
-      <grml:data key="d0">bindoff</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">bindoffright</grml:data>
-    </grml:node>
-    <grml:node id="6">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">knitright</grml:data>
@@ -2964,6 +2949,11 @@
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
+    <grml:node id="6">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
     <grml:node id="0">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">right</grml:data>
@@ -2971,24 +2961,25 @@
       <grml:data key="d4">knit</grml:data>
       <grml:data key="d2">knitright</grml:data>
     </grml:node>
+    <grml:node id="3">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="5">
+      <grml:data key="d0">bindoff</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">bindoffright</grml:data>
+    </grml:node>
     <grml:node id="2">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
-    <grml:edge source="3" target="2" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="3" target="1" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
     <grml:edge source="1" target="5" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
     <grml:edge source="1" target="7" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="6" target="3" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="4" target="3" id="0">
@@ -2997,8 +2988,17 @@
     <grml:edge source="4" target="5" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
+    <grml:edge source="6" target="3" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
     <grml:edge source="0" target="1" id="0">
       <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="3" target="2" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="3" target="1" id="0">
+      <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="2" target="0" id="0">
       <grml:data key="d5">up</grml:data>
@@ -3012,45 +3012,35 @@
   <grml:key id="d1" for="node" attr.name="side" attr.type="string" />
   <grml:key id="d0" for="node" attr.name="stitchtype" attr.type="string" />
   <grml:graph edgedefault="directed">
-    <grml:node id="(2, 5)">
-      <grml:data key="d0">yarnover</grml:data>
+    <grml:node id="(2, 4)">
+      <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">yarnoverleft</grml:data>
-    </grml:node>
-    <grml:node id="(3, 4)">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
-    </grml:node>
-    <grml:node id="5">
-      <grml:data key="d0">bindoff</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">bindoffright</grml:data>
-    </grml:node>
-    <grml:node id="6">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
     </grml:node>
     <grml:node id="7">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
-    <grml:node id="(2, 4)">
+    <grml:node id="4">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="6">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
     </grml:node>
     <grml:node id="(3, 5)">
       <grml:data key="d0">bindoff</grml:data>
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">bindoffright</grml:data>
     </grml:node>
-    <grml:node id="4">
+    <grml:node id="(3, 4)">
       <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
     </grml:node>
     <grml:node id="0">
       <grml:data key="d0">knit</grml:data>
@@ -3059,34 +3049,26 @@
       <grml:data key="d4">knit</grml:data>
       <grml:data key="d2">knitright</grml:data>
     </grml:node>
+    <grml:node id="(2, 5)">
+      <grml:data key="d0">yarnover</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">yarnoverleft</grml:data>
+    </grml:node>
+    <grml:node id="5">
+      <grml:data key="d0">bindoff</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">bindoffright</grml:data>
+    </grml:node>
     <grml:node id="2">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
-    <grml:edge source="(2, 5)" target="(2, 4)" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="(2, 5)" target="(3, 5)" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="(3, 4)" target="(3, 5)" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="(3, 4)" target="7" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="6" target="(2, 4)" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
     <grml:edge source="(2, 4)" target="2" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
     <grml:edge source="(2, 4)" target="(3, 4)" id="0">
       <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="(3, 5)" target="5" id="0">
-      <grml:data key="d5">next</grml:data>
     </grml:edge>
     <grml:edge source="4" target="(2, 5)" id="0">
       <grml:data key="d5">next</grml:data>
@@ -3094,8 +3076,26 @@
     <grml:edge source="4" target="5" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
+    <grml:edge source="6" target="(2, 4)" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 5)" target="5" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 4)" target="(3, 5)" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 4)" target="7" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
     <grml:edge source="0" target="(3, 4)" id="0">
       <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(2, 5)" target="(2, 4)" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(2, 5)" target="(3, 5)" id="0">
+      <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="2" target="0" id="0">
       <grml:data key="d5">up</grml:data>
@@ -3109,25 +3109,10 @@
   <grml:key id="d1" for="node" attr.name="side" attr.type="string" />
   <grml:key id="d0" for="node" attr.name="stitchtype" attr.type="string" />
   <grml:graph edgedefault="directed">
-    <grml:node id="3">
-      <grml:data key="d0">k2tog</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">k2togleft</grml:data>
-    </grml:node>
     <grml:node id="1">
       <grml:data key="d0">bindoff</grml:data>
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">bindoffright</grml:data>
-    </grml:node>
-    <grml:node id="5">
-      <grml:data key="d0">bindoff</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">bindoffright</grml:data>
-    </grml:node>
-    <grml:node id="6">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
     </grml:node>
     <grml:node id="7">
       <grml:data key="d0">knit</grml:data>
@@ -3139,6 +3124,11 @@
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
+    <grml:node id="6">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
     <grml:node id="0">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">right</grml:data>
@@ -3146,22 +3136,23 @@
       <grml:data key="d4">knit</grml:data>
       <grml:data key="d2">knitright</grml:data>
     </grml:node>
+    <grml:node id="3">
+      <grml:data key="d0">k2tog</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">k2togleft</grml:data>
+    </grml:node>
+    <grml:node id="5">
+      <grml:data key="d0">bindoff</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">bindoffright</grml:data>
+    </grml:node>
     <grml:node id="2">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
-    <grml:edge source="3" target="2" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="3" target="1" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
     <grml:edge source="1" target="5" id="0">
       <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="6" target="3" id="0">
-      <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="7" target="6" id="0">
       <grml:data key="d5">next</grml:data>
@@ -3175,8 +3166,17 @@
     <grml:edge source="4" target="5" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
+    <grml:edge source="6" target="3" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
     <grml:edge source="0" target="1" id="0">
       <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="3" target="2" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="3" target="1" id="0">
+      <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="2" target="0" id="0">
       <grml:data key="d5">up</grml:data>
@@ -3195,6 +3195,38 @@
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
+    <grml:node id="(3, 6)">
+      <grml:data key="d0">bindoff</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">bindoffright</grml:data>
+    </grml:node>
+    <grml:node id="7">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
+    <grml:node id="4">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="6">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
+    <grml:node id="(3, 5)">
+      <grml:data key="d0">bindoff</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">bindoffright</grml:data>
+    </grml:node>
+    <grml:node id="0">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d3">startingpoint</grml:data>
+      <grml:data key="d4">knit</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
     <grml:node id="(2, 5)">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
@@ -3204,38 +3236,6 @@
       <grml:data key="d0">bindoff</grml:data>
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">bindoffright</grml:data>
-    </grml:node>
-    <grml:node id="6">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
-    </grml:node>
-    <grml:node id="7">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
-    </grml:node>
-    <grml:node id="(3, 6)">
-      <grml:data key="d0">bindoff</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">bindoffright</grml:data>
-    </grml:node>
-    <grml:node id="(3, 5)">
-      <grml:data key="d0">bindoff</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">bindoffright</grml:data>
-    </grml:node>
-    <grml:node id="4">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
-    <grml:node id="0">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d3">startingpoint</grml:data>
-      <grml:data key="d4">knit</grml:data>
-      <grml:data key="d2">knitright</grml:data>
     </grml:node>
     <grml:node id="2">
       <grml:data key="d0">knit</grml:data>
@@ -3248,14 +3248,8 @@
     <grml:edge source="(2, 6)" target="(3, 6)" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
-    <grml:edge source="(2, 5)" target="2" id="0">
+    <grml:edge source="(3, 6)" target="5" id="0">
       <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="(2, 5)" target="(3, 5)" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="6" target="(2, 6)" id="0">
-      <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="7" target="6" id="0">
       <grml:data key="d5">next</grml:data>
@@ -3263,20 +3257,26 @@
     <grml:edge source="7" target="(2, 5)" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
-    <grml:edge source="(3, 6)" target="5" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="(3, 5)" target="(3, 6)" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
     <grml:edge source="4" target="(2, 6)" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
     <grml:edge source="4" target="5" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
+    <grml:edge source="6" target="(2, 6)" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 5)" target="(3, 6)" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
     <grml:edge source="0" target="(3, 5)" id="0">
       <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(2, 5)" target="2" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(2, 5)" target="(3, 5)" id="0">
+      <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="2" target="0" id="0">
       <grml:data key="d5">up</grml:data>
@@ -3291,12 +3291,12 @@
   <grml:key id="d1" for="node" attr.name="side" attr.type="string" />
   <grml:key id="d0" for="node" attr.name="stitchtype" attr.type="string" />
   <grml:graph edgedefault="directed">
-    <grml:node id="5">
-      <grml:data key="d0">yarnover</grml:data>
+    <grml:node id="1">
+      <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">yarnoverleft</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
     </grml:node>
-    <grml:node id="3">
+    <grml:node id="8">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">knitright</grml:data>
@@ -3306,30 +3306,20 @@
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">yarnoverleft</grml:data>
     </grml:node>
-    <grml:node id="2">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
-    </grml:node>
-    <grml:node id="8">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
-    </grml:node>
-    <grml:node id="1">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
     <grml:node id="7">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">knitright</grml:data>
     </grml:node>
-    <grml:node id="9">
+    <grml:node id="2">
       <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
+    <grml:node id="6">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
     </grml:node>
     <grml:node id="0">
       <grml:data key="d0">knit</grml:data>
@@ -3338,15 +3328,40 @@
       <grml:data key="d4">knit</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
-    <grml:node id="6">
+    <grml:node id="3">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">knitright</grml:data>
     </grml:node>
-    <grml:edge source="5" target="1" id="0">
+    <grml:node id="5">
+      <grml:data key="d0">yarnover</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">yarnoverleft</grml:data>
+    </grml:node>
+    <grml:node id="9">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:edge source="1" target="0" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
-    <grml:edge source="5" target="6" id="0">
+    <grml:edge source="1" target="7" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="8" target="2" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="4" target="5" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="7" target="6" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="2" target="3" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="2" target="0" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="3" target="4" id="0">
@@ -3356,26 +3371,11 @@
     <grml:edge source="3" target="1" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
-    <grml:edge source="4" target="5" id="0">
+    <grml:edge source="5" target="1" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
-    <grml:edge source="2" target="3" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="2" target="0" id="0">
+    <grml:edge source="5" target="6" id="0">
       <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="8" target="2" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="1" target="0" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="1" target="7" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="7" target="6" id="0">
-      <grml:data key="d5">next</grml:data>
     </grml:edge>
     <grml:edge source="9" target="2" id="0">
       <grml:data key="d5">up</grml:data>
@@ -3390,7 +3390,7 @@
   <grml:key id="d1" for="node" attr.name="side" attr.type="string" />
   <grml:key id="d0" for="node" attr.name="stitchtype" attr.type="string" />
   <grml:graph edgedefault="directed">
-    <grml:node id="3">
+    <grml:node id="8">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">knitright</grml:data>
@@ -3400,7 +3400,7 @@
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">yarnoverleft</grml:data>
     </grml:node>
-    <grml:node id="8">
+    <grml:node id="7">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">knitright</grml:data>
@@ -3410,25 +3410,15 @@
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
+    <grml:node id="6">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
     <grml:node id="(3, 2)">
       <grml:data key="d0">yarnover</grml:data>
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">yarnoverright</grml:data>
-    </grml:node>
-    <grml:node id="(3, 3)">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
-    </grml:node>
-    <grml:node id="7">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
-    </grml:node>
-    <grml:node id="9">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
     </grml:node>
     <grml:node id="0">
       <grml:data key="d0">knit</grml:data>
@@ -3442,22 +3432,28 @@
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
-    <grml:node id="6">
+    <grml:node id="3">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">knitright</grml:data>
     </grml:node>
-    <grml:edge source="3" target="4" id="0">
+    <grml:node id="9">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="(3, 3)">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
+    <grml:edge source="8" target="(3, 2)" id="0">
       <grml:data key="d5">next</grml:data>
-      <grml:data key="d6">True</grml:data>
-    </grml:edge>
-    <grml:edge source="3" target="(4, 4)" id="0">
-      <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="4" target="(4, 4)" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
-    <grml:edge source="8" target="(3, 2)" id="0">
+    <grml:edge source="7" target="6" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
     <grml:edge source="(4, 4)" target="(4, 3)" id="0">
@@ -3472,22 +3468,26 @@
     <grml:edge source="(3, 2)" target="0" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
-    <grml:edge source="(3, 3)" target="3" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="(3, 3)" target="(4, 3)" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="7" target="6" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="9" target="(3, 3)" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
     <grml:edge source="(4, 3)" target="0" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
     <grml:edge source="(4, 3)" target="7" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="3" target="4" id="0">
+      <grml:data key="d5">next</grml:data>
+      <grml:data key="d6">True</grml:data>
+    </grml:edge>
+    <grml:edge source="3" target="(4, 4)" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="9" target="(3, 3)" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 3)" target="3" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 3)" target="(4, 3)" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
   </grml:graph>
@@ -3499,22 +3499,236 @@
   <grml:key id="d1" for="node" attr.name="side" attr.type="string" />
   <grml:key id="d0" for="node" attr.name="stitchtype" attr.type="string" />
   <grml:graph edgedefault="directed">
-    <grml:node id="13">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
-    <grml:node id="10">
-      <grml:data key="d0">yarnover</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">yarnoverright</grml:data>
-    </grml:node>
-    <grml:node id="3">
+    <grml:node id="1">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
     <grml:node id="8">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
+    <grml:node id="7">
+      <grml:data key="d0">yarnover</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">yarnoverleft</grml:data>
+    </grml:node>
+    <grml:node id="4">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
+    <grml:node id="6">
+      <grml:data key="d0">yarnover</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">yarnoverleft</grml:data>
+    </grml:node>
+    <grml:node id="0">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d3">startingpoint</grml:data>
+      <grml:data key="d4">knit</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="3">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
+    <grml:node id="5">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="9">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
+    <grml:node id="2">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
+    <grml:edge source="1" target="6" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="1" target="9" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="8" target="9" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="4" target="2" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="4" target="1" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="6" target="7" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="6" target="8" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="0" target="1" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="5" target="2" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="2" target="3" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="2" target="0" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+  </grml:graph>
+</grml:graphml></asd:oldgraph><asd:newgraph><grml:graphml xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+  <grml:key id="d5" for="edge" attr.name="edgetype" attr.type="string" />
+  <grml:key id="d4" for="node" attr.name="alternative_stitchtype" attr.type="string" />
+  <grml:key id="d3" for="node" attr.name="mark" attr.type="string" />
+  <grml:key id="d2" for="node" attr.name="hashval" attr.type="string" />
+  <grml:key id="d1" for="node" attr.name="side" attr.type="string" />
+  <grml:key id="d0" for="node" attr.name="stitchtype" attr.type="string" />
+  <grml:graph edgedefault="directed">
+    <grml:node id="(4, 1)">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="(4, 2)">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="8">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
+    <grml:node id="7">
+      <grml:data key="d0">yarnover</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">yarnoverleft</grml:data>
+    </grml:node>
+    <grml:node id="4">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
+    <grml:node id="(3, 2)">
+      <grml:data key="d0">yarnover</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">yarnoverright</grml:data>
+    </grml:node>
+    <grml:node id="0">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d3">startingpoint</grml:data>
+      <grml:data key="d4">knit</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="3">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
+    <grml:node id="5">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="9">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
+    <grml:node id="(3, 1)">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
+    <grml:edge source="(4, 1)" target="7" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(4, 1)" target="8" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="(4, 2)" target="(4, 1)" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(4, 2)" target="9" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="8" target="9" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="4" target="(3, 1)" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="4" target="(4, 1)" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 2)" target="3" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 2)" target="0" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="0" target="(4, 2)" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="5" target="(3, 1)" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 1)" target="(3, 2)" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 1)" target="(4, 2)" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+  </grml:graph>
+</grml:graphml></asd:newgraph><asd:findpath><asd:edge asd:index="0" asd:first="0" asd:second="out" asd:third="next" asd:fourth="1" /><asd:edge asd:index="1" asd:first="0" asd:second="in" asd:third="up" asd:fourth="2" /><asd:edge asd:index="2" asd:first="2" asd:second="out" asd:third="next" asd:fourth="3" /><asd:edge asd:index="3" asd:first="2" asd:second="in" asd:third="next" asd:fourth="4" /><asd:edge asd:index="4" asd:first="2" asd:second="in" asd:third="up" asd:fourth="5" /><asd:edge asd:index="5" asd:first="1" asd:second="out" asd:third="next" asd:fourth="6" /><asd:edge asd:index="6" asd:first="6" asd:second="out" asd:third="next" asd:fourth="7" /><asd:edge asd:index="7" asd:first="6" asd:second="out" asd:third="up" asd:fourth="8" /><asd:edge asd:index="8" asd:first="8" asd:second="out" asd:third="next" asd:fourth="9" /></asd:findpath><asd:findpath_nodeinfo><asd:node asd:index="0" asd:first="knit" asd:second="left" /><asd:node asd:index="1" asd:first="knit" asd:second="left" /><asd:node asd:index="2" asd:first="knit" asd:second="right" /><asd:node asd:index="3" asd:first="knit" asd:second="right" /><asd:node asd:index="4" asd:first="knit" asd:second="right" /><asd:node asd:index="5" asd:first="knit" asd:second="left" /><asd:node asd:index="6" asd:first="yarnover" asd:second="left" /><asd:node asd:index="7" asd:first="yarnover" asd:second="left" /><asd:node asd:index="8" asd:first="knit" asd:second="right" /><asd:node asd:index="9" asd:first="knit" asd:second="right" /></asd:findpath_nodeinfo></asd:strickgraph_ersetzung><asd:strickgraph_ersetzung><asd:oldgraph><grml:graphml xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+  <grml:key id="d5" for="edge" attr.name="edgetype" attr.type="string" />
+  <grml:key id="d4" for="node" attr.name="alternative_stitchtype" attr.type="string" />
+  <grml:key id="d3" for="node" attr.name="mark" attr.type="string" />
+  <grml:key id="d2" for="node" attr.name="hashval" attr.type="string" />
+  <grml:key id="d1" for="node" attr.name="side" attr.type="string" />
+  <grml:key id="d0" for="node" attr.name="stitchtype" attr.type="string" />
+  <grml:graph edgedefault="directed">
+    <grml:node id="10">
+      <grml:data key="d0">yarnover</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">yarnoverright</grml:data>
+    </grml:node>
+    <grml:node id="12">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="1">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
+    <grml:node id="8">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
+    <grml:node id="7">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
+    <grml:node id="11">
+      <grml:data key="d0">yarnover</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">yarnoverright</grml:data>
+    </grml:node>
+    <grml:node id="2">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">knitright</grml:data>
@@ -3529,31 +3743,6 @@
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">k2togleft</grml:data>
     </grml:node>
-    <grml:node id="5">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
-    <grml:node id="2">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
-    </grml:node>
-    <grml:node id="9">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
-    <grml:node id="1">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
-    </grml:node>
-    <grml:node id="11">
-      <grml:data key="d0">yarnover</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">yarnoverright</grml:data>
-    </grml:node>
     <grml:node id="0">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">right</grml:data>
@@ -3561,15 +3750,25 @@
       <grml:data key="d4">knit</grml:data>
       <grml:data key="d2">knitright</grml:data>
     </grml:node>
-    <grml:node id="12">
+    <grml:node id="3">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
-    <grml:node id="7">
+    <grml:node id="13">
       <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="5">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="9">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
     </grml:node>
     <grml:edge source="10" target="11" id="0">
       <grml:data key="d5">next</grml:data>
@@ -3577,10 +3776,13 @@
     <grml:edge source="10" target="12" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
-    <grml:edge source="3" target="4" id="0">
+    <grml:edge source="12" target="13" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
-    <grml:edge source="3" target="0" id="0">
+    <grml:edge source="1" target="10" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="1" target="13" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="8" target="6" id="0">
@@ -3588,6 +3790,12 @@
     </grml:edge>
     <grml:edge source="8" target="4" id="0">
       <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="7" target="3" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="2" target="0" id="0">
+      <grml:data key="d5">next</grml:data>
     </grml:edge>
     <grml:edge source="6" target="7" id="0">
       <grml:data key="d5">next</grml:data>
@@ -3601,28 +3809,19 @@
     <grml:edge source="4" target="2" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
-    <grml:edge source="2" target="0" id="0">
+    <grml:edge source="0" target="1" id="0">
       <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="3" target="4" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="3" target="0" id="0">
+      <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="9" target="3" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
     <grml:edge source="9" target="1" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="1" target="10" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="1" target="13" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="0" target="1" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="12" target="13" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="7" target="3" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
   </grml:graph>
@@ -3634,32 +3833,7 @@
   <grml:key id="d1" for="node" attr.name="side" attr.type="string" />
   <grml:key id="d0" for="node" attr.name="stitchtype" attr.type="string" />
   <grml:graph edgedefault="directed">
-    <grml:node id="13">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
     <grml:node id="(2, 4)">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
-    <grml:node id="8">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
-    </grml:node>
-    <grml:node id="6">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
-    </grml:node>
-    <grml:node id="(3, 5)">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
-    </grml:node>
-    <grml:node id="5">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
@@ -3669,7 +3843,17 @@
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
-    <grml:node id="9">
+    <grml:node id="8">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
+    <grml:node id="7">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
+    <grml:node id="(2, 3)">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
@@ -3684,6 +3868,21 @@
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
+    <grml:node id="6">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
+    <grml:node id="(3, 5)">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
+    <grml:node id="(3, 4)">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
     <grml:node id="0">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">right</grml:data>
@@ -3691,22 +3890,22 @@
       <grml:data key="d4">knit</grml:data>
       <grml:data key="d2">knitright</grml:data>
     </grml:node>
-    <grml:node id="(2, 3)">
+    <grml:node id="13">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
-    <grml:node id="7">
+    <grml:node id="5">
       <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="9">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
     </grml:node>
     <grml:node id="2">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
-    </grml:node>
-    <grml:node id="(3, 4)">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">knitright</grml:data>
@@ -3717,10 +3916,28 @@
     <grml:edge source="(2, 4)" target="(3, 4)" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
+    <grml:edge source="12" target="13" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
     <grml:edge source="8" target="6" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
     <grml:edge source="8" target="(2, 2)" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="7" target="(2, 4)" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="(2, 3)" target="(2, 2)" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(2, 3)" target="0" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="(2, 2)" target="5" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(2, 2)" target="2" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="6" target="7" id="0">
@@ -3735,7 +3952,13 @@
     <grml:edge source="(3, 5)" target="12" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
-    <grml:edge source="12" target="13" id="0">
+    <grml:edge source="(3, 4)" target="(3, 5)" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(3, 4)" target="13" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="0" target="(3, 4)" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
     <grml:edge source="9" target="(2, 4)" id="0">
@@ -3744,32 +3967,8 @@
     <grml:edge source="9" target="(3, 5)" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
-    <grml:edge source="(2, 2)" target="5" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="(2, 2)" target="2" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="0" target="(3, 4)" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="(2, 3)" target="(2, 2)" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="(2, 3)" target="0" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="7" target="(2, 4)" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
     <grml:edge source="2" target="0" id="0">
       <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="(3, 4)" target="(3, 5)" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="(3, 4)" target="13" id="0">
-      <grml:data key="d5">up</grml:data>
     </grml:edge>
   </grml:graph>
 </grml:graphml></asd:newgraph><asd:findpath><asd:edge asd:index="0" asd:first="0" asd:second="out" asd:third="next" asd:fourth="1" /><asd:edge asd:index="1" asd:first="0" asd:second="in" asd:third="next" asd:fourth="2" /><asd:edge asd:index="2" asd:first="0" asd:second="in" asd:third="up" asd:fourth="3" /><asd:edge asd:index="3" asd:first="3" asd:second="out" asd:third="next" asd:fourth="4" /><asd:edge asd:index="4" asd:first="4" asd:second="out" asd:third="next" asd:fourth="5" /><asd:edge asd:index="5" asd:first="4" asd:second="in" asd:third="up" asd:fourth="6" /><asd:edge asd:index="6" asd:first="6" asd:second="out" asd:third="next" asd:fourth="7" /><asd:edge asd:index="7" asd:first="6" asd:second="in" asd:third="next" asd:fourth="8" /><asd:edge asd:index="8" asd:first="3" asd:second="in" asd:third="next" asd:fourth="9" /><asd:edge asd:index="9" asd:first="1" asd:second="out" asd:third="next" asd:fourth="10" /><asd:edge asd:index="10" asd:first="10" asd:second="out" asd:third="next" asd:fourth="11" /><asd:edge asd:index="11" asd:first="10" asd:second="out" asd:third="up" asd:fourth="12" /><asd:edge asd:index="12" asd:first="12" asd:second="out" asd:third="next" asd:fourth="13" /></asd:findpath><asd:findpath_nodeinfo><asd:node asd:index="0" asd:first="knit" asd:second="right" /><asd:node asd:index="1" asd:first="knit" asd:second="right" /><asd:node asd:index="2" asd:first="knit" asd:second="right" /><asd:node asd:index="3" asd:first="knit" asd:second="left" /><asd:node asd:index="4" asd:first="k2tog" asd:second="left" /><asd:node asd:index="5" asd:first="knit" asd:second="left" /><asd:node asd:index="6" asd:first="knit" asd:second="right" /><asd:node asd:index="7" asd:first="knit" asd:second="right" /><asd:node asd:index="8" asd:first="knit" asd:second="right" /><asd:node asd:index="9" asd:first="knit" asd:second="left" /><asd:node asd:index="10" asd:first="yarnover" asd:second="right" /><asd:node asd:index="11" asd:first="yarnover" asd:second="right" /><asd:node asd:index="12" asd:first="knit" asd:second="left" /><asd:node asd:index="13" asd:first="knit" asd:second="left" /></asd:findpath_nodeinfo></asd:strickgraph_ersetzung><asd:strickgraph_ersetzung><asd:oldgraph><grml:graphml xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
@@ -3786,50 +3985,15 @@
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">yarnoverright</grml:data>
     </grml:node>
-    <grml:node id="7">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
-    <grml:node id="13">
-      <grml:data key="d0">bindoff</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">bindoffleft</grml:data>
-    </grml:node>
     <grml:node id="14">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
-    <grml:node id="3">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
-    </grml:node>
-    <grml:node id="8">
-      <grml:data key="d0">knit</grml:data>
+    <grml:node id="12">
+      <grml:data key="d0">bindoff</grml:data>
       <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
-    <grml:node id="6">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
-    </grml:node>
-    <grml:node id="4">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
-    </grml:node>
-    <grml:node id="5">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
-    </grml:node>
-    <grml:node id="9">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
+      <grml:data key="d2">bindoffleft</grml:data>
     </grml:node>
     <grml:node id="1">
       <grml:data key="d0">knit</grml:data>
@@ -3841,6 +4005,31 @@
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">yarnoverright</grml:data>
     </grml:node>
+    <grml:node id="8">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="7">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="2">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="4">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
+    <grml:node id="6">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
     <grml:node id="0">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">right</grml:data>
@@ -3848,12 +4037,22 @@
       <grml:data key="d4">knit</grml:data>
       <grml:data key="d2">knitright</grml:data>
     </grml:node>
-    <grml:node id="12">
+    <grml:node id="3">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
+    <grml:node id="13">
       <grml:data key="d0">bindoff</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">bindoffleft</grml:data>
     </grml:node>
-    <grml:node id="2">
+    <grml:node id="5">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
+    </grml:node>
+    <grml:node id="9">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
@@ -3864,41 +4063,11 @@
     <grml:edge source="10" target="8" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
-    <grml:edge source="7" target="8" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="7" target="6" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
     <grml:edge source="14" target="1" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
-    <grml:edge source="3" target="4" id="0">
+    <grml:edge source="12" target="13" id="0">
       <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="8" target="9" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="8" target="5" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="4" target="5" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="4" target="13" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="5" target="6" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="5" target="12" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="9" target="2" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="9" target="4" id="0">
-      <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="1" target="10" id="0">
       <grml:data key="d5">next</grml:data>
@@ -3913,16 +4082,46 @@
     <grml:edge source="11" target="7" id="1">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
+    <grml:edge source="8" target="9" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="8" target="5" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="7" target="8" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="7" target="6" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="2" target="3" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="4" target="5" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="4" target="13" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
     <grml:edge source="0" target="1" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
     <grml:edge source="0" target="2" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
-    <grml:edge source="12" target="13" id="0">
+    <grml:edge source="3" target="4" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
-    <grml:edge source="2" target="3" id="0">
+    <grml:edge source="5" target="6" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="5" target="12" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
+    <grml:edge source="9" target="2" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="9" target="4" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
   </grml:graph>
@@ -3935,27 +4134,22 @@
   <grml:key id="d1" for="node" attr.name="side" attr.type="string" />
   <grml:key id="d0" for="node" attr.name="stitchtype" attr.type="string" />
   <grml:graph edgedefault="directed">
-    <grml:node id="13">
-      <grml:data key="d0">bindoff</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">bindoffleft</grml:data>
-    </grml:node>
     <grml:node id="14">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
     </grml:node>
-    <grml:node id="3">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">right</grml:data>
-      <grml:data key="d2">knitright</grml:data>
+    <grml:node id="12">
+      <grml:data key="d0">bindoff</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">bindoffleft</grml:data>
     </grml:node>
     <grml:node id="(3, 3)">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">knitright</grml:data>
     </grml:node>
-    <grml:node id="6">
+    <grml:node id="(5, 4)">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">knitright</grml:data>
@@ -3965,20 +4159,20 @@
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">yarnoverright</grml:data>
     </grml:node>
-    <grml:node id="(4, 3)">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
-    <grml:node id="2">
-      <grml:data key="d0">knit</grml:data>
-      <grml:data key="d1">left</grml:data>
-      <grml:data key="d2">knitleft</grml:data>
-    </grml:node>
     <grml:node id="11">
       <grml:data key="d0">yarnover</grml:data>
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">yarnoverright</grml:data>
+    </grml:node>
+    <grml:node id="7">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="6">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">right</grml:data>
+      <grml:data key="d2">knitright</grml:data>
     </grml:node>
     <grml:node id="0">
       <grml:data key="d0">knit</grml:data>
@@ -3987,17 +4181,22 @@
       <grml:data key="d4">knit</grml:data>
       <grml:data key="d2">knitright</grml:data>
     </grml:node>
-    <grml:node id="(5, 4)">
+    <grml:node id="(4, 3)">
+      <grml:data key="d0">knit</grml:data>
+      <grml:data key="d1">left</grml:data>
+      <grml:data key="d2">knitleft</grml:data>
+    </grml:node>
+    <grml:node id="3">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">right</grml:data>
       <grml:data key="d2">knitright</grml:data>
     </grml:node>
-    <grml:node id="12">
+    <grml:node id="13">
       <grml:data key="d0">bindoff</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">bindoffleft</grml:data>
     </grml:node>
-    <grml:node id="7">
+    <grml:node id="2">
       <grml:data key="d0">knit</grml:data>
       <grml:data key="d1">left</grml:data>
       <grml:data key="d2">knitleft</grml:data>
@@ -4005,7 +4204,7 @@
     <grml:edge source="14" target="(3, 3)" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
-    <grml:edge source="3" target="(5, 3)" id="0">
+    <grml:edge source="12" target="13" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
     <grml:edge source="(3, 3)" target="11" id="0">
@@ -4014,19 +4213,16 @@
     <grml:edge source="(3, 3)" target="(4, 3)" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
+    <grml:edge source="(5, 4)" target="6" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="(5, 4)" target="12" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
     <grml:edge source="(5, 3)" target="(5, 4)" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
     <grml:edge source="(5, 3)" target="13" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="(4, 3)" target="2" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="(4, 3)" target="(5, 4)" id="0">
-      <grml:data key="d5">up</grml:data>
-    </grml:edge>
-    <grml:edge source="2" target="3" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
     <grml:edge source="11" target="7" id="0">
@@ -4036,25 +4232,28 @@
     <grml:edge source="11" target="7" id="1">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
+    <grml:edge source="7" target="(4, 3)" id="0">
+      <grml:data key="d5">next</grml:data>
+    </grml:edge>
+    <grml:edge source="7" target="6" id="0">
+      <grml:data key="d5">up</grml:data>
+    </grml:edge>
     <grml:edge source="0" target="(3, 3)" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
     <grml:edge source="0" target="2" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
-    <grml:edge source="(5, 4)" target="6" id="0">
+    <grml:edge source="(4, 3)" target="2" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
-    <grml:edge source="(5, 4)" target="12" id="0">
+    <grml:edge source="(4, 3)" target="(5, 4)" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
-    <grml:edge source="12" target="13" id="0">
+    <grml:edge source="3" target="(5, 3)" id="0">
       <grml:data key="d5">next</grml:data>
     </grml:edge>
-    <grml:edge source="7" target="(4, 3)" id="0">
-      <grml:data key="d5">next</grml:data>
-    </grml:edge>
-    <grml:edge source="7" target="6" id="0">
+    <grml:edge source="2" target="3" id="0">
       <grml:data key="d5">up</grml:data>
     </grml:edge>
   </grml:graph>

@@ -16,7 +16,7 @@ class BrokenManual( Exception ):
 
 
 def frommanual( manual, stitchinfo, manual_type="thread", startside="right", \
-                reversed=False ):
+                reverse=False ):
     """
     :todo: implement machine- and follow_thread-layout
     """

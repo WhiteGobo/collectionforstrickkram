@@ -103,6 +103,7 @@ class strick_multiverbesserer( multiverbesserer ):
         ersetzerlist = []
         for old_manual_str, new_manual_str in pairlist:
             for myside in usedsides:
+                print("qqq", myside )
                 try:
                     if oldtranslatorlist:
                         foundtranslator = _tryoldtranslator( oldtranslatorlist,\
@@ -117,8 +118,8 @@ class strick_multiverbesserer( multiverbesserer ):
                         ersetzerlist.append(\
                                 strickalterator.from_manuals( \
                                 old_manual_str, new_manual_str, \
-                                stitchinfo, manual_type=manual_type,\
-                                startside=myside, reversed = reverse )
+                                stitchinfo, manual_type=manual_type, \
+                                startside=myside, reverse = reverse )
                                 )
                 except Exception as err:
                     print( err.args )
@@ -131,10 +132,10 @@ class strick_multiverbesserer( multiverbesserer ):
 def _tryoldtranslator( translatorlist, startside, oldmanstr, newmanstr, \
                                         stitchinfo, reverse=False ):
     trystrick = frommanual( oldmanstr, stitchinfo, manual_type="machine", \
-                                startside = startside, reversed=reverse )
+                                startside = startside, reverse=reverse )
     startpoint = _start_at_marked( trystrick )
     targetstrick = frommanual( newmanstr, stitchinfo, manual_type="machine", \
-                                startside = startside, reversed=reverse )
+                                startside = startside, reverse=reverse )
     _start_at_marked( targetstrick ) #just to replace marked stitches
     for trans in translatorlist:
         asd = copy.deepcopy( trystrick )

@@ -13,7 +13,7 @@ from .verbesserer_class import strickalterator
 
 import logging
 logger = logging.getLogger( __name__ )
-logging.basicConfig( level = logging.DEBUG )
+logging.basicConfig( level = logging.WARNING )
 
 class test_manualtoverbesserung( unittest.TestCase ):
     def setUp( self ):
@@ -75,19 +75,22 @@ class test_manualtoverbesserung( unittest.TestCase ):
                 ), )
         myersetzer = strick_multiverbesserer.from_manuals( pairlist, \
                                                             side="right" )
-        #single = myersetzer.verbessererlist[0]
+        single = myersetzer.verbessererlist[0]
         #print( single.oldgraph.nodes(data=True), single.oldgraph_nodes )
         #raise Exception()
-        mygraph = strickgraph.from_manual( pairlist[0][0], stitchinfo )
+        mygraph = strickgraph.from_manual( pairlist[0][0], stitchinfo, \
+                                        #manual_type = manual_type,\
+                                        #startside=startside, \
+                                        reverse=False \
+                                        )
         mygraph = mygraph.copy_with_alternative_stitchtype()
         mygraph2 = strickgraph.from_manual( pairlist[0][1], stitchinfo )
         mygraph2 = mygraph2.copy_with_alternative_stitchtype()
-        success = myersetzer.replace_in_graph_withinfo( mygraph, (1,1) )
+
+        success,info = myersetzer.replace_in_graph_withinfo( mygraph, (1,3) )
         if not success:
-            myersetzer.print_compare_to_graph_at_position( mygraph, (1,1) )
+            myersetzer.print_compare_to_graph_at_position( mygraph, (1,3) )
         self.assertTrue( success )
-        #print( mygraph2.to_manual( stitchinfo ) )
-        print( mygraph.to_manual( stitchinfo ) )
         self.assertEqual( mygraph, mygraph2 )
 
     def test_multiersetzer( self ):

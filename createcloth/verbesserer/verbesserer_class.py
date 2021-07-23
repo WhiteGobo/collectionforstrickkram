@@ -1,4 +1,3 @@
-from ..strickgraph.fromknitmanual import frommanual
 from ..strickgraph.strickgraph_base import get_neighbours_from, strickgraph, stricksubgraph
 
 import networkx as netx
@@ -17,7 +16,7 @@ class strickalterator( extrasfornetworkx.verbesserer ):
     def from_manuals( cls, manual_old, manual_new, stitchinfo, \
                                     start_at="bottomleft", \
                                     manual_type="machine", startside="right",\
-                                    startpoint_method="marked", reversed=False):
+                                    startpoint_method="marked", reverse=False):
         """generates everything i need for replacing a subgraph
 
         :param startpoint_method: keyword for finding the startpoint \
@@ -40,10 +39,12 @@ class strickalterator( extrasfornetworkx.verbesserer ):
                 currently only mark information is removed and this only works \
                 via extra if function. This has to be optimised somehow \
         """
-        old_graph = frommanual( manual_old, stitchinfo,manual_type=manual_type,\
-                                        startside=startside,reversed=reversed )
-        new_graph = frommanual( manual_new, stitchinfo,manual_type=manual_type,\
-                                        startside=startside, reversed=reversed )
+        old_graph = strickgraph.from_manual( manual_old, stitchinfo, \
+                                        manual_type = manual_type,\
+                                        startside=startside,reverse=reverse )
+        new_graph = strickgraph.from_manual( manual_new, stitchinfo, \
+                                        manual_type = manual_type,\
+                                        startside=startside, reverse=reverse )
 
 
         startold, startnew = findstartnode_dict[ startpoint_method ](\

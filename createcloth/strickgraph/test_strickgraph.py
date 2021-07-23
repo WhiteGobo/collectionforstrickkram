@@ -157,8 +157,11 @@ class TestStringMethods( unittest.TestCase ):
         stitchinfo.add_additional_resources( xml_string )
 
         asd = strickgraph.strickgraph.from_manual( myman, stitchinfo )
-        asd.get_alternative_stitchtypes()
-        asd.copy_with_alternative_stitchtype()
+        self.assertEqual( asd.get_alternative_stitchtypes(), {(1, 3): 'knit'} )
+        newmanual = asd.copy_with_alternative_stitchtype()\
+                        .to_manual( self.stitchinfo)
+        brubru = "6yo\n2k 1k2tog 2k\n1k 1k2tog 2k\n4bo".splitlines()
+        self.assertEqual( newmanual.splitlines(), brubru )
 
     def test_insertcolumn( self ):
         asd = strickgraph.strickgraph.from_gridgraph( self.insertgraph, \
