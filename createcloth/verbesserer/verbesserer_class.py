@@ -49,12 +49,8 @@ class strickalterator( extrasfornetworkx.verbesserer ):
         startold, startnew = findstartnode_dict[ startpoint_method ](\
                                                     old_graph, new_graph )
         if startpoint_method == "marked":
-            newstitchtypes = netx.get_node_attributes(old_graph, \
-                                                    "alternative_stitchtype" )
-            netx.set_node_attributes( old_graph, newstitchtypes, "stitchtype" )
-            newstitchtypes = netx.get_node_attributes(new_graph, \
-                                                    "alternative_stitchtype" )
-            netx.set_node_attributes( new_graph, newstitchtypes, "stitchtype" )
+            new_graph = new_graph.copy_with_alternative_stitchtype()
+            old_graph = old_graph.copy_with_alternative_stitchtype()
 
         try:
             returnv = cls.from_graph_difference( old_graph, new_graph,\
