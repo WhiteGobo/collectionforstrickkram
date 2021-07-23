@@ -1,7 +1,4 @@
-createcloth/builtin_verbesserer/insertcolumn_left.xml
-createcloth/builtin_verbesserer/insertcolumn_right.xml
-createcloth/builtin_verbesserer/removecolumn_left.xml
-createcloth/builtin_verbesserer/insertcolumn_right.xml
+createcloth/builtin_verbesserer/*.xml
 __pycache__
 build
 *egg-info
