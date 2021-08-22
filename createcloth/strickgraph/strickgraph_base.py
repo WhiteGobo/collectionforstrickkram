@@ -4,7 +4,7 @@ from extrasfornetworkx import weisfeiler_lehman_graph_hash
 from .constants import machine_terms, handknitting_terms, WrongTermError
 import itertools
 from collections import Counter
-from typing import Dict, Hashable
+from typing import Dict, Hashable, Iterable
 from . import strickgraph_fromgrid as fromgrid 
 from . import strickgraph_toknitmanual as toknitmanual
 import numpy as np
@@ -170,6 +170,36 @@ class strick_datacontainer( _netx.MultiDiGraph ):
         left = [ tmprow[0] for tmprow in rows ] #todo: instead march through
         right = [ tmprow[-1] for tmprow in rows ] #todo: instead march through
         return down, up, left, right
+    
+    def get_nodeattributelabel( self ):
+        nodestitchtype = _netx.get_node_attributes( self, "stitchtype" )
+        nodeside = _netx.get_node_attributes( self, "side" )
+        nodelabels = { node: "".join(( nodestitchtype[node], nodeside[node])) \
+                        for node in nodeside.keys() \
+                        if node not in ("start", "end" )}
+        return nodelabels
+
+    def get_edgeattributelabels( self ):
+        edgelabels = [ ( v1, v2, str( data["edgetype"] ) )
+                        for v1, v2, i, data \
+                        in self.edges(data=True, keys=True)\
+                        if not set(("start", "end")).intersection((v1,v2))]
+        return edgelabels
+
+    def get_connected_nodes( self, nodelist ):
+        """Return nodetuples of real nodes, which are connected
+        
+        :param nodelist: List of nodes of this graph to check
+        :type nodelist: Hashable
+        :rtype: Iterable
+        """
+        asd = self.give_real_graph()
+        helpgraph = _netx.Graph()
+        helpgraph.add_nodes_from( asd.nodes() )
+        helpgraph.add_edges_from( asd.edges() )
+        helpsubgraph = helpgraph.subgraph( nodelist )
+        return list(_netx.connected_components( helpsubgraph ))
+
 
     def get_startside( self ):
         """Get startside"""
