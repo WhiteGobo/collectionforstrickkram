@@ -27,6 +27,7 @@ Strickgraph
    .. automethod:: give_next_node_to
    .. automethod:: create_hashvalues
    .. automethod:: presort
+   .. automethod:: get_connected_nodes
 
    **Sttchinfo-thingies**
 
