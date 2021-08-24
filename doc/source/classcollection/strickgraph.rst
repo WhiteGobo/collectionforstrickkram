@@ -28,6 +28,8 @@ Strickgraph
    .. automethod:: create_hashvalues
    .. automethod:: presort
    .. automethod:: get_connected_nodes
+   .. automethod:: get_sidemargins
+   .. automethod:: get_sidemargins_indices
 
    **Sttchinfo-thingies**
 
