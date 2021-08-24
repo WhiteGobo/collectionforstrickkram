@@ -200,6 +200,18 @@ class strick_datacontainer( _netx.MultiDiGraph ):
         helpsubgraph = helpgraph.subgraph( nodelist )
         return list(_netx.connected_components( helpsubgraph ))
 
+    def get_nodes_near_nodes( self, nodelist, maxdistance=3 ):
+        asd = self.give_real_graph()
+        helpgraph = _netx.Graph()
+        helpgraph.add_nodes_from( asd.nodes() )
+        helpgraph.add_edges_from( asd.edges() )
+        nearthings = set( nodelist )
+        for a,b in _netx.all_pairs_dijkstra_path( helpgraph,cutoff=maxdistance):
+            if a in nodelist:
+                nearthings.update( b.keys() )
+        return tuple( nearthings )
+
+
 
     def get_startside( self ):
         """Get startside"""
@@ -231,6 +243,50 @@ class strick_datacontainer( _netx.MultiDiGraph ):
         edges = self.edges( node, data=True )
         nextedges = [ x for x in edges if x[2]["edgetype"] == "next" ]
         return nextedges[0][1]
+
+    def get_sidemargins_indices( self, marginsize=5 ):
+        rows = self.get_rows( "machine" )
+        fetchsize = marginsize - 1
+        leftindices = [marginsize]*len(rows)
+        rightindices = [ -marginsize for row in rows ]
+        for i in range( 0, len(rows) ):
+            leftside = rows[i][ :marginsize ] 
+            rightside = rows[i][ -marginsize: ]
+            leftneighs = self.get_nodes_near_nodes( leftside, maxdistance=1 )
+            rightneighs = self.get_nodes_near_nodes( rightside, maxdistance=1 )
+            loweri, upperi = i-1, i+1
+            if loweri >= 0:
+                index_leftdown = max( rows[ loweri ].index( node ) \
+                                            for node in leftneighs \
+                                            if node in rows[ loweri ] )
+                index_rightdown = min( rows[ loweri ].index(node)-len(rows[ loweri ]) \
+                                            for node in rightneighs \
+                                            if node in rows[ loweri ] )
+                leftindices[ loweri ] = max( leftindices[ loweri ], \
+                                            index_leftdown )
+                rightindices[ loweri ] = min( rightindices[ loweri ], \
+                                            index_rightdown )
+            if upperi < len(rows):
+                index_leftup = max( rows[ upperi ].index( node ) \
+                                            for node in leftneighs \
+                                            if node in rows[ upperi ] )
+                index_rightup = min( rows[ upperi ].index(node) -len(rows[ upperi ])\
+                                            for node in rightneighs \
+                                            if node in rows[ upperi ] )
+                leftindices[ upperi ] = max( leftindices[ upperi ], \
+                                            index_leftup )
+                rightindices[ upperi ] = min( rightindices[ upperi ], \
+                                            index_rightup )
+        return leftindices, rightindices
+
+    def get_sidemargins( self, marginsize=5 ):
+        """Return nodes on left and right side"""
+        leftindices, rightindices = self.get_sidemargins_indices( marginsize )
+        rows = self.get_rows( "machine" )
+        leftside = [ row[ :i ] for row, i in zip( rows, leftindices ) ]
+        rightside = [ row[ i: ] for row, i in zip( rows, rightindices ) ]
+        return leftside, rightside
+
 
 
 class strickgraph( strick_datacontainer, fromgrid.strick_fromgrid, \
@@ -272,6 +328,15 @@ def get_neighbours_from( strickgraph, nodelist ):
 class stricksubgraph( strickgraph ):
     """this class is extra for strickgraph patches"""
     def get_rows( self, presentation_type="thread" ):
+        """Get list of graphnode-rows.
+        You can get a threadlike construct, which shows first the first one you
+        would knit.
+        You can get a machinelike construct where you get a form which 
+        corresponds to as-seen, when knitted.
+
+        :param presentation_type: 'machine' or 'thread
+        :rtype: List[ List[ Hashable ]]
+        """
         side_of_nodes = _netx.get_node_attributes( self, "side" )
         all_edges = self.edges( data=True, keys=True )
         up_edges = [ (edge[0],edge[1]) for edge in all_edges \
