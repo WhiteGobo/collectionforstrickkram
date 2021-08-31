@@ -7,7 +7,7 @@ import networkx as netx
 
 
 class strick_manualhelper:
-    def to_manual( self, stitchinfo, manual_type="thread" ):
+    def to_manual( self, stitchinfo, manual_type="machine" ):
         return tomanual( self, stitchinfo, manual_type)
 
     @classmethod
