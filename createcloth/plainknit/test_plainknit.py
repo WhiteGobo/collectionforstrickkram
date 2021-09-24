@@ -7,6 +7,8 @@ logging.basicConfig( level=logging.WARNING )
 #logging.basicConfig( level=logging.DEBUG )
 logger = logging.getLogger( __name__ )
 import time
+from ..verbesserer.verbesserer_class import FindError
+from ..strickgraph.load_stitchinfo import myasd as glstinfo
 
 class TestMeshhandlerMethods( unittest.TestCase ):
     def test_identifier( self ):
@@ -34,7 +36,7 @@ class TestMeshhandlerMethods( unittest.TestCase ):
         from ..strickgraph import strickgraph
         from ..strickgraph.load_stitchinfo import myasd as glstinfo
         import numpy as np
-        strickgraphsize = 8
+        strickgraphsize = 7
         q = create_example_strickset( [], strickgraphsize, min_row_length=14 )
         #q2 = create_example_strickset( [], strickgraphsize, min_row_length=15 )
         bru = dict()
@@ -43,7 +45,7 @@ class TestMeshhandlerMethods( unittest.TestCase ):
         brubru = {}
         #for linetypes, original_upedges in it.chain( q,q2 ):
         from numpy import array as arr
-        from .examplestates import start, end, decrease,  lefteaves, righteaves, leftplane, rightplane, plain, increase, decrease
+        from .examplestates import start, end, enddecrease,  lefteaves, righteaves, leftplane, rightplane, plain, increase, decrease
         def mysort( q ):
             linetypes, original_upedges = q
             return sum( {start:0, end:0, plain:1, increase:2, decrease:2 }\
@@ -53,7 +55,7 @@ class TestMeshhandlerMethods( unittest.TestCase ):
             downedges = [ None, *original_upedges ]
             upedges = [ *original_upedges, None ]
             allinfo = zip( linetypes, downedges, upedges )
-            print( linetypes, original_upedges )
+            #print( linetypes, original_upedges )
             idarray = tuple( arr(original_upedges[1:]) \
                             - arr(original_upedges[:-1]) )
             tmplist = brubru.setdefault( idarray, list() )
@@ -79,7 +81,9 @@ class TestMeshhandlerMethods( unittest.TestCase ):
                             maxdiff = max( abs(i-k) for i in q )
                         except ValueError: #q is empty
                             maxdiff = 0
-                        if maxdiff < 2:
+                        extrabedingung = sum( i[-1] == enddecrease \
+                                        for i in [linetype_out, linetype_in])
+                        if maxdiff < 2 and not extrabedingung == 1:
                             adder2 = {k:2}
                             #print( maxdiff, unsimilarity_vector, tuple(abs(i-k) for i in q) )
                             #print( "graphs:\n%s\n%s" \
@@ -100,55 +104,64 @@ class TestMeshhandlerMethods( unittest.TestCase ):
                                     k, 
                                     ))
 
-        from . import create_verbesserer as helper
+        from ..verbesserer.class_side_alterator import sidealterator
+        q = []
         for linetype_out, linetype_in, upedges_out, upedges_in, changedline_id \
                                                                 in myergebnis:
-            helper.myfoo( linetype_out, linetype_in, upedges_out, \
-                                    upedges_in, changedline_id )
+            if len(q) == 50:
+                print( "current number of verbesserer: ", len(q))
+                input( "continue?" )
+            print( "-"*50 )
+            mytime = time.time()
+            #a = helper.myfoo( linetype_out, linetype_in, upedges_out, \
+            #                        upedges_in, changedline_id )
+            less_graph = create_graph_from_linetypes( linetype_out, upedges_out )
+            great_graph = create_graph_from_linetypes( linetype_in, upedges_in )
+            lever = False
+            print( less_graph.to_manual(glstinfo).replace('\n','\\n') )
+            print( great_graph.to_manual(glstinfo).replace('\n','\\n') )
+            for i in q:
+                try:
+                    i.replace_in_graph( less_graph, changedline_id )
+                    if less_graph == great_graph:
+                        less_graph = create_graph_from_linetypes( linetype_out, upedges_out )
+                        lever = True
+                        print("skip to next")
+                        break
+                    raise Exception( "This should never trigger" )
+                except FindError:
+                    continue
+                except Exception:
+                    #print("Why=")
+                    continue
+            if lever:
+                continue
 
-        return
-        for man1, man2 in edges_manuals:
-            starttime = time.time()
-            graph1 = strickgraph.from_manual( man1, glstinfo )
-            graph2 = strickgraph.from_manual( man2, glstinfo )
-            #print( graph1.to_manual( glstinfo ) )
-            #print( graph2.to_manual( glstinfo ) )
-            return
-            #print()
-            #print( man1.splitlines()[0], man2.splitlines()[0] )
-            #print( man1.splitlines()[0] == man2.splitlines()[0] )
-            if man1.splitlines()[0] == man2.splitlines()[0]:
+            if linetype_out[0] == linetype_in[1]:
                 startnode = (0,0)
             else:
-                startnode = (len( man1.splitlines() )-1, 0)
-            from extrasfornetworkx import generate_replacement_from_graphs
-            nodelabels1 = graph1.get_nodeattributelabel()
-            edgelabels1 = graph1.get_edgeattributelabels()
-            nodelabels2 = graph2.get_nodeattributelabel()
-            edgelabels2 = graph2.get_edgeattributelabels()
-            nodetrans1 = { n:i for i, n in enumerate( nodelabels1.keys() )}
-            nodetrans2 = { n:i for i, n in enumerate( nodelabels2.keys() )}
-            nodelabels1 = { nodetrans1[ node ]: label \
-                                for node, label in nodelabels1.items() }
-            edgelabels1 = [ (nodetrans1[v1], nodetrans1[v2], label) \
-                                for v1, v2, label in edgelabels1 ]
-            nodelabels2 = { nodetrans2[ node ]: label \
-                                for node, label in nodelabels2.items() }
-            edgelabels2 = [ (nodetrans2[v1], nodetrans2[v2], label) \
-                                for v1, v2, label in edgelabels2 ]
+                startnode = (len( linetype_out )-1, 0)
 
-            repl1, repl2, common_nodes = generate_replacement_from_graphs(\
-                                                nodelabels1, edgelabels1,\
-                                                nodelabels2, edgelabels2, \
-                                                startnode, startnode )
-            print("\n\n")
-            print( "repl1:", repl1, "\n", "repl2: ", repl2, "\n\n", common_nodes)
-            print( "needed time: %.3f" %( time.time() - starttime ))
+            print("create next verbesserer" )
+            try:
+                a = sidealterator.from_graphdifference( less_graph, great_graph, startnode, changedline_id )
+                q.append( a )
+            except Exception:
+                print("failed")
+            print( "needed time: ", mytime-time.time() )
 
-            #difference = somesomething( graph1, graph2 )
+        return
 
-            break
-
+from ..strickgraph import strickgraph
+from ..strickgraph.load_stitchinfo import myasd as glstinfo
+def create_graph_from_linetypes( linetypes, upedges ):
+    downedges = [ None, *upedges ]
+    upedges = [ *upedges, None ]
+    allinfo = zip( linetypes, downedges, upedges )
+    graph_man = [ s.create_example_row( down, up ) \
+                                for s, down, up in allinfo ]
+    graph = strickgraph.from_manual( graph_man, glstinfo, manual_type="machine")
+    return graph
 
 
 if __name__ == "__main__":
