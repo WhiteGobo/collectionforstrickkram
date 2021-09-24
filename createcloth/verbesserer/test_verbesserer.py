@@ -6,14 +6,15 @@ from ..strickgraph import strickgraph
 import networkx as netx
 from ..strickgraph.load_stitchinfo import myasd as stitchinfo
 import extrasfornetworkx
-from extrasfornetworkx import multiverbesserer, verbesserer
+from extrasfornetworkx import multiverbesserer
 from .multiverbesserer import strick_multiverbesserer
 from . import resourcestest as test_src
-from .verbesserer_class import strickalterator
+from .verbesserer_class import strickalterator, FindError
 
 import logging
 logger = logging.getLogger( __name__ )
 logging.basicConfig( level = logging.WARNING )
+#logging.basicConfig( level = logging.DEBUG )
 
 class test_manualtoverbesserung( unittest.TestCase ):
     def setUp( self ):
@@ -32,7 +33,7 @@ class test_manualtoverbesserung( unittest.TestCase ):
         asd = strickalterator.from_manuals( old_manual, new_manual, stitchinfo)
 
         qwe = asd.to_xml()
-        remake = verbesserer.from_xmlstr( qwe, graph_type=strickgraph )
+        remake = strickalterator.from_xmlstr( qwe )
 
         self.assertEqual( asd, remake )
 
@@ -59,16 +60,15 @@ class test_manualtoverbesserung( unittest.TestCase ):
         # uer komplizierte graphen reicht eine einfache ausgabe der 
         # nodenames wie es derzeit ist nicht mehr aus
         #self.assertTrue( asd.replace_in_graph( mystrick, (2,2) ) )
-        success, extrainfo = asd.replace_in_graph_withinfo( mystrick, (2,2) )
-        if not success:
-            print( extrainfo )
+        success = asd.replace_in_graph( mystrick, (2,2) )
 
         self.assertTrue( success )
 
         testoutput ="5yo\n5k\n2k 1yo 3k\n2k 1k2tog 2k\n5k\n5bo"
-        #self.assertEqual( mystrick.to_manual( stitchinfo), testoutput )
+        self.assertEqual( mystrick.to_manual( stitchinfo), testoutput )
 
     def test_multifrommanuals( self ):
+        raise Exception( "no multimanuals yet" )
         pairlist = (( \
                 "7yo\n2k 1kmark 1k2tog 2k\n2k 1k2tog 2k\n5bo", \
                 "7yo\n2k 1kmark 2k 2bo\n5k\n5bo" \
@@ -130,3 +130,48 @@ class test_manualtoverbesserung( unittest.TestCase ):
             testoutput ="5yo\n5k\n2k 1yo 3k\n2k 1k2tog 2k\n5k\n5bo"
             controloutput = mystrick.to_manual( stitchinfo,manual_type="machine")
             #self.assertEqual( controloutput, testoutput )
+
+    def test_sidealterator( self ):
+        changedline_id = 4
+        inman="16yo\n16k\n16k\n16k\n2k 1k2tog 8k 1k2tog 2k\n2k 1yo 10k 1yo 2k\n16bo"
+        outman="16yo\n16k\n16k\n16k\n16k\n16k\n16bo"
+
+
+
+        #changedline_id = 0
+        #inman = "14yo\n14k\n14k\n14k\n14k\n14k\n14bo"
+        #outman ="16yo\n2k 1k2tog 8k 1k2tog 2k\n14k\n14k\n14k\n14k\n14bo"
+        #outman ="14yo\n2k 1yo 10k 1yo 2k\n2k 1k2tog 8k 1k2tog 2k\n14k\n14k\n14k\n14bo"
+        #outman ="14yo\n14k\n2k 1yo 10k 1yo 2k\n2k 1k2tog 8k 1k2tog 2k\n14k\n14k\n14bo"
+        #outman ="14yo\n14k\n14k\n14k\n14k\n2k 1yo 10k 1yo 2k\n16bo"
+        less_graph = strickgraph.from_manual( inman, stitchinfo )
+        great_graph = strickgraph.from_manual( outman, stitchinfo )
+
+        from ..verbesserer.class_side_alterator import sidealterator
+        #print( less_graph.to_manual( glstinfo,manual_type="machine" ), \
+        #            great_graph.to_manual(glstinfo, manual_type="machine"))
+        #input("continue?")
+
+        startnode = (0,0)
+
+        qwe = sidealterator.from_graphdifference( less_graph, great_graph, startnode, changedline_id )
+
+        try_graph = strickgraph.from_manual( inman, stitchinfo )
+        self.assertNotEqual( try_graph, great_graph )
+        qwe.replace_in_graph( try_graph, changedline_id )
+        self.assertEqual( try_graph, great_graph )
+        del( try_graph )
+        q = lambda: qwe.replace_in_graph( great_graph, changedline_id )
+        self.assertRaises( Exception, q )
+        #self.assertRaises( FindError, q )
+
+        safe = qwe.to_xml()
+        return
+
+        qwe2 = sidealterator.from_xml( safe )
+        try_graph = strickgraph.from_manual( inman, stitchinfo )
+        self.assertNotEqual( try_graph, great_graph )
+        qwe2.replace_in_graph( try_graph, changedline_id )
+        self.assertEqual( try_graph, great_graph )
+
+

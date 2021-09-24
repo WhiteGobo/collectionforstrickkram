@@ -11,7 +11,42 @@ import io
 import extrasfornetworkx
 from extrasfornetworkx import verbesserer
 
+from extrasfornetworkx.verbesserer_class import \
+                  replace_subgraph, FindError, WrongStartnode
 class strickalterator( extrasfornetworkx.verbesserer ):
+    nodeattributes = ( "stitchtype", "side" )
+    edgeattributes = ( "edgetype", )
+    def replace_in_graph( self, graph, startnode ):
+        """Mainmethod. replaces in given strickgraph at given position"""
+        nodeattributes = graph.get_nodeattributes()
+        edgeswithlabel = graph.get_edges_with_labels()
+        try:
+            nodes_to_remove, newnodes_data, edges_to_add \
+                    = self.create_replace_info( \
+                                        nodeattributes, \
+                                        edgeswithlabel, startnode )
+        except ( FindError, WrongStartnode ) as err:
+            return False
+        replace_subgraph( graph, nodes_to_remove, newnodes_data, edges_to_add, \
+                        self.nodeattributes, self.edgeattributes[0] )
+        return True
+
+    def isreplaceable( self, graph, startnode ):
+        """checks if graph is at this startnode alterateable with this 
+        alterator
+        :rtype: boolean
+        """
+        nodeattributes = graph.get_nodeattributes()
+        edgeswithlabel = graph.get_edges_with_labels()
+        try:
+            nodes_to_remove, newnodes_data, edges_to_add \
+                    = self.create_replace_info( \
+                                        nodeattributes, \
+                                        edgeswithlabel, startnode )
+        except ( FindError, WrongStartnode ) as err:
+            return False
+        return True
+
     @classmethod
     def from_manuals( cls, manual_old, manual_new, stitchinfo, \
                                     start_at="bottomleft", \
@@ -54,11 +89,14 @@ class strickalterator( extrasfornetworkx.verbesserer ):
             old_graph = old_graph.copy_with_alternative_stitchtype()
 
         try:
-            returnv = cls.from_graph_difference( old_graph, new_graph,\
+            oldnodes = old_graph.get_nodeattributes()
+            oldedges = old_graph.get_edges_with_labels()
+            newnodes = new_graph.get_nodeattributes()
+            newedges = new_graph.get_edges_with_labels()
+            returnv = cls.from_graph_difference( oldnodes, oldedges, \
+                                                newnodes, newedges, \
                                                 startold,\
-                                                startnew,\
-                                                "edgetype", ["stitchtype", \
-                                                "side"] )
+                                                startnew )
         except KeyError as err:
             if err.args[0] in [ "start", "end" ]:
                 raise NotSimilarError() from err
