@@ -14,6 +14,7 @@ Welcome to Createcloth's documentation!
    classcollection/builtinverbesserer
    classcollection/stitchinfo
    classcollection/verbesserer
+   classcollection/sidealterator
    classcollection/visualizer
    classcollection/meshhandler
 
