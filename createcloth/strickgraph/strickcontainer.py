@@ -19,6 +19,15 @@ class strickgraph_container():
         return tmpsubgraph
 
     def get_rows( self, presentation_type="machine" ):
+        """return nodes as rows. machine-presentation means nodes, which are 
+        on top of each other have an equivalent ordering. thread-like ordering
+        means the first node of a starting line is the next node of the last
+        node of the previous line
+        :param presentation_type: determines the structure of the returned rows.
+                possible values are 'machine' and 'thread'
+        :type presentation_type: str
+        :rtype: List[ List[ Hashable]]
+        """
         rows = []
         firststitch = self.give_next_node_to( "start" )
         while firststitch != "end":
