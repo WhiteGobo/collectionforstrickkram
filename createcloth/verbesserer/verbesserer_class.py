@@ -13,6 +13,8 @@ from extrasfornetworkx import verbesserer
 
 from extrasfornetworkx.verbesserer_class import \
                   replace_subgraph, FindError, WrongStartnode
+#import logging
+#logger = logging.getLogger( __name__ )
 class strickalterator( extrasfornetworkx.verbesserer ):
     nodeattributes = ( "stitchtype", "side" )
     edgeattributes = ( "edgetype", )
@@ -27,8 +29,16 @@ class strickalterator( extrasfornetworkx.verbesserer ):
                                         edgeswithlabel, startnode )
         except ( FindError, WrongStartnode ) as err:
             return False
+        print("-"*75)
+        print( "nodestoremove: ", nodes_to_remove )
+        print( "\nnewnodes_data", newnodes_data )
+        #print( "\nedges_to_add", edges_to_add)
+
+        print("edgesA: ", [e for e in graph.edges(data=True) if (5,2) in e ])
         replace_subgraph( graph, nodes_to_remove, newnodes_data, edges_to_add, \
                         self.nodeattributes, self.edgeattributes[0] )
+        print("edgesB: ", [e for e in graph.edges(data=True) if (5,2) in e ])
+        print("-"*75)
         return True
 
     def isreplaceable( self, graph, startnode ):
