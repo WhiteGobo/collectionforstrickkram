@@ -157,7 +157,7 @@ class TestStringMethods( unittest.TestCase ):
         stitchinfo.add_additional_resources( xml_string )
 
         asd = strickgraph.strickgraph.from_manual( myman, stitchinfo )
-        self.assertEqual( asd.get_alternative_stitchtypes(), {(1, 3): 'knit'} )
+        self.assertEqual( asd.get_alternative_stitchtypes(), {(1, 1): 'knit'} )
         newmanual = asd.copy_with_alternative_stitchtype()\
                         .to_manual( self.stitchinfo)
         brubru = "6yo\n2k 1k2tog 2k\n1k 1k2tog 2k\n4bo".splitlines()
@@ -264,15 +264,16 @@ class TestStringMethods( unittest.TestCase ):
         self.assertEqual( tuple(asd.get_borders()), testrows )
 
     def test_frommanual( self ):
-        testmanual = "4yo\n2k yo 2 k\n2k, 1k2tog, 1k\n4bo\n"
+        testmanual = "3yo\n2k yo 1k\n2k, 1k2tog\n3bo\n"
+        testmanual_uni = "3yo\n2k 1yo 1k\n2k 1k2tog\n3bo\n"
         asd = strickgraph.strickgraph.from_manual( testmanual, self.stitchinfo )
         manual = asd.to_manual( self.stitchinfo )
-        manual = [ x.split() for x in manual.splitlines() ]
-        testmanual = [x.split() for x \
-                        in "4yo\n2k 1yo 2k\n2k 1k2tog 1k\n4bo\n".splitlines()]
+        manual = tuple( "".join( x.split() ) for x in manual.splitlines() )
+        testmanual_uni = tuple("".join( x.split() ) for x \
+                        in testmanual_uni.splitlines())
         #this removes the spaces and tabs
-        for i in range(len(testmanual)):
-            self.assertEqual( "".join(manual[i]), "".join(testmanual[i]) )
+        import networkx as netx
+        self.assertEqual( manual, testmanual_uni )
 
         def testbrokenmanual():
             testmanual = "4yo\n2k 1yo 1k\n2k, 1k2tog, 1k\n4bo\n"
