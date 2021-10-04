@@ -49,6 +49,17 @@ class strick_compare:
         hashattributes = { key: a[key]+b[key] for key in a }
         _netx.set_node_attributes( self, hashattributes, "hashval" )
 
+    def get_nodeattributes( self ):
+        """Needed for verbesserer"""
+        subgraph = self.subgraph( set(self.nodes())-{"start", "end"})
+        return { node:(data["stitchtype"], data["side"]) \
+                        for node, data in subgraph.nodes( data=True )}
+    def get_edges_with_labels( self ):
+        """Needed for verbesserer"""
+        subgraph = self.subgraph( set(self.nodes())-{"start", "end"})
+        return tuple( (e[0], e[1], e[-1]["edgetype"]) \
+                        for e in subgraph.edges( data=True ) )
+
     def __hash__( self ):
         self.supergraph.create_hashvalues()
 
@@ -58,8 +69,7 @@ class strick_compare:
         edges = [ ( v1, v2, str( data["edgetype"] ) )
                         for v1, v2, i, data \
                         in subgraph.edges(data=True, keys=True) ]
-        returnv = weisfeiler_lehman_graph_hash( nodelabels, edges )
-        return int( returnv, base=16 )
+        return weisfeiler_lehman_graph_hash( nodelabels, edges )
 
     def presort( self ) -> Hashable:
         """magic method to know with which other graphs it wont definitly 
@@ -242,7 +252,10 @@ class strick_datacontainer( _netx.MultiDiGraph ):
     def give_next_node_to( self, node ):
         edges = self.edges( node, data=True )
         nextedges = [ x for x in edges if x[2]["edgetype"] == "next" ]
-        return nextedges[0][1]
+        try:
+            return nextedges[0][1]
+        except IndexError as err:
+            raise Exception( edges, node )
 
     def get_sidemargins_indices( self, marginsize=5 ):
         rows = self.get_rows( "machine" )
