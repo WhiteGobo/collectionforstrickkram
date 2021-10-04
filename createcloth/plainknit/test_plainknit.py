@@ -9,6 +9,8 @@ logger = logging.getLogger( __name__ )
 import time
 from ..verbesserer.verbesserer_class import FindError
 from ..strickgraph.load_stitchinfo import myasd as glstinfo
+from typing import Iterable
+import numpy as np
 
 class TestMeshhandlerMethods( unittest.TestCase ):
     def test_identifier( self ):
@@ -47,70 +49,73 @@ class TestMeshhandlerMethods( unittest.TestCase ):
         from numpy import array as arr
         from .examplestates import start, end, enddecrease,  lefteaves, righteaves, leftplane, rightplane, plain, increase, decrease
         def mysort( q ):
-            linetypes, original_upedges = q
+            linetypes, original_upedges, stitches_per_line = q
             return sum( {start:0, end:0, plain:1, increase:2, decrease:2 }\
                         .get( line, 3 ) for line in linetypes )
         q = sorted( q, key=mysort )
-        for linetypes, original_upedges in q:
+        for linetypes, original_upedges, stitches_per_line in q:
+            #print(stitches_per_line, original_upedges )
             downedges = [ None, *original_upedges ]
             upedges = [ *original_upedges, None ]
             allinfo = zip( linetypes, downedges, upedges )
             #print( linetypes, original_upedges )
-            idarray = tuple( arr(original_upedges[1:]) \
-                            - arr(original_upedges[:-1]) )
+            idarray = class_idarray( stitches_per_line )
+            #idarray = tuple( arr(original_upedges[1:]) \
+            #                - arr(original_upedges[:-1]) )
             tmplist = brubru.setdefault( idarray, list() )
             tmplist.append( (linetypes, original_upedges) )
+
 
         import numpy as np
         myergebnis = []
         for idarray, qpartial in brubru.items():
             #adding rowlength
-            for k in range( len(idarray)+1 ):
-                adder = {k-1:2, k:-2}
-                newidarray = tuple( x + adder.get( i, 0 ) \
-                                    for i, x in enumerate(idarray) )
-                for linetype_out, upedges in qpartial:
-                    for linetype_in, upe2 in brubru.get( newidarray, list() ):
-                        unsimilarity_vector = tuple( i!=j \
-                                    for i,j in zip(linetype_out,linetype_in ))
-                        from itertools import compress
-                        reduce_to_differencelines = lambda vector: tuple( \
-                                    compress( range(len(vector)), vector ))
-                        q = reduce_to_differencelines( unsimilarity_vector )
-                        try:
-                            maxdiff = max( abs(i-k) for i in q )
-                        except ValueError: #q is empty
-                            maxdiff = 0
-                        extrabedingung = sum( i[-1] == enddecrease \
-                                        for i in [linetype_out, linetype_in])
-                        if maxdiff < 2 and not extrabedingung == 1:
-                            adder2 = {k:2}
-                            #print( maxdiff, unsimilarity_vector, tuple(abs(i-k) for i in q) )
-                            #print( "graphs:\n%s\n%s" \
-                            #        % ( " ".join(str(i) for i in linetype_out),\
-                            #        " ".join(str(i) for i in linetype_in) ))
-                            #print(
-                            #        upedges, 
-                            #        tuple( x + adder2.get( i, 0 ) \
-                            #                for i, x in enumerate( upedges ) ),
-                            #        )
-                            #print( "\n" )
-                            myergebnis.append((\
-                                    linetype_out,
-                                    linetype_in, 
-                                    upedges, 
-                                    tuple( x + adder2.get( i, 0 ) \
-                                            for i, x in enumerate( upedges ) ),
-                                    k, 
-                                    ))
+            from . import examplestates as es
+            for k in range( len(idarray) ):
+                for adder in [{k:2}, {k:2,k-1:1}, {k:2,k+1:1}]:
+                    newidarray = idarray + [ adder.get(i, 0) \
+                                            for i in range(len(idarray)) ]
+                    for linetype_out, upedges in qpartial:
+                        for linetype_in, upe2 in brubru.get( newidarray, list() ):
+                            unsimilarity_vector = tuple( i!=j \
+                                        for i,j in zip(linetype_out,linetype_in ))
+                            from itertools import compress
+                            reduce_to_differencelines = lambda vector: tuple( \
+                                        compress( range(-k,len(vector)-k), vector ))
+                            q = reduce_to_differencelines( unsimilarity_vector )
+                            try:
+                                maxdiff = max( abs(i) for i in q )
+                            except ValueError: #q is empty
+                                maxdiff = 0
+                            if maxdiff < 2:
+                                myergebnis.append((\
+                                        linetype_out,
+                                        linetype_in, 
+                                        upedges, 
+                                        tuple( x + {k:2}.get( i, 0 ) \
+                                                for i, x in enumerate( upedges ) ),
+                                        k, 
+                                        ))
+                                if linetype_out[k] == es.righteaves:
+                                #if all( i==j for i,j in zip(linetype_out,[es.start, es.plain, es.plain, es.decrease, es.plain, es.decrease, end])):
+                                    print(idarray.stitches_per_line, newidarray.stitches_per_line)
+                                    print(maxdiff, q, k)
+                                    print( [str(i) for i in linetype_out] )
+                                    print( [str(i) for i in linetype_in] )
+                                    print("ok")
 
+        #return
         from ..verbesserer.class_side_alterator import sidealterator
         q = []
-        for linetype_out, linetype_in, upedges_out, upedges_in, changedline_id \
+        lever = True
+        for linetype_out, linetype_in, upedges_out, upedges_in, changedline_id\
                                                                 in myergebnis:
             if len(q) == 50:
                 print( "current number of verbesserer: ", len(q))
                 input( "continue?" )
+            if lever:
+                lever = False
+                continue
             print( "-"*50 )
             mytime = time.time()
             #a = helper.myfoo( linetype_out, linetype_in, upedges_out, \
@@ -131,7 +136,7 @@ class TestMeshhandlerMethods( unittest.TestCase ):
                     raise Exception( "This should never trigger" )
                 except FindError:
                     continue
-                except Exception:
+                except Exception as err:
                     #print("Why=")
                     continue
             if lever:
@@ -146,11 +151,31 @@ class TestMeshhandlerMethods( unittest.TestCase ):
             try:
                 a = sidealterator.from_graphdifference( less_graph, great_graph, startnode, changedline_id )
                 q.append( a )
-            except Exception:
+            except Exception as err:
+                raise err
                 print("failed")
             print( "needed time: ", mytime-time.time() )
 
         return
+
+class class_idarray():
+    def __init__( self, stitches_per_line ):
+        self.stitches_per_line = tuple( i - stitches_per_line[0] \
+                                    for i in stitches_per_line)
+    def __hash__( self ):
+        return self.stitches_per_line.__hash__()
+    def __len__( self ):
+        return len(self.stitches_per_line)
+    def __add__( self, addtuple:Iterable[ int ] ):
+        """
+        :raises: TypeError
+        """
+        asdf = np.add( self.stitches_per_line, addtuple )
+        return type(self)( asdf )
+
+    def __eq__(self, other):
+        return self.stitches_per_line == other.stitches_per_line
+
 
 from ..strickgraph import strickgraph
 from ..strickgraph.load_stitchinfo import myasd as glstinfo

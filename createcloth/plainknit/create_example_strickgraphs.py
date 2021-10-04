@@ -46,7 +46,12 @@ def create_example_strickset( verbessererlist, strickgraphsize, \
     #        for a,b in graphs_to_rowlengths.items() })
     for linetypes, possible_upedges in graphs_to_upedges.items():
         for upedges in possible_upedges:
-            yield linetypes, upedges
+            tmpup = [ upedges[0], ] + list( upedges )
+            tmpdown = list( upedges ) + [ upedges[-1], ]
+            stitches_per_line = [ len(rowtype.create_example_row( down, up ))\
+                                    for rowtype, up, down \
+                                    in zip( rowtypelist, tmpup, tmpdown ) ]
+            yield linetypes, upedges, stitches_per_line
 
 
 
