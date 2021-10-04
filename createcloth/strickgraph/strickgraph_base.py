@@ -300,6 +300,20 @@ class strick_datacontainer( _netx.MultiDiGraph ):
         rightside = [ row[ i: ] for row, i in zip( rows, rightindices ) ]
         return leftside, rightside
 
+    def isvalid( self ):
+        nextoutedges = (a for a,b,i,data in self.edges( data=True, keys=True )\
+                        if data["edgetype"]=="next")
+        nextinedges = (b for a,b,i,data in self.edges( data=True, keys=True )\
+                        if data["edgetype"]=="next")
+        import collections as col
+        a = col.Counter( nextoutedges )
+        b = col.Counter( nextinedges )
+        cond1 = set(("end",)) == set(self.nodes()).difference(set(a.keys()))
+        cond2 = set(("start",)) == set(self.nodes()).difference(set(b.keys()))
+        cond3 = set() == set(a.keys()).difference(self.nodes())
+        cond4 = set() == set(b.keys()).difference(self.nodes())
+        return all((cond1, cond2, cond3, cond4))
+
 
 
 class strickgraph( strick_datacontainer, fromgrid.strick_fromgrid, \
