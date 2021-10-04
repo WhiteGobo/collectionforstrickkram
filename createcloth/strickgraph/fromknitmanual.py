@@ -15,7 +15,7 @@ class BrokenManual( Exception ):
     pass
 
 
-def frommanual( manual, stitchinfo, manual_type="thread", startside="right", \
+def frommanual( manual, stitchinfo, manual_type="machine", startside="right", \
                 reverse=False ):
     """
     :todo: implement machine- and follow_thread-layout
@@ -29,14 +29,14 @@ def frommanual( manual, stitchinfo, manual_type="thread", startside="right", \
     else:
         raise Exception( "dont knot manual_type %s" %(manual_type) )
 
-    if reversed:
+    if reverse:
         _reverse_every_row( manual )
     manual = transform_to_single_key( manual )
     manual = symbol_to_stitchid( manual, mystitchinfo )
     try:
         mystrickgraph = list_to_strickgraph( manual, startside, mystitchinfo )
     except BrokenManual:
-        logger.error( manual )
+        logger.error( f"Broken manual given: {manual}" )
         raise
     return mystrickgraph
 
@@ -55,10 +55,8 @@ def symbol_to_stitchid( manual, mystitchinfo ):
         try:
             manual[i] = [ namedict[x] for x in manual[i] ]
         except KeyError as err:
-            print( mystitchinfo.symbol )
-            err.args = (*err.args, \
-                            "manual contains keys, that are not supported")
-            raise err
+            raise KeyError("manual contains keys, that are not supported", \
+                                                mystitchinfo.symbol) from err
     return manual
 
 def stitchnodeid( rowindex, columnindex, stitchtype ):
