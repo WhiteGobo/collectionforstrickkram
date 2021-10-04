@@ -312,6 +312,12 @@ class strick_datacontainer( _netx.MultiDiGraph ):
         cond2 = set(("start",)) == set(self.nodes()).difference(set(b.keys()))
         cond3 = set() == set(a.keys()).difference(self.nodes())
         cond4 = set() == set(b.keys()).difference(self.nodes())
+        if not all((cond1, cond2, cond3, cond4)):
+            q1 = set(self.nodes()).difference(set(a.keys()))
+            q2 = set(self.nodes()).difference(set(b.keys()))
+            q3 = set(a.keys()).difference(self.nodes())
+            q4 = set(b.keys()).difference(self.nodes())
+            raise Exception( q1, q2, q3, q4 )
         return all((cond1, cond2, cond3, cond4))
 
 
