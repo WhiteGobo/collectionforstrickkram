@@ -102,9 +102,9 @@ def find_rows( strickgraph ):
             rows.append( currentrow )
         currentrow.append( nextnode )
         if nextnode in visited:
-            print(rows)
-            print(nextnode)
-            raise Exception("loop found")
+            #print(rows)
+            #print(nextnode)
+            raise Exception("loop found", rows, nextnode)
         visited.add( nextnode )
         tmpnode = nextnode
         nextnode = tmpdict[ tmpnode ]
