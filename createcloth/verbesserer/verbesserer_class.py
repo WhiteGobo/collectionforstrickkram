@@ -20,6 +20,7 @@ class strickalterator( extrasfornetworkx.verbesserer ):
     edgeattributes = ( "edgetype", )
     def replace_in_graph( self, graph, startnode ):
         """Mainmethod. replaces in given strickgraph at given position"""
+        assert graph.isvalid(), "input must be valid strickgraph"
         nodeattributes = graph.get_nodeattributes()
         edgeswithlabel = graph.get_edges_with_labels()
         try:
@@ -29,16 +30,18 @@ class strickalterator( extrasfornetworkx.verbesserer ):
                                         edgeswithlabel, startnode )
         except ( FindError, WrongStartnode ) as err:
             return False
-        print("-"*75)
-        print( "nodestoremove: ", nodes_to_remove )
-        print( "\nnewnodes_data", newnodes_data )
+        #print("-"*75)
+        #print( "nodestoremove: ", nodes_to_remove )
+        #print( "\nnewnodes_data", newnodes_data )
         #print( "\nedges_to_add", edges_to_add)
 
-        print("edgesA: ", [e for e in graph.edges(data=True) if (5,2) in e ])
+        #print("edgesA: ", [e for e in graph.edges(data=True) if (5,2) in e ])
         replace_subgraph( graph, nodes_to_remove, newnodes_data, edges_to_add, \
                         self.nodeattributes, self.edgeattributes[0] )
-        print("edgesB: ", [e for e in graph.edges(data=True) if (5,2) in e ])
-        print("-"*75)
+        #print("edgesB: ", [e for e in graph.edges(data=True) if (5,2) in e ])
+        #print("-"*75)
+        if not graph.isvalid():
+            raise Exception( "replacement produced not valid strickgraph" )
         return True
 
     def isreplaceable( self, graph, startnode ):
