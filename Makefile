@@ -35,10 +35,7 @@ test_meshhandler:
 
 
 test_manualtoverbesserung:
-#	python -m unittest createcloth.verbesserer.test_verbesserer.test_manualtoverbesserung.test_xmlverbesserung
-#	python -m unittest createcloth.verbesserer.test_verbesserer.test_manualtoverbesserung.test_tryingsimpleinsert
-#	python -m unittest createcloth.verbesserer.test_verbesserer.test_manualtoverbesserung.test_multiersetzer
-	python -m unittest createcloth.verbesserer.test_verbesserer
+	python -m unittest createcloth.verbesserer.test_verbesserer -k sidealterator
 
 test_builtinverbesserer:
 	python -m unittest createcloth.builtin_verbesserer.test_builtinverbesserer
