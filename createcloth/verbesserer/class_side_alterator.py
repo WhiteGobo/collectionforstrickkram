@@ -153,11 +153,14 @@ class sidealterator():
                 = separate_wholegraphs_to_leftright_insulas( \
                         difference_graph1, difference_graph2, translator, \
                         source_strickgraph, target_strickgraph, changedline_id )
+        mykey = lambda x: x if type(x)==tuple \
+                        else (x,) if type(x)==int \
+                        else (0,)
         logger.info( f"startnodes l/r: {startnode1_right}, {startnode1_left}" )
-        logger.info( f"leftnodes1: {sorted(leftnodes1)}" )
-        logger.info( f"leftnodes2: {sorted(leftnodes2)}" )
-        logger.info( f"rightnodes1: {sorted(rightnodes1)}" )
-        logger.info( f"rightnodes2: {sorted(rightnodes2)}" )
+        logger.info( "leftnodes1: %s" %( sorted(leftnodes1, key=mykey) ))
+        logger.info( "leftnodes2: %s" %( sorted(leftnodes2, key=mykey) ))
+        logger.info( "rightnodes1: %s" %( sorted(rightnodes1, key=mykey) ))
+        logger.info( "rightnodes2: %s" %( sorted(rightnodes2, key=mykey) ))
 
         #print("="*75)
         #print("generate leftrightverbesserer" )
@@ -166,6 +169,9 @@ class sidealterator():
         lefttrans = { a:b for a, b in translator.items() if a in leftnodes1 }
         #print( f"correspondingleft: {leftindex}, {startnode1_left}, {startnode2_left}\n", sorted(leftnodes1), "\n",sorted(leftnodes2),"\n\n")
         #print( "lefttrans:", lefttrans, "\n")
+        logger.info("create left alterator")
+        logger.info( f"nodes1: {leftnodes1}")
+        logger.info( f"nodes2: {leftnodes2}")
         a = generate_verbesserer_asdf( \
                                 source_strickgraph, target_strickgraph, \
                                 leftnodes1, leftnodes2, \
@@ -176,7 +182,10 @@ class sidealterator():
         #print("newnodes: ", a.newgraph_nodeattributes )
         #print("idpath: ", a.oldgraph_identificationpath )
         #print("edgeattr: ", a.newgraph_edges_with_label )
+        logger.info("create right alterator")
         righttrans = { a:b for a, b in translator.items() if a in rightnodes1 }
+        logger.info( f"nodes1: {rightnodes1}")
+        logger.info( f"nodes2: {rightnodes2}")
         b = generate_verbesserer_asdf( \
                                 source_strickgraph, target_strickgraph, \
                                 rightnodes1, rightnodes2, \
@@ -202,7 +211,6 @@ def generate_verbesserer_asdf( graph1, graph2, \
                                         startnode2, \
                                         starttranslation )
 
-
     nodetrans1 = { n:i for i, n in enumerate( nodelabels1.keys() )}
     nodetrans2 = { n:i for i, n in enumerate( nodelabels2.keys() )}
     nodelabels1 = { nodetrans1[ node ]: label \
@@ -225,10 +233,13 @@ def generate_verbesserer_asdf( graph1, graph2, \
                                         translation )
 
 
+def inv( mydictionary ):
+    assert type(mydictionary)==dict, "wrong use"
+    return { b:a for a,b in mydictionary.items() }
+
 def separate_wholegraphs_to_leftright_insulas( \
                         difference_graph1, difference_graph2, translator, \
-                        less_graph, great_graph, \
-                        changedline_id ):
+                        less_graph, great_graph, changedline_id ):
     """
 
     :raises: NoLeftRightFound
@@ -243,10 +254,8 @@ def separate_wholegraphs_to_leftright_insulas( \
     great_graph_nodes = great_graph.give_real_graph().nodes()
 
     #find left and right side to replace with insulas
-    connected_insulas = less_graph.get_connected_nodes( \
-                                                    difference_graph1 )
-    connected_insulas2 = great_graph.get_connected_nodes( \
-                                                    difference_graph2 )
+    connected_insulas = less_graph.get_connected_nodes( difference_graph1 )
+    connected_insulas2 = great_graph.get_connected_nodes( difference_graph2 )
     ## This here helps for finding two corresponding conninsulas
     ## saved in maximal_shared_nodes
     #connected_insulas = tuple(tuple(nodeset) for nodeset in connected_insulas)
@@ -265,15 +274,13 @@ def separate_wholegraphs_to_leftright_insulas( \
     #assert max(Counter(pair[1] for pair in maximal_shared_nodes).values())==1,\
     #                "connected insulas are double corresponding"
 
-    
-
     leftside_indices, rightside_indices \
                         = less_graph.get_sidemargins_indices()
     changed_row = rows[ changedline_id ]
     left_index = leftside_indices[ changedline_id ]
     right_index = rightside_indices[ changedline_id ]
     leftside_nodes = list(zip( changed_row[:left_index], range(left_index), ))
-    rightside_nodes = list(zip( changed_row[right_index:], range(right_index, 0), ))
+    rightside_nodes= list(zip( changed_row[right_index:],range(right_index,0),))
     rightside_nodes.reverse()
     lessgraph_difference_line = [ node \
                 for node in less_graph.get_rows()[ changedline_id ] \
@@ -282,35 +289,37 @@ def separate_wholegraphs_to_leftright_insulas( \
     greatgraph_difference_line = [ node \
                 for node in great_graph.get_rows()[ changedline_id ] \
                 if node in difference_graph2 ]
-    #print( "trgetline: ", lessgraph_difference_line )
-
     leftnodes1: list
     leftnodes2: list
     rightnodes1: list
     rightnodes2: list
     leftindex: int
     rightindex: int
-    #print( "coninsulas", connected_insulas )
+
+    mykey = lambda x: x if type(x)==tuple \
+                        else (x,) if type(x)==int \
+                        else (0,)
+    qs = lambda x: sorted(x, key=mykey)
     for asdf in connected_insulas:
         for qwer in connected_insulas2:
             if not any( translator[q] in qwer \
                             for q in asdf if q in translator.keys() ):
                 continue
-            #print( "-"*75 )
             nearnodes = less_graph.get_nodes_near_nodes( asdf )
             nearnodes2 = great_graph.get_nodes_near_nodes( qwer )
-            #print( "nearnodes", nearnodes )
-            #print( "asdf", asdf )
-            #print(list( (node, index) for node, index in leftside_nodes\
-            #        if node in asdf ))
+            qgqg = lambda x: x[0]
+            print( "translator: ", sorted(((a,b) for a,b in translator.items() if a in nearnodes or b in nearnodes2), key=qgqg) )
+            print( "-"*75, "\nbrubru", qs(nearnodes), qs(nearnodes2) )
             try:
                 startnode1_left, leftindex \
                     = ( (node, index) for node, index in leftside_nodes\
                     if node in asdf and node in translator ).__next__()
                 startnode2_left = translator[ startnode1_left ]
-                leftnodes1 = nearnodes
-                leftnodes2 = set( translator[n] for n in nearnodes if n in translator)\
-                                .union(qwer)
+                invtrans = inv( translator )
+                leftnodes1 = set( invtrans[n] for n in nearnodes2 \
+                                if n in invtrans ).union( nearnodes )
+                leftnodes2 = set( translator[n] for n in nearnodes \
+                                if n in translator ).union( nearnodes2 )
             except StopIteration:
                 pass
             try:
@@ -318,9 +327,17 @@ def separate_wholegraphs_to_leftright_insulas( \
                     = ( (node, index) for node,index in rightside_nodes\
                     if node in asdf and node in translator ).__next__()
                 startnode2_right = translator[ startnode1_right ]
-                rightnodes1 = nearnodes
-                rightnodes2 = set( translator[n] for n in nearnodes if n in translator)\
-                                .union(qwer)
+                invtrans = inv( translator )
+                rightnodes1 = set( invtrans[n] for n in nearnodes2 \
+                                if n in invtrans ).union( nearnodes )
+                rightnodes2 = set( translator[n] for n in nearnodes \
+                                if n in translator ).union( nearnodes2 )
+                print("-"*75)
+                print( "right1_common", qs([n for n in rightnodes1 if n in translator ]),"\n")
+                print( "right1_uncommon", qs([n for n in rightnodes1 if n not in translator ]))
+                print("-"*75)
+                print( "right2_common", qs([n for n in rightnodes2 if n in invtrans ]),"\n")
+                print( "right2_uncommon",qs([n for n in rightnodes2 if n not in invtrans ]),"\n")
             except StopIteration:
                 pass
     try:
@@ -332,17 +349,18 @@ def separate_wholegraphs_to_leftright_insulas( \
 
 
 def twographs_to_replacement( graph1, graph2, startnode, changedline_id ):
-    from extrasfornetworkx import generate_replacement_from_graphs, AddedToUncommonNodes
+    from extrasfornetworkx import generate_replacement_from_graphs, \
+                                AddedToUncommonNodes
     nodelabels1 = graph1.get_nodeattributelabel()
     edgelabels1 = graph1.get_edgeattributelabels()
     nodelabels2 = graph2.get_nodeattributelabel()
     edgelabels2 = graph2.get_edgeattributelabels()
-    #print( nodelabels1, edgelabels1, nodelabels2, edgelabels2, startnode, startnode )
     try:
         repl1, repl2, common_nodes = generate_replacement_from_graphs(\
                                         nodelabels1, edgelabels1,\
                                         nodelabels2, edgelabels2, \
-                                        {startnode: startnode} )
+                                        {"start":"start", "end":"end"} )
+        #                                {startnode: startnode} )
         return tuple(  repl1 ), \
                 tuple(  repl2 ), \
                 tuple( (n1, n2) for n1, n2 in common_nodes )
@@ -351,25 +369,25 @@ def twographs_to_replacement( graph1, graph2, startnode, changedline_id ):
         repl2 = err.replacement_nodes_in_new
         common_nodes = err.same_nodes
         translator = { a:b for a, b in err.same_nodes }
-        leftnodes1, leftnodes2, startnode1_left, leftindex, \
-                rightnodes1, rightnodes2, startnode1_right, rightindex \
-                = separate_wholegraphs_to_leftright_insulas( \
-                        repl1, repl2, translator, \
-                        graph1, graph2, changedline_id )
-        brubru1 = set(nodelabels1.keys()).difference(repl1)
-        brubru2 = set(nodelabels2.keys()).difference(repl2)
-        a1 = compareGraph(*get_subgraph( brubru1, nodelabels1, edgelabels1 ))
-        a2 = compareGraph(*get_subgraph( brubru2, nodelabels2, edgelabels2 ))
-        l1 = compareGraph(*get_subgraph( brubru1.intersection(leftnodes1), nodelabels1, edgelabels1 ))
-        l2 = compareGraph(*get_subgraph( brubru2.intersection(leftnodes2), nodelabels2, edgelabels2 ))
-        r1 = compareGraph(*get_subgraph( brubru1.intersection(rightnodes1), nodelabels1,edgelabels1 ))
-        r2 = compareGraph(*get_subgraph( brubru2.intersection(rightnodes2), nodelabels2,edgelabels2 ))
-        if not( r1==r2 and l1==l2 ):
-            raise Exception("couldnt separate left and right")
-        
-        return tuple(  repl1 ), \
-                tuple(  repl2 ), \
-                tuple( (n1, n2) for n1, n2 in common_nodes )
+    leftnodes1, leftnodes2, startnode1_left, leftindex, \
+            rightnodes1, rightnodes2, startnode1_right, rightindex \
+            = separate_wholegraphs_to_leftright_insulas( \
+                    repl1, repl2, translator, \
+                    graph1, graph2, changedline_id )
+    brubru1 = set(nodelabels1.keys()).difference(repl1)
+    brubru2 = set(nodelabels2.keys()).difference(repl2)
+    a1 = compareGraph(*get_subgraph( brubru1, nodelabels1, edgelabels1 ))
+    a2 = compareGraph(*get_subgraph( brubru2, nodelabels2, edgelabels2 ))
+    l1 = compareGraph(*get_subgraph( brubru1.intersection(leftnodes1), nodelabels1, edgelabels1 ))
+    l2 = compareGraph(*get_subgraph( brubru2.intersection(leftnodes2), nodelabels2, edgelabels2 ))
+    r1 = compareGraph(*get_subgraph( brubru1.intersection(rightnodes1), nodelabels1,edgelabels1 ))
+    r2 = compareGraph(*get_subgraph( brubru2.intersection(rightnodes2), nodelabels2,edgelabels2 ))
+    if not( r1==r2 and l1==l2 ):
+        raise Exception("couldnt separate left and right")
+    
+    return tuple(  repl1 ), \
+            tuple(  repl2 ), \
+            tuple( (n1, n2) for n1, n2 in common_nodes )
     raise Exception("should come to this")
     nodetrans1 = { n:i for i, n in enumerate( nodelabels1.keys() )}
     nodetrans2 = { n:i for i, n in enumerate( nodelabels2.keys() )}
