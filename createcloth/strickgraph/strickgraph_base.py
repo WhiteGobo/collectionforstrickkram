@@ -44,34 +44,19 @@ class strick_physic_forceproperties:
 
 class strick_compare:
     def create_hashvalues( self ):
-        """
-
-        :todo: revisit this method
-        """
         a = _netx.get_node_attributes( self, "stitchtype" )
         b = _netx.get_node_attributes( self, "side" )
         hashattributes = { key: a[key]+b[key] for key in a }
         _netx.set_node_attributes( self, hashattributes, "hashval" )
 
     def get_nodeattributes( self ):
-        """Needed for verbesserer
-
-        :todo: rework so that start and end have data
-        """
-        #subgraph = self.subgraph( set(self.nodes())-{"start", "end"})
-        subgraph = self.subgraph( set(self.nodes()) )
-        nodeplusdata = { a:b for a,b in subgraph.nodes( data=True ) }
-        if "start" in nodeplusdata:
-            nodeplusdata["start"] = {"stitchtype": "start", "side":"" }
-        if "end" in nodeplusdata:
-            nodeplusdata["end"] = {"stitchtype": "end", "side":"" }
+        """Needed for verbesserer"""
+        subgraph = self.subgraph( set(self.nodes())-{"start", "end"})
         return { node:(data["stitchtype"], data["side"]) \
-                        for node, data in nodeplusdata.items() }
-
+                        for node, data in subgraph.nodes( data=True )}
     def get_edges_with_labels( self ):
         """Needed for verbesserer"""
-        #subgraph = self.subgraph( set(self.nodes())-{"start", "end"})
-        subgraph = self.subgraph( set(self.nodes()) )
+        subgraph = self.subgraph( set(self.nodes())-{"start", "end"})
         return tuple( (e[0], e[1], e[-1]["edgetype"]) \
                         for e in subgraph.edges( data=True ) )
 
@@ -199,22 +184,16 @@ class strick_datacontainer( _netx.MultiDiGraph ):
     def get_nodeattributelabel( self ):
         nodestitchtype = _netx.get_node_attributes( self, "stitchtype" )
         nodeside = _netx.get_node_attributes( self, "side" )
-        if 'start' in self.nodes():
-            nodeside["start"] = ""
-            nodestitchtype["start"] = "start"
-        if 'end' in self.nodes():
-            nodeside["end"] = ""
-            nodestitchtype["end"] = "end"
         nodelabels = { node: "".join(( nodestitchtype[node], nodeside[node])) \
-                        for node in nodeside.keys() }
-        #                if node not in ("start", "end" )}
+                        for node in nodeside.keys() \
+                        if node not in ("start", "end" )}
         return nodelabels
 
     def get_edgeattributelabels( self ):
         edgelabels = [ ( v1, v2, str( data["edgetype"] ) )
                         for v1, v2, i, data \
-                        in self.edges(data=True, keys=True) ]
-        #                if not set(("start", "end")).intersection((v1,v2))]
+                        in self.edges(data=True, keys=True)\
+                        if not set(("start", "end")).intersection((v1,v2))]
         return edgelabels
 
     def get_connected_nodes( self, nodelist ):
@@ -232,17 +211,10 @@ class strick_datacontainer( _netx.MultiDiGraph ):
         return list(_netx.connected_components( helpsubgraph ))
 
     def get_nodes_near_nodes( self, nodelist, maxdistance=3 ):
-        """Find nodes near nodelist within given distance
-
-        :param maxdistance: maximum distance to nodelist
-        :type maxdistance: int
-        :type nodelist: Iterable[ Hashable ]
-        :rtype nodelist: Tuple[ Hashable ]
-        """
-        #asd = self.give_real_graph()
+        asd = self.give_real_graph()
         helpgraph = _netx.Graph()
-        helpgraph.add_nodes_from( self.nodes() )
-        helpgraph.add_edges_from( self.edges() )
+        helpgraph.add_nodes_from( asd.nodes() )
+        helpgraph.add_edges_from( asd.edges() )
         nearthings = set( nodelist )
         for a,b in _netx.all_pairs_dijkstra_path( helpgraph,cutoff=maxdistance):
             if a in nodelist:
@@ -329,10 +301,10 @@ class strick_datacontainer( _netx.MultiDiGraph ):
         return leftside, rightside
 
     def isvalid( self ):
-        nextoutedges = [a for a,b,i,data in self.edges( data=True, keys=True )\
-                        if data["edgetype"]=="next" ]
-        nextinedges = [b for a,b,i,data in self.edges( data=True, keys=True )\
-                        if data["edgetype"]=="next" ]
+        nextoutedges = (a for a,b,i,data in self.edges( data=True, keys=True )\
+                        if data["edgetype"]=="next")
+        nextinedges = (b for a,b,i,data in self.edges( data=True, keys=True )\
+                        if data["edgetype"]=="next")
         import collections as col
         a = col.Counter( nextoutedges )
         b = col.Counter( nextinedges )
@@ -340,23 +312,12 @@ class strick_datacontainer( _netx.MultiDiGraph ):
         cond2 = set(("start",)) == set(self.nodes()).difference(set(b.keys()))
         cond3 = set() == set(a.keys()).difference(self.nodes())
         cond4 = set() == set(b.keys()).difference(self.nodes())
-        cond5 = set((1,)) == set(a.values())
-        cond6 = set((1,)) == set(b.values())
-        if not all((cond1, cond2, cond3, cond4, cond5, cond6)):
-            messages = []
-            messages.append( "nodes without outedges %s" \
-                    %( set(self.nodes()).difference(('end',*(a.keys()))) ))
-            messages.append( "nodes without inedges %s" \
-                    %( set(self.nodes()).difference(('start',*(b.keys()))) ))
+        if not all((cond1, cond2, cond3, cond4)):
+            q1 = set(self.nodes()).difference(set(a.keys()))
+            q2 = set(self.nodes()).difference(set(b.keys()))
             q3 = set(a.keys()).difference(self.nodes())
             q4 = set(b.keys()).difference(self.nodes())
-            q5 = [node for node, count in a.items() if count!=1 ]
-            qq5 = [ [(a,b) for a,b,i,data in self.edges( data=True, keys=True )\
-                        if data["edgetype"]=="next" and a==node] for node in q5]
-            q6 = [node for node, count in b.items() if count!=1 ]
-            qq6 = [ [(a,b) for a,b,i,data in self.edges( data=True, keys=True )\
-                        if data["edgetype"]=="next" and b==node] for node in q6]
-            raise Exception( *messages, q3, q4, qq5, qq6 )
+            raise Exception( q1, q2, q3, q4 )
         return all((cond1, cond2, cond3, cond4))
 
 
