@@ -39,5 +39,11 @@ Strickgraph
    **Strickgraph as Graph**
 
    .. automethod:: get_edges_with_labels
+   .. automethod:: get_nodes_near_nodes
+
+   These Methods seems to be doubles.
+
    .. automethod:: get_nodeattributes
    .. automethod:: create_hashvalues
+   .. automethod:: get_nodeattributelabel
+   .. automethod:: get_edgeattributelabels
