@@ -31,7 +31,13 @@ Strickgraph
    .. automethod:: get_sidemargins
    .. automethod:: get_sidemargins_indices
 
-   **Sttchinfo-thingies**
+   **Stitchinfo-thingies**
 
    .. automethod:: get_alternative_stitchtypes
    .. automethod:: copy_with_alternative_stitchtype
+
+   **Strickgraph as Graph**
+
+   .. automethod:: get_edges_with_labels
+   .. automethod:: get_nodeattributes
+   .. automethod:: create_hashvalues
