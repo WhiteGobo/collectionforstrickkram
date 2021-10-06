@@ -29,13 +29,11 @@ test_strickgraph:
 	python -m unittest createcloth.strickgraph.test_strickgraph
 
 test_meshhandler:
-	python -m unittest createcloth.meshhandler.test_meshhandler
-	#python -m unittest createcloth.meshhandler.test_meshhandler -k test_wholerelaxing
-	#python -m unittest createcloth.meshhandler.test_meshhandler -k test_createsurfacemap
+	python -m unittest createcloth.meshhandler.test_meshhandler -k test_wholerelaxing
 
 
 test_manualtoverbesserung:
-	python -m unittest createcloth.verbesserer.test_verbesserer -k sidealterator
+	python -m unittest createcloth.verbesserer.test_verbesserer #-k sidealterator
 
 test_builtinverbesserer:
 	python -m unittest createcloth.builtin_verbesserer.test_builtinverbesserer
