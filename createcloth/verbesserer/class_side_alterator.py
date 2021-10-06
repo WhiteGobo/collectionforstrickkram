@@ -307,9 +307,6 @@ def separate_wholegraphs_to_leftright_insulas( \
                 continue
             nearnodes = less_graph.get_nodes_near_nodes( asdf )
             nearnodes2 = great_graph.get_nodes_near_nodes( qwer )
-            qgqg = lambda x: x[0]
-            print( "translator: ", sorted(((a,b) for a,b in translator.items() if a in nearnodes or b in nearnodes2), key=qgqg) )
-            print( "-"*75, "\nbrubru", qs(nearnodes), qs(nearnodes2) )
             try:
                 startnode1_left, leftindex \
                     = ( (node, index) for node, index in leftside_nodes\
@@ -332,12 +329,6 @@ def separate_wholegraphs_to_leftright_insulas( \
                                 if n in invtrans ).union( nearnodes )
                 rightnodes2 = set( translator[n] for n in nearnodes \
                                 if n in translator ).union( nearnodes2 )
-                print("-"*75)
-                print( "right1_common", qs([n for n in rightnodes1 if n in translator ]),"\n")
-                print( "right1_uncommon", qs([n for n in rightnodes1 if n not in translator ]))
-                print("-"*75)
-                print( "right2_common", qs([n for n in rightnodes2 if n in invtrans ]),"\n")
-                print( "right2_uncommon",qs([n for n in rightnodes2 if n not in invtrans ]),"\n")
             except StopIteration:
                 pass
     try:
