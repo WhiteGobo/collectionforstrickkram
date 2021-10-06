@@ -43,77 +43,14 @@ class strick_physic_forceproperties:
 
 
 class strick_compare:
-    def create_hashvalues( self ):
-        """
-
-        :todo: revisit this method
-        """
-        a = _netx.get_node_attributes( self, "stitchtype" )
-        b = _netx.get_node_attributes( self, "side" )
-        hashattributes = { key: a[key]+b[key] for key in a }
-        _netx.set_node_attributes( self, hashattributes, "hashval" )
-
-    def get_nodeattributes( self ):
-        """Needed for verbesserer
-
-        :todo: rework so that start and end have data
-        """
-        #subgraph = self.subgraph( set(self.nodes())-{"start", "end"})
-        subgraph = self.subgraph( set(self.nodes()) )
-        nodeplusdata = { a:b for a,b in subgraph.nodes( data=True ) }
-        if "start" in nodeplusdata:
-            nodeplusdata["start"] = {"stitchtype": "start", "side":"" }
-        if "end" in nodeplusdata:
-            nodeplusdata["end"] = {"stitchtype": "end", "side":"" }
-        return { node:(data["stitchtype"], data["side"]) \
-                        for node, data in nodeplusdata.items() }
-
-    def get_edges_with_labels( self ):
-        """Needed for verbesserer"""
-        #subgraph = self.subgraph( set(self.nodes())-{"start", "end"})
-        subgraph = self.subgraph( set(self.nodes()) )
-        return tuple( (e[0], e[1], e[-1]["edgetype"]) \
-                        for e in subgraph.edges( data=True ) )
-
     def __hash__( self ):
-        self.supergraph.create_hashvalues()
-
-        subgraph = self.subgraph( set(self.nodes())-{"start", "end"})
-        nodelabels = { n:str( data["hashval"] )
-                        for n, data in subgraph.nodes(data=True) }
-        edges = [ ( v1, v2, str( data["edgetype"] ) )
-                        for v1, v2, i, data \
-                        in subgraph.edges(data=True, keys=True) ]
+        nodelabels = self.get_nodeattributelabel()
+        edges = self.get_edges_with_labels()
         return weisfeiler_lehman_graph_hash( nodelabels, edges )
 
-    def presort( self ) -> Hashable:
-        """magic method to know with which other graphs it wont definitly 
-        is unequal
-
-        :returns: Hashable
-        """
-        self.supergraph.create_hashvalues()
-        selfnodecount = Counter([ value for value \
-                    in _netx.get_node_attributes( self, "hashval" ).values() ])
-        trans = { str(e):e for e in selfnodecount.keys()}
-        tmptuple = tuple( sorted( trans.keys() ))
-        second = tuple( selfnodecount[trans[stre]] for stre in tmptuple )
-        return (tmptuple, second)
-
     def __eq__( self, other ):
-        try:
-            self.supergraph.create_hashvalues()
-            selfnodecount = Counter([ value for value \
-                    in _netx.get_node_attributes( self, "hashval" ).values() ])
-
-            other.supergraph.create_hashvalues()
-            othernodecount = Counter([ value for value \
-                    in _netx.get_node_attributes( other, "hashval" ).values() ])
-            if selfnodecount != othernodecount:
-                return False
-        except Exception as err:
+        if type(self)!=type(other):
             return False
-
         return self.__hash__() == other.__hash__()
 
 
@@ -149,13 +86,89 @@ class alternative_stitchtype_support():
 
 
 class strick_datacontainer( _netx.MultiDiGraph ):
+    """Groundclass for fabric. Support for node and edges equivalent to fabric.
+
+    :todo: only concentrate on methods, which equal a graph representation
+    :todo: methods to be outsourced: get_rows, get_borders, get_connected_nodes,
+            get_nodes_near_nodes, get_startside, find_following_row, 
+            give_next_node_to, get_sidemargins_indices, get_sidemargins
+    :todo: isvalid should me a method which works not only for strickgraphs
+    """
     def __init__( self, *args, **argv ):
         """Use .from_gridgraph, .from_manual"""
         super().__init__( *args, **argv )
 
+    def _get_nodeattr( self, attrname ):
+        subgraph = self.subgraph( set(self.nodes()) )
+        return { a:b[attrname] for a,b in subgraph.nodes( data=True ) }
+    def get_nodeattr_stitchtype( self ):
+        return self._get_nodeattr( "stitchtype" )
+    def get_nodeattr_side( self ):
+        return self._get_nodeattr( "side" )
+    def get_nodeattr_startingpoint( self ):
+        return self._get_nodeattr( "startingpoint" )
+    def get_nodeattr_alternativestitchtype( self ):
+        return self._get_nodeattr( "alternativestitchtype" )
+
+    def get_nodeattributes( self ):
+        """Needed for verbesserer
+
+        :todo: rework so that start and end have data
+        """
+        #subgraph = self.subgraph( set(self.nodes())-{"start", "end"})
+        subgraph = self.subgraph( set(self.nodes()) )
+        nodeplusdata = { a:b for a,b in subgraph.nodes( data=True ) }
+        if "start" in nodeplusdata:
+            nodeplusdata["start"] = {"stitchtype": "start", "side":"" }
+        if "end" in nodeplusdata:
+            nodeplusdata["end"] = {"stitchtype": "end", "side":"" }
+        return { node:(data["stitchtype"], data["side"]) \
+                        for node, data in nodeplusdata.items() }
+
+    def get_nodes( self ):
+        return self.nodes()
+
+    def get_nodeattributelabel( self ):
+        """
+
+        :todo: remove this Method
+        """
+        nodedata = self.get_nodeattributes()
+        nodestitchtype = { a:b[0] for a,b in nodedata.items() }
+        nodeside = { a:b[1] for a,b in nodedata.items() }
+        #nodestitchtype = _netx.get_node_attributes( self, "stitchtype" )
+        #nodeside = _netx.get_node_attributes( self, "side" )
+        #if 'start' in self.nodes():
+        #    nodeside["start"] = ""
+        #    nodestitchtype["start"] = "start"
+        #if 'end' in self.nodes():
+        #    nodeside["end"] = ""
+        #    nodestitchtype["end"] = "end"
+        nodelabels = { node: "".join(( nodestitchtype[node], nodeside[node])) \
+                        for node in nodeside.keys() }
+        #                if node not in ("start", "end" )}
+        return nodelabels
+
+    def get_edges_with_labels( self ):
+        """Needed for verbesserer"""
+        #subgraph = self.subgraph( set(self.nodes())-{"start", "end"})
+        subgraph = self.subgraph( set(self.nodes()) )
+        return tuple( (e[0], e[1], e[-1]["edgetype"]) \
+                        for e in subgraph.edges( data=True ) )
+
+    def get_startnode( self ):
+        nodes = set( self.get_nodes() )
+        nodes.difference_update( v2 \
+                        for v1, v2, edgetype in self.get_edges_with_labels() \
+                        if edgetype=="next" )
+        assert len( nodes ) == 1, f"multiple nodes with single outedge found {nodes}"
+        return iter(nodes).__next__()
+
+
     def get_rows( self, presentation_type="machine" ):
         rows = []
-        firststitch = self.give_next_node_to( "start" )
+        #firststitch = self.give_next_node_to( "start" )
+        firststitch = self.give_next_node_to( self.get_startnode() )
         while firststitch != "end":
             currentrow = self.find_following_row( firststitch )
             rows.append( currentrow )
@@ -196,26 +209,6 @@ class strick_datacontainer( _netx.MultiDiGraph ):
         right = [ tmprow[-1] for tmprow in rows ] #todo: instead march through
         return down, up, left, right
     
-    def get_nodeattributelabel( self ):
-        nodestitchtype = _netx.get_node_attributes( self, "stitchtype" )
-        nodeside = _netx.get_node_attributes( self, "side" )
-        if 'start' in self.nodes():
-            nodeside["start"] = ""
-            nodestitchtype["start"] = "start"
-        if 'end' in self.nodes():
-            nodeside["end"] = ""
-            nodestitchtype["end"] = "end"
-        nodelabels = { node: "".join(( nodestitchtype[node], nodeside[node])) \
-                        for node in nodeside.keys() }
-        #                if node not in ("start", "end" )}
-        return nodelabels
-
-    def get_edgeattributelabels( self ):
-        edgelabels = [ ( v1, v2, str( data["edgetype"] ) )
-                        for v1, v2, i, data \
-                        in self.edges(data=True, keys=True) ]
-        #                if not set(("start", "end")).intersection((v1,v2))]
-        return edgelabels
 
     def get_connected_nodes( self, nodelist ):
         """Return nodetuples of real nodes, which are connected
@@ -248,8 +241,6 @@ class strick_datacontainer( _netx.MultiDiGraph ):
             if a in nodelist:
                 nearthings.update( b.keys() )
         return tuple( nearthings )
-
-
 
     def get_startside( self ):
         """Get startside"""
