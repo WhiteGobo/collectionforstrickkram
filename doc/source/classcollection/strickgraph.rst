@@ -25,8 +25,6 @@ Strickgraph
    .. automethod:: get_rows
    .. automethod:: get_startside
    .. automethod:: give_next_node_to
-   .. automethod:: create_hashvalues
-   .. automethod:: presort
    .. automethod:: get_connected_nodes
    .. automethod:: get_sidemargins
    .. automethod:: get_sidemargins_indices
@@ -38,12 +36,21 @@ Strickgraph
 
    **Strickgraph as Graph**
 
-   .. automethod:: get_edges_with_labels
+   .. automethod:: get_startstitch
+   .. automethod:: get_endstitch
+
+   .. automethod:: get_nodes
    .. automethod:: get_nodes_near_nodes
-
-   These Methods seems to be doubles.
-
    .. automethod:: get_nodeattributes
-   .. automethod:: create_hashvalues
+   .. automethod:: get_edges_with_labels
    .. automethod:: get_nodeattributelabel
-   .. automethod:: get_edgeattributelabels
+   
+   **available attributes**
+
+   allnodes: stitchtype, side
+   somenodes: startingpoint, alternativestitchtype
+
+   .. automethod:: get_nodeattr_stitchtype
+   .. automethod:: get_nodeattr_side
+   .. automethod:: get_nodeattr_startingpoint
+   .. automethod:: get_nodeattr_alternativestitchtype
