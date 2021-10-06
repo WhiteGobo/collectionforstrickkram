@@ -156,20 +156,32 @@ class strick_datacontainer( _netx.MultiDiGraph ):
         return tuple( (e[0], e[1], e[-1]["edgetype"]) \
                         for e in subgraph.edges( data=True ) )
 
-    def get_startnode( self ):
+    def get_startstitch( self ):
         nodes = set( self.get_nodes() )
         nodes.difference_update( v2 \
                         for v1, v2, edgetype in self.get_edges_with_labels() \
                         if edgetype=="next" )
-        assert len( nodes ) == 1, f"multiple nodes with single outedge found {nodes}"
+        assert len( nodes ) == 1, f"multiple nodes with single "\
+                                    f"outedge found {nodes}"
         return iter(nodes).__next__()
+
+    def get_endstitch( self ):
+        nodes = set( self.get_nodes() )
+        nodes.difference_update( v1 \
+                        for v1, v2, edgetype in self.get_edges_with_labels() \
+                        if edgetype=="next" )
+        assert len( nodes ) == 1, f"multiple nodes with single "\
+                                    f"inedge found {nodes}"
+        return iter(nodes).__next__()
+
 
 
     def get_rows( self, presentation_type="machine" ):
         rows = []
         #firststitch = self.give_next_node_to( "start" )
-        firststitch = self.give_next_node_to( self.get_startnode() )
-        while firststitch != "end":
+        firststitch = self.give_next_node_to( self.get_startstitch() )
+        endstitch = self.get_endstitch()
+        while firststitch != endstitch:
             currentrow = self.find_following_row( firststitch )
             rows.append( currentrow )
             firststitch = self.give_next_node_to( currentrow[-1] )
