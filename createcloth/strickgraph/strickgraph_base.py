@@ -269,12 +269,9 @@ class strick_datacontainer( _netx.MultiDiGraph ):
 
         row = []
         tmpnode = firstnode
-        while rowside == node_side[ tmpnode ]:
+        while rowside == node_side.get( tmpnode, "" ) and tmpnode != "end":
             row.append( tmpnode )
             tmpnode = self.give_next_node_to( tmpnode )
-            if tmpnode == "end":
-                break
-
         return row
 
     def give_next_node_to( self, node ):
@@ -336,8 +333,8 @@ class strick_datacontainer( _netx.MultiDiGraph ):
         import collections as col
         a = col.Counter( nextoutedges )
         b = col.Counter( nextinedges )
-        cond1 = set(("end",)) == set(self.nodes()).difference(set(a.keys()))
-        cond2 = set(("start",)) == set(self.nodes()).difference(set(b.keys()))
+        cond1 = len(set(self.nodes()).difference(set(a.keys()))) == 1
+        cond2 = len(set(self.nodes()).difference(set(b.keys()))) == 1
         cond3 = set() == set(a.keys()).difference(self.nodes())
         cond4 = set() == set(b.keys()).difference(self.nodes())
         cond5 = set((1,)) == set(a.values())
@@ -345,9 +342,9 @@ class strick_datacontainer( _netx.MultiDiGraph ):
         if not all((cond1, cond2, cond3, cond4, cond5, cond6)):
             messages = []
             messages.append( "nodes without outedges %s" \
-                    %( set(self.nodes()).difference(('end',*(a.keys()))) ))
+                    %( set(self.nodes()).difference((*(a.keys()),)) ))
             messages.append( "nodes without inedges %s" \
-                    %( set(self.nodes()).difference(('start',*(b.keys()))) ))
+                    %( set(self.nodes()).difference((*(b.keys()),)) ))
             q3 = set(a.keys()).difference(self.nodes())
             q4 = set(b.keys()).difference(self.nodes())
             q5 = [node for node, count in a.items() if count!=1 ]
