@@ -13,8 +13,8 @@ from .verbesserer_class import strickalterator, FindError
 
 import logging
 logger = logging.getLogger( __name__ )
-#logging.basicConfig( level = logging.WARNING )
-logging.basicConfig( level = logging.DEBUG )
+logging.basicConfig( level = logging.WARNING )
+#logging.basicConfig( level = logging.DEBUG )
 
 class test_manualtoverbesserung( unittest.TestCase ):
     def setUp( self ):
@@ -140,16 +140,12 @@ class test_manualtoverbesserung( unittest.TestCase ):
         outman="16yo\n16k\n16k\n16k\n16k\n16k\n16bo"
 
         changedline_id = 4
-        inman="14yo\n14k\n14k\n2k 1yo 10k 1yo 2k\n2k 1yo 12k 1yo 2k\n18k\n18bo"
-        outman="14yo\n14k\n14k\n2yo 14k\n16k 4yo\n2k 1k2tog 12k 1k2tog 2k\n18bo"
-        #changedline_id = 0
-        #inman = "14yo\n14k\n14k\n14k\n14k\n14k\n14bo"
-        #outman ="16yo\n2k 1k2tog 8k 1k2tog 2k\n14k\n14k\n14k\n14k\n14bo"
-        #outman ="14yo\n2k 1yo 10k 1yo 2k\n2k 1k2tog 8k 1k2tog 2k\n14k\n14k\n14k\n14bo"
-        #outman ="14yo\n14k\n2k 1yo 10k 1yo 2k\n2k 1k2tog 8k 1k2tog 2k\n14k\n14k\n14bo"
-        #outman ="14yo\n14k\n14k\n14k\n14k\n2k 1yo 10k 1yo 2k\n16bo"
-        print( "inman: ", inman )
-        print( "outman: ", outman )
+        #inman ="14yo\n14k\n14k\n2k 1yo 10k 1yo 2k\n2k 1yo 12k 1yo 2k\n18k\n18bo"
+        #outman="14yo\n14k\n14k\n14k 2yo\n4yo 16k\n2k 1k2tog 12k 1k2tog 2k\n18bo"
+        inman='14yo\n14k\n14k\n2yo 14k\n16k 4yo\n2k 1k2tog 12k 1k2tog 2k\n18bo'
+        outman='14yo\n14k\n14k\n14k 2yo\n4yo 16k\n2k 1k2tog 12k 1k2tog 2k\n18bo'
+        #print( "inman: ", inman )
+        #print( "outman: ", outman )
         less_graph = strickgraph.from_manual( inman, stitchinfo )
         great_graph = strickgraph.from_manual( outman, stitchinfo )
 
@@ -161,8 +157,8 @@ class test_manualtoverbesserung( unittest.TestCase ):
         startnode = (0,0)
 
         qwe = sidealterator.from_graphdifference( less_graph, great_graph, startnode, changedline_id )
-        print( qwe.alterator_left.newgraph_nodeattributes )
-        print( qwe.alterator_left.newgraph_edges_with_label )
+        #print( qwe.alterator_left.newgraph_nodeattributes )
+        #print( qwe.alterator_left.newgraph_edges_with_label )
         #print(inman)
         #print(outman)
 
@@ -170,14 +166,14 @@ class test_manualtoverbesserung( unittest.TestCase ):
         qnodes = set(try_graph.nodes())
         self.assertNotEqual( try_graph, great_graph )
         self.assertEqual( try_graph, less_graph )
-        print("edges1:", [e for e in try_graph.edges(data=True) if (5,2) in e])
+        #print("edges1:", [e for e in try_graph.edges(data=True) if (5,2) in e])
         qwe.replace_in_graph( try_graph, changedline_id )
         newnodes = set(try_graph.nodes())
         #print( "removed: ", sorted(set(qnodes).difference(newnodes)) )
         #print( "added: ", sorted(set(newnodes).difference(qnodes)) )
         #print( newnodes )
         #print( qnodes )
-        print( try_graph.to_manual( stitchinfo ))
+        #print( try_graph.to_manual( stitchinfo ))
 
         self.assertEqual( try_graph, great_graph )
         del( try_graph )

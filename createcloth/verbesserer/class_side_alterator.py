@@ -200,9 +200,9 @@ def generate_verbesserer_asdf( graph1, graph2, \
     subgraph2 = graph2.subgraph( subnodelist2 )
     from extrasfornetworkx import generate_replacement_from_graphs, AddedToUncommonNodes
     nodelabels1 = subgraph1.get_nodeattributes()
-    edgelabels1 = subgraph1.get_edgeattributelabels()
+    edgelabels1 = subgraph1.get_edges_with_labels()
     nodelabels2 = subgraph2.get_nodeattributes()
-    edgelabels2 = subgraph2.get_edgeattributelabels()
+    edgelabels2 = subgraph2.get_edges_with_labels()
     from ..verbesserer.verbesserer_class import strickalterator
     return strickalterator.from_graph_difference(
                                         nodelabels1, edgelabels1,\
@@ -343,15 +343,16 @@ def twographs_to_replacement( graph1, graph2, startnode, changedline_id ):
     from extrasfornetworkx import generate_replacement_from_graphs, \
                                 AddedToUncommonNodes
     nodelabels1 = graph1.get_nodeattributelabel()
-    edgelabels1 = graph1.get_edgeattributelabels()
+    edgelabels1 = graph1.get_edges_with_labels()
+    startnode1, endnode1 = graph1.get_startstitch(), graph1.get_endstitch()
     nodelabels2 = graph2.get_nodeattributelabel()
-    edgelabels2 = graph2.get_edgeattributelabels()
+    edgelabels2 = graph2.get_edges_with_labels()
+    startnode2, endnode2 = graph2.get_startstitch(), graph2.get_endstitch()
     try:
         repl1, repl2, common_nodes = generate_replacement_from_graphs(\
-                                        nodelabels1, edgelabels1,\
-                                        nodelabels2, edgelabels2, \
-                                        {"start":"start", "end":"end"} )
-        #                                {startnode: startnode} )
+                                    nodelabels1, edgelabels1,\
+                                    nodelabels2, edgelabels2, \
+                                    {startnode1:startnode2, endnode1:endnode2} )
         return tuple(  repl1 ), \
                 tuple(  repl2 ), \
                 tuple( (n1, n2) for n1, n2 in common_nodes )
