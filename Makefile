@@ -22,18 +22,30 @@ documentation:
 create_verbesserung_for_rechtsstrickzuangepasst:
 	python -m createcloth.rechtsstrickzuangepasst.src.compile_verbesserer
 
+.PHONY: test
+test: #test_strickgraph test_meshhandler test_manualtoverbesserung test_plainknit
+	python -m unittest \
+		-k createcloth.strickgraph \
+		-k createcloth.verbesserer \
+		-k createcloth.meshhandler.test_meshhandler.test_wholerelaxing \
+		-k createcloth.plainknit
+
+
 test_clothfactory:
 	python -m unittest clothfactory_parts.test_clothfactory_parts
 
+.PHONY: test_strickgraph
 test_strickgraph:
 	python -m unittest createcloth.strickgraph.test_strickgraph
 
+
+.PHONY: test_meshhandler
 test_meshhandler:
 	python -m unittest createcloth.meshhandler.test_meshhandler -k test_wholerelaxing
 
-
+.PHONY: test_manualtoverbesserung
 test_manualtoverbesserung:
-	python -m unittest createcloth.verbesserer.test_verbesserer #-k sidealterator
+	python -m unittest createcloth.verbesserer.test_verbesserer
 
 test_builtinverbesserer:
 	python -m unittest createcloth.builtin_verbesserer.test_builtinverbesserer
@@ -50,6 +62,7 @@ test_myprogram:
 	#python -m myprogram.asd myprogram/testbody.ply
 	python -m myprogram.asd myprogram/test.ply
 
+.PHONY: test_plainknit
 test_plainknit:
 	python -m unittest createcloth.plainknit.test_plainknit
 
