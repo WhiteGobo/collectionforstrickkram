@@ -2,6 +2,7 @@ import networkx as netx
 
 class strickgraph_container():
     def __init__( self, *args, **argv ):
+        raise Exception()
         self.supergraph = self
         self.__datacontainer = netx.MultiDiGraph( *args, **argv )
 

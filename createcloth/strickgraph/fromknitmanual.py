@@ -17,9 +17,7 @@ class BrokenManual( Exception ):
 
 def frommanual( manual, stitchinfo, manual_type="machine", startside="right", \
                 reverse=False ):
-    """
-    :todo: implement machine- and follow_thread-layout
-    """
+    """helper method for reation of strick from manual"""
     manual = transform_manual_to_listform( manual )
     mystitchinfo = stitchinfo
     if manual_type in handknitting_terms:
@@ -33,11 +31,7 @@ def frommanual( manual, stitchinfo, manual_type="machine", startside="right", \
         _reverse_every_row( manual )
     manual = transform_to_single_key( manual )
     manual = symbol_to_stitchid( manual, mystitchinfo )
-    try:
-        mystrickgraph = list_to_strickgraph( manual, startside, mystitchinfo )
-    except BrokenManual:
-        logger.error( f"Broken manual given: {manual}" )
-        raise
+    mystrickgraph = list_to_strickgraph( manual, startside, mystitchinfo )
     return mystrickgraph
 
 def _reverse_every_row( manual ):
@@ -83,9 +77,11 @@ def list_to_strickgraph( manual, startside, mystitchinfo ):
     downknots, upknots = None, None
     i,j = None, None
     node_edgefrom, nodeid = None, None
-    graph = strickgraph()
-    graph.add_node("start")
-    laststitch = "start"
+    #graph = strickgraph()
+    #graph.add_node("start")
+    laststitch = (0,0)
+    nodeattributes = {}
+    edgeswithlabels = []
     lastrow = []
     i = 0
     current_side = startside
@@ -97,15 +93,14 @@ def list_to_strickgraph( manual, startside, mystitchinfo ):
             downknots = mystitchinfo.downedges[ single ]
             upknots = mystitchinfo.upedges[ single ]
             extrainfo = mystitchinfo.extrainfo[ single ]
+            nodeattributes[ nodeid ] = {"stitchtype":single,"side":current_side}
+            nodeattributes[ nodeid ].update( extrainfo )
 
-            graph.add_node( nodeid, stitchtype=single, side=current_side, \
-                                                        **extrainfo )
+            #graph.add_node( nodeid, stitchtype=single, side=current_side, \
+            #                                            **extrainfo )
 
-            if laststitch in lastrow:
-                graph.add_edge( laststitch, nodeid, edgetype="next", \
-                                                        breakline=True )
-            else:
-                graph.add_edge( laststitch, nodeid, edgetype="next" )
+            if laststitch != nodeid: #else first nodewould have an edge to itsel
+                edgeswithlabels.append( (laststitch, nodeid, "next") )
 
             for k in range(downknots):
                 try:
@@ -114,7 +109,8 @@ def list_to_strickgraph( manual, startside, mystitchinfo ):
                     err.args = (*err.args, ("in row %d the downedges doesnt "\
                                     +"match the upedges of the last row")%(i))
                     raise BrokenManual( *err.args )
-                graph.add_edge( node_edgefrom, nodeid, edgetype="up" )
+                edgeswithlabels.append( (node_edgefrom, nodeid, "up") )
+                #graph.add_edge( node_edgefrom, nodeid, edgetype="up" )
             for k in range( upknots ):
                 newrow.append( nodeid )
             laststitch = nodeid
@@ -124,6 +120,9 @@ def list_to_strickgraph( manual, startside, mystitchinfo ):
         lastrow = newrow
         i = i+1
         current_side = turn(current_side)
+    return strickgraph( nodeattributes, edgeswithlabels )
+
+    raise Exception()
     graph.add_node( "end" )
     graph.add_edge( laststitch, "end", edgetype="next" )
     return graph

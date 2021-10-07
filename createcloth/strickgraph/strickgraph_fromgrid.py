@@ -6,21 +6,6 @@ from .strickgraph_helper import strick_NotImplementedError, strick_NotFoundError
 import networkx as netx
 
 
-
-def _rowmanagment( graph, firstrow ):
-    """
-    converts a graph into a snake. snake is bucketed in sublist. These sublists
-    are the rows.
-    :type graph: networkx.Graph
-    :type firstrow: list; elements==hashable
-    :return rows: graph.nodes() sorted as snake, divided into sublists. every 
-                list is a row of the strickgraph
-    :rtype rows: list, type(list[i])==list, type(list[i][i])==hashable
-    """
-    rows = separate_to_rows( graph, firstrow )
-    rows = sort_rows_as_snake( graph, rows, firstrow )
-    return rows
-
 rightside = "right"
 leftside = "left"
 turndict={ rightside:leftside, leftside:rightside }
@@ -28,22 +13,65 @@ turndict={ rightside:leftside, leftside:rightside }
 def turn(side):
     return turndict[side]
 
-def _managestitches( strickgraph, rows, graph, startside, stitchinfo ):
+#def _managestitches( strickgraph, rows, graph, startside, stitchinfo, edges ):
+def _managestitches( rows, startside, stitchinfo, edges ):
     """
     loops through every node in the graph to construct the strickgraph. 
     what happens with every node is upto my_stitchgenerator
     Manages information gathering for my_stitchgenerator
     :param startside: 'right' or 'left'
     """
-    if startside == "right":
-        alternatesides = ["right", "left"]
-    else:
-        alternatesides = ["left", "right"]
-    rowindex = 0
-    sorted_restrowlist = []
-    for currentrow in rows:
-        sorted_restrowlist = sorted_restrowlist + currentrow
+    alternatesides =["right","left"] if startside=="right" else ["left","right"]
+    import itertools as it
+    sorted_restrowlist = list( it.chain( *rows ))
+    nodetorowindex = {}
+    for i, row in enumerate( rows ):
+        for node in row:
+            nodetorowindex[ node ] = i
+    dictedges = {}
+    upedges = {} #nodes:list[nodes]
+    downedges = {} #nodes:list[nodes]
+    edgelabels = []
+    for v1, v2 in edges:
+        i1, i2 = ( nodetorowindex[v] for v in (v1, v2) )
+        if i1-i2 == -1:
+            upedges.setdefault( v1, list() ).append( v2 )
+            downedges.setdefault( v2, list() ).append( v1 )
+            edgelabels.append( (v1, v2, "up") )
+        elif i1-i2 == 1:
+            upedges.setdefault( v2, list() ).append( v1 )
+            downedges.setdefault( v1, list() ).append( v2 )
+            edgelabels.append( (v2, v1, "up") )
+        else:
+            vertices_sorted = sorted((v1, v2),key=sorted_restrowlist.index)
+            edgelabels.append( ( *vertices_sorted, "next" ) )
+    for lowrow, highrow in zip(rows[:-1], rows[1:]):
+        lastnode, firstnode = lowrow[-1], highrow[0]
+        edgelabels.append( ( lastnode, firstnode, "next" ) )
+    def asdf( downnumber, upnumber ):
+        if ( downnumber, upnumber ) == ( 0, 1 ):
+            return "yarnover"
+        elif ( downnumber, upnumber ) == ( 1, 0 ):
+            return "bindoff"
+        elif ( downnumber, upnumber ) == ( 1, 1 ):
+            return "knit"
+        else:
+            raise Exception()
 
+    upnumber = { n: len(tmplist) for n, tmplist in upedges.items() }
+    downnumber = { n: len(tmplist) for n, tmplist in downedges.items() }
+    nodeattributes = {}
+    for rowindex, row in enumerate( rows ):
+        side = alternatesides[rowindex%2]
+        for n in row:
+            try:
+                stitchtype = asdf( downnumber.get(n,0), upnumber.get( n,0) )
+            except Exception as err:
+                raise Exception(n) from err
+            nodeattributes[ n ] = { "side":side, "stitchtype":stitchtype }
+            pass
+    return nodeattributes, edgelabels
+    rowindex = 0
     while len( sorted_restrowlist ) > 0: # 1 loop for every node
         tmpnode = sorted_restrowlist.pop( 0 ) #take next node
         if tmpnode not in rows[rowindex]:
@@ -55,6 +83,7 @@ def _managestitches( strickgraph, rows, graph, startside, stitchinfo ):
                             sorted_restrowlist, rowindex, side, stitchinfo )
     strickgraph.add_edge( "start", rows[0][0], edgetype="next" )
     strickgraph.add_edge( rows[-1][-1], "end", edgetype="next" )
+    return nodeattributes, edgelabels
 
 
 stitchgenerator_lib={}
@@ -213,10 +242,11 @@ class strick_fromgrid:
                         firstrow[i] in graph.nodes()
         :type firstrow: Iterable[ Hashable ]
         """
-        rows = _rowmanagment( graph, firstrow )
+        rows = separate_to_rows( graph, firstrow )
+        rows = sort_rows_as_snake( graph, rows, firstrow )
         #strickgraph = netx.MultiDiGraph( graph )
-        strickgraph = cls( graph )
-        strickgraph.clear_edges()
-        _managestitches( strickgraph, rows, graph, startside, stitchinfo )
-        return strickgraph
+        nodeattributes = {(0, 0): {'side': 'right', 'stitchtype': 'yarnover'}, (0, 1): {'side': 'right', 'stitchtype': 'yarnover'}, (0, 2): {'side': 'right', 'stitchtype': 'yarnover'}, (0, 3): {'side': 'right', 'stitchtype': 'yarnover'}, (1, 3): {'side': 'left', 'stitchtype': 'knit'}, (1, 2): {'side': 'left', 'stitchtype': 'knit'}, (1, 1): {'side': 'left', 'stitchtype': 'knit'}, (1, 0): {'side': 'left', 'stitchtype': 'knit'}, (2, 0): {'side': 'right', 'stitchtype': 'knit'}, (2, 1): {'side': 'right', 'stitchtype': 'knit'}, (2, 2): {'side': 'right', 'stitchtype': 'knit'}, (2, 3): {'side': 'right', 'stitchtype': 'knit'}, (3, 3): {'side': 'left', 'stitchtype': 'bindoff'}, (3, 2): {'side': 'left', 'stitchtype': 'bindoff'}, (3, 1): {'side': 'left', 'stitchtype': 'bindoff'}, (3, 0): {'side': 'left', 'stitchtype': 'bindoff'}}
+        edgelabels = [((0, 0), (1, 0), 'up'), ((0, 0), (0, 1), 'next'), ((0, 1), (1, 1), 'up'), ((0, 1), (0, 2), 'next'), ((0, 2), (1, 2), 'up'), ((0, 2), (0, 3), 'next'), ((0, 3), (1, 3), 'next'), ((0, 3), (1, 3), 'up'), ((1, 0), (2, 0), 'up'), ((1, 1), (1, 0), 'next'), ((1, 1), (2, 1), 'up'), ((1, 2), (1, 1), 'next'), ((1, 2), (2, 2), 'up'), ((1, 3), (1, 2), 'next'), ((1, 3), (2, 3), 'up'), ((2, 0), (3, 0), 'up'), ((1, 0), (2, 0), 'next'), ((2, 0), (2, 1), 'next'), ((2, 1), (3, 1), 'up'), ((2, 1), (2, 2), 'next'), ((2, 2), (3, 2), 'up'), ((2, 2), (2, 3), 'next'), ((2, 3), (3, 3), 'up'), ((2, 3), (3, 3), 'next'), ((3, 1), (3, 0), 'next'), ((3, 2), (3, 1), 'next'), ((3, 3), (3, 2), 'next')]
+        nodeattributes, edgelabels = _managestitches( rows, startside, stitchinfo, graph.edges() )
+        return cls( nodeattributes, edgelabels )
 

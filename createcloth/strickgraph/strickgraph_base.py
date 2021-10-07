@@ -77,11 +77,12 @@ class alternative_stitchtype_support():
                 alternative stitchtype
         :rtype: type( self )
         """
-        selfcopy = self.copy()
-        newstitchtypes = _netx.get_node_attributes( selfcopy, \
-                                                    "alternative_stitchtype" )
-        _netx.set_node_attributes( selfcopy, newstitchtypes, "stitchtype" )
-        return selfcopy
+        mytrans = lambda data: {"stitchtype":data[0], "side":data[1]}
+        nodeattr = { a: mytrans(data) for a, data in self.get_nodeattributes().items() }
+        for n, alt in self._get_nodeattr( "alternative_stitchtype" ).items():
+            nodeattr[n]["stitchtype"] = alt
+        edges = self.get_edges_with_labels()
+        return type(self)( nodeattr, edges )
 
 
 
@@ -94,21 +95,33 @@ class strick_datacontainer( _netx.MultiDiGraph ):
             give_next_node_to, get_sidemargins_indices, get_sidemargins
     :todo: isvalid should me a method which works not only for strickgraphs
     """
-    def __init__( self, *args, **argv ):
-        """Use .from_gridgraph, .from_manual"""
-        super().__init__( *args, **argv )
+    def __init__( self, nodeattributes, edgelabels ):
+        super().__init__()
+        for node, data in nodeattributes.items():
+            self.add_node( node, **data )
+        for v1, v2, label in edgelabels:
+            self.add_edge( v1, v2, edgetype=label )
+    #def __init__( self, *args, **argv ):
+    #    """Use .from_gridgraph, .from_manual"""
+    #    super().__init__( *args, **argv )
 
     def _get_nodeattr( self, attrname ):
-        subgraph = self.subgraph( set(self.nodes()) )
-        return { a:b[attrname] for a,b in subgraph.nodes( data=True ) }
+        return { a:b[attrname] for a,b in self.nodes( data=True ) if attrname in b }
     def get_nodeattr_stitchtype( self ):
         return self._get_nodeattr( "stitchtype" )
     def get_nodeattr_side( self ):
         return self._get_nodeattr( "side" )
-    def get_nodeattr_startingpoint( self ):
-        return self._get_nodeattr( "startingpoint" )
     def get_nodeattr_alternativestitchtype( self ):
         return self._get_nodeattr( "alternativestitchtype" )
+
+    def subgraph( self, nodes ):
+        mytrans = lambda data: {"stitchtype":data[0], "side":data[1]}
+        nodeattr = { a: mytrans(data) for a, data in self.get_nodeattributes().items() }
+        edges = self.get_edges_with_labels()
+        sub_nodeattr = { n:attr for n, attr in nodeattr.items() if n in nodes }
+        sub_edges = list( (v1, v2, label) for v1, v2, label in edges \
+                        if v1 in nodes and v2 in nodes )
+        return type(self)( sub_nodeattr, sub_edges )
 
     def get_nodeattributes( self ):
         """Needed for verbesserer
@@ -116,8 +129,8 @@ class strick_datacontainer( _netx.MultiDiGraph ):
         :todo: rework so that start and end have data
         """
         #subgraph = self.subgraph( set(self.nodes())-{"start", "end"})
-        subgraph = self.subgraph( set(self.nodes()) )
-        nodeplusdata = { a:b for a,b in subgraph.nodes( data=True ) }
+        #subgraph = self.subgraph( set(self.nodes()) )
+        nodeplusdata = { a:b for a,b in self.nodes( data=True ) }
         if "start" in nodeplusdata:
             nodeplusdata["start"] = {"stitchtype": "start", "side":"" }
         if "end" in nodeplusdata:
@@ -151,6 +164,8 @@ class strick_datacontainer( _netx.MultiDiGraph ):
 
     def get_edges_with_labels( self ):
         """Needed for verbesserer"""
+        return tuple( (e[0], e[1], e[-1]["edgetype"]) \
+                        for e in self.edges( data=True ) )
         #subgraph = self.subgraph( set(self.nodes())-{"start", "end"})
         subgraph = self.subgraph( set(self.nodes()) )
         return tuple( (e[0], e[1], e[-1]["edgetype"]) \
@@ -179,11 +194,13 @@ class strick_datacontainer( _netx.MultiDiGraph ):
     def get_rows( self, presentation_type="machine" ):
         rows = []
         #firststitch = self.give_next_node_to( "start" )
-        firststitch = self.give_next_node_to( self.get_startstitch() )
+        firststitch = self.get_startstitch()
         endstitch = self.get_endstitch()
         while firststitch != endstitch:
             currentrow = self.find_following_row( firststitch )
             rows.append( currentrow )
+            if currentrow[ -1 ] == endstitch:
+                break
             firststitch = self.give_next_node_to( currentrow[-1] )
         if presentation_type in machine_terms:
             #tmprows = [] #dont need this
@@ -256,10 +273,15 @@ class strick_datacontainer( _netx.MultiDiGraph ):
 
     def get_startside( self ):
         """Get startside"""
-        firststitch = self.give_next_node_to( "start" )
+        #firststitch = self.give_next_node_to( "start" )
+        firststitch = self.get_startstitch()
+        #endstitch = self.get_endstitch()
         firstrow = self.find_following_row( firststitch )
         nodeattr = _netx.get_node_attributes( self, "side" )
-        return nodeattr[ firstrow[0] ]
+        try:
+            return nodeattr[ firstrow[0] ]
+        except Exception as err:
+            raise Exception( nodeattr, firstrow, firststitch ) from err
 
     def find_following_row( self, firstnode ):
         """return the row of this node, the start of the row will be the 
@@ -269,12 +291,16 @@ class strick_datacontainer( _netx.MultiDiGraph ):
         """
         node_side = _netx.get_node_attributes( self, "side" )
         rowside = node_side[ firstnode ]
+        endstitch = self.get_endstitch()
 
         row = []
         tmpnode = firstnode
-        while rowside == node_side.get( tmpnode, "" ) and tmpnode != "end":
+        while rowside == node_side.get( tmpnode, "" ):
             row.append( tmpnode )
-            tmpnode = self.give_next_node_to( tmpnode )
+            if tmpnode == endstitch:
+                break
+            else:
+                tmpnode = self.give_next_node_to( tmpnode )
         return row
 
     def give_next_node_to( self, node ):
@@ -370,11 +396,11 @@ class strickgraph( strick_datacontainer, fromgrid.strick_fromgrid, \
     asdf
     this is something
     """
-    def __init__( self, *args, **argv ):
+    def __init__( self, nodeattributes, edgelabels, **argv ):
         """
         myinit
         """
-        strick_datacontainer.__init__( self, *args, **argv )
+        strick_datacontainer.__init__( self, nodeattributes, edgelabels )
         self.supergraph = self
 
     def give_real_graph( self ):

@@ -31,49 +31,37 @@ class TestStringMethods( unittest.TestCase ):
         asd = strickgraph.strickgraph.from_gridgraph(self.mygraph, \
                                                         self.firstrow, \
                                                         self.stitchinfo )
-        mynodes = {(0, 1), (0, 0), (0, 2), (0, 3), (1, 0), (1, 1), (1, 2), \
-                    (1, 3), (2, 0), (2, 1), (2, 2), (2, 3), (3, 0), (3, 1), \
-                    (3, 2), (3, 3), 'start', 'end'}
-        myedges = {((0, 0), (0, 1)), ((0, 0), (1, 0)), ((0, 1), (0, 2)), \
-                ((0, 1), (1, 1)), ((0, 2), (0, 3)), ((0, 2), (1, 2)), ((0, 3),\
-                (1, 3)), ((0, 3), (1, 3)), ((1, 0), (2, 0)), ((1, 0), (2, 0)),\
-                ((1, 1), (2, 1)), ((1, 1), (1, 0)), ((1, 2), (2, 2)), ((1, 2),\
-                (1, 1)), ((1, 3), (2, 3)), ((1, 3), (1, 2)), ((2, 0), (3, 0)),\
-                ((2, 0), (2, 1)), ((2, 1), (3, 1)), ((2, 1), (2, 2)), ((2, 2),\
-                (3, 2)), ((2, 2), (2, 3)), ((2, 3), (3, 3)), ((2, 3), (3, 3)),\
-                ((3, 0), 'end'), ((3, 1), (3, 0)), ((3, 2), (3, 1)), ((3, 3),\
-                (3, 2)), ('start', (0, 0))}
-        myedges_edgetype = {((0, 0), (0, 1), 0): 'next', \
-                ((0, 0), (1, 0), 0): 'up', ((0, 1), (0, 2), 0): 'next', \
-                ((0, 1), (1, 1), 0): 'up', ((0, 2), (0, 3), 0): 'next', \
-                ((0, 2), (1, 2), 0): 'up', ((0, 3), (1, 3), 0): 'next', \
-                ((0, 3), (1, 3), 1): 'up', ((1, 0), (2, 0), 0): 'up', \
-                ((1, 0), (2, 0), 1): 'next', ((1, 1), (2, 1), 0): 'up', \
-                ((1, 1), (1, 0), 0): 'next', ((1, 2), (2, 2), 0): 'up', \
-                ((1, 2), (1, 1), 0): 'next', ((1, 3), (2, 3), 0): 'up', \
-                ((1, 3), (1, 2), 0): 'next', ((2, 0), (3, 0), 0): 'up', \
-                ((2, 0), (2, 1), 0): 'next', ((2, 1), (3, 1), 0): 'up', \
-                ((2, 1), (2, 2), 0): 'next', ((2, 2), (3, 2), 0): 'up', \
-                ((2, 2), (2, 3), 0): 'next', ((2, 3), (3, 3), 0): 'up', \
-                ((2, 3), (3, 3), 1): 'next', ((3, 0), 'end', 0): 'next', \
-                ((3, 1), (3, 0), 0): 'next', ((3, 2), (3, 1), 0): 'next', \
-                ((3, 3), (3, 2), 0): 'next', ('start', (0, 0), 0): 'next' }
-        myedges_breakline = {((0, 3), (1, 3), 0): 0, ((1, 0), (2, 0), 1): 1, \
-                ((2, 3), (3, 3), 1): 1}
+        myedges_edgelabels = (((0, 0), (1, 0), 'up'), ((0, 0), (0, 1),'next'),\
+                ((0, 1), (1, 1), 'up'), ((0, 1), (0, 2), 'next'), \
+                ((0, 2), (1, 2), 'up'), ((0, 2), (0, 3), 'next'), \
+                ((0, 3), (1, 3), 'up'), ((1, 3), (1, 2), 'next'), \
+                ((1, 3), (2, 3), 'up'), ((1, 2), (1, 1), 'next'), \
+                ((1, 2), (2, 2), 'up'), ((1, 1), (1, 0), 'next'), \
+                ((1, 1), (2, 1), 'up'), ((1, 0), (2, 0), 'up'), \
+                ((2, 0), (3, 0), 'up'), ((2, 0), (2, 1), 'next'), \
+                ((2, 1), (3, 1), 'up'), ((2, 1), (2, 2), 'next'), \
+                ((2, 2), (3, 2), 'up'), ((2, 2), (2, 3), 'next'), \
+                ((2, 3), (3, 3), 'up'), ((3, 3), (3, 2), 'next'), \
+                ((3, 2), (3, 1), 'next'), ((3, 1), (3, 0), 'next'), \
+                ((0, 3),(1,3), 'next'), ((1, 0),(2,0), 'next'), \
+                ((2, 3),(3,3), 'next'))
         mynodes_stitchtype = {(0, 0): 'yarnover', (0, 1): 'yarnover', \
                 (0, 2): 'yarnover', (0, 3): 'yarnover', (1, 0): 'knit', \
                 (1, 1): 'knit', (1, 2): 'knit', (1, 3): 'knit', (2, 0): 'knit',\
                 (2, 1): 'knit', (2, 2): 'knit', (2, 3): 'knit', \
                 (3, 0): 'bindoff', (3, 1): 'bindoff', \
                 (3, 2): 'bindoff', (3, 3): 'bindoff'}
-        self.assertEqual( mynodes, set(asd.nodes()) )
-        self.assertEqual( myedges, set(asd.edges()) )
-        asdedgetype = netx.get_edge_attributes( asd, "edgetype" )
-        asdbreakline = netx.get_edge_attributes( asd, "breakline" )
-        self.assertEqual( asdedgetype, myedges_edgetype )
-        self.assertEqual( asdbreakline, myedges_breakline )
-        asdstitchtype = netx.get_node_attributes( asd, "stitchtype" )
+        asdedgetype = asd.get_edges_with_labels()
+        from collections import Counter
+        a, b = Counter(asdedgetype), Counter(myedges_edgelabels)
+        import itertools as it
+        self.assertEqual( a, b,\
+                msg = "(edge, found, expected): %s"%([ (e,a[e], b[e]) \
+                for e in set(it.chain(a,b)) if a[e]!=b[e] ]))
+        #self.assertEqual( asdbreakline, myedges_breakline )
+        asdstitchtype = asd.get_nodeattr_stitchtype()
         self.assertEqual( asdstitchtype, mynodes_stitchtype )
+        #self.assertEqual( asdside, mynodes_side )
 
     def test_tomanual( self ):
         """
@@ -89,7 +77,8 @@ class TestStringMethods( unittest.TestCase ):
         manual = [ x.split() for x in manual.splitlines() ]
         #this removes the spaces and tabs
         for i in range(len(testmessage)):
-            self.assertEqual( "".join(manual[i]), "".join(testmessage[i]) )
+            self.assertEqual( "".join(manual[i]), "".join(testmessage[i]),\
+                                msg="Couldnt get the predicted manual: predicted: %s\nreal: %s" %(testmessage, manual))
 
     def test_minimalstitchtypes( self ):
         """
@@ -164,6 +153,7 @@ class TestStringMethods( unittest.TestCase ):
         self.assertEqual( newmanual.splitlines(), brubru )
 
     def test_insertcolumn( self ):
+        raise Exception( "insertcolumn not in use" )
         asd = strickgraph.strickgraph.from_gridgraph( self.insertgraph, \
                                                         self.insertfirstrow, \
                                                         self.stitchinfo )
@@ -184,6 +174,7 @@ class TestStringMethods( unittest.TestCase ):
                             or (x, (2,2)) in asd.edges(x) )
 
     def test_insertcolumn( self ):
+        raise Exception( "insertcolumn not in use" )
         asd = strickgraph.strickgraph.from_gridgraph( self.mygraph, \
                                                             self.firstrow, \
                                                             self.stitchinfo )
@@ -212,8 +203,6 @@ class TestStringMethods( unittest.TestCase ):
         asd2 = strickgraph.strickgraph.from_gridgraph( self.minigraph, \
                                                             self.minifirstrow, \
                                                             self.stitchinfo )
-        asd1 = strickgraph.strickgraph( asd1 )
-        asd2 = strickgraph.strickgraph( asd2 )
         self.assertEqual( asd1.__hash__(), asd2.__hash__() )
 
     def test_refindsubgraph( self ):
@@ -223,8 +212,6 @@ class TestStringMethods( unittest.TestCase ):
         asd2 = strickgraph.strickgraph.from_gridgraph( self.biggraph, \
                                                             self.bigrow, \
                                                             self.stitchinfo )
-        asd1 = strickgraph.strickgraph( asd1 )
-        asd2 = strickgraph.strickgraph( asd2 )
         subgraph1 = asd1.subgraph([(1,1), (2,1), (3,1), (2,2), \
                                     (1,2), (1,3), (2,3)])
         path, nodes, qwe = create_pathforhashing( subgraph1, (1,1) )
@@ -240,10 +227,10 @@ class TestStringMethods( unittest.TestCase ):
             self.assertFalse( set(foundpaths[0]) == set(subgraph1.nodes()) )
 
     def test_graphml( self ):
+        raise Exception( "graphml not supported yet" )
         asd = strickgraph.strickgraph.from_gridgraph( self.mygraph, \
                                                             self.firstrow, \
                                                             self.stitchinfo )
-        asd = strickgraph.strickgraph( asd )
         asdxml = netx.generate_graphml( asd )
         mygraphml = ""
         for line in asdxml:
@@ -256,7 +243,6 @@ class TestStringMethods( unittest.TestCase ):
         asd = strickgraph.strickgraph.from_gridgraph( self.mygraph, \
                                                             self.firstrow, \
                                                             self.stitchinfo )
-        asd = strickgraph.strickgraph( asd )
         testrows = tuple([[(0, 0), (0, 1), (0, 2), (0, 3)], \
                         [(3, 0), (3, 1), (3, 2), (3, 3)], \
                         [(0, 0), (1, 0), (2, 0), (3, 0)], \
