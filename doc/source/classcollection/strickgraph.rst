@@ -48,9 +48,8 @@ Strickgraph
    **available attributes**
 
    allnodes: stitchtype, side
-   somenodes: startingpoint, alternativestitchtype
+   somenodes: alternativestitchtype
 
    .. automethod:: get_nodeattr_stitchtype
    .. automethod:: get_nodeattr_side
-   .. automethod:: get_nodeattr_startingpoint
    .. automethod:: get_nodeattr_alternativestitchtype
