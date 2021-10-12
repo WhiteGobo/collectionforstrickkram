@@ -19,6 +19,7 @@ Welcome to Createcloth's documentation!
    classcollection/meshhandler
 
    howto/strickgraph
+   howto/linetypes
 
 
 
