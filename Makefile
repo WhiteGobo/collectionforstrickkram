@@ -13,10 +13,10 @@ install: #dist/$(pkgname)-$(version).tar.gz
 	#pip install dist/$(pkgname)-$(version).tar.gz --force-reinstall
 
 
-plainknit_increaser.pickle:
+createcloth/plainknit/plainknit_increaser.pickle:
 	python -m createcloth.plainknit.program_create_alterator $@ -l 8 -w 16 --continue --skip-gen-exception
 
-plainknit_decreaser.pickle:
+createcloth/plainknit/plainknit_decreaser.pickle:
 	python -m createcloth.plainknit.program_create_alterator $@ -l 8 -w 16 --continue --skip-gen-exception --alteratortype decrease
 
 .PHONY: build
