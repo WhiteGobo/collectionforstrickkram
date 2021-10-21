@@ -1,3 +1,8 @@
+"""
+
+:todo: Finderror could be catched so i use Exception as catcher
+"""
+
 from ..strickgraph.strickgraph_base import get_neighbours_from, strickgraph, stricksubgraph
 
 import networkx as netx
@@ -12,13 +17,18 @@ import extrasfornetworkx
 from extrasfornetworkx import verbesserer
 
 from extrasfornetworkx.verbesserer_class import \
-                  replace_subgraph, FindError, WrongStartnode
-#import logging
-#logger = logging.getLogger( __name__ )
+                  replace_subgraph, WrongStartnode
+from extrasfornetworkx import verbesserer_class as graphverb
+import logging
+
+class FindError( Exception ):
+    pass
+
+logger = logging.getLogger( __name__ )
 class strickalterator( extrasfornetworkx.verbesserer ):
     nodeattributes = ( "stitchtype", "side" )
     edgeattributes = ( "edgetype", )
-    def replace_in_graph( self, graph, startnode ):
+    def replace_in_graph( self, graph, startnode, dontreplace=False ):
         """Mainmethod. replaces in given strickgraph at given position"""
         assert graph.isvalid(), "input must be valid strickgraph"
         nodeattributes = graph.get_nodeattributes()
@@ -28,18 +38,15 @@ class strickalterator( extrasfornetworkx.verbesserer ):
                     = self.create_replace_info( \
                                         nodeattributes, \
                                         edgeswithlabel, startnode )
-        except ( FindError, WrongStartnode ) as err:
+        except ( graphverb.FindError, graphverb.WrongStartnode ) as err:
+            raise FindError()
+            logger.debug( "replace in graph failed" )
             return False
-        #print("-"*75)
-        #print( "nodestoremove: ", nodes_to_remove )
-        #print( "\nnewnodes_data", newnodes_data )
-        #print( "\nedges_to_add", edges_to_add)
-
-        #print("edgesA: ", [e for e in graph.edges(data=True) if (5,2) in e ])
+        logger.debug( f"replace in graph found. removenodes: {nodes_to_remove}, newnodes: {newnodes_data.keys()}" )
+        if dontreplace:
+            return True
         replace_subgraph( graph, nodes_to_remove, newnodes_data, edges_to_add, \
                         self.nodeattributes, self.edgeattributes[0] )
-        #print("edgesB: ", [e for e in graph.edges(data=True) if (5,2) in e ])
-        #print("-"*75)
         if not graph.isvalid():
             raise Exception( "replacement produced not valid strickgraph" )
         return True
@@ -56,7 +63,7 @@ class strickalterator( extrasfornetworkx.verbesserer ):
                     = self.create_replace_info( \
                                         nodeattributes, \
                                         edgeswithlabel, startnode )
-        except ( FindError, WrongStartnode ) as err:
+        except ( graphverb.FindError, graphverb.WrongStartnode ) as err:
             return False
         return True
 
@@ -106,10 +113,13 @@ class strickalterator( extrasfornetworkx.verbesserer ):
             oldedges = old_graph.get_edges_with_labels()
             newnodes = new_graph.get_nodeattributes()
             newedges = new_graph.get_edges_with_labels()
+            logger.debug("input for extrasfornetworkx.generate_replacement_from"
+                            "_graphs: %s, %s, %s, %s " \
+                            % ( oldnodes, oldedges, newnodes, newedges ) )
             returnv = cls.from_graph_difference( oldnodes, oldedges, \
                                                 newnodes, newedges, \
                                                 startold,\
-                                                startnew )
+                                                {startold: startnew} )
         except KeyError as err:
             if err.args[0] in [ "start", "end" ]:
                 raise NotSimilarError() from err
@@ -125,9 +135,6 @@ class NotSimilarError( Exception ):
                                 "the detection of similar graphnodes is "\
                                 +"still not fully functionable"
         super().__init__( self, *args, extradescription )
-
-class FindError( Exception ):
-    pass
 
 def _create_update_graphs( oldgraph, oldgraph_nodes, newgraph, newgraph_nodes, \
                                 translator):
@@ -158,6 +165,7 @@ def _create_update_graphs( oldgraph, oldgraph_nodes, newgraph, newgraph_nodes, \
 
 def _replace_findsubgraph_in_original(graph, startnode, identificationpath, \
                     nodeinfoonpath, target_subgraph):
+    raise Exception()
     foundsubgraph = None
     foundtranslator = None
     nodesets = follow_cached_path( \

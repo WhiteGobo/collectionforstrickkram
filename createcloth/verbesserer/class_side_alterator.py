@@ -5,6 +5,7 @@ import extrasfornetworkx as efn
 import networkx as netx
 import itertools as it
 import math
+from .. import helper_limitcalculationtime as timelimiter
 logger = logging.getLogger( __name__ )
 
 XML_SIDEALTERATOR_NAME = "sidealterator"
@@ -45,11 +46,11 @@ class sidealterator():
         logger.debug( "checking if graph ist replaceable" )
         cond1 = self.alterator_left.isreplaceable( strickgraph, startnodeleft )
         cond2 = self.alterator_right.isreplaceable( strickgraph,startnoderight )
-        logger.debug( f"left-replaceble: {cond1}, right-replacable: {cond2}" )
+        logger.debug( f"left-replaceable: {cond1}, right-replacable: {cond2}" )
         if cond1 and cond2:
-            logger.debug( "replaceleft" )
+            logger.info( "replaceleft" )
             self.alterator_left.replace_in_graph( strickgraph, startnodeleft )
-            logger.debug( "replaceright" )
+            logger.info( "replaceright" )
             self.alterator_right.replace_in_graph( strickgraph, startnoderight )
         else:
             raise FindError()
@@ -76,14 +77,7 @@ class sidealterator():
                     raise Exception( "This should never trigger" )
                 except FindError:
                     continue
-                except Exception as err:
-                    #raise err
-                    #print("Why=")
-                    continue
         less_graph = create_graph_from_linetypes( linetype_out, upedges_out)
-        print( less_graph.to_manual(glstinfo).replace('\n','\\n') )
-        print( great_graph.to_manual(glstinfo).replace('\n','\\n') )
-        print( linetype_out, upedges_out )
 
         if linetype_out[0] == linetype_in[1]:
             startnode = (0,0)
@@ -185,15 +179,15 @@ class sidealterator():
         :todo: remove use of startnode
         """
         logger.info( f"create {cls} from graphdifference" )
-        logger.info( "find graphdifferencewhole" )
-        difference_graph1, difference_graph2, translator \
+        replacement_graph1, replacement_graph2, translator \
                                 = twographs_to_replacement( \
                                 source_strickgraph, target_strickgraph, \
                                 startnode, changedline_id )
-        logger.info( f"difference input: {difference_graph1}" )
-        logger.info( f"difference output: {difference_graph2}" )
-        #print("diffs:\n", sorted(difference_graph1), "\n\n", sorted(difference_graph2), "\n" )
         translator = { a:b for a, b in translator }
+        difference_graph1 =set(replacement_graph1).difference(translator.keys())
+        difference_graph2 =set(replacement_graph2).difference(translator.values())
+        logger.debug( f"difference input: {difference_graph1}" )
+        logger.debug( f"difference output: {difference_graph2}" )
         leftnodes1, leftnodes2, startnode1_left, leftindex, \
                 rightnodes1, rightnodes2, startnode1_right, rightindex \
                 = separate_wholegraphs_to_leftright_insulas( \
@@ -202,59 +196,76 @@ class sidealterator():
         mykey = lambda x: x if type(x)==tuple \
                         else (x,) if type(x)==int \
                         else (0,)
-        logger.info( f"startnodes l/r: {startnode1_right}, {startnode1_left}" )
-        logger.info( "leftnodes1: (l:%i) %s" %( len(leftnodes1), sorted(leftnodes1, key=mykey) ))
-        logger.info( "leftnodes2: (l:%i) %s" %( len(leftnodes2), sorted(leftnodes2, key=mykey) ))
-        logger.info( "rightnodes1: (l:%i) %s" %( len(rightnodes1), sorted(rightnodes1, key=mykey) ))
-        logger.info( "rightnodes2: (l:%i) %s" %( len(rightnodes2), sorted(rightnodes2, key=mykey) ))
+        logger.debug( f"startnodes l/r: {startnode1_right}, {startnode1_left}" )
+        logger.debug( "leftnodes1: (l:%i) %s" %( len(leftnodes1), sorted(leftnodes1, key=mykey) ))
+        logger.debug( "leftnodes2: (l:%i) %s" %( len(leftnodes2), sorted(leftnodes2, key=mykey) ))
+        logger.debug( "rightnodes1: (l:%i) %s" %( len(rightnodes1), sorted(rightnodes1, key=mykey) ))
+        logger.debug( "rightnodes2: (l:%i) %s" %( len(rightnodes2), sorted(rightnodes2, key=mykey) ))
 
-        #print("="*75)
-        #print("generate leftrightverbesserer" )
-        startnode2_left = translator[ startnode1_left ]
-        startnode2_right = translator[ startnode1_right ]
-        lefttrans = { a:b for a, b in translator.items() if a in leftnodes1 }
-        #print( f"correspondingleft: {leftindex}, {startnode1_left}, {startnode2_left}\n", sorted(leftnodes1), "\n",sorted(leftnodes2),"\n\n")
-        #print( "lefttrans:", lefttrans, "\n")
         logger.info("create left alterator")
-        logger.info( f"nodes1: {leftnodes1}")
-        logger.info( f"nodes2: {leftnodes2}")
+        #startnode2_left = translator[ startnode1_left ]
+        lefttrans = { a:b for a, b in translator.items() if a in leftnodes1 }
+        logger.debug( f"nodes1: {leftnodes1}")
+        logger.debug( f"nodes2: {leftnodes2}")
         a = generate_verbesserer_asdf( \
                                 source_strickgraph, target_strickgraph, \
                                 leftnodes1, leftnodes2, \
-                                startnode1_left, startnode2_left,
+                                startnode1_left,
                                 lefttrans )
-        #print("-"*75)
-        #print("oldnodes: ", sorted(a.oldgraph_nodeattributes.items()) )
-        #print("newnodes: ", a.newgraph_nodeattributes )
-        #print("idpath: ", a.oldgraph_identificationpath )
-        #print("edgeattr: ", a.newgraph_edges_with_label )
+        tmp_bordernodes1 = get_innerborder( leftnodes1, source_strickgraph )
+        tmp_bordernodes2 = get_innerborder( leftnodes2, target_strickgraph )
+        oldtrans = { y:x for x,y in a.logging_information['translator oldgraph'].items()}
+        newtrans = { y:x for x,y in a.logging_information['translator newgraph'].items()}
+        orig_nodes_to_remove = [oldtrans[n] for n in a.nodes_to_remove()]
+        orig_nodes_to_add = [newtrans[n] for n in a.nodes_to_add()]
+        outsorted_oldnodes=set(orig_nodes_to_remove).intersection(tmp_bordernodes1)
+        outsorted_newnodes =set(orig_nodes_to_add).intersection(tmp_bordernodes2)
+        assert set() == outsorted_oldnodes == outsorted_newnodes, \
+                "lefttrans problem, bordernodes, cant be added or removed: "\
+                f"removed oldbordernodes: {outsorted_oldnodes} added "\
+                f"newbordernodes: {outsorted_newnodes}"
         logger.info("create right alterator")
+        #startnode2_right = translator[ startnode1_right ]
         righttrans = { a:b for a, b in translator.items() if a in rightnodes1 }
-        logger.info( f"nodes1: {rightnodes1}")
-        logger.info( f"nodes2: {rightnodes2}")
+        logger.debug( f"nodes1: {rightnodes1}")
+        logger.debug( f"nodes2: {rightnodes2}")
         b = generate_verbesserer_asdf( \
                                 source_strickgraph, target_strickgraph, \
                                 rightnodes1, rightnodes2, \
-                                startnode1_right, startnode2_right, \
+                                startnode1_right, \
                                 righttrans )
+        tmp_bordernodes1 = get_innerborder( rightnodes1, source_strickgraph )
+        tmp_bordernodes2 = get_innerborder( rightnodes2, target_strickgraph )
+        oldtrans = { y:x for x,y in b.logging_information['translator oldgraph'].items()}
+        newtrans = { y:x for x,y in b.logging_information['translator newgraph'].items()}
+        orig_nodes_to_remove = [oldtrans[n] for n in b.nodes_to_remove()]
+        orig_nodes_to_add = [newtrans[n] for n in b.nodes_to_add()]
+        outsorted_oldnodes=set(orig_nodes_to_remove).intersection(tmp_bordernodes1)
+        outsorted_newnodes =set(orig_nodes_to_add).intersection(tmp_bordernodes2)
+        assert set() == outsorted_oldnodes == outsorted_newnodes, \
+                "righttrans problem, bordernodes, cant be added or removed: "\
+                f"removed oldbordernodes: {outsorted_oldnodes} added "\
+                f"newbordernodes: {outsorted_newnodes}"
+
         return cls( a, leftindex, b, rightindex )
 
 def generate_verbesserer_asdf( graph1, graph2, \
                                 subnodelist1, subnodelist2, \
-                                startnode1, startnode2, starttranslation ):
+                                startnode1, starttranslation ):
     subgraph1 = graph1.subgraph( subnodelist1 )
     subgraph2 = graph2.subgraph( subnodelist2 )
-    from extrasfornetworkx import generate_replacement_from_graphs, AddedToUncommonNodes
     nodelabels1 = subgraph1.get_nodeattributes()
     edgelabels1 = subgraph1.get_edges_with_labels()
     nodelabels2 = subgraph2.get_nodeattributes()
     edgelabels2 = subgraph2.get_edges_with_labels()
     from ..verbesserer.verbesserer_class import strickalterator
+    logger.debug("input for strickgraphalterator: %s, %s, %s, %s, %s " \
+            % (nodelabels1, edgelabels1, nodelabels2, edgelabels2, \
+            starttranslation ) )
     return strickalterator.from_graph_difference(
                                         nodelabels1, edgelabels1,\
                                         nodelabels2, edgelabels2, \
                                         startnode1, \
-                                        startnode2, \
                                         starttranslation )
 
     nodetrans1 = { n:i for i, n in enumerate( nodelabels1.keys() )}
@@ -275,7 +286,7 @@ def generate_verbesserer_asdf( graph1, graph2, \
                                         nodelabels1, edgelabels1,\
                                         nodelabels2, edgelabels2, \
                                         nodetrans1[startnode1], \
-                                        nodetrans2[startnode2], \
+                                        #nodetrans2[startnode2], \
                                         translation )
 
 
@@ -320,23 +331,6 @@ def separate_wholegraphs_to_leftright_insulas( \
     #find left and right side to replace with insulas
     connected_insulas = less_graph.get_connected_nodes( difference_graph1 )
     connected_insulas2 = great_graph.get_connected_nodes( difference_graph2 )
-    ## This here helps for finding two corresponding conninsulas
-    ## saved in maximal_shared_nodes
-    #connected_insulas = tuple(tuple(nodeset) for nodeset in connected_insulas)
-    #connected_insulas2= tuple(tuple(nodeset) for nodeset in connected_insulas2)
-    #get_number_shared_nodes = lambda n1, n2: len( set(n2)\
-    #                                            .intersection( translator[n] \
-    #                                            for n in n1 if n in translator) )
-    #decor = lambda n1, func: lambda n2: func( n1, n2 ) #reduce to one input
-    #fetch_correspond = lambda n1:  \
-    #        max( connected_insulas2, key=decor( n1, get_number_shared_nodes) )
-    #maximal_shared_nodes = tuple( (n1,fetch_correspond( n1 )) \
-    #                                    for n1 in connected_insulas )
-    #from collections import Counter
-    #assert max(Counter(pair[0] for pair in maximal_shared_nodes).values())==1,\
-    #                "connected insulas are double corresponding"
-    #assert max(Counter(pair[1] for pair in maximal_shared_nodes).values())==1,\
-    #                "connected insulas are double corresponding"
 
     leftside_indices, rightside_indices \
                         = less_graph.get_sidemargins_indices()
@@ -383,21 +377,20 @@ def separate_wholegraphs_to_leftright_insulas( \
         raise Exception( "couldnt find two distincly different nodeparts in "\
                             "differences. Most likely the difference nodes "\
                             "are to close to oneanother" ) from err
+    logger.debug(" side-associated unccommonnodes:\nfirst: "\
+            f"{uncommon_nodepairs1}\n second: {uncommon_nodepairs2}")
     
     lessgraphsplitter = split_graph_per_insula_in_nearestparts( 
                             [ uncommon_nodepairs1[0], uncommon_nodepairs2[0] ],\
                             less_graph )
     i = -1
     for asdf, qwer in ( uncommon_nodepairs1, uncommon_nodepairs2 ):
-        print( "-"*75 )
         i += 1
         nearnodes = less_graph.get_nodes_near_nodes( asdf )
         nearnodes = [ n for n in nearnodes \
                         if lessgraphsplitter[ n ] == i ]
-        print( asdf, qwer )
-        print( leftside_nodes,rightside_nodes, nearnodes )
-        print( "left", set( n for n, i in leftside_nodes).intersection( nearnodes ) )
-        print( "right", set( n for n, i in rightside_nodes).intersection( nearnodes ) )
+        nearnodes = [ n for n in lessgraphsplitter \
+                        if lessgraphsplitter[ n ] == i ]
         try:
             startnode1_left, leftindex \
                 = ( (node, index) for node, index in leftside_nodes\
@@ -436,8 +429,8 @@ def divide_into_two_parts( connected_insulas1, neighbours1, \
     translator = { a:i for a,i in zip(neighbours2, nextname_gen()) }
     translator.update(  { v2: v1 for v1, v2 in samenode_translator.items() } )
     antitrans = { v1: v2 for v2, v1 in translator.items() }
-    trans_neighbours2 = {translator[n]: [ translator[q] for q in neighbourlist ]\
-                                    for n, neighbourlist in neighbours2.items() }
+    trans_neighbours2 = {translator[n]: [ translator[q] for q in neighbourlist]\
+                                    for n, neighbourlist in neighbours2.items()}
     trans_connected_insulas2 = [ tuple( translator[n] for n in insula) \
                                     for insula in connected_insulas2 ]
 
@@ -457,11 +450,12 @@ def divide_into_two_parts( connected_insulas1, neighbours1, \
     for i, ins1 in enumerate( connected_insulas1 ):
         for j, ins2 in enumerate( trans_connected_insulas2 ):
             tmpdistance = metagraph.calc_distance( ins1, ins2 )
-            insulagraph.add_edge( (0,i), (1,j), weight=max(0,tmpdistance) )
+            insulagraph.add_edge( (0,i), (1,j), weight=max(0,tmpdistance-1) )
     distances = dict(netx.shortest_path_length( insulagraph, weight="weight" ))
     edges = list( (v1, v2, distances[v1][v2]) \
                     for v1, v2 in it.combinations(insulagraph.nodes(), 2) )
     edges.sort( key=lambda x: x[2] )
+
     for maxi in range( len(edges) ):
         mufugraph = netx.Graph()
         mufugraph.add_nodes_from( insulagraph.nodes( data=True ) )
@@ -524,36 +518,22 @@ def split_graph_per_insula_in_nearestparts( insulas, graph ):
 
     alliance = { n:(math.inf, -1) for n in neighbours.keys() }
     for i, nodes in enumerate( insulas ):
-        print( i, "-"*75 )
-        print( nodes )
         assert len([ n for n in nodes if n not in neighbours.keys() ])==0, "asdf"
         graph = netx.Graph()
         for v1, v2list in neighbours.items():
             for v2 in v2list:
                 tmpweight = 0 if v1 in nodes and v2 in nodes else 1
-                if tmpweight == 0:
-                    print( v1, v2 )
                 graph.add_edge( v1, v2, weight=tmpweight  )
         distances = dict( netx.shortest_path_length( graph, weight="weight" ) )
         sourcenode = iter(nodes).__next__()
-        print( "startingnode ", sourcenode )
         for targetnode in graph.nodes():
             tmpdist = distances[sourcenode][targetnode]
-            #print( targetnode, tmpdist, alliance[ targetnode ][0] )
             if tmpdist < alliance[ targetnode ][0]:
                 alliance[ targetnode ] = ( tmpdist, i )
         del( graph )
 
-    print( alliance )
     return { node: data[1] for node, data in alliance.items() }
                 
-
-
-
-        
-    
-
-
 
 def twographs_to_replacement( graph1, graph2, startnode, changedline_id ):
     from extrasfornetworkx import generate_replacement_from_graphs, \
@@ -565,10 +545,9 @@ def twographs_to_replacement( graph1, graph2, startnode, changedline_id ):
     edgelabels2 = graph2.get_edges_with_labels()
     startnode2, endnode2 = graph2.get_startstitch(), graph2.get_endstitch()
     starttranslation = {startnode1:startnode2, endnode1:endnode2}
-    logger.info("input for extrasfornetworkx.generate_replacement_from_graphs:"\
-                +f" %s, %s, %s, %s, %s " % (nodelabels1, edgelabels1, \
+    logger.debug("input for extrasfornetworkx.generate_replacement_from"
+                "_graphs: %s, %s, %s, %s, %s " % (nodelabels1, edgelabels1, \
                 nodelabels2, edgelabels2, starttranslation ) )
-    print( "length: %i, %i" %(len(nodelabels1) , len(nodelabels2)))
     try:
         repl1, repl2, common_nodes = generate_replacement_from_graphs(\
                                     nodelabels1, edgelabels1,\
@@ -601,32 +580,6 @@ def twographs_to_replacement( graph1, graph2, startnode, changedline_id ):
     return tuple(  repl1 ), \
             tuple(  repl2 ), \
             tuple( (n1, n2) for n1, n2 in common_nodes )
-    raise Exception("should come to this")
-    nodetrans1 = { n:i for i, n in enumerate( nodelabels1.keys() )}
-    nodetrans2 = { n:i for i, n in enumerate( nodelabels2.keys() )}
-    antitrans1 = { b:a for a,b in nodetrans1.items() }
-    antitrans2 = { b:a for a,b in nodetrans2.items() }
-    nodelabels1 = { nodetrans1[ node ]: label \
-                        for node, label in nodelabels1.items() }
-    edgelabels1 = [ (nodetrans1[v1], nodetrans1[v2], label) \
-                        for v1, v2, label in edgelabels1 ]
-    nodelabels2 = { nodetrans2[ node ]: label \
-                        for node, label in nodelabels2.items() }
-    edgelabels2 = [ (nodetrans2[v1], nodetrans2[v2], label) \
-                        for v1, v2, label in edgelabels2 ]
-    #print( nodelabels1, edgelabels1, nodelabels2, edgelabels2, nodetrans1[startnode], nodetrans2[startnode] )
-    #print( antitrans1 )
-    #print("-"*75)
-    #print( antitrans2 )
-
-    repl1, repl2, common_nodes = generate_replacement_from_graphs(\
-                                        nodelabels1, edgelabels1,\
-                                        nodelabels2, edgelabels2, \
-                                        {nodetrans1[startnode]:\
-                                        nodetrans2[startnode]} )
-    return tuple( antitrans1[ node ] for node in repl1 ), \
-            tuple( antitrans2[ node ] for node in repl2 ), \
-            tuple( (antitrans1[n1], antitrans2[n2]) for n1, n2 in common_nodes )
 
 
 def get_subgraph( nodes, nodeattr, edges ):
@@ -647,24 +600,61 @@ class compareGraph():
         return efn.weisfeiler_lehman_graph_hash_attributearray( \
                                         self.nodelabels, self.edgelabels )
 
+
+
+def _multi_sidesigint_handler( signal_received, frame ):
+    print( "Exiting gracefully" )
+    exit( 0 )
+
 class multi_sidealterator():
     def __init__( self, side_alterator_list ):
         self.side_alterator_list = side_alterator_list
 
     @classmethod
-    def generate_from_linetypelist( cls, asdf ):
+    def generate_from_linetypelist( cls, asdf, starttranslator_list=None, \
+                                    skip_by_exception=False, \
+                                    pipe_for_interrupt=None, \
+                                    timelimit = 300):
         """Method for automativ creation of multialterator"""
-        q = []
+        if starttranslator_list is not None:
+            q = list( starttranslator_list )
+        else:
+            q = []
+        if pipe_for_interrupt is not None:
+            if type(pipe_for_interrupt) == list:
+                pipe_for_interrupt.append( q )
+
+        try:
+            maxlen = str(len(asdf))
+        except TypeError:
+            maxlen = "?"
+        i = 0
+        if timelimit is not None:
+            sidealt_gen = timelimiter.limit_calctime( sidealterator.from_linetypes, 300 )
+        else:
+            sidealt_gen = sidealterator.from_linetypes
         for linetype_out, linetype_in, upedges_out, upedges_in, changedline_id \
                                                                     in asdf:
+            i+=1
+            logger.info( "alteration %i/%s with %i found alterators" \
+                            %(i,maxlen, len(q)))
             try:
-                new = sidealterator.from_linetypes( \
+                #new = sidealterator.from_linetypes( \
+                new = sidealt_gen(\
                         linetype_out, linetype_in, \
                         upedges_out, upedges_in, \
                         changedline_id, skip_if_in_list = q )
                 q.append( new )
             except SkipGeneration:
-                pass
+                logger.info( "already in list - skip" )
+            except timelimiter.TimeLimitExceeded:
+                logger.info( "timelimit exceeded" )
+            except (timelimiter.NoDataProduced, Exception) as err:
+                if not skip_by_exception:
+                    raise
+                else:
+                    logger.info( "error, when trying to create next alterator" )
+                    logger.debug( err )
         return cls( q )
 
     @classmethod
@@ -683,7 +673,16 @@ class multi_sidealterator():
 
     def replace_in_graph( self, graph, changeline ):
         """mainmethod"""
-        raise Exception( "not implemented" )
+        lever = False
+        for alt in self.side_alterator_list:
+            try:
+                alt.replace_in_graph( graph, changeline )
+                lever = True
+                break
+            except FindError:
+                pass
+        if not lever:
+            raise FindError()
 
     def toxmlelem( self ):
         """to xml element
@@ -691,6 +690,7 @@ class multi_sidealterator():
         :rtype: xml.etree.ElementTree.Element
         """
         raise Exception()
+
     def to_xml( self, encoding="utf-8" ):
         """to xmlstring
 
@@ -705,3 +705,16 @@ class multi_sidealterator():
         xmlbytes = ET.tostring( elemroot, encoding=encoding )
         xmlstring = xmlbytes.decode( encoding )
         return xmlstring
+
+def get_innerborder( sub_nodelist, graph ):
+    """return border nodes within sub_nodelist"""
+    neighbours = {}
+    for v1, v2, label in graph.get_edges_with_labels():
+        neighbours.setdefault( v1, list() ).append( v2 )
+        neighbours.setdefault( v2, list() ).append( v1 )
+
+    tmp_neighbours = set( it.chain(*(neighbours[n] for n in sub_nodelist)))
+    neighs = tuple( tmp_neighbours.difference(sub_nodelist) )
+
+    tmp_neighbours = set( it.chain(*(neighbours[n] for n in neighs)))
+    return tuple( tmp_neighbours.intersection(sub_nodelist) )
