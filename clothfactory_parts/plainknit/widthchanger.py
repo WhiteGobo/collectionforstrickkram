@@ -1,28 +1,27 @@
 import networkx as netx
-from createcloth.strickgraph import tomanual
-from createcloth.builtin_verbesserer import \
-                insertcolumn_left as verb_insertcolumn_left, \
-                insertcolumn_right as verb_insertcolumn_right, \
-                removecolumn_left as verb_removecolumn_left, \
-                removecolumn_right as verb_removecolumn_right, \
-                plain_extension_lowerleft as verb_extendcolumn_lowerleft, \
-                plain_extension_lowerright as verb_extendcolumn_lowerright, \
-                plain_extension_upperleft as verb_extendcolumn_upperleft, \
-                plain_extension_upperright as verb_extendcolumn_upperright, \
-                eaves_extension_lowerleft as verb_eavesextend_lowerleft, \
-                eaves_extension_lowerright as verb_eavesextend_lowerright, \
-                eaves_extension_upperleft as verb_eavesextend_upperleft, \
-                eaves_extension_upperright as verb_eavesextend_upperright, \
-                plain_extension_lowerleft as verb_planeinset_lowerleft, \
-                plain_extension_lowerright as verb_planeinset_lowerright, \
-                plain_extension_upperleft as verb_planeinset_upperleft, \
-                plain_extension_upperright as verb_planeinset_upperright, \
-                eaves_extension_lowerleft as verb_eavesinset_lowerleft, \
-                eaves_extension_lowerright as verb_eavesinset_lowerright, \
-                eaves_extension_upperleft as verb_eavesinset_upperleft, \
-                eaves_extension_upperright as verb_eavesinset_upperright
+#from createcloth.builtin_verbesserer import \
+#                insertcolumn_left as verb_insertcolumn_left, \
+#                insertcolumn_right as verb_insertcolumn_right, \
+#                removecolumn_left as verb_removecolumn_left, \
+#                removecolumn_right as verb_removecolumn_right, \
+#                plain_extension_lowerleft as verb_extendcolumn_lowerleft, \
+#                plain_extension_lowerright as verb_extendcolumn_lowerright, \
+#                plain_extension_upperleft as verb_extendcolumn_upperleft, \
+#                plain_extension_upperright as verb_extendcolumn_upperright, \
+#                eaves_extension_lowerleft as verb_eavesextend_lowerleft, \
+#                eaves_extension_lowerright as verb_eavesextend_lowerright, \
+#                eaves_extension_upperleft as verb_eavesextend_upperleft, \
+#                eaves_extension_upperright as verb_eavesextend_upperright, \
+#                plain_extension_lowerleft as verb_planeinset_lowerleft, \
+#                plain_extension_lowerright as verb_planeinset_lowerright, \
+#                plain_extension_upperleft as verb_planeinset_upperleft, \
+#                plain_extension_upperright as verb_planeinset_upperright, \
+#                eaves_extension_lowerleft as verb_eavesinset_lowerleft, \
+#                eaves_extension_lowerright as verb_eavesinset_lowerright, \
+#                eaves_extension_upperleft as verb_eavesinset_upperleft, \
+#                eaves_extension_upperright as verb_eavesinset_upperright
 
-from createcloth.strickgraph.load_stitchinfo import myasd as globalstitchinfo
+from createcloth.stitchinfo import basic_stitchdata as globalstitchinfo
 from .plain_identifier import isplain
 
 class failedOperation( Exception ):
@@ -205,6 +204,10 @@ def remove_columns( mystrickgraph, rows_with_too_much_pressure ):
 
         
 def find_removecolumns( mystrickgraph, rows_with_too_much_tension ):
+    """
+
+    :todo: to be removed obsolete
+    """
     linetypes = isplain( mystrickgraph )
     lineforremove = [ i for i in range( len(linetypes)) \
                     if line_can_be_removed( linetypes, i ) ]
@@ -251,6 +254,10 @@ def find_addcolumns( mystrickgraph, rows_with_too_much_tension ):
 
 
 def extend_columns( mystrickgraph, rows_with_too_much_tension ):
+    """
+
+    :todo: obsolete remove this method
+    """
     rowpair, insettype = find_row_for_extend( mystrickgraph, \
                                                 rows_with_too_much_tension, [])
     if rowpair:
@@ -284,6 +291,10 @@ def extend_columns( mystrickgraph, rows_with_too_much_tension ):
 
 
 def inset_columns( mystrickgraph, rows_with_too_much_pressure ):
+    """
+
+    :todo: obsolete remove this method
+    """
     rowpair, insettype = find_row_for_inset( mystrickgraph, \
                                             [], rows_with_too_much_pressure )
     if rowpair:

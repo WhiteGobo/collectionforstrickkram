@@ -3,11 +3,14 @@ from datagraph_factory.processes import DATATYPE, EDGETYPE
 #from createcloth.meshhandler.main import add_edgelength
 import networkx as netx
 from createcloth.strickgraph import strickgraph as strickgraph_class
-from createcloth.strickgraph.load_stitchinfo import myasd as globalstitchinfo
+from createcloth.stitchinfo import basic_stitchdata as globalstitchinfo
 
 class strickgraph_container( datatype ):
     """
+
     :type strickgraph: createcloth.strickgraph.strickgraph
+    :ivar strickgraph: Strickgraphthingy
+    :type strickgraph: :class:`strickgraph_class`
     """
     def __init__( self, strickgraph ):
         self.strickgraph = strickgraph
@@ -26,6 +29,14 @@ class strickgraph_container( datatype ):
             mymanual.write( manualtext )
 
 class strickgraph_stitchdata( datatype ):
+    """
+
+    :ivar plain_stitch: asdf
+    :ivar plain_startrow: qwer
+    :ivar plain_endrow: asqw
+    :ivar stitchlist: erdf
+    :ivar stitchinfo: fdwq
+    """
     def __init__( self, stitchinfo, plain_stitch, \
                     plain_startrow, plain_endrow ):
         self.plain_stitch = plain_stitch
@@ -58,6 +69,12 @@ class strickgraph_stitchdata( datatype ):
         #    file.write( txt )
 
 class strickgraph_spatialdata( datatype ):
+    """
+
+    :ivar _xdict: a
+    :ivar _ydict: b
+    :ivar _zdict: c
+    """
     def __init__( self, posgraph ):
         self.posgraph = posgraph
         x_data = netx.get_node_attributes( posgraph, "x" )
@@ -97,35 +114,40 @@ class strickgraph_spatialdata( datatype ):
 
 
 class strickgraph_property_relaxed( datatype ):
+    """
+
+    :ivar tensionrows: asdf
+    :ivar pressurerows: qwer
+    """
     def __init__( self, tensionrows=None, pressurerows=None):
         self.tensionrows = tensionrows
         self.pressurerows = pressurerows
 
-tmpvalid = lambda: ((strickgraph_container, strickgraph_property_relaxed),)
-springs_of_strickgraph_have_tension = edgetype( tmpvalid, \
+_soshtens_tmpvalid = lambda: ((strickgraph_container, strickgraph_property_relaxed),)
+springs_of_strickgraph_have_tension: edgetype = edgetype( _soshtens_tmpvalid, \
                                             "some springs have tension", \
                             "source strickgraph has edges which are too long")
-del( tmpvalid )
+"""Property that strickgraph has parts under tension"""
 
-tmpvalid = lambda: ((strickgraph_container, strickgraph_property_relaxed),)
-springs_of_strickgraph_have_pressure = edgetype( tmpvalid, \
+_soshpress_tmpvalid = lambda: ((strickgraph_container, strickgraph_property_relaxed),)
+springs_of_strickgraph_have_pressure: edgetype = edgetype( _soshpress_tmpvalid, \
                 "some springs have pressure",\
                 "source strickgraph has edges which are too short" )
-del( tmpvalid )
+"""some springs have pressure"""
 
-tmpvalid = lambda: ((strickgraph_container, strickgraph_property_relaxed),)
-springs_of_strickgraph_are_relaxed = edgetype( tmpvalid, \
+_sosrel_tmpvalid = lambda: ((strickgraph_container, strickgraph_property_relaxed),)
+springs_of_strickgraph_are_relaxed: edgetype = edgetype( _sosrel_tmpvalid, \
                 "springs are relaxed", \
                 "source strickgraph has no edges which are "\
                 +"too long or too short" )
-del( tmpvalid )
+"""All springs are relaxed"""
 
-tmpvalid = lambda: ((strickgraph_container, strickgraph_stitchdata),)
-stitchdata_of_strick = edgetype( tmpvalid, \
+_stdata_tmpvalid = lambda: ((strickgraph_container, strickgraph_stitchdata),)
+stitchdata_of_strick: edgetype = edgetype( _stdata_tmpvalid, \
                                 "stitchdata of strick", "" )
-del( tmpvalid )
+"""Stitchdata to Strickgraph"""
 
-tmpvalid = lambda: ((strickgraph_container,\
+_stpos_tmpvalid = lambda: ((strickgraph_container,\
                     strickgraph_spatialdata),)
-stitchposition = edgetype( tmpvalid, "stitch position", "" )
-del( tmpvalid )
+stitchposition: edgetype = edgetype( _stpos_tmpvalid, "stitch position", "" )
+"""Stitchposition to Strickgraph"""

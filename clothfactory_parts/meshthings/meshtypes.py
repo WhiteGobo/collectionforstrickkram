@@ -1,10 +1,13 @@
+"""Datatypes of mesh and all corresponding things"""
 from datagraph_factory import datatype, edgetype
 
 from createcloth.meshhandler import plysurfacehandler, surfacemap
 
 class ply_surface( datatype ):
-    """
-    :type mesh
+    """plysurface??
+    type mesh
+
+    :todo: revisit
     """
     __slots__=( "surfacemesh", )
     def __init__( self, mesh ):
@@ -20,6 +23,10 @@ class ply_surface( datatype ):
 
 
 class ply_2dmap( datatype ):
+    """ply 2dmap
+
+    :todo: revisit
+    """
     def __init__( self, plycontainer:surfacemap ):
         plycontainer.complete_surfaces_with_map()
         try:
@@ -40,3 +47,4 @@ class ply_2dmap( datatype ):
 
 _valid_map_to_mesh = lambda : tuple(((ply_2dmap, ply_surface),))
 map_to_mesh = edgetype( _valid_map_to_mesh, "maptomesh", "" )
+"""edgetype thingy"""

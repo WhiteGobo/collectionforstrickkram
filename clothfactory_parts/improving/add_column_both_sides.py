@@ -1,14 +1,22 @@
+"""Add columns??
+
+:todo: has plainknit identifer. to be removed and replaced by createcloth.plainknit
+"""
 import networkx as netx
-from createcloth.strickgraph import tomanual
-from createcloth.builtin_verbesserer import insertcolumn_left as verb_insertcolumn_left
-from createcloth.builtin_verbesserer import insertcolumn_right as verb_insertcolumn_right
-from createcloth.builtin_verbesserer import removecolumn_left as verb_removecolumn_left
-from createcloth.builtin_verbesserer import removecolumn_right as verb_removecolumn_right
-from createcloth.strickgraph.load_stitchinfo import myasd as globalstitchinfo
+#from createcloth.builtin_verbesserer import insertcolumn_left as verb_insertcolumn_left
+#from createcloth.builtin_verbesserer import insertcolumn_right as verb_insertcolumn_right
+#from createcloth.builtin_verbesserer import removecolumn_left as verb_removecolumn_left
+#from createcloth.builtin_verbesserer import removecolumn_right as verb_removecolumn_right
+#from createcloth.strickgraph.load_stitchinfo import myasd as globalstitchinfo
+from createcloth.stitchinfo import basic_stitchdata as globalstitchinfo
 
 plain_types = ( "knit" )
 variable_types = ( "yarnover", "knit", "k2tog" )
 def check_single_line( row, mystrickgraph ):
+    """
+
+    :todo: to be removed
+    """
     stitchtypes = netx.get_node_attributes( mystrickgraph, "stitchtype" )
     a = stitchtypes[ row[0] ] in plain_types
     aa = stitchtypes[ row[1] ] in plain_types
@@ -28,6 +36,10 @@ def check_single_line( row, mystrickgraph ):
 addable_type1 = ( "yarnover", "knit" )
 addable_type2 = ( "yarnover", "knit", "k2tog" )
 def check_single_line_addable( row, mystrickgraph ):
+    """
+
+    :todo: to be removed
+    """
     stitchtypes = netx.get_node_attributes( mystrickgraph, "stitchtype" )
     a = stitchtypes[ row[0] ] == "knit"
     aa = stitchtypes[ row[1] ] == "knit"
@@ -44,6 +56,10 @@ def check_single_line_addable( row, mystrickgraph ):
     return all( (a,aa,b,c,d,e,f,ff,g,h,i,j) )
 
 def check_if_plain( mystrickgraph ):
+    """
+
+    :todo: to be removed
+    """
     rows = mystrickgraph.get_rows()
     for row in rows[1:-1]:
         if check_single_line( row, mystrickgraph ):
@@ -55,6 +71,10 @@ def check_if_plain( mystrickgraph ):
     return True
 
 def add_columns( mystrickgraph, rows_with_too_much_tension ):
+    """
+
+    :todo: to be removed
+    """
     longestconnectedrowlist = find_addcolumns( mystrickgraph, \
                                                 rows_with_too_much_tension )
     myrows = mystrickgraph.get_rows()
@@ -62,19 +82,23 @@ def add_columns( mystrickgraph, rows_with_too_much_tension ):
         print( i, longestconnectedrowlist )
         suc, info = verb_insertcolumn_left.replace_in_graph_withinfo( \
                                                 mystrickgraph, myrows[i][1] ) 
-        print( tomanual( mystrickgraph, globalstitchinfo, manual_type="machine" ))
+        print( mystrickgraph.to_manual( globalstitchinfo, manual_type="machine" ))
         if not suc:
             st = netx.get_node_attributes( mystrickgraph, "stitchtype" )
             raise Exception( list((st[e] for e in mystrickgraph.get_rows()[i])), *info )
             raise Exception( *info )
         suc, info = verb_insertcolumn_right.replace_in_graph_withinfo( \
                                                 mystrickgraph, myrows[i][-2] )
-        print( tomanual( mystrickgraph, globalstitchinfo, manual_type="machine" ))
+        print( mystrickgraph.to_manual( globalstitchinfo, manual_type="machine" ))
         if not suc:
             raise Exception( *info )
 
         
 def remove_columns( mystrickgraph, rows_with_too_much_pressure ):
+    """
+
+    :todo: to be removed
+    """
     longestconnectedrowlist = find_addcolumns( mystrickgraph, \
                                                 rows_with_too_much_pressure )
     myrows = mystrickgraph.get_rows()
@@ -82,17 +106,21 @@ def remove_columns( mystrickgraph, rows_with_too_much_pressure ):
         print( i )
         suc, info = verb_removecolumn_left.replace_in_graph_withinfo( \
                                                 mystrickgraph, myrows[i][1] )
-        print( tomanual( mystrickgraph, globalstitchinfo, manual_type="machine" ))
+        print( mystrickgraph.to_manual( globalstitchinfo, manual_type="machine" ))
         if not suc:
             raise Exception( *info )
         suc, info = verb_removecolumn_right.replace_in_graph_withinfo( \
                                                 mystrickgraph, myrows[i][-2] )
-        print( tomanual( mystrickgraph, globalstitchinfo, manual_type="machine" ))
+        print( mystrickgraph.to_manual( globalstitchinfo, manual_type="machine" ))
         if not suc:
             raise Exception( *info )
         
 
 def find_addcolumns( mystrickgraph, rows_with_too_much_tension ):
+    """Gives back rows with too much tension??
+
+    :todo: revisit this method
+    """
     add_columns = []
     add_columns.append( 0 )
     rows = mystrickgraph.get_rows()

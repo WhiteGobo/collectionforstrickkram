@@ -2,7 +2,7 @@ import unittest
 from . import physics
 import pkg_resources as pkr
 #from .strickgraph_datatypes import strickgraph_stitchdata
-from createcloth.strickgraph.load_stitchinfo import myasd as globalstitchinfo
+from createcloth.stitchinfo import basic_stitchdata as globalstitchinfo
 from createcloth.strickgraph.strickgraph_base import strickgraph
 from datagraph_factory.find_process_path import create_flowgraph_for_datanodes
 from datagraph_factory.linear_factorybranch import create_linear_function

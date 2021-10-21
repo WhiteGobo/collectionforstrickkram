@@ -4,8 +4,9 @@ from .. import strickgraph
 from createcloth.meshhandler import relax_gridgraph
 from createcloth.physicalhelper import standardthreadinfo as mythreadinfo
 
+from typing import Dict, Union
 
-def create_datagraphs():
+def _rsos_create_datagraphs():
     tmp = datagraph()
     #tmp.add_node( "mymesh", meshthings.ply_surface )
     tmp.add_node( "mysurf", meshthings.ply_2dmap )
@@ -20,7 +21,9 @@ def create_datagraphs():
                     strickgraph.stitchposition)
     poststatus = tmp.copy()
     return prestatus, poststatus
-def call_function( mysurf, inputstrickgraph ):
+def _rsos_call_function( mysurf: meshthings.ply_2dmap, \
+                    inputstrickgraph: strickgraph.strickgraph_container )\
+                    -> Dict[ str, strickgraph.strickgraph_spatialdata ]:
     mystrickgraph = inputstrickgraph.strickgraph
     mystrickgraph.set_calmlength( mythreadinfo )
     surfacemap = mysurf.surfacemap
@@ -43,13 +46,17 @@ def call_function( mysurf, inputstrickgraph ):
     #returngraph = myrelaxator.get_positiongrid()
 
     return { "positiondata": strickgraph.strickgraph_spatialdata( returngraph )}
-relax_strickgraph_on_surface \
-                = factory_leaf( create_datagraphs, call_function, \
+relax_strickgraph_on_surface : factory_leaf\
+                = factory_leaf( _rsos_create_datagraphs, _rsos_call_function, \
                 name = __name__+"relax on strickgraph" )
-del( create_datagraphs, call_function )
+"""relax strickgraph on surface creating positiondata
+
+.. autofunction:: _rsos_call_function
+.. autofunction:: _rsos_create_datagraphs
+"""
 
 
-def create_datagraphs():
+def _mfs_create_datagraphs():
     tmp = datagraph()
     tmp.add_node( "mymesh", meshthings.ply_surface )
     tmp.add_node( "mysurf", meshthings.ply_2dmap )
@@ -61,11 +68,15 @@ def create_datagraphs():
     tmp.add_edge( "mysurf", "inputstrickgraph", map_for_strickgraph )
     poststatus = tmp.copy()
     return prestatus, poststatus
-mesh_and_strickgraph_to_mapping_conclusion = conclusion_leaf(create_datagraphs)
-del( create_datagraphs )
+mesh_and_strickgraph_to_mapping_conclusion: conclusion_leaf \
+                        = conclusion_leaf(_mfs_create_datagraphs)
+"""Conclusionleaf that strickgraphs corresponding to a mesh correspond 
+also to surfacemaps of the mesh
+"""
 
 
 _valid_map_for_strickgraph = lambda : tuple(((meshthings.ply_2dmap, \
                                         strickgraph.strickgraph_container),))
-map_for_strickgraph = edgetype( _valid_map_for_strickgraph, "maptostrick", "" )
+map_for_strickgraph: edgetype = edgetype( _valid_map_for_strickgraph, "maptostrick", "" )
+"""Positon of Strickgraph may be mapped with that 2dmap"""
 

@@ -10,7 +10,7 @@ from createcloth.physicalhelper import relaxedgelength_to_strickgraph, \
 import logging
 logger = logging.getLogger( __name__ )
 
-def create_datagraphs():
+def _create_datagraphs():
     tmp = datagraph()
     tmp.add_node( "mystrick", strickgraph.strickgraph_container )
     tmp.add_node( "positions", strickgraph.strickgraph_spatialdata )
@@ -27,7 +27,7 @@ def create_datagraphs():
                             strickgraph.springs_of_strickgraph_have_pressure )
     poststatus = tmp.copy()
     return prestatus, poststatus
-def call_function( mystrick, positions ):
+def _call_function( mystrick, positions ):
     x = positions.xposition
     y = positions.yposition
     z = positions.zposition
@@ -75,5 +75,6 @@ def call_function( mystrick, positions ):
                                                     tensionrows=hastension) }
     else:
         return{ "isrelaxed": strickgraph.strickgraph_property_relaxed() }
-test_if_strickgraph_isrelaxed = factory_leaf( create_datagraphs, \
-                                call_function, name=__name__+"test relax" )
+test_if_strickgraph_isrelaxed:factory_leaf = factory_leaf( _create_datagraphs, \
+                                _call_function, name=__name__+"test relax" )
+"""Tests if strickgraph is relaxed"""
