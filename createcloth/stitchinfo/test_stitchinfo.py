@@ -26,20 +26,19 @@ class TestStitchinfo( unittest.TestCase ):
         for stitchtype in ["knit", "yarnover", "bindoff", "k2tog"]:
             self.assertEqual( True, stitchtype in stitchinfo.stitchtypes )
 
-        strdat = stitchinfo.strickdata["plainknit"]
-        self.assertEqual( strdat["stitch"], "knit" )
-        self.assertEqual( strdat["startrow"], "yarnover" )
-        self.assertEqual( strdat["endrow"], "bindoff" )
+        self.assertEqual( stitchinfo.strickstitch["plainknit"], "knit" )
+        self.assertEqual( stitchinfo.strickstart["plainknit"], "yarnover" )
+        self.assertEqual( stitchinfo.strickend["plainknit"], "bindoff" )
 
         for stitchtype, symbol, up, down, extrainfo in [\
                             ("knit", "k", 1,1,{}), \
                             ("yarnover", "yo",1,0,{}), \
                             ("bindoff", "bo", 0,1,{}), \
                             ("k2tog","k2tog",1,2,{}) ]:
-            self.assertEqual( symbol, stitchinfo.symbol[ stitchtype ] )
+            self.assertEqual( symbol, stitchinfo.stitchsymbol[ stitchtype ] )
             self.assertEqual( up, stitchinfo.upedges[ stitchtype ] )
             self.assertEqual( down, stitchinfo.downedges[ stitchtype ] )
-            self.assertEqual( extrainfo, stitchinfo.extrainfo[stitchtype])
+            self.assertEqual( extrainfo, stitchinfo.extraoptions[stitchtype])
 
 
     @unittest.skip("not implemented yet")
