@@ -30,6 +30,10 @@ documentation:
 create_verbesserung_for_rechtsstrickzuangepasst:
 	python -m createcloth.rechtsstrickzuangepasst.src.compile_verbesserer
 
+
+test_stitchinfo:
+	python -m unittest createcloth.stitchinfo.test_stitchinfo
+
 .PHONY: test
 test: #test_strickgraph test_meshhandler test_manualtoverbesserung test_plainknit
 	python -m unittest \
