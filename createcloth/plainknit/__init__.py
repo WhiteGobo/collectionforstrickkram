@@ -14,7 +14,7 @@ from .method_isplain import isplain
 import pickle as _pickle
 from ..verbesserer import class_side_alterator as csa
 import pkg_resources
-plainknit_increaser_file = "build/plainknit_increaser.pickle"
+plainknit_increaser_file = "plainknit_increaser.pickle"
 """file to load increaser from"""
 plainknit_increaser: csa.multi_sidealterator
 """increaser from file as in plainknit_increaser_file"""
@@ -25,7 +25,7 @@ try:
 except Exception as err:
     plainknit_increaser = None
 
-plainknit_decreaser_file = "build/plainknit_decreaser.pickle"
+plainknit_decreaser_file = "plainknit_decreaser.pickle"
 """file to load decreaser from"""
 plainknit_decreaser: csa.multi_sidealterator
 """decreaser from file as described in plainknit_decreaser_file"""
