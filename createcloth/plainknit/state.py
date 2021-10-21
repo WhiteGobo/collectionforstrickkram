@@ -3,50 +3,69 @@ import logging
 from ..strickgraph.load_stitchinfo import myasd as glstinfo
 logger = logging.getLogger( __name__ )
 from collections import Counter
+class WrongSide( Exception ):
+    pass
+class WrongDownUpEdges( Exception ):
+    pass
+
 class rowstate():
-    def __init__( self, name:str, identifier, downupdifference=None ):
+    """Rowstate to identify plainknit rows"""
+    def __init__( self, name:str, identifier, updowndifference=None, \
+                                            valid_sides=("left", "right") ):
         self.__name__ = name
         self.identifier = identifier
-        if downupdifference is None:
-            self._downupdifference = (0,)
-        elif type( downupdifference ) == int:
-            self._downupdifference = (downupdifference, )
-        elif type( downupdifference ) == str:
+        self.valid_sides = valid_sides
+        if updowndifference is None:
+            self._updowndifference = (0,)
+        elif type( updowndifference ) == int:
+            self._updowndifference = (updowndifference, )
+        elif type( updowndifference ) == str:
             q = { "positive":range(3, 6), "negative":range(-3,-6,-1)}
             try:
-                self._downupdifference = tuple(q[downupdifference])
+                self._updowndifference = tuple(q[updowndifference])
             except KeyError as err:
-                raise KeyError( "string downupdifference must be one" \
+                raise KeyError( "string updowndifference must be one" \
                                 + f"of these: {tuple(q.keys())}" ) from err
         else:
             try:
-                tmparray = iter( downupdifference )
-                self._downupdifference( tuple( tmparray ) )
+                tmparray = iter( updowndifference )
+                self._updowndifference( tuple( tmparray ) )
             except TypeError:
                 raise
 
-    def get_downupdifference_examples( self ):
-        return self._downupdifference
+    def get_updowndifference_examples( self ):
+        return self._updowndifference
 
     def __str__( self ):
         return self.__name__
-    def create_example_row( self, downedges, upedges ) :
+    def __repr__( self ):
+        return self.__name__
+
+    def create_example_row( self, downedges, upedges, side="right" ) :
+        """
+
+        :raises: WrongDownUpEdges, WrongSide
+        """
         assert downedges is None or type( downedges ) == int, f"downedges must be int, {downedges}"
         assert upedges is None or type( upedges ) == int, f"upedges must be int {upedges}"
+        if side not in self.valid_sides:
+            raise WrongSide( side, self.valid_sides, self )
+
         return self.identifier.create_row( downedges, upedges )
     def identify( self, line_stitchtypes: Iterable[ str ] ):
         return self.identifier( line_stitchtypes )
 
     @classmethod
     def with_variabledifference( cls, name:str, identifier, \
-                                        downupdifference_positive = True ):
-        q = "positive" if downupdifference_positive else "negative"
-        return cls( name, identifier, downupdifference=q )
+                                        updowndifference_positive = True,\
+                                        valid_sides = ("right", "left") ):
+        q = "positive" if updowndifference_positive else "negative"
+        return cls( name, identifier, updowndifference=q, valid_sides = valid_sides )
 
     @classmethod
-    def with_static_downupdifference( cls, name:str, identifier, \
-                                                downupdifference:int):
-        return cls( name, identifier, downupdifference=downupdifference )
+    def with_static_updowndifference( cls, name:str, identifier, \
+                                                updowndifference:int):
+        return cls( name, identifier, updowndifference=updowndifference )
 
     def calc_edgedifference( self, length, nextlength, lastlength ):
         self.identifier
@@ -56,6 +75,11 @@ class linetype_identifier():
     pass
 
 class linetype_identifier_simple( linetype_identifier ):
+    """Identifier for rows of a single stitchtype
+
+    :ivar default_stitchtype: string to identify stitchtype
+    :ivar stitchinfo: stitchtype-dictionary zo get identify
+    """
     def __init__( self, default_stitchtype:str ):
         self.default_stitchtype = default_stitchtype
         self.stitchinfo = glstinfo
@@ -91,6 +115,16 @@ class linetype_identifier_simple( linetype_identifier ):
 
 
 class linetype_identifier_fourborderstitches( linetype_identifier ):
+    """Identifier for linetype with a given 4stitchwideborder and else only
+    a single stitchtype.
+
+    :ivar default_stitchtype: asdf
+    :ivar fourborder_stitchtype_right: asdf
+    :ivar fourborder_stitchtype_left: asdf
+    :ivar contained_stitchtypes: asdf
+    :ivar border_downedges: asdf
+    :ivar border_upedges: asdf
+    """
     def __init__( self, default_stitchtype:str, \
                         fourborder_stitchtype_right: Iterable[str] ):
         self.default_stitchtype = default_stitchtype
@@ -127,6 +161,14 @@ class linetype_identifier_fourborderstitches( linetype_identifier ):
                 + list( self.fourborder_stitchtype_right)\
 
 class linetype_identifier_oneside_increase( linetype_identifier ):
+    """identifier with one main stitchtype and 1 stitchtype to increase per
+    stitch.
+
+    :ivar default_stitchtype: asdf
+    :ivar border_stitchtype: asdf
+    :ivar right: asdf
+    :ivar contained_stitchtypes: asdf
+    """
     def __init__( self, default_stitchtype:str, border_stitchtype:str, \
                                                             right=True ):
         self.default_stitchtype = default_stitchtype
@@ -151,8 +193,9 @@ class linetype_identifier_oneside_increase( linetype_identifier ):
     def create_row( self, downedges=None, upedges=None, **args ):
         difference = upedges - downedges
         if difference < 1 or upedges < 8:
-            raise Exception( "create_row must be at least 8 stitches wide "\
-                            +"and there must be more upedges than downedges")
+            raise WrongDownUpEdges( "create_row must be at least 8 stitches "\
+                    +"wide and there must be more downedges than upedges"\
+                    +f"down{downedges}, up{upedges}, difference{difference}")
         leftarray = [ self.border_stitchtype ] * difference \
                 + [ self.default_stitchtype ] * downedges
         if self.right:
@@ -160,6 +203,14 @@ class linetype_identifier_oneside_increase( linetype_identifier ):
         return leftarray
 
 class linetype_identifier_oneside_decrease( linetype_identifier ):
+    """identifier with one main stitchtype and 1 stitchtype to decrease per
+    stitch.
+
+    :ivar default_stitchtype: asdf
+    :ivar border_stitchtype: asdf
+    :ivar right: asdf
+    :ivar contained_stitchtypes: asdf
+    """
     def __init__( self, default_stitchtype:str, border_stitchtype:str, \
                                                             right=True ):
         self.default_stitchtype = default_stitchtype
@@ -184,8 +235,9 @@ class linetype_identifier_oneside_decrease( linetype_identifier ):
     def create_row( self, downedges=None, upedges=None, **args ):
         difference = downedges - upedges
         if difference < 1 or downedges < 8:
-            raise Exception( "create_row must be at least 8 stitches wide "\
-                            +"and there must be more downedges than upedges")
+            raise WrongDownUpEdges( "create_row must be at least 8 stitches wide "\
+                            +"and there must be more downedges than upedges"\
+                            +f"down{downedges}, up{upedges}, difference{difference}, type{self}")
         leftarray = [ self.border_stitchtype ] * difference \
                 + [ self.default_stitchtype ] * upedges
         if self.right:

@@ -3,7 +3,13 @@ from .examplestates import start, end, leftplane, rightplane, \
                     plain, increase, decrease
 from typing import Iterable
 
+def isplain_strickgraph( strickgraph ):
+    """Method for identification of a strickgraph, if its plainknit or not"""
+    raise Exception()
+
+
 def isplain( linetypes, upedges:Iterable[int]=None ):
+    """method for identify plainknit"""
     if upedges is not None:
         return _isplain_with_upedges( linetypes, upedges )
     else:
@@ -87,4 +93,14 @@ def _isplain_with_upedges( linetypes, upedges:Iterable[int] ):
                     if a != nextline:
                         return False
                     skipnext = True
+
+    for linelow, lineup in zip( linetypes[:-1], linetypes[1:] ):
+        if linelow in (rightplane, leftplane) and lineup == increase:
+            #This is because, they have the same stitchnumbers per line as
+            #if lineup is plain
+            return False
+        if linelow in (rightplane, leftplane) and lineup in (decrease, enddecrease):
+            #this is because you can exchange a decrease with a bigger plane
+            #and still have the same stitchnumbers per line
+            return False
     return True

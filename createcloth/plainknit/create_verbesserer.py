@@ -43,6 +43,10 @@ def myfoo( linetype_out, linetype_in, upedges_out, upedges_in, changedline_id ):
 
 
 def create_graph_from_linetypes( linetypes, upedges ):
+    """Seems to be a double to thing from create_example_strickgraphs
+
+    :todo: undouble this method
+    """
     downedges = [ None, *upedges ]
     upedges = [ *upedges, None ]
     allinfo = zip( linetypes, downedges, upedges )
@@ -154,6 +158,11 @@ def generate_verbesserer_from_given_strickgraphs( graph1, graph2, \
                                 startnode1_left, startnode2_left, leftindex, \
                                 subnodelist_right1, subnodelist_right2, \
                                 startnode1_right, startnode2_right, rightindex):
+    """Function for creation of alterator. Is mist liekly obsolent because of 
+    generator of class_side_alterator
+    
+    :todo: ueberpruefe if this is bsolete
+    """
     graph1_left = graph1.subgraph( subnodelist_left1 )
     graph2_left = graph2.subgraph( subnodelist_left2 )
     graph1_right = graph1.subgraph( subnodelist_right1 )
@@ -195,6 +204,10 @@ def generate_verbesserer_from_given_strickgraphs( graph1, graph2, \
 
 
 def twographs_to_replacement( graph1, graph2, startnode ):
+    """helper function, might be obsolete.
+
+    :todo: check if this is obsolete
+    """
     from extrasfornetworkx import generate_replacement_from_graphs
     nodelabels1 = graph1.get_nodeattributelabel()
     edgelabels1 = graph1.get_edgeattributelabels()
