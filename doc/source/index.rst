@@ -11,7 +11,6 @@ Welcome to Createcloth's documentation!
    :caption: Contents:
 
    classcollection/strickgraph
-   classcollection/builtinverbesserer
    classcollection/stitchinfo
    classcollection/verbesserer
    classcollection/sidealterator
