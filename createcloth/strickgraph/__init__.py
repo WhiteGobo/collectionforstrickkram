@@ -7,4 +7,3 @@ from .strickgraph_replacesubgraph \
 #from .fromknitmanual import BrokenManual
 
 from .constants import handknitting_terms, machine_terms
-from .load_stitchinfo import stitchdatacontainer

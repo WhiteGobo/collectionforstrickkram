@@ -194,6 +194,6 @@ class stitchdatacontainer():
         root.append(_ET.fromstring( xml_string ))
 
 
-from . import stitchdata
-with importlib.resources.path( stitchdata, "stitches.xml" ) as filepath:
-    myasd = stitchdatacontainer.from_xmlfile( filepath )
+#from . import stitchdata
+#with importlib.resources.path( stitchdata, "stitches.xml" ) as filepath:
+#    myasd = stitchdatacontainer.from_xmlfile( filepath )

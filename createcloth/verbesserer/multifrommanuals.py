@@ -1,3 +1,8 @@
+"""
+
+:todo: stitchdata is directly imported to this, that may not be good
+"""
+
 import pkg_resources
 import copy
 from extrasfornetworkx import multiverbesserer
@@ -6,7 +11,7 @@ from .verbesserer_class import strickalterator
 from .multiverbesserer import strick_multiverbesserer
 from .manualtoverbesserung import _start_at_marked
 
-from ..strickgraph.load_stitchinfo import myasd as stitchinfo
+from ..stitchinfo import basic_stitchdata as stitchinfo
 from ..strickgraph.strickgraph_base import stricksubgraph as mygraphtype
 from ..strickgraph.fromknitmanual import frommanual
 

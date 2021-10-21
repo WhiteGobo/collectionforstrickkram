@@ -1,8 +1,9 @@
-"""
-Naming process can be altered via
+"""Naming process can be altered via
 >>fromknitmanual.stitchnodeid = own_naming_function
 >>type(own_naming_function) == foo( i,j,stitchtype )
 look at stitchnodeid for more information
+
+:todo: reorder this, so that this file can be extreminated
 """
 
 import regex
@@ -44,13 +45,13 @@ def _reverse_every_second_row( manual ):
 
 def symbol_to_stitchid( manual, mystitchinfo ):
     #namedict = { mystitchinfo.symbol[x]:x for x in mystitchinfo.symbol }
-    namedict = mystitchinfo.symbol_to_stitchid
+    namedict = mystitchinfo.stitchsymbol_to_stitchid
     for i in range( len(manual)):
         try:
             manual[i] = [ namedict[x] for x in manual[i] ]
         except KeyError as err:
             raise KeyError("manual contains keys, that are not supported", \
-                                                mystitchinfo.symbol) from err
+                                                mystitchinfo.stitchsymbol ) from err
     return manual
 
 def stitchnodeid( rowindex, columnindex, stitchtype ):
@@ -92,7 +93,7 @@ def list_to_strickgraph( manual, startside, mystitchinfo ):
             nodeid = stitchnodeid(i,j,single)
             downknots = mystitchinfo.downedges[ single ]
             upknots = mystitchinfo.upedges[ single ]
-            extrainfo = mystitchinfo.extrainfo[ single ]
+            extrainfo = mystitchinfo.extraoptions[ single ]
             nodeattributes[ nodeid ] = {"stitchtype":single,"side":current_side}
             nodeattributes[ nodeid ].update( extrainfo )
 

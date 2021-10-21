@@ -291,7 +291,7 @@ def generate_verbesserer_asdf( graph1, graph2, \
 
 
 from ..strickgraph import strickgraph
-from ..strickgraph.load_stitchinfo import myasd as glstinfo
+from ..stitchinfo import basic_stitchdata as glstinfo
 def create_graph_from_linetypes( linetypes, upedges, startside="right" ):
     sides = ("right", "left") if startside=="right" else ("left", "right")
     downedges = [ None, *upedges ]

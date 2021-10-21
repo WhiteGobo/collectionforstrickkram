@@ -1,7 +1,7 @@
 #!/bin/env python
 from .create_example_strickgraphs import create_example_strickset
 from ..strickgraph import strickgraph
-from ..strickgraph.load_stitchinfo import myasd as glstinfo
+from ..stitchinfo import basic_stitchdata as glstinfo
 from .create_example_strickgraphs import create_stitchnumber_to_examplestrick
 from .create_example_strickgraphs import order_neighbouring
 from ..verbesserer.class_side_alterator import sidealterator, multi_sidealterator

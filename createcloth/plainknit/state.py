@@ -1,6 +1,6 @@
 from typing import Iterable
 import logging
-from ..strickgraph.load_stitchinfo import myasd as glstinfo
+from ..stitchinfo import basic_stitchdata as glstinfo
 logger = logging.getLogger( __name__ )
 from collections import Counter
 class WrongSide( Exception ):

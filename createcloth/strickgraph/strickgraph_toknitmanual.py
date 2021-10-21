@@ -54,7 +54,11 @@ def _reverse_every_second_row( manual ):
 character_dictionary={}
 #character_dictionary.update( stitchinfo.symbol )
 def transform_rowtomanualline( row, stitchtypes_dictionary, stitchinfo ):
-    character_dictionary.update( stitchinfo.symbol ) #ensure up-to-date
+    """
+
+    :todo: strange use of global variable, has to be revisted
+    """
+    character_dictionary.update( stitchinfo.stitchsymbol ) #ensure up-to-date
     mycharacter_dictionary = character_dictionary
 
     line = ""

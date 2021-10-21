@@ -12,7 +12,7 @@ from . import test_src
 
 #from ..strickgraph import strickgraph_fromgrid as fromgrid
 from ..strickgraph import strickgraph
-from ..strickgraph.load_stitchinfo import myasd as stinfo
+from ..stitchinfo import basic_stitchdata as stinfo
 
 class TestMeshhandlerMethods( unittest.TestCase ):
     def setUp( self ):

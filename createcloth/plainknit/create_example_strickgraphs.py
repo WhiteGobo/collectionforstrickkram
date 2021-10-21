@@ -6,7 +6,7 @@ from .examplestates import start, end, leftplane, rightplane, \
                                     lefteaves, righteaves, \
                                     enddecrease, plain, increase, decrease
 from .state import WrongSide, WrongDownUpEdges
-from ..strickgraph.load_stitchinfo import myasd as glstinfo
+from ..stitchinfo import basic_stitchdata as glstinfo
 
 import numpy as np
 

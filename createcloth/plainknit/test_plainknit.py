@@ -9,7 +9,7 @@ logger = logging.getLogger( __name__ )
 import time
 from ..verbesserer.verbesserer_class import FindError
 from ..verbesserer.class_side_alterator import sidealterator, multi_sidealterator
-from ..strickgraph.load_stitchinfo import myasd as glstinfo
+from ..stitchinfo import basic_stitchdata as glstinfo
 from typing import Iterable
 import numpy as np
 
@@ -56,10 +56,15 @@ class TestMeshhandlerMethods( unittest.TestCase ):
         pass
 
 
+    @unittest.skip( "too long to test everytime should be shortend")
     def test_createverbesserer( self ):
+        """
+
+        :todo: shorten time to test
+        """
+        return
         from .create_example_strickgraphs import create_example_strickset
         from ..strickgraph import strickgraph
-        from ..strickgraph.load_stitchinfo import myasd as glstinfo
         strickgraphsize = 7
         q = create_example_strickset( [], strickgraphsize, min_row_length=12 )
         q = list(q)
@@ -202,7 +207,6 @@ class TestMeshhandlerMethods( unittest.TestCase ):
 
 
 from ..strickgraph import strickgraph
-from ..strickgraph.load_stitchinfo import myasd as glstinfo
 def create_graph_from_linetypes( linetypes, upedges, startside="right" ):
     sides = ("right", "left") if startside=="right" else ("left", "right")
     downedges = [ None, *upedges ]

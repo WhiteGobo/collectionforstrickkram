@@ -1,5 +1,5 @@
 from ..strickgraph import strickgraph
-from ..strickgraph.load_stitchinfo import myasd as glstinfo
+from ..stitchinfo import basic_stitchdata as glstinfo
 
 class NoLeftRightFound( Exception ):
     pass

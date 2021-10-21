@@ -32,8 +32,8 @@ def translate_elementtree_to_strickdata( myresources: _ET.ElementTree ):
         return {a.get("key"): a.get("value") for a in elem.findall( "{%s}extraoption"% (namespace) )}
     stitchinfo =list( myresources.iter( "{"+namespace +"}stitchtype"))
     stitchsymbol = { a.get('name'): a.get('manualchar') for a in stitchinfo }
-    upedges = { a.get('name'): a.get('upedges') for a in stitchinfo }
-    downedges = { a.get('name'): a.get('downedges') for a in stitchinfo }
+    upedges = { a.get('name'): int(a.get('upedges')) for a in stitchinfo }
+    downedges = { a.get('name'): int(a.get('downedges')) for a in stitchinfo }
     extraoptions = { a.get('name'): get_extraoptions(a) for a in stitchinfo }
 
     return strickstitch, strickstart, strickend, \
@@ -77,7 +77,7 @@ def translate_strickdata_to_elementtree( strickstitch, strickstart, strickend, \
 class stitchdatacontainer():
     """Object tostore information about stitchtypes
 
-    :ivar stricksymbol: dictionary for name of stitch to corresponding symbol
+    :ivar stitchsymbol: dictionary for name of stitch to corresponding symbol
     :ivar upedges: name of stitch to number upedges
     :ivar downedges: name of stitch to number downedges
     :ivar extraoptions: name to extras
@@ -100,9 +100,13 @@ class stitchdatacontainer():
         self.extraoptions = extraoptions
 
     def _stitchsymbol_to_name( self ) -> Dict[ str, str ]:
-        return { b:a for a,b in self.stitchsymbol }
+        tmpdict = { a:a for a in self.stitchsymbol.keys() }
+        tmpdict.update( { b:a for a,b in self.stitchsymbol.items() } )
+        return tmpdict
     stitchsymbol_to_stitchid = property( fget=_stitchsymbol_to_name )
-    """Holds dictionary from stitchsymbol zo stitchname"""
+    """Holds dictionary from stitchsymbol and stitchname to stitchname. Used
+    for converting manuals to Normalform
+    """
 
     def _get_stitchtypes( self ) -> Tuple[ str ]:
         return tuple( self.stitchsymbol.keys() )
