@@ -6,10 +6,18 @@ pkgname = createcloth
 default: build install
 	echo "hello"
 
+
 install: #dist/$(pkgname)-$(version).tar.gz
 	pip uninstall $(pkgname) -y
 	pip install dist/$(pkgname)-$(version)-py3-none-any.whl --force-reinstall
 	#pip install dist/$(pkgname)-$(version).tar.gz --force-reinstall
+
+
+plainknit_increaser.pickle:
+	python -m createcloth.plainknit.program_create_alterator $@ -l 8 -w 16 --continue --skip-gen-exception
+
+plainknit_decreaser.pickle:
+	python -m createcloth.plainknit.program_create_alterator $@ -l 8 -w 16 --continue --skip-gen-exception --alteratortype decrease
 
 .PHONY: build
 build: 
@@ -45,7 +53,7 @@ test_meshhandler:
 
 .PHONY: test_manualtoverbesserung
 test_manualtoverbesserung:
-	python -m unittest createcloth.verbesserer.test_verbesserer
+	python -m unittest createcloth.verbesserer.test_verbesserer -k test_sidealterator
 
 test_builtinverbesserer:
 	python -m unittest createcloth.builtin_verbesserer.test_builtinverbesserer
