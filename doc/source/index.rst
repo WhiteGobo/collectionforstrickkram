@@ -17,10 +17,26 @@ Welcome to Createcloth's documentation!
    classcollection/sidealterator
    classcollection/visualizer
    classcollection/meshhandler
+   classcollection/plainknit
 
    howto/strickgraph
    howto/linetypes
 
+   clothfactoryparts/all
+
+
+Todo:
+=====
+
+.. todolist::
+
+.. todo::
+
+   making for intersphinx inventoryfile of datagraphfactory, see source/conf.py
+
+.. todo::
+
+   getting todo to work
 
 
 Indices and tables

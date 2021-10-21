@@ -21,6 +21,7 @@ from createcloth.strickgraph.strickgraph_fromgrid import strick_fromgrid
 from createcloth.meshhandler import relax_gridgraph
 import createcloth.meshhandler
 import createcloth.verbesserer
+import createcloth
 
 
 # -- Project information -----------------------------------------------------
@@ -37,10 +38,25 @@ author = 'Richard Fechner'
 # ones.
 extensions = [
         'sphinx.ext.autodoc',
+        'sphinx.ext.autosectionlabel',
+        'sphinx.ext.doctest',
+        #'sphinx.ext.extlinks',
+        #'sphinx.ext.intersphinx',
+        #'sphinx.ext.graphviz',
+        'sphinx.ext.todo',
 ]
+
+
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
+
+# should do, that every todo from sourcecode is implemented in ..todolist::
+todo_include_todos = True
+
+# for mapping to other sphinxthingies
+#i have no
+#intersphinx_mapping = {'datagraph_factory': ('https://docs.python.org/3', "datagraph_factory.inv")}
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.

@@ -1,3 +1,9 @@
+Identify Strickgraph as plainknit
+---------------------------------
+
+Use this function: :py:function:`isplain<createcloth.plainknit.method_isplain.isplain_strickgraph>` for identification.
+
+
 Create Strickgraph from Linetypes
 ---------------------------------
 
@@ -21,3 +27,5 @@ Here is a codebook example on howto create a strickgraph from linetypes
             graph = strickgraph.from_manual( graph_man, glstinfo, \
                                         manual_type="machine")
             return graph
+
+This correspondes also to :py:method:`createcloth.plainknit.test.TestMeshhandlerMethods.test_createverbesserer`
