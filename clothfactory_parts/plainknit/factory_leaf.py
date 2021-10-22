@@ -14,6 +14,10 @@ from .plain_identifier import isplain, notplainException, \
 from typing import Union, Dict
 
 from createcloth import plainknit as pk
+from createcloth.stitchinfo import basic_stitchdata as stinfo
+
+import logging
+logger = logging.getLogger( __name__ )
 
 
 def _sip_create_datagraphs():
@@ -97,9 +101,11 @@ def _rt_call_function( isrelaxed: strickgraph.strickgraph_property_relaxed, \
     if 0 in tobeextendedrows:
         tobeextendedrows.add( 1 )
 
-    toberemoved_rows = get_longest_series( tobeshortenedrows )
-    for i in toberemoved_rows:
-        pk.plainknit_decreaser.replace_in_graph( tmpstrickgraph, i )
+    tobeadded_rows = get_longest_series( tobeextendedrows )
+    logger.debug( f"add lines {tobeadded_rows} from {tobeextendedrows}")
+    for i in sorted( tobeextendedrows ):
+        pk.plainknit_increaser.replace_in_graph( tmpstrickgraph, i )
+    logger.debug( tmpstrickgraph.to_manual( stinfo ) )
     return { "newstrickgraph": strickgraph.strickgraph_container( tmpstrickgraph ) }
 relax_tension:factory_leaf = factory_leaf( _rt_create_datagraphs, _rt_call_function, \
                             name = __name__+".improve strickgraph tension" )
@@ -148,8 +154,10 @@ def _rp_call_function( isrelaxed: strickgraph.strickgraph_property_relaxed, \
     #newstrickgraph = mystrickgraph.copy()
 
     toberemoved_rows = get_longest_series( tobeshortenedrows )
-    for i in toberemoved_rows:
+    logger.debug( f"remove lines {toberemoved_rows} from {tobeshortenedrows}")
+    for i in sorted( tobeshortenedrows, reverse=True): #problems with decrease last row
         pk.plainknit_decreaser.replace_in_graph( tmpstrickgraph, i )
+    logger.debug( tmpstrickgraph.to_manual( stinfo ) )
     return { "newstrickgraph": strickgraph.strickgraph_container( tmpstrickgraph ) }
 relax_pressure: factory_leaf = factory_leaf( _rp_create_datagraphs, _rp_call_function, \
                             name = __name__ + ".improvestrickgraph pressure")
