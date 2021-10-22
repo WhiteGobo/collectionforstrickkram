@@ -47,6 +47,7 @@ def _call_function( mystrick, positions ):
     vertline_to_edges = lambda verts: list( zip( verts[:-2], verts[1:] ) )
 
     #valueable_edges = [ asdf( row ) for row in rows ]
+    LENIENCE = 1.5
     haspressure, hastension = set(), set()
     for i, row in enumerate( rows ):
         edges_in_row = len(row) - 1
@@ -57,11 +58,11 @@ def _call_function( mystrick, positions ):
             overlength += l[edge] - edge_to_calmlength[ edge ]
         overlength_per_stitch = overlength / len(myedges)
         length_for_extrastitch_per_stitch = lengthforextrastitch/ edges_in_row
-        if overlength_per_stitch > length_for_extrastitch_per_stitch:
+        if overlength_per_stitch > LENIENCE * length_for_extrastitch_per_stitch:
             hastension.add(i)
-        elif overlength_per_stitch < -length_for_extrastitch_per_stitch:
+        elif overlength_per_stitch < -LENIENCE * length_for_extrastitch_per_stitch:
             haspressure.add(i)
-    logger.debug( "brubru", hastension, haspressure )
+    logger.debug( f"brubru \ntension: {hastension}\npressure: {haspressure}" )
     if haspressure and hastension:
         return { "havetension": strickgraph.strickgraph_property_relaxed( \
                                                     tensionrows=hastension), \
