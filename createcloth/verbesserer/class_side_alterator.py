@@ -638,7 +638,7 @@ class multi_sidealterator():
             i+=1
             logger.info( "alteration %i/%s with %i found alterators" \
                             %(i,maxlen, len(q)))
-            logger.debug( linetype_out )
+            logger.debug( f"at line {changedline_id}; linetypes: {linetype_out}" )
             try:
                 #new = sidealterator.from_linetypes( \
                 new = sidealt_gen(\
