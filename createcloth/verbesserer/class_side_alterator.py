@@ -638,6 +638,7 @@ class multi_sidealterator():
             i+=1
             logger.info( "alteration %i/%s with %i found alterators" \
                             %(i,maxlen, len(q)))
+            logger.debug( linetype_out )
             try:
                 #new = sidealterator.from_linetypes( \
                 new = sidealt_gen(\
@@ -682,7 +683,7 @@ class multi_sidealterator():
             except FindError:
                 pass
         if not lever:
-            raise FindError()
+            raise FindError( changeline )
 
     def toxmlelem( self ):
         """to xml element
