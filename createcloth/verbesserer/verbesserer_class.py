@@ -47,8 +47,7 @@ class strickalterator( extrasfornetworkx.verbesserer ):
             return True
         replace_subgraph( graph, nodes_to_remove, newnodes_data, edges_to_add, \
                         self.nodeattributes, self.edgeattributes[0] )
-        if not graph.isvalid():
-            raise Exception( "replacement produced not valid strickgraph" )
+        assert graph.isvalid(), "replacement produced not valid strickgraph"
         return True
 
     def isreplaceable( self, graph, startnode ):
