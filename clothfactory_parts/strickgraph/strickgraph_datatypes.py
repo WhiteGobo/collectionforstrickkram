@@ -4,6 +4,7 @@ from datagraph_factory.processes import DATATYPE, EDGETYPE
 import networkx as netx
 from createcloth.strickgraph import strickgraph as strickgraph_class
 from createcloth.stitchinfo import basic_stitchdata as globalstitchinfo
+from createcloth.stitchinfo import stitchdatacontainer
 
 class strickgraph_container( datatype ):
     """
@@ -44,15 +45,13 @@ class strickgraph_stitchdata( datatype ):
         self.plain_endrow = plain_endrow
         self.stitchlist = stitchinfo
         self.stitchinfo = stitchinfo
+
     @classmethod
     def load_from( cls, filepath ):
-        from createcloth.strickgraph import stitchdatacontainer
-        #from createcloth.strickgraph.load_stitchinfo import stitchdatacontainer
         mystitchinfo = stitchdatacontainer.from_xmlfile( filepath )
-        strdat = stitchinfo.strickdata["plainknit"]
-        plain_stitch = strdat["stitch"]
-        plain_startrow = strdat["startrow"]
-        plain_endrow = strdat["endrow"]
+        plain_stitch = globalstitchinfo.strickstitch["plainknit"]
+        plain_startrow = globalstitchinfo.strickstart["plainknit"]
+        plain_endrow = globalstitchinfo.strickend["plainknit"]
         return cls( mystitchinfo, plain_stitch, plain_startrow, plain_endrow)
         with open( filepath, "r" ) as file:
             plain_stitch = file.readline()
