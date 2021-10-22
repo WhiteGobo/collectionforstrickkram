@@ -35,11 +35,14 @@ class sidealterator():
         self.alterator_right = alterator_right
         self.rightstartindex = rightstartindex
 
-    def replace_in_graph( self, strickgraph, linenumber ):
+    def replace_in_graph( self, strickgraph, linenumber, row=None ):
         """mainmethod replkaces in graph at given line
+
         :raises: FindError
+        :param row: use this to accelerate this method
         """
-        row = strickgraph.get_rows()[ linenumber ]
+        if row == None:
+            row = strickgraph.get_rows()[ linenumber ]
         startnodeleft = row[ self.leftstartindex ]
         startnoderight = row[ self.rightstartindex ]
 
@@ -673,17 +676,25 @@ class multi_sidealterator():
             raise Exception(xmlstring) from err
 
     def replace_in_graph( self, graph, changeline ):
-        """mainmethod"""
+        """mainmethod
+
+        :param graph: Graph to alterate
+        :type graph: :py:class:`createcloth.strickgraph.strickgraph`
+        :param changeline: Line to alterate
+        :type changeline: int
+        """
         lever = False
+        row = graph.get_rows()[ changeline ]
         for alt in self.side_alterator_list:
             try:
-                alt.replace_in_graph( graph, changeline )
+                alt.replace_in_graph( graph, changeline, row=row )
                 lever = True
                 break
             except FindError:
                 pass
         if not lever:
             raise FindError( changeline )
+
 
     def toxmlelem( self ):
         """to xml element
