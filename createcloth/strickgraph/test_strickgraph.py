@@ -98,42 +98,6 @@ class TestStringMethods( unittest.TestCase ):
                             graph2.subgraph( common_nodes2) )
 
 
-    @unittest.skip( "have to create this dingsi" )
-    def test_insertcolumn( self ):
-        return
-        raise Exception( "insertcolumn not in use" )
-        asd = strickgraph.strickgraph.from_gridgraph( self.insertgraph, \
-                                                        self.insertfirstrow, \
-                                                        self.stitchinfo )
-        oldnodes = { *asd.nodes() }
-        action.insert_column_onlyknits( asd, (4,1), 3)
-        newnodes = { *asd.nodes() } - oldnodes
-        self.assertEqual( 2, len(newnodes) )
-        for x in newnodes:
-            mustbeedges = {"next", "up"}
-            for y in asd.edges( x ):
-                mustbeedges = mustbeedges.difference( \
-                        {netx.get_edge_attributes( asd, "edgetype" )[(*y,0)]} )
-            self.assertEqual( 0, len(mustbeedges) )
-
-            self.assertTrue( ((3,2), x) in asd.in_edges(x) \
-                            or ((2,1),x) in asd.in_edges(x) )
-            self.assertTrue( (x, (3,1)) in asd.edges(x) \
-                            or (x, (2,2)) in asd.edges(x) )
-
-    @unittest.skip( "have to create this dingsi" )
-    def test_insertcolumn( self ):
-        raise Exception( "insertcolumn not in use" )
-        asd = strickgraph.strickgraph.from_gridgraph( self.mygraph, \
-                                                            self.firstrow, \
-                                                            self.stitchinfo )
-        subasd = netx.subgraph( asd, [(0,0),(1,0),(0,2),(0,1),(2,0)] )
-        path, nodes, qwe = create_pathforhashing( subasd, (0,0))
-
-        self.assertEqual(set(path), set([(0, 'out', 'next', 1), (0, 'out', 'up', 2), (2, 'out', 'up', 3), (1, 'out', 'next', 4)]))
-        self.assertEqual( nodes, [('yarnover','right'), ('yarnover','right'), ('knit','left'), ('knit','right'), ('yarnover','right')])
-
-
     def test_findsubgraph( self ):
         asd = strickgraph.strickgraph.from_gridgraph( self.mygraph, \
                                                             self.firstrow, \
