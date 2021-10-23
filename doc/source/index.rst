@@ -4,11 +4,12 @@
    contain the root `toctree` directive.
 
 Welcome to Createcloth's documentation!
-=======================================
+***************************************
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
+
 
    classcollection/strickgraph
    classcollection/stitchinfo
@@ -20,12 +21,12 @@ Welcome to Createcloth's documentation!
 
    howto/strickgraph
    howto/linetypes
+   howto/visualizer
 
    clothfactoryparts/all
 
-
 Todo:
-=====
+*****
 
 .. todolist::
 
@@ -44,3 +45,5 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
+
