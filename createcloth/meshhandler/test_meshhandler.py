@@ -19,6 +19,7 @@ class TestMeshhandlerMethods( unittest.TestCase ):
         self.testmeshfilename = "meshfortests.ply"
         pass
 
+    @unittest.skip( "need to much time" )
     def test_createsurfacemap( self ):
         with importlib.resources.path( test_src, "tester.ply" ) as filepath:
             #q = PlySurfaceHandler.plysurfacehandler.load_from_file( filepath )

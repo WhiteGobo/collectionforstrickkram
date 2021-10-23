@@ -39,7 +39,7 @@ test: #test_strickgraph test_meshhandler test_manualtoverbesserung test_plainkni
 	python -m unittest \
 		-k createcloth.strickgraph \
 		-k createcloth.verbesserer \
-		-k createcloth.meshhandler.test_meshhandler.test_wholerelaxing \
+		-k createcloth.meshhandler \
 		-k createcloth.plainknit
 
 
