@@ -31,9 +31,9 @@ import networkx as netx
 import logging
 logger = logging.getLogger( __name__ )
 logging.basicConfig( level=logging.WARNING )
-for logname in ["datagraph_factory.linear_factorybranch", "clothfactory_parts.plainknit.factory_leaf"]:
-    interestinglogger = logging.getLogger( logname )
-    interestinglogger.setLevel( logging.DEBUG )
+#for logname in ["datagraph_factory.linear_factorybranch", "clothfactory_parts.plainknit.factory_leaf"]:
+#    interestinglogger = logging.getLogger( logname )
+#    interestinglogger.setLevel( logging.DEBUG )
 #matplotlogger = logging.getLogger("matplotlib.font_manager")
 #matplotlogger.setLevel()
 
@@ -255,6 +255,7 @@ class TestClothfactoryParts( unittest.TestCase ):
             copy_stinfo = strickgraph_stitchdata.load_from( filepath )
 
 
+    @unittest.skip( "takes too much time" )
     def test_completingdatagraph( self ):
         datatypes, edgetypes, factoryleafs_dict, conclusionleaf_dict \
                 = get_all_datatypes( mainmodule )
