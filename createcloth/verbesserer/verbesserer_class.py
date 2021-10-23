@@ -50,13 +50,15 @@ class strickalterator( extrasfornetworkx.verbesserer ):
         assert graph.isvalid(), "replacement produced not valid strickgraph"
         return True
 
-    def isreplaceable( self, graph, startnode ):
+    def isreplaceable( self, graph, startnode, nodeattributes=None, edgeswithlabel=None ):
         """checks if graph is at this startnode alterateable with this 
         alterator
         :rtype: boolean
         """
-        nodeattributes = graph.get_nodeattributes()
-        edgeswithlabel = graph.get_edges_with_labels()
+        if nodeattributes is None:
+            nodeattributes = graph.get_nodeattributes()
+        if edgeswithlabel is None:
+            edgeswithlabel = graph.get_edges_with_labels()
         try:
             nodes_to_remove, newnodes_data, edges_to_add \
                     = self.create_replace_info( \

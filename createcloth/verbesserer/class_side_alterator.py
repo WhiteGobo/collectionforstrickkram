@@ -35,7 +35,7 @@ class sidealterator():
         self.alterator_right = alterator_right
         self.rightstartindex = rightstartindex
 
-    def replace_in_graph( self, strickgraph, linenumber, row=None ):
+    def replace_in_graph( self, strickgraph, linenumber, row=None, nodeattributes=None, edgeswithlabel=None ):
         """mainmethod replkaces in graph at given line
 
         :raises: FindError
@@ -45,18 +45,22 @@ class sidealterator():
             row = strickgraph.get_rows()[ linenumber ]
         startnodeleft = row[ self.leftstartindex ]
         startnoderight = row[ self.rightstartindex ]
+        if nodeattributes is None:
+            nodeattributes = graph.get_nodeattributes()
+        if edgeswithlabel is None:
+            edgeswithlabel = graph.get_edges_with_labels()
 
         logger.debug( "checking if graph ist replaceable" )
-        cond1 = self.alterator_left.isreplaceable( strickgraph, startnodeleft )
-        cond2 = self.alterator_right.isreplaceable( strickgraph,startnoderight )
-        logger.debug( f"left-replaceable: {cond1}, right-replacable: {cond2}" )
-        if cond1 and cond2:
-            logger.info( "replaceleft" )
-            self.alterator_left.replace_in_graph( strickgraph, startnodeleft )
-            logger.info( "replaceright" )
-            self.alterator_right.replace_in_graph( strickgraph, startnoderight )
-        else:
+        cond1 = self.alterator_left.isreplaceable( strickgraph, startnodeleft, nodeattributes=nodeattributes, edgeswithlabel=edgeswithlabel )
+        if not cond1:
             raise FindError()
+        cond2 = self.alterator_right.isreplaceable( strickgraph,startnoderight, nodeattributes=nodeattributes, edgeswithlabel=edgeswithlabel )
+        if not cond2:
+            raise FindError()
+        logger.info( "replaceleft" )
+        self.alterator_left.replace_in_graph( strickgraph, startnodeleft )
+        logger.info( "replaceright" )
+        self.alterator_right.replace_in_graph( strickgraph, startnoderight )
 
     @classmethod
     def from_linetypes( cls, linetype_out, linetype_in, upedges_out, \
@@ -685,9 +689,11 @@ class multi_sidealterator():
         """
         lever = False
         row = graph.get_rows()[ changeline ]
+        nodeattributes = graph.get_nodeattributes()
+        edgeswithlabel = graph.get_edges_with_labels()
         for alt in self.side_alterator_list:
             try:
-                alt.replace_in_graph( graph, changeline, row=row )
+                alt.replace_in_graph( graph, changeline, row=row, nodeattributes=nodeattributes, edgeswithlabel=edgeswithlabel )
                 lever = True
                 break
             except FindError:
