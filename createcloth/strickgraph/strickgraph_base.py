@@ -1,10 +1,10 @@
 import networkx as _netx
 #from . import strickgraph_weisfeiler_lehman_graph_hash as myhash
 from extrasfornetworkx import weisfeiler_lehman_graph_hash
-from .constants import machine_terms, handknitting_terms, WrongTermError
 import itertools
 from collections import Counter
 from typing import Dict, Hashable, Iterable
+from .. import strickgraph as mod_strickgraph
 from . import strickgraph_fromgrid as fromgrid 
 from . import strickgraph_toknitmanual as toknitmanual
 import numpy as np
@@ -202,7 +202,7 @@ class strick_datacontainer( _netx.MultiDiGraph ):
             if currentrow[ -1 ] == endstitch:
                 break
             firststitch = self.give_next_node_to( currentrow[-1] )
-        if presentation_type in machine_terms:
+        if presentation_type in mod_strickgraph.machine_terms:
             #tmprows = [] #dont need this
             node_side = _netx.get_node_attributes( self, "side" )
             for row in rows:
@@ -212,10 +212,11 @@ class strick_datacontainer( _netx.MultiDiGraph ):
                     row.reverse()
                 #tmprows.append( row )
             #rows = tmprows
-        elif presentation_type in handknitting_terms:
+        elif presentation_type in mod_strickgraph.handknitting_terms:
             pass
         else:
-            raise WrongTermError("get_rows can only print in handknitting or"
+            raise mod_strickgraph.WrongTermError("get_rows can only print "\
+                            +"in handknitting or" \
                             +" machine terms. see pkg/strickgraph/constants.py")
         return rows
         #firstrow = self.find_following_row( firststitch )
@@ -461,7 +462,7 @@ class stricksubgraph( strickgraph ):
                 rows.append( currentrow )
                 left = (node in left_nodes)
             currentrow.append( node )
-        if presentation_type in machine_terms:
+        if presentation_type in mod_strickgraph.machine_terms:
             rows = reverse_every_second_row( rows, \
                                     firstside= side_of_nodes[ rows[0][0] ] )
 
