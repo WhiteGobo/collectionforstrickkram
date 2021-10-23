@@ -31,6 +31,11 @@ import networkx as netx
 import logging
 logger = logging.getLogger( __name__ )
 logging.basicConfig( level=logging.WARNING )
+for logname in ["datagraph_factory.linear_factorybranch", "clothfactory_parts.plainknit.factory_leaf"]:
+    interestinglogger = logging.getLogger( logname )
+    interestinglogger.setLevel( logging.DEBUG )
+#matplotlogger = logging.getLogger("matplotlib.font_manager")
+#matplotlogger.setLevel()
 
 class TestClothfactoryParts( unittest.TestCase ):
     #def SetUp
@@ -281,7 +286,8 @@ class TestClothfactoryParts( unittest.TestCase ):
         tmp["stitchinfo"] = strickgraph_stitchdata( globalstitchinfo, "knit", \
                                                     "yarnover", "bindoff" )
         from createcloth.meshhandler import test_src 
-        with importlib.resources.path( test_src, "tester.ply" ) as filepath:
+        #with importlib.resources.path( test_src, "tester.ply" ) as filepath:
+        with importlib.resources.path( test_src, "surfmap.ply" ) as filepath:
             tmpsurf = ply_surface.load_from( filepath )
         tmp["mesh"] = tmpsurf
         #with importlib.resources.path( test_src, "tester_surfmap.ply" ) \
@@ -340,6 +346,7 @@ def mydatarescue( err ):
         print("brubru\n\n\n")
         traceback.print_exc()
         verb.print_compare_to_graph_at_position( mystrick, markednode )
+    raise err
 
 examplestrickman = "20yo\n20k\n2k 1yo 16k 1yo 2k\n2k 1yo 18k 1yo 2k\n24k\n2k 1yo 20k 1yo 2k\n26k\n2k 1yo 22k 1yo 2k\n28k\n2k 1yo 24k 1yo 2k\n30k\n30k\n30k\n30k\n30k\n30k\n30k\n2k 1k2tog 22k 1k2tog 2k\n28k\n2k 1k2tog 20k 1k2tog 2k\n26k\n2k 1k2tog 18k 1k2tog 2k\n24k\n2k 1k2tog 16k 1k2tog 2k\n2k 1k2tog 14k 1k2tog 2k\n20bo"
 
