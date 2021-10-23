@@ -4,6 +4,9 @@ import matplotlib.pyplot as plt
 mysize = 50
 
 def easygraph( mygrid, myplotinfo=None, show=True, ax = None, marked_nodes=None ):
+    """This is for plotting 2d graphs of strick. Plots different stitchtypes
+    with different symbols
+    """
 
     if myplotinfo:
         myplotinfo.clear_nodes()
@@ -48,13 +51,12 @@ edge_style={ \
         }
 
 def draw_every_edgetype_different( mygrid, pos, ax = None ):
-    edgetypes = netx.get_edge_attributes( mygrid, "edgetype" )
+    edges = mygrid.get_edges_with_labels()
     asd = {}
-    for edge in list( mygrid.edges( keys=True ) ):
-        mylist = asd.setdefault( edgetypes[ edge ], list() )
-        mylist.append( edge )
-    keylist = list( asd.keys() )
-
+    for v1, v2, label in edges:
+        mylist = asd.setdefault( label, list() )
+        mylist.append( (v1, v2) )
+    keylist = tuple( asd.keys() )
     for i in range( len( asd )):
         netx.draw_networkx_edges( mygrid, pos, ax=ax, node_size=mysize,\
                                     edgelist = asd[keylist[i]], \
@@ -70,7 +72,8 @@ def draw_marked_nodes( mygrid, pos, marked_nodes, **argv ):
 
 def draw_every_stitchtype_different( mygrid, pos, myplotinfo, ax=None ):
     #asd = {}
-    stitchtypes = netx.get_node_attributes( mygrid, "stitchtype" )
+    #stitchtypes = netx.get_node_attributes( mygrid, "stitchtype" )
+    stitchtypes = mygrid.get_nodeattr_stitchtype()
     stitchtypes.update({"start":"custom", "end":"custom"})
     for node in list( mygrid.nodes() ):
         #mylist = asd.setdefault( stitchtypes[ node ], list() )

@@ -39,7 +39,7 @@ test: #test_strickgraph test_meshhandler test_manualtoverbesserung test_plainkni
 	python -m unittest
 
 test_interactive:
-	env INTERACTIVE= python -m unittest -k test_visualizer
+	env INTERACTIVE= python -m unittest -k visualizer
 
 
 test_clothfactory:
