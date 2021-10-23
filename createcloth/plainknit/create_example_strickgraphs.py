@@ -1,5 +1,4 @@
 from ..strickgraph import strickgraph
-from ..verbesserer import multifrommanuals
 from typing import Iterable, Tuple, Iterator
 import itertools as it
 from .examplestates import start, end, leftplane, rightplane, \
