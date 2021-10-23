@@ -36,11 +36,10 @@ test_stitchinfo:
 
 .PHONY: test
 test: #test_strickgraph test_meshhandler test_manualtoverbesserung test_plainknit
-	python -m unittest \
-		-k createcloth.strickgraph \
-		-k createcloth.verbesserer \
-		-k createcloth.meshhandler \
-		-k createcloth.plainknit
+	python -m unittest
+
+test_interactive:
+	env INTERACTIVE= python -m unittest -k test_visualizer
 
 
 test_clothfactory:
