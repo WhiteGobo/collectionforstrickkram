@@ -141,7 +141,6 @@ class TestStringMethods( unittest.TestCase ):
 
     @unittest.skip( "graphml not suported" )
     def test_graphml( self ):
-        raise Exception( "graphml not supported yet" )
         asd = strickgraph.strickgraph.from_gridgraph( self.mygraph, \
                                                             self.firstrow, \
                                                             self.stitchinfo )
