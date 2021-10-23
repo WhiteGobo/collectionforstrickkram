@@ -3,7 +3,8 @@ from datagraph_factory import datagraph, factory_leaf, edgetype
 from .. import strickgraph
 from createcloth.physicalhelper import standardthreadinfo as mythreadinfo
 import networkx as netx
-from createcloth.strickgraph import strickgraph_fromgrid as fromgrid 
+#from createcloth.strickgraph import strickgraph_fromgrid as fromgrid 
+from createcloth.strickgraph import strickgraph as strgra
 
 from .. import strickgraph
 
@@ -47,8 +48,7 @@ def call_function( stitchdata, mymesh, mysurface ):
                         / (2 * sidestitchlength) )
     mygridgraph = netx.grid_2d_graph( number_numberrows, number_linelength )
     firstrow = [ x for x in mygridgraph.nodes() if x[0] == 0 ]
-    mystrickgraph = fromgrid.create_strickgraph_from_gridgraph( \
-                                                    mygridgraph, firstrow, \
+    mystrickgraph = strgra.from_gridgraph( mygridgraph, firstrow, \
                                                     stitchdata.stitchlist )
 
     #lengthdict = {}
