@@ -5,6 +5,7 @@ look at stitchnodeid for more information
 
 :todo: reorder this, so that this file can be extreminated
 """
+raise Exception()
 
 import regex
 from . import handknitting_terms

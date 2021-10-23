@@ -10,7 +10,6 @@ import math
 from ..strickgraph.strickgraph_replacesubgraph import create_pathforhashing, follow_cached_path
 from . import xml_config
 import xml.etree.ElementTree as ET
-from .manualtoverbesserung import generate_replacement_from_graphs, find_startpoint_dictionary, replace_nodenames_for_samenames, replace_nodes_in_list, build_xmlElement
 import copy
 import io
 import extrasfornetworkx

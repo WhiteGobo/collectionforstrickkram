@@ -11,7 +11,7 @@ import unittest
 import importlib.resources
 import networkx as netx
 from ..stitchinfo import basic_stitchdata as stinfo
-from .fromknitmanual import BrokenManual
+from .strickgraph_toknitmanual import BrokenManual
 
 from extrasfornetworkx import create_pathforhashing
 from extrasfornetworkx import follow_cached_path
