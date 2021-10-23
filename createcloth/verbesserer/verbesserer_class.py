@@ -1,13 +1,11 @@
-"""
+"""Base module for base alteratorclass
 
-:todo: Finderror could be catched so i use Exception as catcher
 """
 
 from ..strickgraph.strickgraph_base import get_neighbours_from, strickgraph, stricksubgraph
 
 import networkx as netx
 import math
-from ..strickgraph.strickgraph_replacesubgraph import create_pathforhashing, follow_cached_path
 from . import xml_config
 import xml.etree.ElementTree as ET
 import copy

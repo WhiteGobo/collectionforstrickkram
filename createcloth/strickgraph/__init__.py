@@ -4,8 +4,8 @@
 """
 
 from .strickgraph_base import strickgraph
-from .strickgraph_replacesubgraph \
-        import create_pathforhashing, follow_cached_path
+#from .strickgraph_replacesubgraph \
+#        import create_pathforhashing, follow_cached_path
 #from .fromknitmanual import BrokenManual
 
 #standard should be machine
