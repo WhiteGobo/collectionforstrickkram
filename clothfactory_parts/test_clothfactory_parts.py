@@ -128,62 +128,6 @@ class TestClothfactoryParts( unittest.TestCase ):
         self.assertTrue( "mysurfacemaps" in output.keys() )
 
 
-    @unittest.expectedFailure
-    def test_physics( self ):
-        """
-
-        :todo: ply_2dmap has no load_from anymore
-        """
-        from createcloth.meshhandler import test_src 
-        with importlib.resources.path( test_src, "tester.ply" ) as filepath:
-            tmpsurf = ply_surface.load_from( filepath )
-        with importlib.resources.path( test_src, "tester_surfmap.ply" ) \
-                                                                as filepath:
-            tmpmap = ply_2dmap.load_from( filepath )
-        from . import strickgraph as strigra
-        tmpgrid = netx.grid_2d_graph(10,10)
-        firstrow = [ node for node in tmpgrid.nodes if node[0]==0 ]
-        tmpstrick = strickgraph.from_gridgraph( tmpgrid, firstrow, \
-                                                    globalstitchinfo )
-        mystrigracont = strigra.strickgraph_container( tmpstrick )
-
-        from . import physics as relsurf
-        output = relsurf.relax_strickgraph_on_surface( mymesh=tmpsurf, \
-                                mysurf=tmpmap, inputstrickgraph=mystrigracont )
-        self.assertEqual( set(("positiondata",)), output.keys() )
-        self.assertEqual( type(output["positiondata"]), strickgraph_spatialdata)
-        strickpositions = output["positiondata"]
-
-        output = relsurf.test_if_strickgraph_isrelaxed( mystrick=mystrigracont,\
-                                            positions=strickpositions )
-        self.assertEqual( set(("havetension",)), output.keys() )
-        tensionpropcont = output["havetension"]
-        #output["havepressure"]
-        #output["havetension"]
-        #output["isrelaxed"]
-
-        #def test_plainknit( self ):
-        from . import strickgraph as strigra
-        tmpgrid = netx.grid_2d_graph(10,10)
-        firstrow = [ node for node in tmpgrid.nodes if node[0]==0 ]
-        tmpstrick = strickgraph.from_gridgraph( tmpgrid, firstrow, \
-                                                    globalstitchinfo )
-        mystrigracont = strigra.strickgraph_container( tmpstrick )
-        from . import plainknit
-        output = plainknit.test_if_strickgraph_is_plainknit( \
-                                                    mystrick=mystrigracont )
-        self.assertEqual( set(("isplainknit",)), output.keys() )
-        plainknitprop = output["isplainknit"]
-
-        from . import plainknit
-        #plainknit.relax_pressure( isrelaxed=output["havepressure"], isplainknit=output["isplainknit"], mystrickgraph=, mymesh= )
-        output = plainknit.relax_tension( isrelaxed = tensionpropcont, \
-                                isplainknit = plainknitprop,\
-                                mystrickgraph = mystrigracont, \
-                                mymesh = tmpmap,\
-                                )
-        self.assertEqual( set(("newstrickgraph",)), output.keys() )
-
 
     @unittest.expectedFailure
     def test_strickgraphdummy( self ):
