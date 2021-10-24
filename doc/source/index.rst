@@ -19,6 +19,7 @@ Welcome to Createcloth's documentation!
    classcollection/meshhandler
    classcollection/plainknit
 
+   howto/clothfactory
    howto/strickgraph
    howto/linetypes
    howto/visualizer

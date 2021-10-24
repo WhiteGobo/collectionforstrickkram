@@ -56,7 +56,9 @@ todo_include_todos = True
 
 # for mapping to other sphinxthingies
 #i have no
-#intersphinx_mapping = {'datagraph_factory': ('https://docs.python.org/3', "datagraph_factory.inv")}
+intersphinx_mapping = {"plysurfacehandler": ("https://whitegobo.github.io/PlySurfaceHandler/build/html/main.html", None)}
+
+        #'datagraph_factory': ('https://docs.python.org/3', "datagraph_factory.inv")}
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
