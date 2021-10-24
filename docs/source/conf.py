@@ -13,7 +13,6 @@
 import os
 import sys
 sys.path.insert(0, os.path.abspath('../../'))
-print( sys.path )
 import networkx
 import createcloth.strickgraph.strickgraph_fromgrid
 import createcloth.strickgraph.strickgraph_base
@@ -41,7 +40,7 @@ extensions = [
         'sphinx.ext.autosectionlabel',
         'sphinx.ext.doctest',
         #'sphinx.ext.extlinks',
-        #'sphinx.ext.intersphinx',
+        'sphinx.ext.intersphinx',
         #'sphinx.ext.graphviz',
         'sphinx.ext.todo',
 ]
@@ -56,7 +55,7 @@ todo_include_todos = True
 
 # for mapping to other sphinxthingies
 #i have no
-intersphinx_mapping = {"plysurfacehandler": ("https://whitegobo.github.io/PlySurfaceHandler/build/html/main.html", None)}
+intersphinx_mapping = {"plysurfacehandler": ("https://whitegobo.github.io/PlySurfaceHandler/build/html", "plysurfacehandler-inv.txt")}
 
         #'datagraph_factory': ('https://docs.python.org/3', "datagraph_factory.inv")}
 
