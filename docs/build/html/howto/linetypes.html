@@ -1,0 +1,140 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Identify Strickgraph as plainknit &#8212; Createcloth  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="all" href="../clothfactoryparts/all.html" />
+    <link rel="prev" title="How to handle Strickgraphs" href="strickgraph.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../clothfactoryparts/all.html" title="all"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="strickgraph.html" title="How to handle Strickgraphs"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Createcloth  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Identify Strickgraph as plainknit</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="identify-strickgraph-as-plainknit">
+<h1>Identify Strickgraph as plainknit<a class="headerlink" href="#identify-strickgraph-as-plainknit" title="Permalink to this headline">¶</a></h1>
+<p>Use this function: <a href="#id1"><span class="problematic" id="id2">:py:function:`isplain&lt;createcloth.plainknit.method_isplain.isplain_strickgraph&gt;`</span></a> for identification.</p>
+</section>
+<section id="create-strickgraph-from-linetypes">
+<h1>Create Strickgraph from Linetypes<a class="headerlink" href="#create-strickgraph-from-linetypes" title="Permalink to this headline">¶</a></h1>
+<p>Here is a codebook example on howto create a strickgraph from linetypes</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">create_graph_from_linetypes</span><span class="p">(</span> <span class="n">linetypes</span><span class="p">,</span> <span class="n">upedges</span><span class="p">,</span> <span class="n">startside</span><span class="o">=</span><span class="s2">&quot;right&quot;</span> <span class="p">):</span>
+    <span class="k">if</span> <span class="n">startside</span> <span class="o">==</span> <span class="s2">&quot;right&quot;</span><span class="p">:</span>
+        <span class="n">sides</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="s2">&quot;left&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sides</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="s2">&quot;right&quot;</span><span class="p">)</span>
+    <span class="n">downedges</span> <span class="o">=</span> <span class="p">[</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">upedges</span> <span class="p">]</span>
+    <span class="n">upedges</span> <span class="o">=</span> <span class="p">[</span> <span class="o">*</span><span class="n">upedges</span><span class="p">,</span> <span class="kc">None</span> <span class="p">]</span>
+    <span class="n">iline</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">downedges</span><span class="p">))</span>
+    <span class="n">allinfo</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span> <span class="n">linetypes</span><span class="p">,</span> <span class="n">downedges</span><span class="p">,</span> <span class="n">upedges</span><span class="p">,</span> <span class="n">iline</span> <span class="p">)</span>
+
+    <span class="n">graph_man</span> <span class="o">=</span> <span class="p">[</span> <span class="n">s</span><span class="o">.</span><span class="n">create_example_row</span><span class="p">(</span> <span class="n">down</span><span class="p">,</span> <span class="n">up</span><span class="p">,</span> <span class="n">side</span><span class="o">=</span><span class="n">sides</span><span class="p">[</span><span class="n">i</span><span class="o">%</span><span class="mi">2</span><span class="p">]</span> <span class="p">)</span> \
+                                <span class="k">for</span> <span class="n">s</span><span class="p">,</span> <span class="n">down</span><span class="p">,</span> <span class="n">up</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">allinfo</span> <span class="p">]</span>
+
+    <span class="n">graph</span> <span class="o">=</span> <span class="n">strickgraph</span><span class="o">.</span><span class="n">from_manual</span><span class="p">(</span> <span class="n">graph_man</span><span class="p">,</span> <span class="n">glstinfo</span><span class="p">,</span> \
+                                <span class="n">manual_type</span><span class="o">=</span><span class="s2">&quot;machine&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">graph</span>
+</pre></div>
+</div>
+<p>This correspondes also to <a href="#id3"><span class="problematic" id="id4">:py:method:`createcloth.plainknit.test.TestMeshhandlerMethods.test_createverbesserer`</span></a></p>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Identify Strickgraph as plainknit</a></li>
+<li><a class="reference internal" href="#create-strickgraph-from-linetypes">Create Strickgraph from Linetypes</a></li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="strickgraph.html"
+                        title="previous chapter">How to handle Strickgraphs</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../clothfactoryparts/all.html"
+                        title="next chapter">all</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/howto/linetypes.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../clothfactoryparts/all.html" title="all"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="strickgraph.html" title="How to handle Strickgraphs"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Createcloth  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Identify Strickgraph as plainknit</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, Richard Fechner.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
+    </div>
+  </body>
+</html>

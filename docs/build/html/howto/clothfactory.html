@@ -1,0 +1,302 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Howto to autothingy clothes &#8212; Createcloth  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="How to handle Strickgraphs" href="strickgraph.html" />
+    <link rel="prev" title="Plainknit" href="../classcollection/plainknit.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="strickgraph.html" title="How to handle Strickgraphs"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../classcollection/plainknit.html" title="Plainknit"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Createcloth  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Howto to autothingy clothes</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="howto-to-autothingy-clothes">
+<h1>Howto to autothingy clothes<a class="headerlink" href="#howto-to-autothingy-clothes" title="Permalink to this headline">¶</a></h1>
+<section id="overview-other-available-and-targetted-data">
+<h2>Overview other available and targetted data<a class="headerlink" href="#overview-other-available-and-targetted-data" title="Permalink to this headline">¶</a></h2>
+<p>As otherview i will sort to following corresponding categories:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Objectinfo - 3d information about the body - static</p></li>
+<li><p>Yarn- and Knittingpattern - Information which knits are used and what physical properties they have - static</p></li>
+<li><p>Information about the knitting piece - variable</p></li>
+</ul>
+</div></blockquote>
+<section id="objectinfo">
+<h3>Objectinfo<a class="headerlink" href="#objectinfo" title="Permalink to this headline">¶</a></h3>
+<p>This information includes spatialdescription of the object, for that our knitting piece is made. A quick bulletpoint overview:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>description via mesh, that means via vertices (3d) and faces.</p></li>
+<li><p>subsurfaceinformation, that means which rectangles will be covered with each one knitting piece</p></li>
+</ul>
+</div></blockquote>
+<p>A detailled overview:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>3d-vertices</p></li>
+<li><p>(edges consisting of 2 vertice-indices)</p></li>
+<li><p>faces consisting of n-vertice-indices</p></li>
+<li><p>subsurfaces consisting of n-face-indices</p></li>
+<li><p>subsurface-maps, which convert the 3d-space of the corresponding submesh to a 2d-maplike representation</p></li>
+</ol>
+</div></blockquote>
+<p>For reference i have listed all corresponding datagraphnodes: 1-5 is saved in
+<code class="xref py py-class docutils literal notranslate"><span class="pre">clothfactory.ply_surface</span></code>. There is also a connection to
+<code class="xref py py-class docutils literal notranslate"><span class="pre">clothfactory.mesh_2dmap</span></code> but im not sure how this turns out.</p>
+</section>
+<section id="yarn-and-knittinginformation">
+<h3>Yarn- and knittinginformation<a class="headerlink" href="#yarn-and-knittinginformation" title="Permalink to this headline">¶</a></h3>
+<dl class="simple">
+<dt>This information comprises:</dt><dd><ul class="simple">
+<li><p>knittingpattern information - meaning how the knitpiece is made, when it should e.g. expand fromm line to line</p></li>
+<li><p>Yarninformation - Information mainly for spatialsimulation of the knittingpiece. E.g. how big a stitch is.</p></li>
+</ul>
+</dd>
+</dl>
+<p>For further information see <a class="reference internal" href="../classcollection/stitchinfo.html#module-createcloth.stitchinfo" title="createcloth.stitchinfo"><code class="xref py py-mod docutils literal notranslate"><span class="pre">createcloth.stitchinfo</span></code></a>, <a class="reference internal" href="../classcollection/plainknit.html#module-createcloth.plainknit" title="createcloth.plainknit"><code class="xref py py-mod docutils literal notranslate"><span class="pre">createcloth.plainknit</span></code></a> and <code class="xref py py-mod docutils literal notranslate"><span class="pre">createcloth.physicalhelper</span></code>.
+The stitchinfo is stored within the datagraphnode <code class="xref py py-class docutils literal notranslate"><span class="pre">strickgraph_stitchdata</span></code>.
+The manner in which this information is stored is <em>work-in-progres</em>. So please, feel free to check in the reference, how the data is stored.</p>
+</section>
+<section id="knittingpiece">
+<h3>Knittingpiece<a class="headerlink" href="#knittingpiece" title="Permalink to this headline">¶</a></h3>
+<p>This is the part we want to be simulated. This information describes our Knittinpiec in detail:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>knittingmanuals for each knittingpiece</p></li>
+<li><p>also spatialinformation about our knittingpiece, in other words a spatial 3d description, where each stitch will be located</p></li>
+<li><p>an evaluation, how fitting the knittingpiece ist, if it will have tension or it will not fit</p></li>
+<li><p>also some minor information, if our knittingpiece is complies with given knittingpatterns</p></li>
+</ul>
+</div></blockquote>
+<dl class="simple">
+<dt>In detail:</dt><dd><ol class="arabic simple">
+<li><p>A full description of the knitpiece via knittingmanual or a corresponding graph</p></li>
+<li><p>Spatial(3d location) information about every stitch</p></li>
+<li><p>in which lines the knitpiece has tension or is loose</p></li>
+<li><p>if the graph corresponds to a knittinpattern.</p></li>
+</ol>
+</dd>
+</dl>
+<p>In the datagraph this information will be saved within <code class="xref py py-class docutils literal notranslate"><span class="pre">strickgraph_container</span></code> (1), <code class="xref py py-class docutils literal notranslate"><span class="pre">clothfactory_parts.strickgraph_spatialdata</span></code> (2), <code class="xref py py-class docutils literal notranslate"><span class="pre">clothfactory_parts.strickgraph_property_relaxed</span></code> (3) annd <code class="xref py py-class docutils literal notranslate"><span class="pre">clothfactory_parts.strickgraph_property_plainknit</span></code> (4)</p>
+</section>
+</section>
+<section id="informationinput">
+<h2>Informationinput<a class="headerlink" href="#informationinput" title="Permalink to this headline">¶</a></h2>
+<p>All the static information must be given at the start. So we need all the
+static datagraph nodes:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">tmp</span> <span class="o">=</span> <span class="n">datagraph</span><span class="p">()</span>
+<span class="n">tmp</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span> <span class="s2">&quot;mesh&quot;</span><span class="p">,</span> <span class="n">ply_surface</span> <span class="p">)</span>
+<span class="n">tmp</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span> <span class="s2">&quot;maptomesh&quot;</span><span class="p">,</span> <span class="n">ply_2dmap</span> <span class="p">)</span>
+<span class="n">tmp</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span> <span class="s2">&quot;stitchinfo&quot;</span><span class="p">,</span> <span class="n">strickgraph_stitchdata</span> <span class="p">)</span>
+<span class="n">tmp</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span> <span class="s2">&quot;maptomesh&quot;</span><span class="p">,</span> <span class="s2">&quot;mesh&quot;</span><span class="p">,</span> <span class="n">map_to_mesh</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p>The information must be initialized, as described in the documentation of
+<code class="xref py py-mod docutils literal notranslate"><span class="pre">datagraph_factory</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="o">...</span><span class="p">]</span>
+<span class="kn">from</span> <span class="nn">createcloth.stitchinfo</span> <span class="kn">import</span> <span class="n">basic_stitchdata</span>
+<span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;stitchinfo&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">strickgraph_stitchdata</span><span class="p">(</span> <span class="n">basic_stitchdata</span><span class="p">,</span> \
+                                  <span class="s2">&quot;knit&quot;</span><span class="p">,</span> <span class="s2">&quot;yarnover&quot;</span><span class="p">,</span> <span class="s2">&quot;bindoff&quot;</span> <span class="p">)</span>
+<span class="n">filepath</span> <span class="o">=</span> <span class="s2">&quot;data/surfmap.ply&quot;</span>
+<span class="n">tmpsurf</span> <span class="o">=</span> <span class="n">ply_surface</span><span class="o">.</span><span class="n">load_from</span><span class="p">(</span> <span class="n">filepath</span> <span class="p">)</span>
+<span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;mesh&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmpsurf</span>
+</pre></div>
+</div>
+<p>With this information we want to create a knittingpiece, which is plainknit
+and is in a fitting (relaxed) state. Relaxed means no tension and loose parts:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="o">...</span><span class="p">]</span>
+<span class="n">tmp</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span> <span class="s2">&quot;strickgraph&quot;</span><span class="p">,</span> <span class="n">strickgraph_container</span> <span class="p">)</span>
+
+<span class="n">tmp</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span> <span class="s2">&quot;spat&quot;</span><span class="p">,</span> <span class="n">strickgraph_spatialdata</span> <span class="p">)</span>
+<span class="n">tmp</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span> <span class="s2">&quot;strickgraph&quot;</span><span class="p">,</span> <span class="s2">&quot;spat&quot;</span><span class="p">,</span> <span class="n">stitchposition</span> <span class="p">)</span>
+
+<span class="n">tmp</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span> <span class="s2">&quot;isrelaxed&quot;</span> <span class="p">,</span> <span class="n">strickgraph_property_relaxed</span> <span class="p">)</span>
+<span class="n">tmp</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span> <span class="s2">&quot;strickgraph&quot;</span><span class="p">,</span> <span class="s2">&quot;isrelaxed&quot;</span><span class="p">,</span> \
+                <span class="n">springs_of_strickgraph_are_relaxed</span> <span class="p">)</span>
+
+<span class="n">tmp</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span> <span class="s2">&quot;isplainknit&quot;</span><span class="p">,</span> <span class="n">strickgraph_property_plainknit</span> <span class="p">)</span>
+<span class="n">tmp</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span> <span class="s2">&quot;strickgraph&quot;</span><span class="p">,</span> <span class="s2">&quot;isplainknit&quot;</span><span class="p">,</span> <span class="n">strickgraph_isplainknit</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p>A complete datagraph-construction as seen in test_clothfactoryparts:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">tmp</span> <span class="o">=</span> <span class="n">datagraph</span><span class="p">()</span>
+
+<span class="n">tmp</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span> <span class="s2">&quot;mesh&quot;</span><span class="p">,</span> <span class="n">ply_surface</span> <span class="p">)</span>
+<span class="n">tmp</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span> <span class="s2">&quot;maptomesh&quot;</span><span class="p">,</span> <span class="n">ply_2dmap</span> <span class="p">)</span>
+<span class="n">tmp</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span> <span class="s2">&quot;strickgraph&quot;</span><span class="p">,</span> <span class="n">strickgraph_container</span> <span class="p">)</span>
+<span class="n">tmp</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span> <span class="s2">&quot;spat&quot;</span><span class="p">,</span> <span class="n">strickgraph_spatialdata</span> <span class="p">)</span>
+<span class="n">tmp</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span> <span class="s2">&quot;strickgraph&quot;</span><span class="p">,</span> <span class="s2">&quot;spat&quot;</span><span class="p">,</span> <span class="n">stitchposition</span> <span class="p">)</span>
+<span class="n">tmp</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span> <span class="s2">&quot;maptomesh&quot;</span><span class="p">,</span> <span class="s2">&quot;mesh&quot;</span><span class="p">,</span> <span class="n">map_to_mesh</span> <span class="p">)</span>
+<span class="n">tmp</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span> <span class="s2">&quot;strickgraph&quot;</span><span class="p">,</span> <span class="s2">&quot;mesh&quot;</span><span class="p">,</span> <span class="n">strickgraph_fit_to_mesh</span> <span class="p">)</span>
+<span class="n">tmp</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span> <span class="s2">&quot;maptomesh&quot;</span><span class="p">,</span> <span class="s2">&quot;strickgraph&quot;</span><span class="p">,</span> <span class="n">physics</span><span class="o">.</span><span class="n">map_for_strickgraph</span> <span class="p">)</span>
+<span class="n">tmp</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span> <span class="s2">&quot;isrelaxed&quot;</span> <span class="p">,</span> <span class="n">strickgraph_property_relaxed</span> <span class="p">)</span>
+<span class="n">tmp</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span> <span class="s2">&quot;isplainknit&quot;</span><span class="p">,</span> <span class="n">strickgraph_property_plainknit</span> <span class="p">)</span>
+<span class="n">tmp</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span> <span class="s2">&quot;stitchinfo&quot;</span><span class="p">,</span> <span class="n">strickgraph_stitchdata</span> <span class="p">)</span>
+<span class="n">tmp</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span> <span class="s2">&quot;stitchinfo&quot;</span><span class="p">,</span> <span class="s2">&quot;mesh&quot;</span><span class="p">,</span> <span class="n">use_stitchdata_for_construction</span> <span class="p">)</span>
+<span class="n">tmp</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span> <span class="s2">&quot;strickgraph&quot;</span><span class="p">,</span> <span class="s2">&quot;isrelaxed&quot;</span><span class="p">,</span> \
+                <span class="n">springs_of_strickgraph_are_relaxed</span> <span class="p">)</span>
+<span class="n">tmp</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span> <span class="s2">&quot;strickgraph&quot;</span><span class="p">,</span> <span class="s2">&quot;isplainknit&quot;</span><span class="p">,</span> <span class="n">strickgraph_isplainknit</span> <span class="p">)</span>
+
+
+<span class="kn">from</span> <span class="nn">createcloth.stitchinfo</span> <span class="kn">import</span> <span class="n">basic_stitchdata</span>
+<span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;stitchinfo&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">strickgraph_stitchdata</span><span class="p">(</span> <span class="n">basic_stitchdata</span><span class="p">,</span> \
+                                  <span class="s2">&quot;knit&quot;</span><span class="p">,</span> <span class="s2">&quot;yarnover&quot;</span><span class="p">,</span> <span class="s2">&quot;bindoff&quot;</span> <span class="p">)</span>
+<span class="n">filepath</span> <span class="o">=</span> <span class="s2">&quot;data/surfmap.ply&quot;</span>
+<span class="n">tmpsurf</span> <span class="o">=</span> <span class="n">ply_surface</span><span class="o">.</span><span class="n">load_from</span><span class="p">(</span> <span class="n">filepath</span> <span class="p">)</span>
+<span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;mesh&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmpsurf</span>
+</pre></div>
+</div>
+</section>
+<section id="automatic-completion-of-data">
+<h2>Automatic completion of data<a class="headerlink" href="#automatic-completion-of-data" title="Permalink to this headline">¶</a></h2>
+<p>To generate our knitting piece from the given information, we have to load the given <code class="xref py py-class docutils literal notranslate"><span class="pre">clothfactoy_leafs</span></code> from <code class="xref py py-mod docutils literal notranslate"><span class="pre">clothfactory_parts</span></code>,
+and let the algorithm magic of datagraph_factory generate our knitting_piece.</p>
+<p>As described in the documentation of <code class="xref py py-mod docutils literal notranslate"><span class="pre">datagraph_factory</span></code>, to
+complete the daatagraph we have to load the needed factory_leafs:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">somethingsomething</span>
+</pre></div>
+</div>
+<p>With the now generated flowgraph, we can complete our datagraph as described in detail in <code class="xref py py-mod docutils literal notranslate"><span class="pre">datagraph_factory</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">datagraph_factory</span> <span class="kn">import</span> <span class="n">DataRescueException</span><span class="p">,</span> <span class="n">complete_datagraph</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="n">complete_datagraph</span><span class="p">(</span> <span class="n">flowgraph</span><span class="p">,</span> <span class="n">tmp</span> <span class="p">)</span>
+<span class="p">[</span><span class="o">...</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Now we can now extract the information from the <code class="xref py py-class docutils literal notranslate"><span class="pre">datagraph</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="o">...</span><span class="p">]</span>
+<span class="k">except</span> <span class="n">DataRescueException</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+    <span class="n">datarescue</span><span class="p">:</span> <span class="n">function</span> <span class="c1">#for description see below</span>
+    <span class="n">datarescue</span><span class="p">(</span> <span class="n">err</span> <span class="p">)</span>
+    <span class="k">raise</span> <span class="n">err</span>
+<span class="c1"># just for info:</span>
+<span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;strickgraph&quot;</span><span class="p">]:</span> <span class="n">clothfactory_leaf</span><span class="o">.</span><span class="n">strickgraph_container</span>
+<span class="n">generated_strickgraph</span><span class="p">:</span> <span class="n">createcloth</span><span class="o">.</span><span class="n">strickgraph</span><span class="o">.</span><span class="n">strickgraph</span>
+
+<span class="n">generated_strickgraph</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;strickgraph&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">strickgraph</span>
+<span class="n">stinfo</span> <span class="o">=</span> <span class="n">createcloth</span><span class="o">.</span><span class="n">stitchinfo</span><span class="o">.</span><span class="n">basic_stitchdata</span>
+
+<span class="nb">print</span><span class="p">(</span> <span class="n">generated_strickgraph</span><span class="o">.</span><span class="n">to_manual</span><span class="p">(</span> <span class="n">stinfo</span> <span class="p">)</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p>If the algorithm fails we can extract the available data with the a function,
+we call it here <a href="#id1"><span class="problematic" id="id2">:py:function:`datarescue`</span></a>. See for exact instruction in
+documentation <code class="xref py py-mod docutils literal notranslate"><span class="pre">datagraph_factory</span></code> or in the testmethod
+<code class="xref py py-mod docutils literal notranslate"><span class="pre">clothfactory_parts.test_clothfactory_parts</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">tmpdir</span><span class="p">:</span>
+    <span class="n">save_graph</span><span class="p">(</span> <span class="n">tmp</span><span class="p">,</span> <span class="n">tmpdir</span><span class="p">,</span> <span class="p">[</span> <span class="n">meshthings</span><span class="p">,</span> <span class="n">physics</span><span class="p">,</span> <span class="n">plainknit</span><span class="p">,</span> <span class="n">strickgraph</span><span class="p">]</span> <span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Howto to autothingy clothes</a><ul>
+<li><a class="reference internal" href="#overview-other-available-and-targetted-data">Overview other available and targetted data</a><ul>
+<li><a class="reference internal" href="#objectinfo">Objectinfo</a></li>
+<li><a class="reference internal" href="#yarn-and-knittinginformation">Yarn- and knittinginformation</a></li>
+<li><a class="reference internal" href="#knittingpiece">Knittingpiece</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#informationinput">Informationinput</a></li>
+<li><a class="reference internal" href="#automatic-completion-of-data">Automatic completion of data</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../classcollection/plainknit.html"
+                        title="previous chapter">Plainknit</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="strickgraph.html"
+                        title="next chapter">How to handle Strickgraphs</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/howto/clothfactory.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="strickgraph.html" title="How to handle Strickgraphs"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../classcollection/plainknit.html" title="Plainknit"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Createcloth  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Howto to autothingy clothes</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, Richard Fechner.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
+    </div>
+  </body>
+</html>

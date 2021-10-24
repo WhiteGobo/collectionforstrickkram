@@ -1,0 +1,457 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Plainknit &#8212; Createcloth  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="How to handle Strickgraphs" href="../howto/strickgraph.html" />
+    <link rel="prev" title="Meshhandler" href="meshhandler.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../howto/strickgraph.html" title="How to handle Strickgraphs"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="meshhandler.html" title="Meshhandler"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Createcloth  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Plainknit</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="plainknit">
+<h1>Plainknit<a class="headerlink" href="#plainknit" title="Permalink to this headline">¶</a></h1>
+<p>Methods for everything sourrunded a plainknit-strickgraph.</p>
+<span class="target" id="module-createcloth.plainknit"></span><dl class="py data">
+<dt class="sig sig-object py" id="createcloth.plainknit.plainknit_decreaser">
+<span class="sig-prename descclassname"><span class="pre">createcloth.plainknit.</span></span><span class="sig-name descname"><span class="pre">plainknit_decreaser</span></span><em class="property"><span class="pre">:</span> <a class="reference internal" href="sidealterator.html#createcloth.verbesserer.class_side_alterator.multi_sidealterator" title="createcloth.verbesserer.class_side_alterator.multi_sidealterator"><span class="pre">createcloth.verbesserer.class_side_alterator.multi_sidealterator</span></a></em><em class="property"> <span class="pre">=</span> <span class="pre">&lt;createcloth.verbesserer.class_side_alterator.multi_sidealterator</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#createcloth.plainknit.plainknit_decreaser" title="Permalink to this definition">¶</a></dt>
+<dd><p>decreaser from file as described in plainknit_decreaser_file</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="createcloth.plainknit.plainknit_decreaser_file">
+<span class="sig-prename descclassname"><span class="pre">createcloth.plainknit.</span></span><span class="sig-name descname"><span class="pre">plainknit_decreaser_file</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'plainknit_decreaser.pickle'</span></em><a class="headerlink" href="#createcloth.plainknit.plainknit_decreaser_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>file to load decreaser from</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="createcloth.plainknit.plainknit_increaser">
+<span class="sig-prename descclassname"><span class="pre">createcloth.plainknit.</span></span><span class="sig-name descname"><span class="pre">plainknit_increaser</span></span><em class="property"><span class="pre">:</span> <a class="reference internal" href="sidealterator.html#createcloth.verbesserer.class_side_alterator.multi_sidealterator" title="createcloth.verbesserer.class_side_alterator.multi_sidealterator"><span class="pre">createcloth.verbesserer.class_side_alterator.multi_sidealterator</span></a></em><em class="property"> <span class="pre">=</span> <span class="pre">&lt;createcloth.verbesserer.class_side_alterator.multi_sidealterator</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#createcloth.plainknit.plainknit_increaser" title="Permalink to this definition">¶</a></dt>
+<dd><p>increaser from file as in plainknit_increaser_file</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="createcloth.plainknit.plainknit_increaser_file">
+<span class="sig-prename descclassname"><span class="pre">createcloth.plainknit.</span></span><span class="sig-name descname"><span class="pre">plainknit_increaser_file</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'plainknit_increaser.pickle'</span></em><a class="headerlink" href="#createcloth.plainknit.plainknit_increaser_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>file to load increaser from</p>
+</dd></dl>
+
+<section id="description-of-plainknit">
+<h2>Description of plainknit<a class="headerlink" href="#description-of-plainknit" title="Permalink to this headline">¶</a></h2>
+<p>That means every Strixkgraph only consisting mainly of knit stitches. starting
+and ending with yarnovers and bindoffs. So that the Strickstueck can increase
+and extend from row to row, at the sites, there can be yarnover for increase
+and k2tog for decrease. for strong also possible isthat the sderow hs on both
+sides yarnover or bindoff.</p>
+<span class="target" id="module-createcloth.plainknit.create_verbesserer"></span><dl class="py exception">
+<dt class="sig sig-object py" id="createcloth.plainknit.create_verbesserer.NoLeftRightFound">
+<em class="property"><span class="pre">exception</span> </em><span class="sig-prename descclassname"><span class="pre">createcloth.plainknit.create_verbesserer.</span></span><span class="sig-name descname"><span class="pre">NoLeftRightFound</span></span><a class="headerlink" href="#createcloth.plainknit.create_verbesserer.NoLeftRightFound" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="createcloth.plainknit.create_verbesserer.create_graph_from_linetypes">
+<span class="sig-prename descclassname"><span class="pre">createcloth.plainknit.create_verbesserer.</span></span><span class="sig-name descname"><span class="pre">create_graph_from_linetypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">linetypes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upedges</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.plainknit.create_verbesserer.create_graph_from_linetypes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Seems to be a double to thing from create_example_strickgraphs</p>
+<dl class="field-list simple">
+<dt class="field-odd">Todo</dt>
+<dd class="field-odd"><p>undouble this method</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="createcloth.plainknit.create_verbesserer.generate_verbesserer_from_given_strickgraphs">
+<span class="sig-prename descclassname"><span class="pre">createcloth.plainknit.create_verbesserer.</span></span><span class="sig-name descname"><span class="pre">generate_verbesserer_from_given_strickgraphs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graph2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subnodelist_left1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subnodelist_left2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startnode1_left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startnode2_left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leftindex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subnodelist_right1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subnodelist_right2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startnode1_right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startnode2_right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rightindex</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.plainknit.create_verbesserer.generate_verbesserer_from_given_strickgraphs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function for creation of alterator. Is mist liekly obsolent because of 
+generator of class_side_alterator</p>
+<dl class="field-list simple">
+<dt class="field-odd">Todo</dt>
+<dd class="field-odd"><p>ueberpruefe if this is bsolete</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="createcloth.plainknit.create_verbesserer.myfoo">
+<span class="sig-prename descclassname"><span class="pre">createcloth.plainknit.create_verbesserer.</span></span><span class="sig-name descname"><span class="pre">myfoo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">linetype_out</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linetype_in</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upedges_out</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upedges_in</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">changedline_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.plainknit.create_verbesserer.myfoo" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p>NoLeftRightFound</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="createcloth.plainknit.create_verbesserer.separate_wholegraphs_to_leftright_insulas">
+<span class="sig-prename descclassname"><span class="pre">createcloth.plainknit.create_verbesserer.</span></span><span class="sig-name descname"><span class="pre">separate_wholegraphs_to_leftright_insulas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">difference_graph1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">difference_graph2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">less_graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">great_graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">changedline_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.plainknit.create_verbesserer.separate_wholegraphs_to_leftright_insulas" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p>NoLeftRightFound</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="createcloth.plainknit.create_verbesserer.twographs_to_replacement">
+<span class="sig-prename descclassname"><span class="pre">createcloth.plainknit.create_verbesserer.</span></span><span class="sig-name descname"><span class="pre">twographs_to_replacement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graph2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startnode</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.plainknit.create_verbesserer.twographs_to_replacement" title="Permalink to this definition">¶</a></dt>
+<dd><p>helper function, might be obsolete.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Todo</dt>
+<dd class="field-odd"><p>check if this is obsolete</p>
+</dd>
+</dl>
+</dd></dl>
+
+<span class="target" id="module-createcloth.plainknit.method_isplain"></span><dl class="py function">
+<dt class="sig sig-object py" id="createcloth.plainknit.method_isplain.isplain">
+<span class="sig-prename descclassname"><span class="pre">createcloth.plainknit.method_isplain.</span></span><span class="sig-name descname"><span class="pre">isplain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">linetypes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upedges</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.plainknit.method_isplain.isplain" title="Permalink to this definition">¶</a></dt>
+<dd><p>method for identify plainknit</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="createcloth.plainknit.method_isplain.isplain_strickgraph">
+<span class="sig-prename descclassname"><span class="pre">createcloth.plainknit.method_isplain.</span></span><span class="sig-name descname"><span class="pre">isplain_strickgraph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strickgraph</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.plainknit.method_isplain.isplain_strickgraph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method for identification of a strickgraph, if its plainknit or not</p>
+</dd></dl>
+
+<span class="target" id="module-createcloth.plainknit.state"></span><dl class="py exception">
+<dt class="sig sig-object py" id="createcloth.plainknit.state.WrongDownUpEdges">
+<em class="property"><span class="pre">exception</span> </em><span class="sig-prename descclassname"><span class="pre">createcloth.plainknit.state.</span></span><span class="sig-name descname"><span class="pre">WrongDownUpEdges</span></span><a class="headerlink" href="#createcloth.plainknit.state.WrongDownUpEdges" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="createcloth.plainknit.state.WrongSide">
+<em class="property"><span class="pre">exception</span> </em><span class="sig-prename descclassname"><span class="pre">createcloth.plainknit.state.</span></span><span class="sig-name descname"><span class="pre">WrongSide</span></span><a class="headerlink" href="#createcloth.plainknit.state.WrongSide" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="createcloth.plainknit.state.linetype_identifier_fourborderstitches">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">createcloth.plainknit.state.</span></span><span class="sig-name descname"><span class="pre">linetype_identifier_fourborderstitches</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">default_stitchtype</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fourborder_stitchtype_right</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.plainknit.state.linetype_identifier_fourborderstitches" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">createcloth.plainknit.state.linetype_identifier</span></code></p>
+<p>Identifier for linetype with a given 4stitchwideborder and else only
+a single stitchtype.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>default_stitchtype</strong> – asdf</p></li>
+<li><p><strong>fourborder_stitchtype_right</strong> – asdf</p></li>
+<li><p><strong>fourborder_stitchtype_left</strong> – asdf</p></li>
+<li><p><strong>contained_stitchtypes</strong> – asdf</p></li>
+<li><p><strong>border_downedges</strong> – asdf</p></li>
+<li><p><strong>border_upedges</strong> – asdf</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="createcloth.plainknit.state.linetype_identifier_oneside_decrease">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">createcloth.plainknit.state.</span></span><span class="sig-name descname"><span class="pre">linetype_identifier_oneside_decrease</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">default_stitchtype</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">border_stitchtype</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.plainknit.state.linetype_identifier_oneside_decrease" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">createcloth.plainknit.state.linetype_identifier</span></code></p>
+<p>identifier with one main stitchtype and 1 stitchtype to decrease per
+stitch.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>default_stitchtype</strong> – asdf</p></li>
+<li><p><strong>border_stitchtype</strong> – asdf</p></li>
+<li><p><strong>right</strong> – asdf</p></li>
+<li><p><strong>contained_stitchtypes</strong> – asdf</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="createcloth.plainknit.state.linetype_identifier_oneside_increase">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">createcloth.plainknit.state.</span></span><span class="sig-name descname"><span class="pre">linetype_identifier_oneside_increase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">default_stitchtype</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">border_stitchtype</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.plainknit.state.linetype_identifier_oneside_increase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">createcloth.plainknit.state.linetype_identifier</span></code></p>
+<p>identifier with one main stitchtype and 1 stitchtype to increase per
+stitch.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>default_stitchtype</strong> – asdf</p></li>
+<li><p><strong>border_stitchtype</strong> – asdf</p></li>
+<li><p><strong>right</strong> – asdf</p></li>
+<li><p><strong>contained_stitchtypes</strong> – asdf</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="createcloth.plainknit.state.linetype_identifier_simple">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">createcloth.plainknit.state.</span></span><span class="sig-name descname"><span class="pre">linetype_identifier_simple</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">default_stitchtype</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.plainknit.state.linetype_identifier_simple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">createcloth.plainknit.state.linetype_identifier</span></code></p>
+<p>Identifier for rows of a single stitchtype</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>default_stitchtype</strong> – string to identify stitchtype</p></li>
+<li><p><strong>stitchinfo</strong> – stitchtype-dictionary zo get identify</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="createcloth.plainknit.state.rowstate">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">createcloth.plainknit.state.</span></span><span class="sig-name descname"><span class="pre">rowstate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">identifier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">updowndifference</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valid_sides</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">('left',</span> <span class="pre">'right')</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.plainknit.state.rowstate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Rowstate to identify plainknit rows</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="createcloth.plainknit.state.rowstate.create_example_row">
+<span class="sig-name descname"><span class="pre">create_example_row</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">downedges</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upedges</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">side</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'right'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.plainknit.state.rowstate.create_example_row" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p>WrongDownUpEdges, WrongSide</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-createcloth.plainknit.examplestates">
+<span id="used-states"></span><h2>Used states<a class="headerlink" href="#module-createcloth.plainknit.examplestates" title="Permalink to this headline">¶</a></h2>
+<dl class="py data">
+<dt class="sig sig-object py" id="createcloth.plainknit.examplestates.decrease">
+<span class="sig-prename descclassname"><span class="pre">createcloth.plainknit.examplestates.</span></span><span class="sig-name descname"><span class="pre">decrease</span></span><em class="property"><span class="pre">:</span> <a class="reference internal" href="#createcloth.plainknit.state.rowstate" title="createcloth.plainknit.state.rowstate"><span class="pre">createcloth.plainknit.state.rowstate</span></a></em><em class="property"> <span class="pre">=</span> <span class="pre">decrease</span></em><a class="headerlink" href="#createcloth.plainknit.examplestates.decrease" title="Permalink to this definition">¶</a></dt>
+<dd><p>row with left and right 3rd position k2tog and else only knits. 
+k2tog is for decrease.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="createcloth.plainknit.examplestates.end">
+<span class="sig-prename descclassname"><span class="pre">createcloth.plainknit.examplestates.</span></span><span class="sig-name descname"><span class="pre">end</span></span><em class="property"><span class="pre">:</span> <a class="reference internal" href="#createcloth.plainknit.state.rowstate" title="createcloth.plainknit.state.rowstate"><span class="pre">createcloth.plainknit.state.rowstate</span></a></em><em class="property"> <span class="pre">=</span> <span class="pre">end</span></em><a class="headerlink" href="#createcloth.plainknit.examplestates.end" title="Permalink to this definition">¶</a></dt>
+<dd><p>endrow with only bindoff</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="createcloth.plainknit.examplestates.enddecrease">
+<span class="sig-prename descclassname"><span class="pre">createcloth.plainknit.examplestates.</span></span><span class="sig-name descname"><span class="pre">enddecrease</span></span><em class="property"><span class="pre">:</span> <a class="reference internal" href="#createcloth.plainknit.state.rowstate" title="createcloth.plainknit.state.rowstate"><span class="pre">createcloth.plainknit.state.rowstate</span></a></em><em class="property"> <span class="pre">=</span> <span class="pre">enddecrease</span></em><a class="headerlink" href="#createcloth.plainknit.examplestates.enddecrease" title="Permalink to this definition">¶</a></dt>
+<dd><p>endrow wizh left and right 3rd position bind2off and else only bindoff</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="createcloth.plainknit.examplestates.increase">
+<span class="sig-prename descclassname"><span class="pre">createcloth.plainknit.examplestates.</span></span><span class="sig-name descname"><span class="pre">increase</span></span><em class="property"><span class="pre">:</span> <a class="reference internal" href="#createcloth.plainknit.state.rowstate" title="createcloth.plainknit.state.rowstate"><span class="pre">createcloth.plainknit.state.rowstate</span></a></em><em class="property"> <span class="pre">=</span> <span class="pre">increase</span></em><a class="headerlink" href="#createcloth.plainknit.examplestates.increase" title="Permalink to this definition">¶</a></dt>
+<dd><p>row with left and right 3rd position yarnover and else only knits. 
+yarnover is for increase.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="createcloth.plainknit.examplestates.lefteaves">
+<span class="sig-prename descclassname"><span class="pre">createcloth.plainknit.examplestates.</span></span><span class="sig-name descname"><span class="pre">lefteaves</span></span><em class="property"><span class="pre">:</span> <a class="reference internal" href="#createcloth.plainknit.state.rowstate" title="createcloth.plainknit.state.rowstate"><span class="pre">createcloth.plainknit.state.rowstate</span></a></em><em class="property"> <span class="pre">=</span> <span class="pre">lefteaves</span></em><a class="headerlink" href="#createcloth.plainknit.examplestates.lefteaves" title="Permalink to this definition">¶</a></dt>
+<dd><p>row with mainly knit but on zje left side yarnover for increase</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="createcloth.plainknit.examplestates.leftplane">
+<span class="sig-prename descclassname"><span class="pre">createcloth.plainknit.examplestates.</span></span><span class="sig-name descname"><span class="pre">leftplane</span></span><em class="property"><span class="pre">:</span> <a class="reference internal" href="#createcloth.plainknit.state.rowstate" title="createcloth.plainknit.state.rowstate"><span class="pre">createcloth.plainknit.state.rowstate</span></a></em><em class="property"> <span class="pre">=</span> <span class="pre">leftplane</span></em><a class="headerlink" href="#createcloth.plainknit.examplestates.leftplane" title="Permalink to this definition">¶</a></dt>
+<dd><p>row with mainly knit but on the left side bindoff for decrease</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="createcloth.plainknit.examplestates.plain">
+<span class="sig-prename descclassname"><span class="pre">createcloth.plainknit.examplestates.</span></span><span class="sig-name descname"><span class="pre">plain</span></span><em class="property"><span class="pre">:</span> <a class="reference internal" href="#createcloth.plainknit.state.rowstate" title="createcloth.plainknit.state.rowstate"><span class="pre">createcloth.plainknit.state.rowstate</span></a></em><em class="property"> <span class="pre">=</span> <span class="pre">plain</span></em><a class="headerlink" href="#createcloth.plainknit.examplestates.plain" title="Permalink to this definition">¶</a></dt>
+<dd><p>row with only knit</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="createcloth.plainknit.examplestates.righteaves">
+<span class="sig-prename descclassname"><span class="pre">createcloth.plainknit.examplestates.</span></span><span class="sig-name descname"><span class="pre">righteaves</span></span><em class="property"><span class="pre">:</span> <a class="reference internal" href="#createcloth.plainknit.state.rowstate" title="createcloth.plainknit.state.rowstate"><span class="pre">createcloth.plainknit.state.rowstate</span></a></em><em class="property"> <span class="pre">=</span> <span class="pre">righteaves</span></em><a class="headerlink" href="#createcloth.plainknit.examplestates.righteaves" title="Permalink to this definition">¶</a></dt>
+<dd><p>row with mainly knit but on the right side yarnover for increase</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="createcloth.plainknit.examplestates.rightplane">
+<span class="sig-prename descclassname"><span class="pre">createcloth.plainknit.examplestates.</span></span><span class="sig-name descname"><span class="pre">rightplane</span></span><em class="property"><span class="pre">:</span> <a class="reference internal" href="#createcloth.plainknit.state.rowstate" title="createcloth.plainknit.state.rowstate"><span class="pre">createcloth.plainknit.state.rowstate</span></a></em><em class="property"> <span class="pre">=</span> <span class="pre">rightplane</span></em><a class="headerlink" href="#createcloth.plainknit.examplestates.rightplane" title="Permalink to this definition">¶</a></dt>
+<dd><p>row with mainly knit but on the right side bindoff for decrease</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="createcloth.plainknit.examplestates.start">
+<span class="sig-prename descclassname"><span class="pre">createcloth.plainknit.examplestates.</span></span><span class="sig-name descname"><span class="pre">start</span></span><em class="property"><span class="pre">:</span> <a class="reference internal" href="#createcloth.plainknit.state.rowstate" title="createcloth.plainknit.state.rowstate"><span class="pre">createcloth.plainknit.state.rowstate</span></a></em><em class="property"> <span class="pre">=</span> <span class="pre">start</span></em><a class="headerlink" href="#createcloth.plainknit.examplestates.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Startrow with only  yarnover</p>
+</dd></dl>
+
+</section>
+<section id="graphalterator-generators">
+<h2>Graphalterator Generators:<a class="headerlink" href="#graphalterator-generators" title="Permalink to this headline">¶</a></h2>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>Write howto use graphalterator generators</p>
+</div>
+<span class="target" id="module-createcloth.plainknit.create_example_strickgraphs"></span><dl class="py class">
+<dt class="sig sig-object py" id="createcloth.plainknit.create_example_strickgraphs.class_idarray">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">createcloth.plainknit.create_example_strickgraphs.</span></span><span class="sig-name descname"><span class="pre">class_idarray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stitches_per_line</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.plainknit.create_example_strickgraphs.class_idarray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Helperclass for creation of increaser and decreaser</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="createcloth.plainknit.create_example_strickgraphs.create_example_strickset">
+<span class="sig-prename descclassname"><span class="pre">createcloth.plainknit.create_example_strickgraphs.</span></span><span class="sig-name descname"><span class="pre">create_example_strickset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbessererlist</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strickgraphsize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_row_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startright</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span></span></span><a class="headerlink" href="#createcloth.plainknit.create_example_strickgraphs.create_example_strickset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method for creating example strickgraphs with plainknit lineidentifiers</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="createcloth.plainknit.create_example_strickgraphs.create_graph_from_linetypes">
+<span class="sig-prename descclassname"><span class="pre">createcloth.plainknit.create_example_strickgraphs.</span></span><span class="sig-name descname"><span class="pre">create_graph_from_linetypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">linetypes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upedges</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startside</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'right'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.plainknit.create_example_strickgraphs.create_graph_from_linetypes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create graph only from linetypes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Todo</dt>
+<dd class="field-odd"><p>there is double?? in create_verbesserer</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="createcloth.plainknit.create_example_strickgraphs.create_stitchnumber_to_examplestrick">
+<span class="sig-prename descclassname"><span class="pre">createcloth.plainknit.create_example_strickgraphs.</span></span><span class="sig-name descname"><span class="pre">create_stitchnumber_to_examplestrick</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.plainknit.create_example_strickgraphs.create_stitchnumber_to_examplestrick" title="Permalink to this definition">¶</a></dt>
+<dd><p>Im not sure</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="createcloth.plainknit.create_example_strickgraphs.find_to_graph_onedifferencegraphs">
+<span class="sig-prename descclassname"><span class="pre">createcloth.plainknit.create_example_strickgraphs.</span></span><span class="sig-name descname"><span class="pre">find_to_graph_onedifferencegraphs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">maingraph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">brulist</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_row_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.plainknit.create_example_strickgraphs.find_to_graph_onedifferencegraphs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Needed for creating increaser and decreaser</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="createcloth.plainknit.create_example_strickgraphs.method1">
+<span class="sig-prename descclassname"><span class="pre">createcloth.plainknit.create_example_strickgraphs.</span></span><span class="sig-name descname"><span class="pre">method1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pairlist</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">side</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'both'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oldtranlatorlist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.plainknit.create_example_strickgraphs.method1" title="Permalink to this definition">¶</a></dt>
+<dd><p>???</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="createcloth.plainknit.create_example_strickgraphs.order_neighbouring">
+<span class="sig-prename descclassname"><span class="pre">createcloth.plainknit.create_example_strickgraphs.</span></span><span class="sig-name descname"><span class="pre">order_neighbouring</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">brubru</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.plainknit.create_example_strickgraphs.order_neighbouring" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helperfunction for creation of increaser and decreaser for 
+plainknitstrick</p>
+</dd></dl>
+
+<span class="target" id="module-createcloth.plainknit.program_create_alterator"></span><dl class="py function">
+<dt class="sig sig-object py" id="createcloth.plainknit.program_create_alterator.main">
+<span class="sig-prename descclassname"><span class="pre">createcloth.plainknit.program_create_alterator.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alteratortype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strickgraphsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_row_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">14</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cont</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_exception</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.plainknit.program_create_alterator.main" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>alteratortype</strong> – defines, what alterator is created. possible is
+‘increase’ and ‘decrease’</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Plainknit</a><ul>
+<li><a class="reference internal" href="#description-of-plainknit">Description of plainknit</a></li>
+<li><a class="reference internal" href="#module-createcloth.plainknit.examplestates">Used states</a></li>
+<li><a class="reference internal" href="#graphalterator-generators">Graphalterator Generators:</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="meshhandler.html"
+                        title="previous chapter">Meshhandler</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../howto/strickgraph.html"
+                        title="next chapter">How to handle Strickgraphs</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/classcollection/plainknit.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../howto/strickgraph.html" title="How to handle Strickgraphs"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="meshhandler.html" title="Meshhandler"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Createcloth  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Plainknit</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, Richard Fechner.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,173 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>How to handle Strickgraphs &#8212; Createcloth  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Identify Strickgraph as plainknit" href="linetypes.html" />
+    <link rel="prev" title="Plainknit" href="../classcollection/plainknit.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="linetypes.html" title="Identify Strickgraph as plainknit"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../classcollection/plainknit.html" title="Plainknit"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Createcloth  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">How to handle Strickgraphs</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="how-to-handle-strickgraphs">
+<h1>How to handle Strickgraphs<a class="headerlink" href="#how-to-handle-strickgraphs" title="Permalink to this headline">¶</a></h1>
+<section id="printing-strickgraphs">
+<h2>Printing Strickgraphs<a class="headerlink" href="#printing-strickgraphs" title="Permalink to this headline">¶</a></h2>
+<p>The easiest way to look at Strickgraphs is via a manual:
+.. code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">...</span> <span class="n">mystrickgraph</span><span class="p">:</span> <span class="n">createcloth</span><span class="o">.</span><span class="n">strickgraph</span><span class="o">.</span><span class="n">strickgraph</span>
+<span class="o">...</span> <span class="n">stitchinfo</span><span class="p">:</span> <span class="n">createcloth</span><span class="o">.</span><span class="n">strickgraph</span><span class="o">.</span><span class="n">stitchinfo</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">print</span><span class="p">(</span> <span class="n">mystrickgraph</span><span class="o">.</span><span class="n">to_manual</span><span class="p">(</span> <span class="n">stitchinfo</span> <span class="p">)</span> <span class="p">)</span>
+<span class="o">...</span> <span class="mi">6</span><span class="n">yo</span>
+<span class="o">...</span> <span class="mi">6</span><span class="n">k</span>
+<span class="o">...</span> <span class="mi">6</span><span class="n">k</span>
+<span class="o">...</span> <span class="mi">6</span><span class="n">bo</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">print</span><span class="p">(</span> <span class="p">{</span> <span class="n">symbol</span><span class="p">:</span><span class="n">stitch</span>
+            <span class="k">for</span> <span class="n">symbol</span><span class="p">,</span> <span class="n">stitch</span> <span class="ow">in</span> <span class="n">stitchinfo</span><span class="o">.</span><span class="n">asdf</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">symbol</span> <span class="ow">in</span> <span class="p">(</span> <span class="s1">&#39;yo&#39;</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="s1">&#39;bo&#39;</span> <span class="p">)}</span> <span class="p">)</span>
+<span class="o">...</span> <span class="p">{</span> <span class="s1">&#39;yo&#39;</span><span class="p">:</span> <span class="s1">&#39;yarnover&#39;</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">:</span> <span class="s1">&#39;knit&#39;</span><span class="p">,</span> <span class="s1">&#39;bo&#39;</span><span class="p">:</span> <span class="s1">&#39;bindoff&#39;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>You can directly see, that our Strickgraph consist of four rows each with
+6 stitches. The first consists of yarnover-, the last bindoff- and the middle
+of knit-stitches.</p>
+<p>To have complete information you also need the startside:
+.. code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">...</span> <span class="n">mystrickgraph</span><span class="p">:</span> <span class="n">createcloth</span><span class="o">.</span><span class="n">strickgraph</span><span class="o">.</span><span class="n">strickgraph</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">print</span><span class="p">(</span> <span class="n">mystrickgraph</span><span class="o">.</span><span class="n">get_startside</span><span class="p">()</span> <span class="p">)</span>
+<span class="o">...</span> <span class="n">right</span>
+</pre></div>
+</div>
+<p>Valid startsides are “right” and “left”.</p>
+</section>
+<section id="howto-create-a-strickalterator">
+<h2>Howto create a strickalterator<a class="headerlink" href="#howto-create-a-strickalterator" title="Permalink to this headline">¶</a></h2>
+<p>The most solid solution is to get valid input-output scenarios of an alteration
+and create from them the desired alterations.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">...</span> <span class="n">inmanual</span>  <span class="o">==</span> <span class="s2">&quot;6yo</span><span class="se">\n</span><span class="s2">1k 1kmark 1k2tog 2k</span><span class="se">\n</span><span class="s2">1k 1k2tog 2k</span><span class="se">\n</span><span class="s2">4bo&quot;</span>
+<span class="o">...</span> <span class="n">outmanual</span> <span class="o">==</span> <span class="s2">&quot;6yo</span><span class="se">\n</span><span class="s2">1k 1kmark 2k 2bo</span><span class="se">\n</span><span class="s2">4k</span><span class="se">\n</span><span class="s2">4bo&quot;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">alter</span> <span class="o">=</span> <span class="n">strickalterator</span><span class="o">.</span><span class="n">from_manuals</span><span class="p">(</span> <span class="n">inmanual</span><span class="p">,</span> <span class="n">outmanual</span><span class="p">,</span> <span class="n">stitchinfo</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p>For use of multiple senarios at the same time see [1].</p>
+<p>This alterator holds only one in-out-scenario. For holding an array of possible
+scenarios the class multi_strickverbesserer will be used instead. See [1] for this.</p>
+<p>After creation the strickalterator can be used on every fitting Strickgraph, when given the correct startposition:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">...</span> <span class="n">inmanual</span>  <span class="o">==</span> <span class="s2">&quot;6yo</span><span class="se">\n</span><span class="s2">2k 1k2tog 2k</span><span class="se">\n</span><span class="s2">1k 1k2tog 2k</span><span class="se">\n</span><span class="s2">4bo&quot;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">mygraph</span> <span class="o">=</span> <span class="n">strickgraph</span><span class="o">.</span><span class="n">from_manual</span><span class="p">(</span> <span class="n">inmanual</span> <span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">alter</span> <span class="o">=</span> <span class="n">strickalterator</span><span class="o">.</span><span class="n">from_manuals</span><span class="p">(</span> <span class="n">inmanual</span><span class="p">,</span> <span class="n">outmanual</span><span class="p">,</span> <span class="n">stitchinfo</span> <span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">alter</span><span class="o">.</span><span class="n">replace_in_graph</span><span class="p">(</span> <span class="n">mygraph</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">print</span><span class="p">(</span> <span class="n">mygraph</span><span class="o">.</span><span class="n">to_manual</span><span class="p">(</span> <span class="n">stitchinfo</span> <span class="p">)</span> <span class="p">)</span>
+<span class="o">...</span> <span class="mi">6</span><span class="n">yo</span>
+<span class="o">...</span> <span class="mi">4</span><span class="n">k</span> <span class="mi">2</span><span class="n">bo</span>
+<span class="o">...</span> <span class="mi">4</span><span class="n">k</span>
+<span class="o">...</span> <span class="mi">4</span><span class="n">bo</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">How to handle Strickgraphs</a><ul>
+<li><a class="reference internal" href="#printing-strickgraphs">Printing Strickgraphs</a></li>
+<li><a class="reference internal" href="#howto-create-a-strickalterator">Howto create a strickalterator</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../classcollection/plainknit.html"
+                        title="previous chapter">Plainknit</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="linetypes.html"
+                        title="next chapter">Identify Strickgraph as plainknit</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/howto/strickgraph.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="linetypes.html" title="Identify Strickgraph as plainknit"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../classcollection/plainknit.html" title="Plainknit"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Createcloth  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">How to handle Strickgraphs</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, Richard Fechner.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
+    </div>
+  </body>
+</html>

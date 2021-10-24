@@ -1,0 +1,374 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Strickgraph Utils &#8212; Createcloth  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Sidealterator" href="sidealterator.html" />
+    <link rel="prev" title="Stitchinfo" href="stitchinfo.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="sidealterator.html" title="Sidealterator"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="stitchinfo.html" title="Stitchinfo"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Createcloth  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Strickgraph Utils</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-createcloth.verbesserer">
+<span id="strickgraph-utils"></span><h1>Strickgraph Utils<a class="headerlink" href="#module-createcloth.verbesserer" title="Permalink to this headline">¶</a></h1>
+<dl class="field-list simple">
+<dt class="field-odd">todo</dt>
+<dd class="field-odd"><p>tidy up all the methods that arent used anymore</p>
+</dd>
+</dl>
+<p><strong>classes:</strong></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="createcloth.verbesserer.strickalterator">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">createcloth.verbesserer.</span></span><span class="sig-name descname"><span class="pre">strickalterator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">oldgraph_nodeattributes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oldgraph_edges_with_label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newgraph_nodeattributes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newgraph_edges_with_label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startpoint</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oldgraph_identificationpath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oldgraph_nodeinfoonpath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logging_information</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.verbesserer.strickalterator" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="createcloth.verbesserer.strickalterator.create_replace_info">
+<span class="sig-name descname"><span class="pre">create_replace_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph_nodeattributes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_edges</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startnode</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.verbesserer.strickalterator.create_replace_info" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p>WrongStartnode, FindError</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="createcloth.verbesserer.strickalterator.from_graph_difference">
+<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">from_graph_difference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nodeattributes1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edges1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodeattributes2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edges2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startnode_old</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">starttranslation</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.verbesserer.strickalterator.from_graph_difference" title="Permalink to this definition">¶</a></dt>
+<dd><p>function to generate an ersetzer through differences in two graphs         the ersetzer cahces only the border of the different parts and the         difference itself</p>
+<dl>
+<dt>for example 0-a-b-c-d-1 -&gt; 0-a-e-d-1</dt><dd><p>-difference: b-c and e</p>
+<p>-border: a and d</p>
+<p>-not in ersetzer contained: 0 and 1</p>
+</dd>
+</dl>
+<p>startnode can only be node on the border
+for algorithm see sourcecode</p>
+<dl class="simple">
+<dt>Writes in alterator.logging_information:</dt><dd><p>‘oldgraph_translator’: used translator for oldgraph to savednodes
+‘newgraph_translator’: used translator for newgraph to savednodes</p>
+</dd>
+</dl>
+<p>eg.use oldgraph_translator to identify nodes to add (cls.nodes_to_add())</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>oldgraph</strong> – subgraphs must be comparable to subgraphs of asd2                 means ‘asd.subgraph(.. ) == asd2.subgraph(.. )’ must be                 working correctly</p></li>
+<li><p><strong>newgraph</strong> – the target graph, see also asd</p></li>
+<li><p><strong>startnode_old</strong> – id of node in asd,         :param edgeattribute: string of name of the edgeattribute                 which is followed</p></li>
+<li><p><strong>nodeattributes</strong> – list of nodeattributes which to look for</p></li>
+<li><p><strong>starttranslation</strong> – Starttranslation if startnodes may be part of                 the unshared nodes of  both graphs, Optional</p></li>
+</ul>
+</dd>
+<dt class="field-even">Aype starttranslation</dt>
+<dd class="field-even"><p>Dict[ Hashable, Hashable ]</p>
+</dd>
+<dt class="field-odd">Todo</dt>
+<dd class="field-odd"><p>The replacement could be not connected. But here we need
+a connected one.
+Also startnodes must be at least second neighbours to
+uncommon graphnodes
+logger is strange, see comment by logger.info…</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>verbesserer</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="createcloth.verbesserer.strickalterator.from_manuals">
+<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">from_manuals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">manual_old</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">manual_new</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stitchinfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_at</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bottomleft'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">manual_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'machine'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startside</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'right'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startpoint_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'marked'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.verbesserer.strickalterator.from_manuals" title="Permalink to this definition">¶</a></dt>
+<dd><p>generates everything i need for replacing a subgraph</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>startpoint_method</strong> – keyword for finding the startpoint                 for replacement</p></li>
+<li><p><strong>nodes_to_consider</strong> (<em>none</em><em>, </em><em>networkx.graph</em><em> or </em><em>list</em>) – state which nodes should be searched                 for, when replacing a subgraph. if none equals automated</p></li>
+<li><p><strong>manual_old</strong> – the graph where the subgraph is to be searched for</p></li>
+<li><p><strong>manual_new</strong> – the target graph</p></li>
+<li><p><strong>start_at</strong> (<em>str</em>) – string to determine which node should be starting                 node for the search later in the replacement possible                 options are given by: find_startpoint_dictionary.keys()                 extra options can be added, see find_startpoint_dictionary</p></li>
+</ul>
+</dd>
+<dt class="field-even">Todo</dt>
+<dd class="field-even"><p>remake xml to contain which attributes are used in path                 generation currently there is no information that it                 used side and edgetype in pathinfo or nodetype in                 nodeinfo_onpath. THIS,     is clearly wrong:(                 Also remove unneeded node and edge information                 currently only mark information is removed and this only works                 via extra if function. This has to be optimised somehow</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="createcloth.verbesserer.strickalterator.from_xmlobject">
+<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">from_xmlobject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xml_elem</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.verbesserer.strickalterator.from_xmlobject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create from xml-object</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="createcloth.verbesserer.strickalterator.from_xmlstr">
+<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">from_xmlstr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xml</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.verbesserer.strickalterator.from_xmlstr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create from xml str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Todo</dt>
+<dd class="field-odd"><p>remake this method</p>
+</dd>
+<dt class="field-even">Todo</dt>
+<dd class="field-even"><p>link for xml-structure</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="createcloth.verbesserer.strickalterator.isreplaceable">
+<span class="sig-name descname"><span class="pre">isreplaceable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startnode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodeattributes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edgeswithlabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.verbesserer.strickalterator.isreplaceable" title="Permalink to this definition">¶</a></dt>
+<dd><p>checks if graph is at this startnode alterateable with this 
+alterator
+:rtype: boolean</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="createcloth.verbesserer.strickalterator.replace_in_graph">
+<span class="sig-name descname"><span class="pre">replace_in_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startnode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dontreplace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.verbesserer.strickalterator.replace_in_graph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mainmethod. replaces in given strickgraph at given position</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="createcloth.verbesserer.strickalterator.to_xml">
+<span class="sig-name descname"><span class="pre">to_xml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'utf8'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.verbesserer.strickalterator.to_xml" title="Permalink to this definition">¶</a></dt>
+<dd><p>creates xml string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Todo</dt>
+<dd class="field-odd"><p>link xml structure</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="createcloth.verbesserer.strickalterator.toxmlelem">
+<span class="sig-name descname"><span class="pre">toxmlelem</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.verbesserer.strickalterator.toxmlelem" title="Permalink to this definition">¶</a></dt>
+<dd><p>creates xml object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>xml.etree.ElementTree.Element</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="createcloth.verbesserer.strick_multiverbesserer">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">createcloth.verbesserer.</span></span><span class="sig-name descname"><span class="pre">strick_multiverbesserer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbessererlist</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.verbesserer.strick_multiverbesserer" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="createcloth.verbesserer.strick_multiverbesserer.from_xml">
+<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">from_xml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xmlstr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbesserer_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.verbesserer.strick_multiverbesserer.from_xml" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates from xmlstr.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Todo</dt>
+<dd class="field-odd"><p>create link for namespaces and structure of xml</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="createcloth.verbesserer.strick_multiverbesserer.from_xmlstring">
+<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">from_xmlstring</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">xmlstr:</span> <span class="pre">str</span></em>, <em class="sig-param"><span class="pre">graph_type=&lt;class</span> <span class="pre">'createcloth.strickgraph.strickgraph_base.stricksubgraph'&gt;</span></em>, <em class="sig-param"><span class="pre">name=None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.verbesserer.strick_multiverbesserer.from_xmlstring" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create multiverbesserer from xml string</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="createcloth.verbesserer.strick_multiverbesserer.print_compare_to_graph_at_position">
+<span class="sig-name descname"><span class="pre">print_compare_to_graph_at_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">marknode</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.verbesserer.strick_multiverbesserer.print_compare_to_graph_at_position" title="Permalink to this definition">¶</a></dt>
+<dd><p>plot helping to understand problems</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="createcloth.verbesserer.strick_multiverbesserer.print_with_matplotlib">
+<span class="sig-name descname"><span class="pre">print_with_matplotlib</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">useoldgraph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tmpplotinfo</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.verbesserer.strick_multiverbesserer.print_with_matplotlib" title="Permalink to this definition">¶</a></dt>
+<dd><p>visualize with matplot</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="createcloth.verbesserer.strick_multiverbesserer.replace_in_graph">
+<span class="sig-name descname"><span class="pre">replace_in_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startnode</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.verbesserer.strick_multiverbesserer.replace_in_graph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tries for startnode all available builtin alterater.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>graph</strong> (<em>networkx.Graph</em>) – Graph to be alterated</p></li>
+<li><p><strong>startnode</strong> (<em>Hashable</em>) – Marked node in graph as startpoint for alterator</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Return if successful</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="createcloth.verbesserer.strick_multiverbesserer.replace_in_graph_with_exception">
+<span class="sig-name descname"><span class="pre">replace_in_graph_with_exception</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mystrickgraph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">markednode</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.verbesserer.strick_multiverbesserer.replace_in_graph_with_exception" title="Permalink to this definition">¶</a></dt>
+<dd><p>replace in graph</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p>StrickgraphVerbessererException</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="createcloth.verbesserer.strick_multiverbesserer.replace_in_graph_withinfo">
+<span class="sig-name descname"><span class="pre">replace_in_graph_withinfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startnode</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.verbesserer.strick_multiverbesserer.replace_in_graph_withinfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tries for startnode all available builtin alterater. Returns                 additional information</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>graph</strong> (<em>networkx.Graph</em>) – Graph to be alterated</p></li>
+<li><p><strong>startnode</strong> (<em>Hashable</em>) – Marked node in graph as startpoint for alterator</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Return if successful, and additional information if                 not succesful</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tuple[ Boolean, Iterable ]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="createcloth.verbesserer.strick_multiverbesserer.to_xml">
+<span class="sig-name descname"><span class="pre">to_xml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'utf8'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.verbesserer.strick_multiverbesserer.to_xml" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates xml string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="createcloth.verbesserer.strick_multiverbesserer.toxml_element">
+<span class="sig-name descname"><span class="pre">toxml_element</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.verbesserer.strick_multiverbesserer.toxml_element" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create xml-element from self</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>xml.etree.ElementTree.Element</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<p><strong>Exceptions:</strong></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="createcloth.verbesserer.FindError">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">createcloth.verbesserer.</span></span><span class="sig-name descname"><span class="pre">FindError</span></span><a class="headerlink" href="#createcloth.verbesserer.FindError" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="createcloth.verbesserer.StrickgraphVerbessererException">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">createcloth.verbesserer.</span></span><span class="sig-name descname"><span class="pre">StrickgraphVerbessererException</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mymultiverbesserer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mystrickgraph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">markednode</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.verbesserer.StrickgraphVerbessererException" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="stitchinfo.html"
+                        title="previous chapter">Stitchinfo</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="sidealterator.html"
+                        title="next chapter">Sidealterator</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/classcollection/verbesserer.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="sidealterator.html" title="Sidealterator"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="stitchinfo.html" title="Stitchinfo"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Createcloth  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Strickgraph Utils</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, Richard Fechner.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
+    </div>
+  </body>
+</html>
