@@ -28,6 +28,11 @@ class vertice_param_position_container():
 
 def relax_gridgraph( gridgraph:strickgraph, surfacemap: plysurfacehandler ) \
                                                     -> Dict[ Hashable, Dict ]:
+    """Relax gridgraph on surface
+
+    :param surfacemap: asdf
+    :type surfacemap: plysurfacehandler.surfacemap_utils.surfacemap
+    """
     border = gridgraph.get_borders()
     number_rows = len( gridgraph.get_rows() )
     gridgraph = gridgraph.give_real_graph()
