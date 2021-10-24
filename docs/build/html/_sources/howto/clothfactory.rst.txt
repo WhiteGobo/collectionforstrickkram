@@ -194,7 +194,7 @@ Now we can now extract the information from the :py:class:`datagraph<datagraph_f
    print( generated_strickgraph.to_manual( stinfo ) )
 
 If the algorithm fails we can extract the available data with the a function,
-we call it here :py:function:`datarescue`. See for exact instruction in
+we call it here :py:func:`datarescue`. See for exact instruction in
 documentation :py:mod:`datagraph_factory` or in the testmethod 
 :py:mod:`clothfactory_parts.test_clothfactory_parts`.
 

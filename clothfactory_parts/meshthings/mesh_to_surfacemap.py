@@ -17,8 +17,7 @@ def _create_datagraphs():
     return prestatus, poststatus
 def _call_function( mymesh: meshtypes.ply_surface)\
                             -> Dict[ str, meshtypes.ply_2dmap]:
-    """
-    This creates createcloth.meshhandler.surfacemap for the given 
+    """This creates createcloth.meshhandler.surfacemap for the given 
     mesh 'mymesh'. The surfacemap is framed by the border 'myborder'.
     """
     mysurface = mymesh.surfacemesh
@@ -27,8 +26,13 @@ def _call_function( mymesh: meshtypes.ply_surface)\
 mesh_to_surfacemap:factory_leaf = factory_leaf( _create_datagraphs, \
                                     _call_function, \
                                     name=__name__+"mesh to surfacemap" )
-"""Create mesh from surfacemap
+"""Creates a \
+:py:class:`surfacemap<clothfactory_parts.meshthings.meshtypes.ply_2dmap>` \
+from a :py:class:`mesh<clothfactory_parts.meshthings.meshtypes.ply_surface>`.
+Works by just giving the generator of the surfacemap the mesh.
 
 .. autofunction:: _create_datagraphs
 .. autofunction:: _call_function
+
+:todo: remake this method, so only primitive data will be transferred
 """

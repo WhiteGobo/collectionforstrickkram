@@ -7,7 +7,10 @@ class ply_surface( datatype ):
     """plysurface??
     type mesh
 
-    :todo: revisit
+    :ivar surfacemesh: ( :py:class:`plysurfacehandler.plysurfacehandler` )\
+            Container for meshdata. for access see type-description
+    :todo: Only use plysurfacehandler to extract and save data to ply-file,
+            else use python-primitives
     """
     __slots__=( "surfacemesh", )
     def __init__( self, mesh ):
@@ -23,9 +26,18 @@ class ply_surface( datatype ):
 
 
 class ply_2dmap( datatype ):
-    """ply 2dmap
+    """Map of 2d points to ND-Space. 
 
-    :todo: revisit
+    :ivar plycontainer: ( \
+        :py:class:`surfacemap<plysurfacehandler.surfacemap_utils.surfacemap>`\
+        ) One of the surfacedatas of the corresponding
+    :ivar uplength: float
+    :ivar downlength: float
+    :ivar rightlength: float
+    :ivar leftlength: float
+    :todo: Only primitive data should be transferred here
+    :todo: change raise exceptiontype
+    :raises: Exception
     """
     def __init__( self, plycontainer:surfacemap ):
         plycontainer.complete_surfaces_with_map()

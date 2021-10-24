@@ -58,8 +58,9 @@ def call_function( stitchdata, mymesh, mysurface ):
     mystrickgraph.set_calmlength( mythreadinfo )
 
     return { "roughstrickgraph": strickgraph.strickgraph_container( mystrickgraph ) }
-strickgraph_dummy_from_rand= factory_leaf( create_datagraphs, call_function,\
-                                        name=__name__+"strickgraph_from_rand")
+strickgraph_dummy_from_rand:factory_leaf= factory_leaf( create_datagraphs, \
+                                        call_function, \
+                                        name=__name__+"strickgraph_from_rand" )
 
 
 

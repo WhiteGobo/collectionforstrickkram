@@ -126,10 +126,25 @@
 <dt class="sig sig-object py" id="clothfactory_parts.meshthings.meshtypes.ply_2dmap">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">clothfactory_parts.meshthings.meshtypes.</span></span><span class="sig-name descname"><span class="pre">ply_2dmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plycontainer</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">createcloth.meshhandler.PlySurfaceHandler.surfacemap_utils.surfacemap_class.surfacemap</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#clothfactory_parts.meshthings.meshtypes.ply_2dmap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">datagraph_factory.datagraph.datatype</span></code></p>
-<p>ply 2dmap</p>
+<p>Map of 2d points to ND-Space.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>plycontainer</strong> – (         <a class="reference external" href="https://whitegobo.github.io/PlySurfaceHandler/build/html/mappingclasses.html#plysurfacehandler.surfacemap_utils.surfacemap" title="(in plysurfacehandler)"><code class="xref py py-class docutils literal notranslate"><span class="pre">surfacemap</span></code></a>        ) One of the surfacedatas of the corresponding</p></li>
+<li><p><strong>uplength</strong> – float</p></li>
+<li><p><strong>downlength</strong> – float</p></li>
+<li><p><strong>rightlength</strong> – float</p></li>
+<li><p><strong>leftlength</strong> – float</p></li>
+</ul>
+</dd>
+<dt class="field-even">Todo</dt>
+<dd class="field-even"><p>Only primitive data should be transferred here</p>
+</dd>
 <dt class="field-odd">Todo</dt>
-<dd class="field-odd"><p>revisit</p>
+<dd class="field-odd"><p>change raise exceptiontype</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p>Exception</p>
 </dd>
 </dl>
 </dd></dl>
@@ -141,8 +156,12 @@
 <p>plysurface??
 type mesh</p>
 <dl class="field-list simple">
-<dt class="field-odd">Todo</dt>
-<dd class="field-odd"><p>revisit</p>
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><p><strong>surfacemesh</strong> – ( <a class="reference external" href="https://whitegobo.github.io/PlySurfaceHandler/build/html/main.html#plysurfacehandler.plysurfacehandler" title="(in plysurfacehandler)"><code class="xref py py-class docutils literal notranslate"><span class="pre">plysurfacehandler.plysurfacehandler</span></code></a> )            Container for meshdata. for access see type-description</p>
+</dd>
+<dt class="field-even">Todo</dt>
+<dd class="field-even"><p>Only use plysurfacehandler to extract and save data to ply-file,
+else use python-primitives</p>
 </dd>
 </dl>
 <dl class="py method">
@@ -169,7 +188,8 @@ type mesh</p>
 <dl class="py data">
 <dt class="sig sig-object py" id="clothfactory_parts.meshthings.mesh_to_surfacemap.mesh_to_surfacemap">
 <span class="sig-prename descclassname"><span class="pre">clothfactory_parts.meshthings.mesh_to_surfacemap.</span></span><span class="sig-name descname"><span class="pre">mesh_to_surfacemap</span></span><em class="property"><span class="pre">:</span> <span class="pre">datagraph_factory.processes.factory_leaf</span></em><em class="property"> <span class="pre">=</span> <span class="pre">{factory_leaf:clothfactory_parts.meshthings.mesh_to_surfacemapmesh</span> <span class="pre">to</span> <span class="pre">surfacemap}</span></em><a class="headerlink" href="#clothfactory_parts.meshthings.mesh_to_surfacemap.mesh_to_surfacemap" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create mesh from surfacemap</p>
+<dd><p>Creates a <a class="reference internal" href="#clothfactory_parts.meshthings.meshtypes.ply_2dmap" title="clothfactory_parts.meshthings.meshtypes.ply_2dmap"><code class="xref py py-class docutils literal notranslate"><span class="pre">surfacemap</span></code></a> from a <a class="reference internal" href="#clothfactory_parts.meshthings.meshtypes.ply_surface" title="clothfactory_parts.meshthings.meshtypes.ply_surface"><code class="xref py py-class docutils literal notranslate"><span class="pre">mesh</span></code></a>.
+Works by just giving the generator of the surfacemap the mesh.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="clothfactory_parts.meshthings.mesh_to_surfacemap._create_datagraphs">
 <span class="sig-prename descclassname"><span class="pre">clothfactory_parts.meshthings.mesh_to_surfacemap.</span></span><span class="sig-name descname"><span class="pre">_create_datagraphs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#clothfactory_parts.meshthings.mesh_to_surfacemap._create_datagraphs" title="Permalink to this definition">¶</a></dt>
@@ -182,6 +202,11 @@ type mesh</p>
 mesh ‘mymesh’. The surfacemap is framed by the border ‘myborder’.</p>
 </dd></dl>
 
+<dl class="field-list simple">
+<dt class="field-odd">Todo</dt>
+<dd class="field-odd"><p>remake this method, so only primitive data will be transferred</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
