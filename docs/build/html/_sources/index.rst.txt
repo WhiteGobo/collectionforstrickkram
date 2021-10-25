@@ -18,6 +18,7 @@ Welcome to Createcloth's documentation!
    classcollection/visualizer
    classcollection/meshhandler
    classcollection/plainknit
+   classcollection/physicalhelper
 
    howto/clothfactory
    howto/strickgraph

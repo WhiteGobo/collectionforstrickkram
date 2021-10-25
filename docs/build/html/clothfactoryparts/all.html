@@ -222,6 +222,18 @@ mesh ‘mymesh’. The surfacemap is framed by the border ‘myborder’.</p>
 <span class="sig-prename descclassname"><span class="pre">clothfactory_parts.meshthings.strickgraph_dummy_from_rand.</span></span><span class="sig-name descname"><span class="pre">create_datagraphs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#clothfactory_parts.meshthings.strickgraph_dummy_from_rand.create_datagraphs" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="py data">
+<dt class="sig sig-object py" id="clothfactory_parts.meshthings.strickgraph_dummy_from_rand.strickgraph_dummy_from_rand">
+<span class="sig-prename descclassname"><span class="pre">clothfactory_parts.meshthings.strickgraph_dummy_from_rand.</span></span><span class="sig-name descname"><span class="pre">strickgraph_dummy_from_rand</span></span><em class="property"><span class="pre">:</span> <span class="pre">datagraph_factory.processes.factory_leaf</span></em><em class="property"> <span class="pre">=</span> <span class="pre">{factory_leaf:clothfactory_parts.meshthings.strickgraph_dummy_from_randstrickgraph_from_rand}</span></em><a class="headerlink" href="#clothfactory_parts.meshthings.strickgraph_dummy_from_rand.strickgraph_dummy_from_rand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates strickgraph from surfacedata</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="clothfactory_parts.meshthings.strickgraph_dummy_from_rand.strickgraph_fit_to_mesh">
+<span class="sig-prename descclassname"><span class="pre">clothfactory_parts.meshthings.strickgraph_dummy_from_rand.</span></span><span class="sig-name descname"><span class="pre">strickgraph_fit_to_mesh</span></span><em class="property"> <span class="pre">=</span> <span class="pre">strickgraph</span> <span class="pre">fit</span> <span class="pre">for</span> <span class="pre">mesh</span></em><a class="headerlink" href="#clothfactory_parts.meshthings.strickgraph_dummy_from_rand.strickgraph_fit_to_mesh" title="Permalink to this definition">¶</a></dt>
+<dd><p>strickgraph can be evaluated with connected surfacethingy</p>
+</dd></dl>
+
 </section>
 <section id="module-clothfactory_parts.physics.relax_strickgraph_on_surface">
 <span id="physics-relax-strickgraph-on-surface"></span><h2>physics.relax_strickgraph_on_surface<a class="headerlink" href="#module-clothfactory_parts.physics.relax_strickgraph_on_surface" title="Permalink to this headline">¶</a></h2>
@@ -260,7 +272,14 @@ also to surfacemaps of the mesh</p>
 <dl class="py data">
 <dt class="sig sig-object py" id="clothfactory_parts.physics.strickgraph_physics_factoryleafs.test_if_strickgraph_isrelaxed">
 <span class="sig-prename descclassname"><span class="pre">clothfactory_parts.physics.strickgraph_physics_factoryleafs.</span></span><span class="sig-name descname"><span class="pre">test_if_strickgraph_isrelaxed</span></span><em class="property"><span class="pre">:</span> <span class="pre">datagraph_factory.processes.factory_leaf</span></em><em class="property"> <span class="pre">=</span> <span class="pre">{factory_leaf:clothfactory_parts.physics.strickgraph_physics_factoryleafstest</span> <span class="pre">relax}</span></em><a class="headerlink" href="#clothfactory_parts.physics.strickgraph_physics_factoryleafs.test_if_strickgraph_isrelaxed" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests if strickgraph is relaxed</p>
+<dd><p>Tests if strickgraph is relaxed.
+Uses <code class="xref py py-class docutils literal notranslate"><span class="pre">clothfactory.strickgraph.strickgraph_datatypes.strickgraph_container</span></code> and 
+<code class="xref py py-class docutils literal notranslate"><span class="pre">clothfactory.strickgraph.strickgraph_datatypes.strickgraph_spatialdata</span></code> to create <a class="reference internal" href="#clothfactory_parts.strickgraph.strickgraph_datatypes.strickgraph_property_relaxed" title="clothfactory_parts.strickgraph.strickgraph_datatypes.strickgraph_property_relaxed"><code class="xref py py-class docutils literal notranslate"><span class="pre">clothfactory_parts.strickgraph.strickgraph_datatypes.strickgraph_property_relaxed</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Todo</dt>
+<dd class="field-odd"><p>overhaul description</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -333,14 +352,17 @@ also to surfacemaps of the mesh</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="clothfactory_parts.strickgraph.strickgraph_datatypes.strickgraph_spatialdata">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">clothfactory_parts.strickgraph.strickgraph_datatypes.</span></span><span class="sig-name descname"><span class="pre">strickgraph_spatialdata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">posgraph</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#clothfactory_parts.strickgraph.strickgraph_datatypes.strickgraph_spatialdata" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">clothfactory_parts.strickgraph.strickgraph_datatypes.</span></span><span class="sig-name descname"><span class="pre">strickgraph_spatialdata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_pos</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">Hashable</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_pos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edges</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Hashable</span><span class="p"><span class="pre">,</span> </span><span class="pre">Hashable</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_restinglength</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#clothfactory_parts.strickgraph.strickgraph_datatypes.strickgraph_spatialdata" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">datagraph_factory.datagraph.datatype</span></code></p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>_xdict</strong> – a</p></li>
-<li><p><strong>_ydict</strong> – b</p></li>
-<li><p><strong>_zdict</strong> – c</p></li>
+<li><p><strong>_xdict</strong> – (Dict) a</p></li>
+<li><p><strong>_ydict</strong> – (Dict) b</p></li>
+<li><p><strong>_zdict</strong> – (Dict) c</p></li>
+<li><p><strong>edges</strong> – (List[ Tuple( Hashable, Hashable)]) all edges, no multi,             non directional</p></li>
+<li><p><strong>edgelengthdict</strong> – (Dict) edge to real length</p></li>
+<li><p><strong>calmlengthdict</strong> – (Dict) edge to length, without spring force</p></li>
 </ul>
 </dd>
 </dl>

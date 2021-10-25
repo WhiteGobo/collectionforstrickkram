@@ -1,10 +1,16 @@
+"""Here are all the classes listed, which manage information about the
+used threads.
+"""
+
 import networkx as netx
 
 class threadinfo():
-    """
-    dimensions:
+    """dimensions:
     thickness in [millimetre]
     tensure is custom property for numerik thingis
+
+    :ivar thickness:
+    :ivar tensure:
     """
     def __init__( self, thickness, tensure ):
         self.thickness = thickness
@@ -17,10 +23,9 @@ class threadinfo():
     plainknit_normalstitchwidth = property( fget=_get_knitradius )
     plainknit_stitchheight = property( fget=_get_knitradius )
 
-standardthreadinfo = threadinfo( 0.03, 1.0 )
 
 def relaxedgelength_to_strickgraph( mystrickgraph, \
-                                    mythreadinfo=standardthreadinfo ):
+                                    mythreadinfo ):
     length_graph = netx.Graph()
     length_graph.add_nodes_from( mystrickgraph.nodes() )
     length_graph.add_edges_from( mystrickgraph.edges() )
@@ -43,4 +48,8 @@ def relaxedgelength_to_strickgraph( mystrickgraph, \
 
 
 def singleedge_length( sourcetype, targettype, edgetype, mythreadinfo ):
+    """calculates the optimal distance between 2 neighbouring stitches
+    
+    :rtype: float
+    """
     return 2 * mythreadinfo.thickness

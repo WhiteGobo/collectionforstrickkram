@@ -32,6 +32,9 @@ def relax_gridgraph( gridgraph:strickgraph, surfacemap: plysurfacehandler ) \
 
     :param surfacemap: asdf
     :type surfacemap: plysurfacehandler.surfacemap_utils.surfacemap
+    :returns: Dictionary of every stitch with its locations as dictionary.\
+            Form of returned dict is '{ 'x': xpos, 'y':ypos, 'z':zpos }'
+    :rtype: Dict[ Hashable, Dict ]
     """
     border = gridgraph.get_borders()
     number_rows = len( gridgraph.get_rows() )
