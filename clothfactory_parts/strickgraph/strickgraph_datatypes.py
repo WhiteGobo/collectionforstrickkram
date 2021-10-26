@@ -5,6 +5,9 @@ import networkx as netx
 from createcloth.strickgraph import strickgraph as strickgraph_class
 from createcloth.stitchinfo import basic_stitchdata as globalstitchinfo
 from createcloth.stitchinfo import stitchdatacontainer
+import numpy as np
+
+from typing import Dict, Tuple, Hashable, Iterable
 
 class strickgraph_container( datatype ):
     """
@@ -70,32 +73,30 @@ class strickgraph_stitchdata( datatype ):
 class strickgraph_spatialdata( datatype ):
     """
 
-    :ivar _xdict: a
-    :ivar _ydict: b
-    :ivar _zdict: c
+    :ivar _xdict: (Dict) a
+    :ivar _ydict: (Dict) b
+    :ivar _zdict: (Dict) c
+    :ivar edges: (List[ Tuple( Hashable, Hashable)]) all edges, no multi, \
+            non directional
+    :ivar edgelengthdict: (Dict) edge to real length
+    :ivar calmlengthdict: (Dict) edge to length, without spring force
     """
-    def __init__( self, posgraph ):
-        self.posgraph = posgraph
-        x_data = netx.get_node_attributes( posgraph, "x" )
-        y_data = netx.get_node_attributes( posgraph, "y" )
-        z_data = netx.get_node_attributes( posgraph, "z" )
-        self._xdict = x_data
-        self._ydict = y_data
-        self._zdict = z_data
+    def __init__( self, x_pos: Dict[Hashable,float], y_pos, z_pos, \
+                                edges: Iterable[ Tuple[ Hashable, Hashable ]],\
+                                edge_restinglength: Iterable[ float ] =None):
+        self.edges = tuple( edges )
+        self._xdict = x_pos
+        self._ydict = y_pos
+        self._zdict = z_pos
 
-        #default_length = 0.1
-        #raise Exception( "must include add_edgelength" )
-        #add_edgelength( posgraph, default_length )
-        nodetopairset = lambda x,y, d: frozenset((x,y))
-        tmp = netx.get_edge_attributes( posgraph, "currentlength" )
-        self.edgelengthdict = { nodetopairset(*key) : value \
-                                for key, value in tmp.items() }
-        #tmp = netx.get_edge_attributes( posgraph, "calmlength" ) #works also??
-        tmp = netx.get_edge_attributes( posgraph, "length" )
-        self.calmlengthdict = { nodetopairset(*key) : value \
-                                for key, value in tmp.items() }
-
-
+        vec = lambda v: ( x_pos[v], y_pos[v], z_pos[v] )
+        tolength = lambda e: np.linalg.norm( np.subtract(vec(e[0]), vec(e[1])) )
+        self.edgelengthdict = { e: tolength(e) for e in self.edges }
+        if edge_restinglength is not None:
+            self.calmlengthdict = { e: l \
+                    for e, l in zip(self.edges, edge_restinglength) }
+        else:
+            self.calmlengthdict = { e: 0.0 for e in self.edges }
 
     def _get_xposition_to( self ):
         return self._xdict

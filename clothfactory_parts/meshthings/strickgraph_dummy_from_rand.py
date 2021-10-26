@@ -61,6 +61,7 @@ def call_function( stitchdata, mymesh, mysurface ):
 strickgraph_dummy_from_rand:factory_leaf= factory_leaf( create_datagraphs, \
                                         call_function, \
                                         name=__name__+"strickgraph_from_rand" )
+"""Creates strickgraph from surfacedata"""
 
 
 
@@ -72,4 +73,5 @@ strickgraph_fit_to_mesh = edgetype( tmpvalid, \
                                         "it originates, it doesnt need to be "\
                                         +"exactly fitted but the goal is to "\
                                         +"fit it" )
+"""strickgraph can be evaluated with connected surfacethingy"""
 del( tmpvalid )

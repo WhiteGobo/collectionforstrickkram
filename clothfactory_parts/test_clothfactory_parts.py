@@ -231,6 +231,8 @@ class TestClothfactoryParts( unittest.TestCase ):
         tmp["stitchinfo"] = strickgraph_stitchdata( globalstitchinfo, "knit", \
                                                     "yarnover", "bindoff" )
         from createcloth.meshhandler import test_src 
+        from . import test
+        #with importlib.resources.path( test, "testbody_withmap.ply" ) as filepath:
         #with importlib.resources.path( test_src, "tester.ply" ) as filepath:
         with importlib.resources.path( test_src, "surfmap.ply" ) as filepath:
             tmpsurf = ply_surface.load_from( filepath )
@@ -254,8 +256,9 @@ class TestClothfactoryParts( unittest.TestCase ):
         except DataRescueException as err:
             mydatarescue( err )
             raise err
-        #from createcloth.visualizer import plotter
-        #plotter.myvis3d( tmp["spat"].posgraph )
+        from createcloth.visualizer import plotter
+        
+        
         with tempfile.TemporaryDirectory() as tmpdir:
             save_graph( tmp, tmpdir, [ meshthings, physics, plainknit, strickgraph] )
             #input( tmpdir )
@@ -278,8 +281,12 @@ def mydatarescue( err ):
     for tmpstrick_container in strgras:
         tmpstrick = tmpstrick_container.strickgraph
         print( tmpstrick.to_manual( globalstitchinfo ) )
+
+
     for tmppos in strpos:
         plotter.myvis3d( tmppos.posgraph )
+        tmpedges = [e[:2] for e in strgras[0].strickgraph.get_edges_with_labels()]
+        plotter.myvis3d( tmppos.xposition, tmppos.yposition, tmppos.zposition, tmpedges )
 
     causeerror = err.__cause__
     if type( causeerror ) == StrickgraphVerbessererException:

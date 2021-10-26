@@ -28,24 +28,18 @@ def _rsos_call_function( mysurf: meshthings.ply_2dmap, \
     mystrickgraph.set_calmlength( mythreadinfo )
     surfacemap = mysurf.surfacemap
     border = mystrickgraph.get_borders()
+    myedges = [ e[:2] for e in mystrickgraph.get_edges_with_labels() ]
+    upstitchlength = mythreadinfo.plainknit_endstitchwidth
+    calm_edgelength = [ upstitchlength ] * len( myedges )
+
 
     positiondictionary = relax_gridgraph( mystrickgraph, surfacemap )
-    import copy
-    import networkx as netx
-    returngraph = copy.copy( mystrickgraph )
-    netx.set_node_attributes( returngraph, positiondictionary )
-    returngraph.set_positions( positiondictionary )
-    #ensure edgeattribute length is set according to calmlength
 
-    #from createcloth.visualizer import myvis3d
-    #myvis3d( returngraph )
-
-    #gridgraph = prepare_gridcopy( mystrickgraph )
-    #myrelaxator = gridrelaxator( gridgraph, surfacemap, border )
-    #myrelaxator.relax()
-    #returngraph = myrelaxator.get_positiongrid()
-
-    return { "positiondata": strickgraph.strickgraph_spatialdata( returngraph )}
+    xpos = { n: data['x'] for n, data in positiondictionary.items() }
+    ypos = { n: data['y'] for n, data in positiondictionary.items() }
+    zpos = { n: data['z'] for n, data in positiondictionary.items() }
+    spatdata = strickgraph.strickgraph_spatialdata( xpos, ypos, zpos, myedges,calm_edgelength )
+    return { "positiondata": spatdata }
 relax_strickgraph_on_surface : factory_leaf\
                 = factory_leaf( _rsos_create_datagraphs, _rsos_call_function, \
                 name = __name__+"relax on strickgraph" )

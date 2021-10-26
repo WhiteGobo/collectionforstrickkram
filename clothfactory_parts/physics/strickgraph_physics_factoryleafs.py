@@ -42,26 +42,41 @@ def _call_function( mystrick, positions ):
                                                 mythreadinfo )
 
     rows = mystrick.strickgraph.get_rows()
+    from createcloth.stitchinfo import basic_stitchdata as stinfo
+    print( mystrick.strickgraph.to_manual( stinfo).replace("\n", ";" ) )
     #qwer = lambda q: list(q)[0:5] + list(q)[-6:-1]
     #asdf = lambda row: qwer( zip( row[0:-2], row[1:-1] ))
     vertline_to_edges = lambda verts: list( zip( verts[:-2], verts[1:] ) )
 
-    #valueable_edges = [ asdf( row ) for row in rows ]
+    to_rownumber = {}
+    for i, row in enumerate( rows ):
+        for v in row:
+            to_rownumber[v] = i
+    same_row = lambda v1, v2: to_rownumber[v1] == to_rownumber[v2]
+    allready_visited = set()
+    rowlength = [0.0] * len(rows)
+    row_overlength = [0.0] * len(rows)
+    var_optimal_length = [0.0] * len(rows)
+    from numpy.linalg import norm
+    for v1, v2 in ( (v1, v2) for v1, v2 in positions.edges if same_row(v1, v2)):
+        if frozenset((v1, v2)) not in allready_visited:
+            allready_visited.add( frozenset((v1, v2)) )
+            i = to_rownumber[ v1 ]
+            rowlength[i] += positions.edgelengthdict[ (v1, v2) ]
+            row_overlength[i] += positions.edgelengthdict[ (v1, v2) ] \
+                                - positions.calmlengthdict[ (v1, v2) ]
+            var_optimal_length[i] += (positions.edgelengthdict[ (v1, v2) ] \
+                                - positions.calmlengthdict[ (v1, v2) ])**2
+
     LENIENCE = 1.5
     haspressure, hastension = set(), set()
     for i, row in enumerate( rows ):
-        edges_in_row = len(row) - 1
-        myedges = vertline_to_edges(row) #+ vertline_to_edges(row[-3:])
-        overlength = 0.0 #total length - sum of all length of edges
-        for e1, e2 in myedges:
-            edge = frozenset(( e1, e2 ))
-            overlength += l[edge] - edge_to_calmlength[ edge ]
-        overlength_per_stitch = overlength / len(myedges)
-        length_for_extrastitch_per_stitch = lengthforextrastitch/ edges_in_row
-        if overlength_per_stitch > LENIENCE * length_for_extrastitch_per_stitch:
+        length_for_extrastitch_per_stitch = lengthforextrastitch
+        if row_overlength[i] > LENIENCE * lengthforextrastitch:
             hastension.add(i)
-        elif overlength_per_stitch < -LENIENCE * length_for_extrastitch_per_stitch:
+        elif row_overlength[i] < -LENIENCE * lengthforextrastitch:
             haspressure.add(i)
+
     logger.debug( f"brubru \ntension: {hastension}\npressure: {haspressure}" )
     if haspressure and hastension:
         return { "havetension": strickgraph.strickgraph_property_relaxed( \
@@ -78,4 +93,9 @@ def _call_function( mystrick, positions ):
         return{ "isrelaxed": strickgraph.strickgraph_property_relaxed() }
 test_if_strickgraph_isrelaxed:factory_leaf = factory_leaf( _create_datagraphs, \
                                 _call_function, name=__name__+"test relax" )
-"""Tests if strickgraph is relaxed"""
+"""Tests if strickgraph is relaxed.
+Uses :py:class:`clothfactory.strickgraph.strickgraph_datatypes.strickgraph_container` and 
+:py:class:`clothfactory.strickgraph.strickgraph_datatypes.strickgraph_spatialdata` to create :py:class:`clothfactory_parts.strickgraph.strickgraph_datatypes.strickgraph_property_relaxed`
+
+:todo: overhaul description
+"""
