@@ -17,8 +17,8 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Plainknit" href="plainknit.html" />
-    <link rel="prev" title="Visualization" href="visualizer.html" /> 
+    <link rel="next" title="Visualization" href="visualizer.html" />
+    <link rel="prev" title="Physicalhelper" href="physicalhelper.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -30,10 +30,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="plainknit.html" title="Plainknit"
+          <a href="visualizer.html" title="Visualization"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="visualizer.html" title="Visualization"
+          <a href="physicalhelper.html" title="Physicalhelper"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">Createcloth  documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Meshhandler</a></li> 
@@ -47,6 +47,29 @@
             
   <section id="meshhandler">
 <h1>Meshhandler<a class="headerlink" href="#meshhandler" title="Permalink to this headline">¶</a></h1>
+<p>This module contains currently only a simulation, for how knitpieces
+adapt to surfaces.</p>
+<section id="simulation-abstract">
+<h2>Simulation abstract<a class="headerlink" href="#simulation-abstract" title="Permalink to this headline">¶</a></h2>
+<p>The surface has a rectangular shape, with 4 distinct borderlines;
+up, left, down and right. These borderlines correspond to the knitpiece
+borders. Those borders can be obtained via
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">createcloth.strickgraph.strickgraph.get_borders()</span></code>.</p>
+</section>
+<section id="clothfactory-parts">
+<h2>clothfactory parts<a class="headerlink" href="#clothfactory-parts" title="Permalink to this headline">¶</a></h2>
+<p>The function <a class="reference internal" href="#createcloth.meshhandler.relax_gridgraph" title="createcloth.meshhandler.relax_gridgraph"><code class="xref py py-func docutils literal notranslate"><span class="pre">createcloth.meshhandler.relax_gridgraph()</span></code></a> is
+implemented via
+<a class="reference internal" href="../clothfactoryparts/all.html#clothfactory_parts.physics.relax_strickgraph_on_surface.relax_strickgraph_on_surface" title="clothfactory_parts.physics.relax_strickgraph_on_surface.relax_strickgraph_on_surface"><code class="xref py py-data docutils literal notranslate"><span class="pre">relax_strickgraph_on_surface</span></code></a>.
+That factoryleaf produces from a corresponding map, saved via
+<a class="reference internal" href="../clothfactoryparts/all.html#clothfactory_parts.physics.relax_strickgraph_on_surface.map_for_strickgraph" title="clothfactory_parts.physics.relax_strickgraph_on_surface.map_for_strickgraph"><code class="xref py py-class docutils literal notranslate"><span class="pre">map_for_strickgraph</span></code></a>
+and a knitpiece, saved via
+<a class="reference internal" href="../clothfactoryparts/all.html#clothfactory_parts.strickgraph.strickgraph_datatypes.strickgraph_container" title="clothfactory_parts.strickgraph.strickgraph_datatypes.strickgraph_container"><code class="xref py py-class docutils literal notranslate"><span class="pre">strickgraph_container</span></code></a>
+spatialdata about the knit piece and saves it under
+<a class="reference internal" href="../clothfactoryparts/all.html#clothfactory_parts.strickgraph.strickgraph_datatypes.strickgraph_spatialdata" title="clothfactory_parts.strickgraph.strickgraph_datatypes.strickgraph_spatialdata"><code class="xref py py-class docutils literal notranslate"><span class="pre">strickgraph_spatialdata</span></code></a>.</p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="createcloth.meshhandler.relax_gridgraph">
 <span class="sig-prename descclassname"><span class="pre">createcloth.meshhandler.</span></span><span class="sig-name descname"><span class="pre">relax_gridgraph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gridgraph</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">createcloth.strickgraph.strickgraph_base.strickgraph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surfacemap</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">createcloth.meshhandler.PlySurfaceHandler.dataclass.plysurfacehandler</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">Hashable</span><span class="p"><span class="pre">,</span> </span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#createcloth.meshhandler.relax_gridgraph" title="Permalink to this definition">¶</a></dt>
@@ -65,6 +88,7 @@
 </dd></dl>
 
 </section>
+</section>
 
 
             <div class="clearer"></div>
@@ -73,12 +97,22 @@
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Meshhandler</a><ul>
+<li><a class="reference internal" href="#simulation-abstract">Simulation abstract</a></li>
+<li><a class="reference internal" href="#clothfactory-parts">clothfactory parts</a></li>
+<li><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
-  <p class="topless"><a href="visualizer.html"
-                        title="previous chapter">Visualization</a></p>
+  <p class="topless"><a href="physicalhelper.html"
+                        title="previous chapter">Physicalhelper</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="plainknit.html"
-                        title="next chapter">Plainknit</a></p>
+  <p class="topless"><a href="visualizer.html"
+                        title="next chapter">Visualization</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -110,10 +144,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="plainknit.html" title="Plainknit"
+          <a href="visualizer.html" title="Visualization"
              >next</a> |</li>
         <li class="right" >
-          <a href="visualizer.html" title="Visualization"
+          <a href="physicalhelper.html" title="Physicalhelper"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">Createcloth  documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Meshhandler</a></li> 

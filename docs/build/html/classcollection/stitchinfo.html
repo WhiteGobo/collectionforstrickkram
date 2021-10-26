@@ -17,7 +17,7 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Strickgraph Utils" href="verbesserer.html" />
+    <link rel="next" title="Physicalhelper" href="physicalhelper.html" />
     <link rel="prev" title="Strickgraph" href="strickgraph.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -30,7 +30,7 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="verbesserer.html" title="Strickgraph Utils"
+          <a href="physicalhelper.html" title="Physicalhelper"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="strickgraph.html" title="Strickgraph"
@@ -45,8 +45,83 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="module-createcloth.stitchinfo">
-<span id="stitchinfo"></span><h1>Stitchinfo<a class="headerlink" href="#module-createcloth.stitchinfo" title="Permalink to this headline">¶</a></h1>
+  <section id="stitchinfo">
+<h1>Stitchinfo<a class="headerlink" href="#stitchinfo" title="Permalink to this headline">¶</a></h1>
+<section id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>The knitcharts as described in <a class="reference internal" href="strickgraph.html#strickgraph"><span class="std std-ref">Strickgraph</span></a> consist of different
+stitchtypes. You can also describe knitpieces via patterns.</p>
+</section>
+<section id="stitchtypes">
+<h2>Stitchtypes<a class="headerlink" href="#stitchtypes" title="Permalink to this headline">¶</a></h2>
+<p>Stitchtypes normally are only needed, so that the knitter know, what he should
+do, from row to row.</p>
+<p>But computer need some more information over the stitchtype, to be able to
+handle it. Dependend on the stitchtypes used in a line, the line needs a
+different number of stitches. E.g. instead of 2 knit-stitches you can use 1 k2tog-stitch. But in the nextline 1 stitch less can be used.</p>
+<p>For this reason every stitchtype have a corresponding number of upedges
+and downedges.</p>
+<dl class="simple">
+<dt>So to declare a stitchtype following information is needed:</dt><dd><ul class="simple">
+<li><p>a unique name</p></li>
+<li><p>a symbol for knitcharts</p></li>
+<li><p>number of upedges</p></li>
+<li><p>number of downedges</p></li>
+</ul>
+</dd>
+</dl>
+<p>See for example a declaration of a stitchtype in
+<code class="xref py py-data docutils literal notranslate"><span class="pre">createcloth.stitchinfo.stitches.xml</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">stitchtype</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;knit&quot;</span>
+        <span class="n">manualchar</span><span class="o">=</span><span class="s2">&quot;k&quot;</span>
+        <span class="n">upedges</span><span class="o">=</span><span class="s2">&quot;1&quot;</span>
+        <span class="n">downedges</span><span class="o">=</span><span class="s2">&quot;1&quot;</span>
+<span class="o">/&gt;</span>
+</pre></div>
+</div>
+</section>
+<section id="python-implementation-of-stitchdata">
+<h2>python-implementation of stitchdata<a class="headerlink" href="#python-implementation-of-stitchdata" title="Permalink to this headline">¶</a></h2>
+<p>For a unified way of handling all stitchtype-data in python, the class
+<a class="reference internal" href="#createcloth.stitchinfo.load_stitchinfo.stitchdatacontainer" title="createcloth.stitchinfo.load_stitchinfo.stitchdatacontainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">stitchcontainer</span></code></a>
+is introduced.</p>
+<p>The available stitchtypes(names) and their symbol can be accesed via
+<code class="xref py py-data docutils literal notranslate"><span class="pre">stitchsymbol</span></code>.
+For access to the number of upedges and downedges the variables upedges
+and downedges are provided. Eg:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">createcloth.stitchinfo</span> <span class="kn">import</span> <span class="n">basic_stitchdata</span>
+<span class="kn">from</span> <span class="nn">createcloth.stitchinfo</span> <span class="kn">import</span> <span class="n">stitchdatacontainer</span>
+<span class="n">basic_stitchdata</span><span class="p">:</span> <span class="n">stitchdatacontainer</span>
+
+<span class="n">all_stitchtypes</span> <span class="o">=</span> <span class="n">basic_stitchdata</span><span class="o">.</span><span class="n">stitchsymbol</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="c1"># [ &quot;knit&quot;, &quot;yarnover&quot;, &quot;bindoff&quot;, ... ]</span>
+
+<span class="n">knit_symbol</span>    <span class="o">=</span> <span class="n">basic_stitchdata</span><span class="o">.</span><span class="n">stitchsymbol</span><span class="p">[</span> <span class="s2">&quot;knit&quot;</span> <span class="p">]</span>
+<span class="n">knit_upedges</span>   <span class="o">=</span> <span class="n">basic_stitchdata</span><span class="o">.</span><span class="n">upedges</span><span class="p">[</span> <span class="s2">&quot;knit&quot;</span> <span class="p">]</span>
+<span class="n">knit_downedges</span> <span class="o">=</span> <span class="n">basic_stitchdata</span><span class="o">.</span><span class="n">downedges</span><span class="p">[</span> <span class="s2">&quot;knit&quot;</span> <span class="p">]</span>
+<span class="c1"># knit_symbol, knit_upedges, knit_upedges = &quot;k&quot;, 1, 1</span>
+</pre></div>
+</div>
+<p>The stitchtypes can have also an influence on physicsimulation, but this
+is something i want to discuss in more detail in
+<a class="reference internal" href="physicalhelper.html#module-createcloth.physicalhelper" title="createcloth.physicalhelper"><code class="xref py py-mod docutils literal notranslate"><span class="pre">createcloth.physicalhelper</span></code></a>.</p>
+</section>
+<section id="maybe-something-about-strickdata">
+<h2>Maybe something about strickdata??<a class="headerlink" href="#maybe-something-about-strickdata" title="Permalink to this headline">¶</a></h2>
+<p>i wanted in the same file, as stitchtypes are declared als declare
+knittingpatterns. Currently they are called strickdata inside the xmlfile.</p>
+<p>They are accessed via
+<code class="xref py py-data docutils literal notranslate"><span class="pre">stitchdatacontainer.strickstitch</span></code>,
+<code class="xref py py-data docutils literal notranslate"><span class="pre">stitchdatacontainer.strickstart</span></code> and
+<code class="xref py py-data docutils literal notranslate"><span class="pre">stitchdatacontainer.strickend</span></code>.</p>
+</section>
+<section id="declaration-via-xmlfile">
+<h2>Declaration via xmlfile<a class="headerlink" href="#declaration-via-xmlfile" title="Permalink to this headline">¶</a></h2>
+<p>All information can be saved as xml-file. see
+createcloth.stitchinfo.stitches.xml</p>
+</section>
+<section id="module-createcloth.stitchinfo">
+<span id="reference-of-stitchinfo"></span><h2>Reference of stitchinfo<a class="headerlink" href="#module-createcloth.stitchinfo" title="Permalink to this headline">¶</a></h2>
 <dl class="py data">
 <dt class="sig sig-object py" id="createcloth.stitchinfo.NAMESPACE">
 <span class="sig-prename descclassname"><span class="pre">createcloth.stitchinfo.</span></span><span class="sig-name descname"><span class="pre">NAMESPACE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'whitegobosstitchtypes'</span></em><a class="headerlink" href="#createcloth.stitchinfo.NAMESPACE" title="Permalink to this definition">¶</a></dt>
@@ -123,6 +198,7 @@ for converting manuals to Normalform</p>
 <dd></dd></dl>
 
 </section>
+</section>
 
 
             <div class="clearer"></div>
@@ -131,12 +207,25 @@ for converting manuals to Normalform</p>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Stitchinfo</a><ul>
+<li><a class="reference internal" href="#description">Description</a></li>
+<li><a class="reference internal" href="#stitchtypes">Stitchtypes</a></li>
+<li><a class="reference internal" href="#python-implementation-of-stitchdata">python-implementation of stitchdata</a></li>
+<li><a class="reference internal" href="#maybe-something-about-strickdata">Maybe something about strickdata??</a></li>
+<li><a class="reference internal" href="#declaration-via-xmlfile">Declaration via xmlfile</a></li>
+<li><a class="reference internal" href="#module-createcloth.stitchinfo">Reference of stitchinfo</a></li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
   <p class="topless"><a href="strickgraph.html"
                         title="previous chapter">Strickgraph</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="verbesserer.html"
-                        title="next chapter">Strickgraph Utils</a></p>
+  <p class="topless"><a href="physicalhelper.html"
+                        title="next chapter">Physicalhelper</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -168,7 +257,7 @@ for converting manuals to Normalform</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="verbesserer.html" title="Strickgraph Utils"
+          <a href="physicalhelper.html" title="Physicalhelper"
              >next</a> |</li>
         <li class="right" >
           <a href="strickgraph.html" title="Strickgraph"

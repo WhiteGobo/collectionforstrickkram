@@ -1,6 +1,28 @@
 Howto to autothingy clothes
 ===========================
 
+Clothfactory program derived from datagraph_factory to create knit pieces 
+from 3d-objects. 
+
+As a standalone it can be executed, by creating a startdirectory with the
+builtin program :py:mod:`myprogram.asd` and with the autocomplete program
+of datagraph_factory :py:mod:`datagraph_factory.complete_directory`
+
+.. code::
+
+   python -m clothfactory_parts.programs.create_directory_strickcompleter <directory>
+   python -m datagraph_factory.complete_directory <directory>
+
+After that we can read the information from the directory: :program:`create_directory_strickcompleter`
+
+.. code::
+
+   python -m myprogram.visualize_strick <directory>
+   # This plots the knitpiece with the available spatial information
+
+   python -m myprogram.create_knitmanuals <directory>
+   # This prints the knitmanuals
+
 Overview other available and targetted data
 -------------------------------------------
 
@@ -202,3 +224,19 @@ documentation :py:mod:`datagraph_factory` or in the testmethod
 
    with tempfile.TemporaryDirectory() as tmpdir:
        save_graph( tmp, tmpdir, [ meshthings, physics, plainknit, strickgraph] )
+
+
+Reference for programs
+----------------------
+
+.. program:: create_directory_strickcompleter
+
+   ASDF myprogram AAAAAAAAAAA
+
+.. option:: -d <directory>
+
+   wait what is this???
+
+.. automodule:: clothfactory_parts.programs.create_directory_strickcompleter
+   :members:
+

@@ -177,6 +177,15 @@ special stitches
 
 
 
+clothfactory-parts
+------------------
+
+To the Strickgraph coresponding factoryleafs are 
+        * :py:class:`clothfactory_parts.strickgraph.strickgraph.datatypes.strickgraph_container`
+        * :py:data:`clothfactory_parts.plainknit.factory_leaf.relax_tension`
+        * :py:data:`clothfactory_parts.plainknit.factory_leaf.relax_pressure`
+
+
 strickgraph references
 ----------------------
 

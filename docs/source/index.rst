@@ -7,18 +7,18 @@ Welcome to Createcloth's documentation!
 ***************************************
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Contents:
 
 
    classcollection/strickgraph
    classcollection/stitchinfo
+   classcollection/physicalhelper
+   classcollection/meshhandler
+   classcollection/visualizer
    classcollection/verbesserer
    classcollection/sidealterator
-   classcollection/visualizer
-   classcollection/meshhandler
    classcollection/plainknit
-   classcollection/physicalhelper
 
    howto/clothfactory
    howto/strickgraph
