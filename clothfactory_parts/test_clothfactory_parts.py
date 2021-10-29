@@ -4,7 +4,7 @@ import pkg_resources as pkr
 #from .strickgraph_datatypes import strickgraph_stitchdata
 from createcloth.stitchinfo import basic_stitchdata as globalstitchinfo
 from createcloth.strickgraph.strickgraph_base import strickgraph
-from datagraph_factory.find_process_path import create_flowgraph_for_datanodes
+from datagraph_factory.find_process_path import flowgraph
 from datagraph_factory.linear_factorybranch import create_linear_function
 from datagraph_factory.datagraph import datagraph
 from datagraph_factory.utils import get_all_datatypes, \
@@ -56,7 +56,7 @@ class TestClothfactoryParts( unittest.TestCase ):
         all_factoryleafs = factoryleafs_dict.values()
         all_conclusions = conclusionleaf_dict.values()
 
-        flowgraph = create_flowgraph_for_datanodes( all_factoryleafs, \
+        myflowgraph = flowgraph.from_datanodes( all_factoryleafs, \
                                                         all_conclusions )
         return
                     #)
@@ -199,14 +199,14 @@ class TestClothfactoryParts( unittest.TestCase ):
             copy_stinfo = strickgraph_stitchdata.load_from( filepath )
 
 
-    @unittest.skip( "takes too much time" )
+    #@unittest.skip( "takes too much time" )
     def test_completingdatagraph( self ):
         datatypes, edgetypes, factoryleafs_dict, conclusionleaf_dict \
                 = get_all_datatypes( mainmodule )
         all_factoryleafs = set( factoryleafs_dict.values() )
         all_conclusions = set( conclusionleaf_dict.values() )
 
-        flowgraph = create_flowgraph_for_datanodes( all_factoryleafs, \
+        myflowgraph = flowgraph.from_datanodes( all_factoryleafs, \
                                                         all_conclusions )
         #from datagraph_factory.visualize import plot_flowgraph
         #plot_flowgraph( flowgraph )
@@ -232,9 +232,9 @@ class TestClothfactoryParts( unittest.TestCase ):
                                                     "yarnover", "bindoff" )
         from createcloth.meshhandler import test_src 
         from . import test
-        #with importlib.resources.path( test, "testbody_withmap.ply" ) as filepath:
         #with importlib.resources.path( test_src, "tester.ply" ) as filepath:
-        with importlib.resources.path( test_src, "surfmap.ply" ) as filepath:
+        #with importlib.resources.path( test_src, "surfmap.ply" ) as filepath:
+        with importlib.resources.path( test, "testbody_withmap.ply" ) as filepath:
             tmpsurf = ply_surface.load_from( filepath )
         tmp["mesh"] = tmpsurf
         #with importlib.resources.path( test_src, "tester_surfmap.ply" ) \
@@ -250,9 +250,11 @@ class TestClothfactoryParts( unittest.TestCase ):
 
         with tempfile.TemporaryDirectory() as tmpdir:
             save_graph( tmp, tmpdir, [ meshthings, physics, plainknit, strickgraph] )
+
+        return
         from datagraph_factory import DataRescueException
         try:
-            tmp = complete_datagraph( flowgraph, tmp )
+            tmp = complete_datagraph( myflowgraph, tmp )
         except DataRescueException as err:
             mydatarescue( err )
             raise err
