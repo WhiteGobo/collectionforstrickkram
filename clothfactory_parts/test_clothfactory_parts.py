@@ -6,7 +6,7 @@ from createcloth.stitchinfo import basic_stitchdata as globalstitchinfo
 from createcloth.strickgraph.strickgraph_base import strickgraph
 from datagraph_factory.find_process_path import flowgraph
 from datagraph_factory.linear_factorybranch import create_linear_function
-from datagraph_factory.datagraph import datagraph
+from datagraph_factory import datagraph
 from datagraph_factory.utils import get_all_datatypes, \
                                 list_available_edges_with_datatype 
 #from .plyford_mesh_handler import all_factoryleafs

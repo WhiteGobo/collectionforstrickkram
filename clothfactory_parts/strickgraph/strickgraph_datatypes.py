@@ -1,4 +1,4 @@
-from datagraph_factory.datagraph import datatype, edgetype
+from datagraph_factory import datatype, edgetype
 from datagraph_factory.processes import DATATYPE, EDGETYPE
 #from createcloth.meshhandler.main import add_edgelength
 import networkx as netx
@@ -112,6 +112,23 @@ class strickgraph_spatialdata( datatype ):
         return self.edgelength
     edgelength = property( fget = _get_edgelength )
 
+    def save_as( self, filepath ):
+        import pickle
+        savedata = [ self.edges, self._xdict, self._ydict, \
+                    self._zdict, self.calmlengthdict ]
+        with open( filepath, "wb" ) as savefile:
+            pickle.dump( savedata, savefile )
+
+    @classmethod
+    def load_from( cls, filepath ):
+        import pickle
+        with open( filepath, "rb" ) as loadfile:
+            savedata = pickle.load( loadfile )
+        edges, x, y, z, calmlength_dict = savedata
+        edges = tuple( edges )
+        calmlength = [ calmlength_dict[e] for e in edges ]
+        return cls( x, y, z, edges, calmlength )
+
 
 class strickgraph_property_relaxed( datatype ):
     """
@@ -126,28 +143,33 @@ class strickgraph_property_relaxed( datatype ):
 _soshtens_tmpvalid = lambda: ((strickgraph_container, strickgraph_property_relaxed),)
 springs_of_strickgraph_have_tension: edgetype = edgetype( _soshtens_tmpvalid, \
                                             "some springs have tension", \
-                            "source strickgraph has edges which are too long")
-"""Property that strickgraph has parts under tension"""
+                                            __name__ )
+"""Property that strickgraph has parts under tension
+source strickgraph has edges which are too long
+
+"""
 
 _soshpress_tmpvalid = lambda: ((strickgraph_container, strickgraph_property_relaxed),)
 springs_of_strickgraph_have_pressure: edgetype = edgetype( _soshpress_tmpvalid, \
-                "some springs have pressure",\
-                "source strickgraph has edges which are too short" )
-"""some springs have pressure"""
+                "some springs have pressure", __name__ )
+"""some springs have pressure
+source strickgraph has edges which are too short
+"""
 
 _sosrel_tmpvalid = lambda: ((strickgraph_container, strickgraph_property_relaxed),)
 springs_of_strickgraph_are_relaxed: edgetype = edgetype( _sosrel_tmpvalid, \
-                "springs are relaxed", \
-                "source strickgraph has no edges which are "\
-                +"too long or too short" )
-"""All springs are relaxed"""
+                "springs are relaxed", __name__ )
+"""All springs are relaxed
+source strickgraph has no edges which are too long or too short
+
+"""
 
 _stdata_tmpvalid = lambda: ((strickgraph_container, strickgraph_stitchdata),)
 stitchdata_of_strick: edgetype = edgetype( _stdata_tmpvalid, \
-                                "stitchdata of strick", "" )
+                                "stitchdata of strick", __name__ )
 """Stitchdata to Strickgraph"""
 
 _stpos_tmpvalid = lambda: ((strickgraph_container,\
                     strickgraph_spatialdata),)
-stitchposition: edgetype = edgetype( _stpos_tmpvalid, "stitch position", "" )
+stitchposition: edgetype = edgetype( _stpos_tmpvalid, "stitch position", __name__ )
 """Stitchposition to Strickgraph"""
