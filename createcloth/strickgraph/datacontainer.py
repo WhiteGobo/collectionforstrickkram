@@ -1,6 +1,9 @@
 import networkx as _netx
 from .. import strickgraph as mod_strickgraph
 
+maximaldataset_per_node = set(("stitchtype", "side", "alternativestitchtypes"))
+minimaldataset_per_node = set(("stitchtype", "side"))
+
 class strick_datacontainer():
     """Groundclass for fabric. Support for node and edges equivalent to fabric.
 
@@ -14,6 +17,8 @@ class strick_datacontainer():
         self.__datacontainer = _netx.MultiDiGraph()
         for node, data in nodeattributes.items():
             self.__datacontainer.add_node( node, **data )
+            assert minimaldataset_per_node.issubset( data.keys() ), data
+            assert maximaldataset_per_node.issuperset( data.keys() ), data
         for v1, v2, label in edgelabels:
             self.__datacontainer.add_edge( v1, v2, edgetype=label )
     #def __init__( self, *args, **argv ):
