@@ -13,8 +13,6 @@ import networkx as netx
 from ..stitchinfo import basic_stitchdata as stinfo
 from .strickgraph_toknitmanual import BrokenManual
 
-from extrasfornetworkx import create_pathforhashing
-from extrasfornetworkx import follow_cached_path
 from . import strickgraph_base as strickgraph
 import time
 
@@ -118,26 +116,6 @@ class TestStringMethods( unittest.TestCase ):
                                                             self.stitchinfo )
         self.assertEqual( asd1.__hash__(), asd2.__hash__() )
 
-    def test_refindsubgraph( self ):
-        asd1 = strickgraph.strickgraph.from_gridgraph( self.biggraph, \
-                                                            self.bigrow, \
-                                                            self.stitchinfo )
-        asd2 = strickgraph.strickgraph.from_gridgraph( self.biggraph, \
-                                                            self.bigrow, \
-                                                            self.stitchinfo )
-        subgraph1 = asd1.subgraph([(1,1), (2,1), (3,1), (2,2), \
-                                    (1,2), (1,3), (2,3)])
-        path, nodes, qwe = create_pathforhashing( subgraph1, (1,1) )
-        thingis, extrainfo = follow_cached_path( asd2, (1,1), path, nodes)
-        foundpaths = list(thingis)
-        self.assertEqual( len(foundpaths), 1 )
-        if len(foundpaths) > 1:
-            self.assertEqual( set(foundpaths[0]), set(subgraph1.nodes()) )
-        thingis, extrainfo = follow_cached_path( asd2, (2,2), path, nodes)
-        foundpaths = list(thingis)
-        self.assertEqual( len(foundpaths), 0 )
-        if len(foundpaths) > 0:
-            self.assertFalse( set(foundpaths[0]) == set(subgraph1.nodes()) )
 
     @unittest.skip( "graphml not suported" )
     def test_graphml( self ):
