@@ -96,6 +96,12 @@ class TestStringMethods( unittest.TestCase ):
                             graph2.subgraph( common_nodes2) )
 
 
+    @unittest.skip( "Just a collection of methods, that need testing" )
+    def test_not_testmethods( self ):
+        strickgraph.get_connected_nodes( nodelist )
+        strickgraph.get_nodes_near_nodes()
+        strickgraph.isvalid()
+
     def test_strickgraphhash( self ):
         asd1 = strickgraph.strickgraph.from_gridgraph( self.minigraph, \
                                                             self.minifirstrow, \

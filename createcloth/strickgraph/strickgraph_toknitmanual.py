@@ -7,13 +7,14 @@ import networkx as netx
 import regex
 
 from .. import strickgraph as mod_strickgraph
+from .datacontainer import strick_datacontainer
 #from . import handknitting_terms
 #from . import machine_terms
 import logging
 logger = logging.getLogger( __name__ )
 
 
-class strick_manualhelper:
+class strick_manualhelper( strick_datacontainer ):
     def to_manual( self, stitchinfo, manual_type="machine" ):
         return tomanual( self, stitchinfo, manual_type)
 
@@ -33,7 +34,7 @@ def tomanual( strickgraph, stitchinfo, manual_type="thread" ):
     startside = strickgraph.get_startside()
     #rows = find_rows( strickgraph )
     rows = strickgraph.get_rows( presentation_type="thread" )
-    nodeattributes = netx.get_node_attributes( strickgraph, "stitchtype" )
+    nodeattributes = strickgraph.get_nodeattr_stitchtype()
 
     text = ""
     for tmprow in rows:
