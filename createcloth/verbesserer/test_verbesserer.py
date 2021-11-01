@@ -41,7 +41,7 @@ class test_manualtoverbesserung( unittest.TestCase ):
         for l1, l2, upedges1, upedges2, k in asdf:
             graph1 = create_graph_from_linetypes( l1, upedges1 )
             graph2 = create_graph_from_linetypes( l2, upedges2 )
-            myalt.replace_in_graph( graph1, k )
+            graph1 = myalt.replace_in_graph( graph1, k )
             self.assertEqual( graph1, graph2 )
 
         return
@@ -52,7 +52,7 @@ class test_manualtoverbesserung( unittest.TestCase ):
         for l1, l2, upedges1, upedges2, k in asdf:
             graph1 = create_graph_from_linetypes( l1, upedges1 )
             graph2 = create_graph_from_linetypes( l2, upedges2 )
-            myalt_dupl.replace_in_graph( graph1, k )
+            graph1 = myalt_dupl.replace_in_graph( graph1, k )
             self.assertEqual( graph1, graph2 )
 
     @unittest.skip("temporary" )
@@ -81,7 +81,7 @@ class test_manualtoverbesserung( unittest.TestCase ):
         self.assertEqual( try_graph, less_graph )
 
         print( "-"*75 )
-        qwe.replace_in_graph( try_graph, changedline_id )
+        try_graph = qwe.replace_in_graph( try_graph, changedline_id )
         newnodes = set(try_graph.nodes())
         print( try_graph.to_manual( glstinfo ))
         print( great_graph.to_manual( glstinfo ))
@@ -104,7 +104,7 @@ class test_manualtoverbesserung( unittest.TestCase ):
 
         qwe2 = sidealterator.from_xml( safe )
         self.assertNotEqual( graph1, graph2 )
-        qwe2.replace_in_graph( graph1, changedline_id )
+        graph1 = qwe2.replace_in_graph( graph1, changedline_id )
         self.assertEqual( graph1, graph2 )
 
 

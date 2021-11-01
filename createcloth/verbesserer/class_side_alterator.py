@@ -58,9 +58,10 @@ class sidealterator():
         if not cond2:
             raise FindError()
         logger.info( "replaceleft" )
-        self.alterator_left.replace_in_graph( strickgraph, startnodeleft )
+        strickgraph = self.alterator_left.replace_in_graph( strickgraph, startnodeleft )
         logger.info( "replaceright" )
-        self.alterator_right.replace_in_graph( strickgraph, startnoderight )
+        strickgraph = self.alterator_right.replace_in_graph( strickgraph, startnoderight )
+        return strickgraph
 
     @classmethod
     def from_linetypes( cls, linetype_out, linetype_in, upedges_out, \
@@ -78,7 +79,7 @@ class sidealterator():
             for i in skip_if_in_list:
                 try:
                     tmp_graph = create_graph_from_linetypes( linetype_out, upedges_out)
-                    i.replace_in_graph( tmp_graph, changedline_id )
+                    tmp_graph = i.replace_in_graph( tmp_graph, changedline_id )
                     if tmp_graph == great_graph:
                         raise SkipGeneration()
                     raise Exception( "This should never trigger" )
@@ -693,13 +694,14 @@ class multi_sidealterator():
         edgeswithlabel = graph.get_edges_with_labels()
         for alt in self.side_alterator_list:
             try:
-                alt.replace_in_graph( graph, changeline, row=row, nodeattributes=nodeattributes, edgeswithlabel=edgeswithlabel )
+                graph = alt.replace_in_graph( graph, changeline, row=row, nodeattributes=nodeattributes, edgeswithlabel=edgeswithlabel )
                 lever = True
                 break
             except FindError:
                 pass
         if not lever:
             raise FindError( changeline )
+        return graph
 
 
     def toxmlelem( self ):

@@ -42,8 +42,20 @@ class strickalterator( extrasfornetworkx.verbesserer ):
         logger.debug( f"replace in graph found. removenodes: {nodes_to_remove}, newnodes: {newnodes_data.keys()}" )
         if dontreplace:
             return True
-        replace_subgraph( graph, nodes_to_remove, newnodes_data, edges_to_add, \
+
+        myduplgraph = netx.MultiDiGraph()
+        for node, data in nodeattributes.items():
+            myduplgraph.add_node( node, stitchtype=data[0], side=data[1] )
+        for v1, v2, label in edgeswithlabel:
+            myduplgraph.add_edge( v1, v2, edgetype=label )
+        replace_subgraph( myduplgraph, nodes_to_remove, \
+                        newnodes_data, edges_to_add, \
                         self.nodeattributes, self.edgeattributes[0] )
+        newnodeattributes = { node: data for node, data \
+                        in myduplgraph.nodes(data=True)}
+        newedgelabels = [ (e[0], e[1], e[-1]["edgetype"]) \
+                        for e in myduplgraph.edges(data=True) ]
+        return strickgraph( newnodeattributes, newedgelabels )
         assert graph.isvalid(), "replacement produced not valid strickgraph"
         return True
 
