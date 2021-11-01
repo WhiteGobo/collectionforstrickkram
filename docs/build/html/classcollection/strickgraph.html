@@ -76,25 +76,26 @@ The common representation is as knitting manuals in different styles:</p>
 <p>Hand knitting charts are used for row to row implementations, so that
 you as knitter can knit-as-read.</p>
 <p>The implementation
-<a class="reference internal" href="#createcloth.strickgraph.strickgraph" title="createcloth.strickgraph.strickgraph"><code class="xref py py-class docutils literal notranslate"><span class="pre">Strickgraph</span></code></a> has to
+<a class="reference internal" href="#createcloth.strickgraph.strickgraph" title="createcloth.strickgraph.strickgraph"><code class="xref py py-class docutils literal notranslate"><span class="pre">Strickgraph</span></code></a> has two
 different kinds of knit charts, that look similar.</p>
 <p>First we have a knit-as-read manual, which means in contrast, that the
 first stitch you make in each row, is the leftmost stitch in the manual.
 This manual describes a knitpiece via lines of stitches, and you just have
 to knit in parallel, to what you read, eg:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">4</span> <span class="n">bindoff</span>
-<span class="mi">4</span> <span class="n">knit</span>
-<span class="mi">4</span> <span class="n">yarnover</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">4</span><span class="n">bindoff</span>
+<span class="mi">3</span><span class="n">knit</span> <span class="mi">1</span><span class="n">k2tog</span>
+<span class="mi">5</span><span class="n">yarnover</span>
 </pre></div>
 </div>
-<p>Here you start your knitpiece with 4 stitches, knit a right-knit stitches
-in the next row (also 4). The third row is the last, where you finish your
+<p>Here you start your knitpiece with 5 stitches, knit a right-knit stitches
+in the next row (also 3), ending with a stitch, that tightens two stitches
+to one. The third row is the last, where you finish your
 knitpiece, with 4 bindoff-stitches. Note that the read direction is from
 bottom to top.</p>
 <p>We can create an virtual object reperenting this knitpiece via
 <code class="xref py py-meth docutils literal notranslate"><span class="pre">Strickgraph</span> <span class="pre">from</span> <span class="pre">manual</span></code>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">createcloth.stitchinfo</span> <span class="kn">import</span> <span class="n">basic_stitchinfo</span>
-<span class="n">manual</span> <span class="o">=</span> <span class="s2">&quot;4bo</span><span class="se">\n</span><span class="s2">4k</span><span class="se">\n</span><span class="s2">4yo&quot;</span>
+<span class="n">manual</span> <span class="o">=</span> <span class="s2">&quot;4bo</span><span class="se">\n</span><span class="s2">3k 1k2tog</span><span class="se">\n</span><span class="s2">5yo&quot;</span>
 <span class="n">knitpiece</span> <span class="o">=</span> <span class="n">strickgraph</span><span class="o">.</span><span class="n">from_manual</span><span class="p">(</span> <span class="n">manual</span><span class="p">,</span> <span class="n">basic_stitchinfo</span> <span class="p">)</span>
 </pre></div>
 </div>
@@ -119,17 +120,18 @@ written-as-you-see(machineknitting) must be further described.</p>
 <p>Also you can generate a strickgraph with the help of a <cite>graph&lt;networkx.Graph&gt;</cite>.
 This is a more abstract generation, but represents the innerstate of our
 strickgraph.</p>
-<section id="short-description-of-graphs">
-<h4>Short description of graphs<a class="headerlink" href="#short-description-of-graphs" title="Permalink to this headline">¶</a></h4>
-<p>Every graph consists of nodes and edges, which connects those nodes. Also
-every node and edge can have different further attributes.</p>
-<img alt="classcollection/somepicture:)" src="classcollection/somepicture:)" />
-</section>
-<section id="generation">
-<h4>Generation<a class="headerlink" href="#generation" title="Permalink to this headline">¶</a></h4>
-<p>We need not only a graph for this generation but also the firstrow, which
-represents in terms of a knitchart our first knitted line. also we need
-general information about our knitpiece. Eg:</p>
+<p>To give a short description of graphs. A graph is a set of nodes, which
+can represent anything (in our case, each respresents a single stitch).
+Those nodes have a, again, a so called edge. Edges can represent any
+kind of relation between 2 nodes. In our case, they represent, that
+the 2 stitches are connected via thread.</p>
+<a class="reference internal image-reference" href="../_images/stitchchartasgraph.jpg"><img alt="../_images/stitchchartasgraph.jpg" src="../_images/stitchchartasgraph.jpg" style="height: 6cm;" /></a>
+<p>For further information you could look at internet eg: <a class="reference external" href="https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)">wikipedia</a></p>
+<p>We can generate our strickgraph via a basic graph, but we need not only the
+graph(<em>graph</em>) itself but also we must specify the first row(<em>firstrow</em>)
+of the strickgraph.
+The first row represents in terms of a knitchart our first knitted line.
+also we need general information(<em>basic_stitchdata</em>) about our knitpiece. Eg:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">createcloth.stitchinfo</span> <span class="kn">import</span> <span class="n">basic_stitchdata</span>
 <span class="kn">import</span> <span class="nn">networkx</span>
 <span class="n">graph</span> <span class="o">=</span> <span class="n">networkx</span><span class="o">.</span><span class="n">grid_2d_graph</span><span class="p">(</span> <span class="mi">4</span><span class="p">,</span><span class="mi">4</span> <span class="p">)</span>
@@ -138,7 +140,6 @@ general information about our knitpiece. Eg:</p>
 <span class="n">asd</span> <span class="o">=</span> <span class="n">strickgraph</span><span class="o">.</span><span class="n">from_gridgraph</span><span class="p">(</span> <span class="n">graph</span><span class="p">,</span> <span class="n">firstrow</span><span class="p">,</span> <span class="n">basic_stitchdata</span> <span class="p">)</span>
 </pre></div>
 </div>
-</section>
 </section>
 </section>
 <section id="handling-the-strickgraph">
@@ -453,11 +454,7 @@ somenodes: alternativestitchtype</p>
 <li><a class="reference internal" href="#description-of-knitpieces-in-manualform">Description of knitpieces in manualform</a><ul>
 <li><a class="reference internal" href="#machine-knitting-matrices">Machine knitting matrices</a></li>
 <li><a class="reference internal" href="#hand-knitting-charts">Hand knitting charts</a></li>
-<li><a class="reference internal" href="#abstract-strickgraph-generation">Abstract strickgraph generation</a><ul>
-<li><a class="reference internal" href="#short-description-of-graphs">Short description of graphs</a></li>
-<li><a class="reference internal" href="#generation">Generation</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#abstract-strickgraph-generation">Abstract strickgraph generation</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#handling-the-strickgraph">Handling the strickgraph</a><ul>

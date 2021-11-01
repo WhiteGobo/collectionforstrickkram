@@ -7,6 +7,7 @@ import numpy as np
 from itertools import chain
 from ..strickgraph import strickgraph
 from .PlySurfaceHandler import plysurfacehandler
+import numpy as np
 
 def uniqueindex_generator():
     i = 0
@@ -123,17 +124,29 @@ def estimate_startpositions( number_vertices, edges_list, \
     positions = np.zeros( ( number_vertices, 2 ) )
     startpositions = np.zeros( ( number_vertices, 2 ) )
     max_up_index = len( border_up ) - 1
+    ru = np.array( (1,0) )
+    lu = np.array( (1,1) )
+    rd = np.array( (0,0) )
+    ld = np.array( (0,1) )
     for i, vindex in enumerate( border_up ):
-        startpositions[ vindex ] = ( i/max_up_index, 1 )
+        #startpositions[ vindex ] = ( i/max_up_index, 1 )
+        tmp = i/max_up_index
+        startpositions[ vindex ] = tmp*ru + (1-tmp)*lu
     max_down_index = len( border_down ) - 1
     for i, vindex in enumerate( border_down ):
-        startpositions[ vindex ] = ( i/max_down_index, 0 )
+        #startpositions[ vindex ] = ( i/max_down_index, 0 )
+        tmp = i/max_down_index
+        startpositions[ vindex ] = tmp*rd + (1-tmp)*ld
     max_left_index = len( border_left )-1
     for i, vindex in enumerate( border_left ):
-        startpositions[ vindex ] = ( 0, i/max_left_index )
+        #startpositions[ vindex ] = ( 0, i/max_left_index )
+        tmp = i/max_left_index
+        startpositions[ vindex ] = tmp*lu + (1-tmp)*ld
     max_right_index = len( border_right )-1
     for i, vindex in enumerate( border_right ):
-        startpositions[ vindex ] = ( 1, i/max_right_index )
+        #startpositions[ vindex ] = ( 1, i/max_right_index )
+        tmp = i/max_right_index
+        startpositions[ vindex ] = tmp*ru + (1-tmp)*rd
 
     interaction_matrix = lil_matrix( (number_vertices, number_vertices) )
     for v1, v2 in edges_list:

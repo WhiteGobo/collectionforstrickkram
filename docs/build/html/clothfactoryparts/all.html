@@ -118,14 +118,14 @@
 <p>Datatypes of mesh and all corresponding things</p>
 <dl class="py data">
 <dt class="sig sig-object py" id="clothfactory_parts.meshthings.meshtypes.map_to_mesh">
-<span class="sig-prename descclassname"><span class="pre">clothfactory_parts.meshthings.meshtypes.</span></span><span class="sig-name descname"><span class="pre">map_to_mesh</span></span><em class="property"> <span class="pre">=</span> <span class="pre">maptomesh</span></em><a class="headerlink" href="#clothfactory_parts.meshthings.meshtypes.map_to_mesh" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">clothfactory_parts.meshthings.meshtypes.</span></span><span class="sig-name descname"><span class="pre">map_to_mesh</span></span><em class="property"> <span class="pre">=</span> <span class="pre">datagraph_factory.class_datagraphmaptomesh</span></em><a class="headerlink" href="#clothfactory_parts.meshthings.meshtypes.map_to_mesh" title="Permalink to this definition">¶</a></dt>
 <dd><p>edgetype thingy</p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="clothfactory_parts.meshthings.meshtypes.ply_2dmap">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">clothfactory_parts.meshthings.meshtypes.</span></span><span class="sig-name descname"><span class="pre">ply_2dmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plycontainer</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">createcloth.meshhandler.PlySurfaceHandler.surfacemap_utils.surfacemap_class.surfacemap</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#clothfactory_parts.meshthings.meshtypes.ply_2dmap" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">datagraph_factory.datagraph.datatype</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">datagraph_factory.class_datagraph.datatype</span></code></p>
 <p>Map of 2d points to ND-Space.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
@@ -152,7 +152,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="clothfactory_parts.meshthings.meshtypes.ply_surface">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">clothfactory_parts.meshthings.meshtypes.</span></span><span class="sig-name descname"><span class="pre">ply_surface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#clothfactory_parts.meshthings.meshtypes.ply_surface" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">datagraph_factory.datagraph.datatype</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">datagraph_factory.class_datagraph.datatype</span></code></p>
 <p>plysurface??
 type mesh</p>
 <dl class="field-list simple">
@@ -230,8 +230,9 @@ mesh ‘mymesh’. The surfacemap is framed by the border ‘myborder’.</p>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="clothfactory_parts.meshthings.strickgraph_dummy_from_rand.strickgraph_fit_to_mesh">
-<span class="sig-prename descclassname"><span class="pre">clothfactory_parts.meshthings.strickgraph_dummy_from_rand.</span></span><span class="sig-name descname"><span class="pre">strickgraph_fit_to_mesh</span></span><em class="property"> <span class="pre">=</span> <span class="pre">strickgraph</span> <span class="pre">fit</span> <span class="pre">for</span> <span class="pre">mesh</span></em><a class="headerlink" href="#clothfactory_parts.meshthings.strickgraph_dummy_from_rand.strickgraph_fit_to_mesh" title="Permalink to this definition">¶</a></dt>
-<dd><p>strickgraph can be evaluated with connected surfacethingy</p>
+<span class="sig-prename descclassname"><span class="pre">clothfactory_parts.meshthings.strickgraph_dummy_from_rand.</span></span><span class="sig-name descname"><span class="pre">strickgraph_fit_to_mesh</span></span><em class="property"> <span class="pre">=</span> <span class="pre">datagraph_factory.class_datagraphstrickgraph</span> <span class="pre">fit</span> <span class="pre">for</span> <span class="pre">mesh</span></em><a class="headerlink" href="#clothfactory_parts.meshthings.strickgraph_dummy_from_rand.strickgraph_fit_to_mesh" title="Permalink to this definition">¶</a></dt>
+<dd><p>strickgraph can be evaluated with connected surfacethingy
+it originates, it doesnt need to be exactly fitted but the goal is to fit it</p>
 </dd></dl>
 
 </section>
@@ -239,7 +240,7 @@ mesh ‘mymesh’. The surfacemap is framed by the border ‘myborder’.</p>
 <span id="physics-relax-strickgraph-on-surface"></span><h2>physics.relax_strickgraph_on_surface<a class="headerlink" href="#module-clothfactory_parts.physics.relax_strickgraph_on_surface" title="Permalink to this headline">¶</a></h2>
 <dl class="py data">
 <dt class="sig sig-object py" id="clothfactory_parts.physics.relax_strickgraph_on_surface.map_for_strickgraph">
-<span class="sig-prename descclassname"><span class="pre">clothfactory_parts.physics.relax_strickgraph_on_surface.</span></span><span class="sig-name descname"><span class="pre">map_for_strickgraph</span></span><em class="property"><span class="pre">:</span> <span class="pre">datagraph_factory.datagraph.edgetype</span></em><em class="property"> <span class="pre">=</span> <span class="pre">maptostrick</span></em><a class="headerlink" href="#clothfactory_parts.physics.relax_strickgraph_on_surface.map_for_strickgraph" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">clothfactory_parts.physics.relax_strickgraph_on_surface.</span></span><span class="sig-name descname"><span class="pre">map_for_strickgraph</span></span><em class="property"><span class="pre">:</span> <span class="pre">datagraph_factory.class_datagraph.edgetype</span></em><em class="property"> <span class="pre">=</span> <span class="pre">datagraph_factory.class_datagraphmaptostrick</span></em><a class="headerlink" href="#clothfactory_parts.physics.relax_strickgraph_on_surface.map_for_strickgraph" title="Permalink to this definition">¶</a></dt>
 <dd><p>Positon of Strickgraph may be mapped with that 2dmap</p>
 </dd></dl>
 
@@ -287,38 +288,41 @@ Uses <code class="xref py py-class docutils literal notranslate"><span class="pr
 <span id="strickgraph-strickgraph-datatypes"></span><h2>strickgraph.strickgraph_datatypes<a class="headerlink" href="#module-clothfactory_parts.strickgraph.strickgraph_datatypes" title="Permalink to this headline">¶</a></h2>
 <dl class="py data">
 <dt class="sig sig-object py" id="clothfactory_parts.strickgraph.strickgraph_datatypes.springs_of_strickgraph_are_relaxed">
-<span class="sig-prename descclassname"><span class="pre">clothfactory_parts.strickgraph.strickgraph_datatypes.</span></span><span class="sig-name descname"><span class="pre">springs_of_strickgraph_are_relaxed</span></span><em class="property"><span class="pre">:</span> <span class="pre">datagraph_factory.datagraph.edgetype</span></em><em class="property"> <span class="pre">=</span> <span class="pre">springs</span> <span class="pre">are</span> <span class="pre">relaxed</span></em><a class="headerlink" href="#clothfactory_parts.strickgraph.strickgraph_datatypes.springs_of_strickgraph_are_relaxed" title="Permalink to this definition">¶</a></dt>
-<dd><p>All springs are relaxed</p>
+<span class="sig-prename descclassname"><span class="pre">clothfactory_parts.strickgraph.strickgraph_datatypes.</span></span><span class="sig-name descname"><span class="pre">springs_of_strickgraph_are_relaxed</span></span><em class="property"><span class="pre">:</span> <span class="pre">datagraph_factory.class_datagraph.edgetype</span></em><em class="property"> <span class="pre">=</span> <span class="pre">datagraph_factory.class_datagraphsprings</span> <span class="pre">are</span> <span class="pre">relaxed</span></em><a class="headerlink" href="#clothfactory_parts.strickgraph.strickgraph_datatypes.springs_of_strickgraph_are_relaxed" title="Permalink to this definition">¶</a></dt>
+<dd><p>All springs are relaxed
+source strickgraph has no edges which are too long or too short</p>
 </dd></dl>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="clothfactory_parts.strickgraph.strickgraph_datatypes.springs_of_strickgraph_have_pressure">
-<span class="sig-prename descclassname"><span class="pre">clothfactory_parts.strickgraph.strickgraph_datatypes.</span></span><span class="sig-name descname"><span class="pre">springs_of_strickgraph_have_pressure</span></span><em class="property"><span class="pre">:</span> <span class="pre">datagraph_factory.datagraph.edgetype</span></em><em class="property"> <span class="pre">=</span> <span class="pre">some</span> <span class="pre">springs</span> <span class="pre">have</span> <span class="pre">pressure</span></em><a class="headerlink" href="#clothfactory_parts.strickgraph.strickgraph_datatypes.springs_of_strickgraph_have_pressure" title="Permalink to this definition">¶</a></dt>
-<dd><p>some springs have pressure</p>
+<span class="sig-prename descclassname"><span class="pre">clothfactory_parts.strickgraph.strickgraph_datatypes.</span></span><span class="sig-name descname"><span class="pre">springs_of_strickgraph_have_pressure</span></span><em class="property"><span class="pre">:</span> <span class="pre">datagraph_factory.class_datagraph.edgetype</span></em><em class="property"> <span class="pre">=</span> <span class="pre">datagraph_factory.class_datagraphsome</span> <span class="pre">springs</span> <span class="pre">have</span> <span class="pre">pressure</span></em><a class="headerlink" href="#clothfactory_parts.strickgraph.strickgraph_datatypes.springs_of_strickgraph_have_pressure" title="Permalink to this definition">¶</a></dt>
+<dd><p>some springs have pressure
+source strickgraph has edges which are too short</p>
 </dd></dl>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="clothfactory_parts.strickgraph.strickgraph_datatypes.springs_of_strickgraph_have_tension">
-<span class="sig-prename descclassname"><span class="pre">clothfactory_parts.strickgraph.strickgraph_datatypes.</span></span><span class="sig-name descname"><span class="pre">springs_of_strickgraph_have_tension</span></span><em class="property"><span class="pre">:</span> <span class="pre">datagraph_factory.datagraph.edgetype</span></em><em class="property"> <span class="pre">=</span> <span class="pre">some</span> <span class="pre">springs</span> <span class="pre">have</span> <span class="pre">tension</span></em><a class="headerlink" href="#clothfactory_parts.strickgraph.strickgraph_datatypes.springs_of_strickgraph_have_tension" title="Permalink to this definition">¶</a></dt>
-<dd><p>Property that strickgraph has parts under tension</p>
+<span class="sig-prename descclassname"><span class="pre">clothfactory_parts.strickgraph.strickgraph_datatypes.</span></span><span class="sig-name descname"><span class="pre">springs_of_strickgraph_have_tension</span></span><em class="property"><span class="pre">:</span> <span class="pre">datagraph_factory.class_datagraph.edgetype</span></em><em class="property"> <span class="pre">=</span> <span class="pre">datagraph_factory.class_datagraphsome</span> <span class="pre">springs</span> <span class="pre">have</span> <span class="pre">tension</span></em><a class="headerlink" href="#clothfactory_parts.strickgraph.strickgraph_datatypes.springs_of_strickgraph_have_tension" title="Permalink to this definition">¶</a></dt>
+<dd><p>Property that strickgraph has parts under tension
+source strickgraph has edges which are too long</p>
 </dd></dl>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="clothfactory_parts.strickgraph.strickgraph_datatypes.stitchdata_of_strick">
-<span class="sig-prename descclassname"><span class="pre">clothfactory_parts.strickgraph.strickgraph_datatypes.</span></span><span class="sig-name descname"><span class="pre">stitchdata_of_strick</span></span><em class="property"><span class="pre">:</span> <span class="pre">datagraph_factory.datagraph.edgetype</span></em><em class="property"> <span class="pre">=</span> <span class="pre">stitchdata</span> <span class="pre">of</span> <span class="pre">strick</span></em><a class="headerlink" href="#clothfactory_parts.strickgraph.strickgraph_datatypes.stitchdata_of_strick" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">clothfactory_parts.strickgraph.strickgraph_datatypes.</span></span><span class="sig-name descname"><span class="pre">stitchdata_of_strick</span></span><em class="property"><span class="pre">:</span> <span class="pre">datagraph_factory.class_datagraph.edgetype</span></em><em class="property"> <span class="pre">=</span> <span class="pre">datagraph_factory.class_datagraphstitchdata</span> <span class="pre">of</span> <span class="pre">strick</span></em><a class="headerlink" href="#clothfactory_parts.strickgraph.strickgraph_datatypes.stitchdata_of_strick" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stitchdata to Strickgraph</p>
 </dd></dl>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="clothfactory_parts.strickgraph.strickgraph_datatypes.stitchposition">
-<span class="sig-prename descclassname"><span class="pre">clothfactory_parts.strickgraph.strickgraph_datatypes.</span></span><span class="sig-name descname"><span class="pre">stitchposition</span></span><em class="property"><span class="pre">:</span> <span class="pre">datagraph_factory.datagraph.edgetype</span></em><em class="property"> <span class="pre">=</span> <span class="pre">stitch</span> <span class="pre">position</span></em><a class="headerlink" href="#clothfactory_parts.strickgraph.strickgraph_datatypes.stitchposition" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">clothfactory_parts.strickgraph.strickgraph_datatypes.</span></span><span class="sig-name descname"><span class="pre">stitchposition</span></span><em class="property"><span class="pre">:</span> <span class="pre">datagraph_factory.class_datagraph.edgetype</span></em><em class="property"> <span class="pre">=</span> <span class="pre">datagraph_factory.class_datagraphstitch</span> <span class="pre">position</span></em><a class="headerlink" href="#clothfactory_parts.strickgraph.strickgraph_datatypes.stitchposition" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stitchposition to Strickgraph</p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="clothfactory_parts.strickgraph.strickgraph_datatypes.strickgraph_container">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">clothfactory_parts.strickgraph.strickgraph_datatypes.</span></span><span class="sig-name descname"><span class="pre">strickgraph_container</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strickgraph</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#clothfactory_parts.strickgraph.strickgraph_datatypes.strickgraph_container" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">datagraph_factory.datagraph.datatype</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">datagraph_factory.class_datagraph.datatype</span></code></p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><p><strong>strickgraph</strong> – Strickgraphthingy</p>
@@ -339,7 +343,7 @@ Uses <code class="xref py py-class docutils literal notranslate"><span class="pr
 <dl class="py class">
 <dt class="sig sig-object py" id="clothfactory_parts.strickgraph.strickgraph_datatypes.strickgraph_property_relaxed">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">clothfactory_parts.strickgraph.strickgraph_datatypes.</span></span><span class="sig-name descname"><span class="pre">strickgraph_property_relaxed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tensionrows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pressurerows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#clothfactory_parts.strickgraph.strickgraph_datatypes.strickgraph_property_relaxed" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">datagraph_factory.datagraph.datatype</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">datagraph_factory.class_datagraph.datatype</span></code></p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
@@ -353,7 +357,7 @@ Uses <code class="xref py py-class docutils literal notranslate"><span class="pr
 <dl class="py class">
 <dt class="sig sig-object py" id="clothfactory_parts.strickgraph.strickgraph_datatypes.strickgraph_spatialdata">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">clothfactory_parts.strickgraph.strickgraph_datatypes.</span></span><span class="sig-name descname"><span class="pre">strickgraph_spatialdata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_pos</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">Hashable</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_pos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edges</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Hashable</span><span class="p"><span class="pre">,</span> </span><span class="pre">Hashable</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_restinglength</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#clothfactory_parts.strickgraph.strickgraph_datatypes.strickgraph_spatialdata" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">datagraph_factory.datagraph.datatype</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">datagraph_factory.class_datagraph.datatype</span></code></p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
@@ -369,6 +373,16 @@ Uses <code class="xref py py-class docutils literal notranslate"><span class="pr
 <dl class="py property">
 <dt class="sig sig-object py" id="clothfactory_parts.strickgraph.strickgraph_datatypes.strickgraph_spatialdata.edgelength">
 <em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">edgelength</span></span><a class="headerlink" href="#clothfactory_parts.strickgraph.strickgraph_datatypes.strickgraph_spatialdata.edgelength" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="clothfactory_parts.strickgraph.strickgraph_datatypes.strickgraph_spatialdata.load_from">
+<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">load_from</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#clothfactory_parts.strickgraph.strickgraph_datatypes.strickgraph_spatialdata.load_from" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="clothfactory_parts.strickgraph.strickgraph_datatypes.strickgraph_spatialdata.save_as">
+<span class="sig-name descname"><span class="pre">save_as</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#clothfactory_parts.strickgraph.strickgraph_datatypes.strickgraph_spatialdata.save_as" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
@@ -391,7 +405,7 @@ Uses <code class="xref py py-class docutils literal notranslate"><span class="pr
 <dl class="py class">
 <dt class="sig sig-object py" id="clothfactory_parts.strickgraph.strickgraph_datatypes.strickgraph_stitchdata">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">clothfactory_parts.strickgraph.strickgraph_datatypes.</span></span><span class="sig-name descname"><span class="pre">strickgraph_stitchdata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stitchinfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plain_stitch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plain_startrow</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plain_endrow</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#clothfactory_parts.strickgraph.strickgraph_datatypes.strickgraph_stitchdata" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">datagraph_factory.datagraph.datatype</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">datagraph_factory.class_datagraph.datatype</span></code></p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">

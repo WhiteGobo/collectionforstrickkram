@@ -36,7 +36,7 @@ Hand knitting charts are used for row to row implementations, so that
 you as knitter can knit-as-read.
 
 The implementation 
-:py:class:`Strickgraph<createcloth.strickgraph.strickgraph>` has to
+:py:class:`Strickgraph<createcloth.strickgraph.strickgraph>` has two
 different kinds of knit charts, that look similar.
 
 First we have a knit-as-read manual, which means in contrast, that the
@@ -46,12 +46,13 @@ to knit in parallel, to what you read, eg:
 
 .. code::
 
-   4 bindoff
-   4 knit
-   4 yarnover
+   4bindoff
+   3knit 1k2tog
+   5yarnover
 
-Here you start your knitpiece with 4 stitches, knit a right-knit stitches 
-in the next row (also 4). The third row is the last, where you finish your
+Here you start your knitpiece with 5 stitches, knit a right-knit stitches 
+in the next row (also 3), ending with a stitch, that tightens two stitches 
+to one. The third row is the last, where you finish your
 knitpiece, with 4 bindoff-stitches. Note that the read direction is from 
 bottom to top.
 
@@ -61,7 +62,7 @@ We can create an virtual object reperenting this knitpiece via
 .. code::
 
    from createcloth.stitchinfo import basic_stitchinfo
-   manual = "4bo\n4k\n4yo"
+   manual = "4bo\n3k 1k2tog\n5yo"
    knitpiece = strickgraph.from_manual( manual, basic_stitchinfo )
 
 Note, that we need a 
@@ -88,20 +89,25 @@ Also you can generate a strickgraph with the help of a `graph<networkx.Graph>`.
 This is a more abstract generation, but represents the innerstate of our 
 strickgraph.
 
-Short description of graphs
-...........................
+To give a short description of graphs. A graph is a set of nodes, which 
+can represent anything (in our case, each respresents a single stitch).
+Those nodes have a, again, a so called edge. Edges can represent any 
+kind of relation between 2 nodes. In our case, they represent, that 
+the 2 stitches are connected via thread. 
 
-Every graph consists of nodes and edges, which connects those nodes. Also 
-every node and edge can have different further attributes.
+.. image:: ../stitchchartasgraph.jpg
+   :height: 6cm
 
-.. image:: somepicture:)
 
-Generation
-..........
+For further information you could look at internet eg: `wikipedia`_
 
-We need not only a graph for this generation but also the firstrow, which 
-represents in terms of a knitchart our first knitted line. also we need
-general information about our knitpiece. Eg:
+.. _wikipedia: https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)
+
+We can generate our strickgraph via a basic graph, but we need not only the
+graph(*graph*) itself but also we must specify the first row(*firstrow*)
+of the strickgraph.
+The first row represents in terms of a knitchart our first knitted line. 
+also we need general information(*basic_stitchdata*) about our knitpiece. Eg:
 
 .. code::
 

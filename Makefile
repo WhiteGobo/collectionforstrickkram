@@ -22,7 +22,7 @@ createcloth/plainknit/plainknit_decreaser.pickle:
 .PHONY: build
 build: 
 	-rm dist/*
-	-python -m pep517.build .
+	-python -m build
 
 documentation:
 	cd docs && $(MAKE) html
@@ -79,3 +79,10 @@ test_plainknit:
 
 test_rechtsstrickzuangepasst:
 	python -m unittest createcloth.rechtsstrickzuangepasst.test_rechtstrickzuangepasst
+
+.PHONY: myk
+myk: qq/asdf.mime.xml
+	python -m clothfactory_parts.programs.complete_datagraph qq
+
+qq/asdf.mime.xml:
+	python -m clothfactory_parts.programs.create_directory_strickcompleter qq/ clothfactory_parts/test/testbody_withmap.ply 
