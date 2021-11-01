@@ -96,17 +96,6 @@ class TestStringMethods( unittest.TestCase ):
                             graph2.subgraph( common_nodes2) )
 
 
-    def test_findsubgraph( self ):
-        asd = strickgraph.strickgraph.from_gridgraph( self.mygraph, \
-                                                            self.firstrow, \
-                                                            self.stitchinfo )
-        path = [(0, 'out', 'next', 1), (0, 'out', 'up', 2), (2, 'out', 'up', 3), (1, 'out', 'next', 4)]
-        nodeattr = ['yarnover', 'yarnover', 'knit', 'knit', 'yarnover']
-        foundthingis = follow_cached_path( asd, (0,0), path,\
-                                                            nodeattr)
-        #for x in foundthingis:
-        #    print(x.edges())
-
     def test_strickgraphhash( self ):
         asd1 = strickgraph.strickgraph.from_gridgraph( self.minigraph, \
                                                             self.minifirstrow, \
@@ -182,13 +171,14 @@ class TestStringMethods( unittest.TestCase ):
     def test_manualtype_machine_and_thread( self ):
         testmanual = "2yo\n k p\n k p\n 2bo\n"
         asd = strickgraph.strickgraph.from_manual( testmanual, self.stitchinfo, manual_type="machine" )
-        attr = netx.get_node_attributes( asd, "stitchtype" )
+        attr = asd.get_nodeattr_stitchtype()
         self.assertEqual( attr[(1,0)], attr[(2,0)] )
 
         asd2 = strickgraph.strickgraph.from_manual( testmanual, self.stitchinfo, manual_type="thread" )
-        attr = netx.get_node_attributes( asd2, "stitchtype" )
+        attr = asd2.get_nodeattr_stitchtype()
         self.assertEqual( attr[(1,0)], attr[(2,1)] )
 
+    @unittest.skip( "This method needs a rehaul" )
     def test_manual_withstartside( self ):
         testmanual = "2yo\n k p\n k p\n 2bo\n"
         #test if upedge differs from nextedge
