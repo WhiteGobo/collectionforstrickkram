@@ -1,6 +1,12 @@
+"""Small helper module for foked process, to limit runtime
+
+:todo: Exception that are raised will lose their traceback
+"""
 import multiprocessing as mp
 import time
 import os
+import logging
+logger = logging.getLogger( __name__ )
 
 class TimeLimitExceeded( Exception ):
     pass
@@ -13,6 +19,9 @@ def _limit_calculation_minion( function, myqueue, argv, *args ):
         retval = function( *args, **argv )
         myqueue.put( retval )
     except Exception as err:
+        import traceback
+        logger.error( "caught error while running fork" )
+        logger.error( "".join( traceback.format_tb(err.__traceback__)))
         myqueue.put( err )
 
 def limit_calctime( function, calctime,dt=5 ):
