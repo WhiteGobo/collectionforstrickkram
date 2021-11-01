@@ -332,8 +332,8 @@ def separate_wholegraphs_to_leftright_insulas( \
     rows = less_graph.get_rows()
     rowlength = sum( len(row) for row in rows ) / len(rows)
     isonleftside = lambda node: node[1] < rowlength
-    less_graph_nodes = less_graph.give_real_graph().nodes()
-    great_graph_nodes = great_graph.give_real_graph().nodes()
+    less_graph_nodes = less_graph.get_nodes()
+    great_graph_nodes = great_graph.get_nodes()
 
     #find left and right side to replace with insulas
     connected_insulas = less_graph.get_connected_nodes( difference_graph1 )

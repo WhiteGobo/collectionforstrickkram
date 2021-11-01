@@ -51,16 +51,15 @@ class TestMeshhandlerMethods( unittest.TestCase ):
 
         border = gridgraph.get_borders()
         positions = relax_gridgraph( gridgraph, mysurfacemap )
-        netx.set_node_attributes( gridgraph, positions )
 
         if False:
             from ..visualizer import myvis3d
             myvis3d( gridgraph )
 
-        xpos = netx.get_node_attributes( gridgraph, "x" )
+        xpos = { node:valdict["x"] for node, valdict in positions.items() }
         #ypos = netx.get_node_attributes( gridgraph, "y" )
         #zpos = netx.get_node_attributes( gridgraph, "z" )
-        realnodes = list( gridgraph.give_real_graph().nodes() )
+        realnodes = list( gridgraph.get_nodes() )
         testarray = [ test[node] for node in realnodes ]
         xposarray = [ xpos[node] for node in realnodes ]
         tmpbool = np.allclose( xposarray, testarray, atol=0.1 )

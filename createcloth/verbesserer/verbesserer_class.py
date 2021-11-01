@@ -2,7 +2,7 @@
 
 """
 
-from ..strickgraph.strickgraph_base import get_neighbours_from, strickgraph, stricksubgraph
+from ..strickgraph.strickgraph_base import get_neighbours_from, strickgraph
 
 import networkx as netx
 import math
@@ -25,7 +25,7 @@ logger = logging.getLogger( __name__ )
 class strickalterator( extrasfornetworkx.verbesserer ):
     nodeattributes = ( "stitchtype", "side" )
     edgeattributes = ( "edgetype", )
-    def replace_in_graph( self, graph, startnode, dontreplace=False ):
+    def replace_in_graph( self, graph:strickgraph, startnode, dontreplace=False ):
         """Mainmethod. replaces in given strickgraph at given position"""
         assert graph.isvalid(), "input must be valid strickgraph"
         nodeattributes = graph.get_nodeattributes()
@@ -199,52 +199,6 @@ def tounique_translator( staticnodes, transnodes ):
 
 
 
-#def verbesserungtoxml( verbesserer ):
-#    subgraph_old = verbesserer.oldgraph.subgraph( verbesserer.oldgraph_nodes )
-#    subgraph_new = verbesserer.newgraph.subgraph( verbesserer.newgraph_nodes )
-#    path = verbesserer.oldgraph_identificationpath
-#    nodeinfo = verbesserer.oldgraph_nodeinfoonpath
-#    return build_xmlElement( subgraph_old, subgraph_new, path, nodeinfo )
-#
-#def verbessererfromxml( xml, mynamespace='' ):
-#    """
-#    :type xml: str
-#    :todo: think about stream support
-#    """
-#    ET.register_namespace( "graphverbesserer", xml_config.namespace )
-#    ET.register_namespace( "grml", "http://graphml.graphdrawing.org/xmlns" )
-#    ET.register_namespace( "xsi", "http://www.w3.org/2001/XMLSchema-instance" )
-#
-#    xml_str = tostringinterpreter( xml )
-#
-#    verbesserer_xml = ET.fromstring( xml_str )
-#    #print( ET.tostring( verbesserer_xml ).decode("utf8"))
-#    #oldgraphml_iter = verbesserer_xml.findall( mynamespace + xml_config.oldgraph )
-#    oldgraphml_container = verbesserer_xml.find( xml_config.oldgraph )
-#    oldgraphml = list( oldgraphml_container )[0]
-#    oldgraphml_str = ET.tostring( oldgraphml ).decode("utf-8")
-#    #mystrick_old = strickgraph( netx.parse_graphml( oldgraphml_str, \
-#    mystrick_old = stricksubgraph( netx.parse_graphml( oldgraphml_str, \
-#                                                    force_multigraph=True ))
-#
-#    newgraphml_container = verbesserer_xml.find( xml_config.newgraph )
-#    newgraphml = list( newgraphml_container )[0]
-#    newgraphml_str = ET.tostring( newgraphml ).decode("utf-8")
-#    #mystrick_new = strickgraph( netx.parse_graphml( newgraphml_str, \
-#    mystrick_new = stricksubgraph( netx.parse_graphml( newgraphml_str, \
-#                                                    force_multigraph=True ))
-#
-#    path_container = verbesserer_xml.find( xml_config.findpath )
-#    path = pathfrom_xmlelement( path_container )
-#    nodeinfo_container = verbesserer_xml.find( xml_config.nodeinfo_onpath )
-#    nodeinfo = nodeinfo_from_xmlelement( nodeinfo_container )
-#    raise Exception()
-#    
-#    return verbesserer( mystrick_old, mystrick_new, \
-#                        mystrick_old.nodes(), mystrick_new.nodes(), \
-#                        '0', path, nodeinfo )
-
-
 def tostringinterpreter( myobject ):
     return tostringinterpreter_dict[type(myobject)]( myobject )
 
@@ -324,16 +278,3 @@ findstartnode_dict = {\
         "marked": findstartnode_marked, \
         }
 
-def frommanual_without_startandend( manual_new, manual_type=None, \
-                                startside=None ):
-    """
-    obsolete
-    :todo: this function may be obsolete because the node start and end should
-    not be in the subgraph that will be replaced
-    """
-    graph = frommanual( manual_new, stitchinfo, manual_type=manual_type, \
-                                                        startside=startside )
-    #graph_nodes = set( graph).difference([ "start", "end" ])
-    graph_nodes = set( graph).difference([])
-    subgraph = graph.subgraph( graph_nodes )
-    return subgraph

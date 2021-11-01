@@ -39,7 +39,6 @@ def relax_gridgraph( gridgraph:strickgraph, surfacemap: plysurfacehandler ) \
     """
     border = gridgraph.get_borders()
     number_rows = len( gridgraph.get_rows() )
-    gridgraph = gridgraph.give_real_graph()
     graphnodes_list: list[ Hashable ]
     edges_list: list[ Tuple[ int, int ]]
     border_up: list[ int ]
@@ -51,7 +50,7 @@ def relax_gridgraph( gridgraph:strickgraph, surfacemap: plysurfacehandler ) \
     sum_edgelength: Callable
     edgelength: list[ float ]
 
-    graphnodes_list = list( gridgraph.nodes() )
+    graphnodes_list = list( gridgraph.get_nodes() )
     edges_list = edges_to_vertices_from_graph( graphnodes_list, gridgraph )
     edgelength = [ 0 for e in edges_list ]
     down, up, left, right = ( [ graphnodes_list.index(v) for v in line ] \
@@ -165,7 +164,7 @@ def estimate_startpositions( number_vertices, edges_list, \
 
 def edges_to_vertices_from_graph( verticeindices, gridgraph ):
     edgelist = []
-    for e in gridgraph.edges():
+    for e in gridgraph.get_edges_with_labels():
         v1, v2 = e[:2]
         index1 = verticeindices.index( v1 )
         index2 = verticeindices.index( v2 )
