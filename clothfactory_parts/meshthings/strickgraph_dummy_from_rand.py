@@ -12,8 +12,20 @@ tmpvalid = lambda: (\
             (strickgraph.strickgraph_stitchdata, meshtypes.ply_surface), \
             )
 use_stitchdata_for_construction = edgetype( tmpvalid, \
-                                        "for strickgraph construction", "" )
+                                        "for strickgraph construction", __name__ )
 del( tmpvalid )
+
+tmpvalid = lambda: (
+                (strickgraph.strickgraph_container, meshtypes.ply_surface), \
+                )
+strickgraph_fit_to_mesh = edgetype( tmpvalid, \
+                                        "strickgraph fit for mesh", __name__ )
+"""strickgraph can be evaluated with connected surfacethingy
+it originates, it doesnt need to be exactly fitted but the goal is to fit it
+
+"""
+del( tmpvalid )
+
 
 def create_datagraphs():
     tmp = datagraph()
@@ -42,9 +54,9 @@ def call_function( stitchdata, mymesh, mysurface ):
     #upstitchlength = length_dict[ stitchdata.plain_endrow ]
     #downstitchlength = length_dict[ stitchdata.plain_startrow ]
     #sidestitchlength = length_dict[ stitchdata.plain_stitch ]
-    number_linelength = 1 + int((downlength + uplength) \
+    number_linelength = 1 + int((rightlength + leftlength)  \
                         / (upstitchlength + downstitchlength))
-    number_numberrows = 1 + int((rightlength + leftlength)  \
+    number_numberrows = 1 + int((downlength + uplength) \
                         / (2 * sidestitchlength) )
     mygridgraph = netx.grid_2d_graph( number_numberrows, number_linelength )
     firstrow = [ x for x in mygridgraph.nodes() if x[0] == 0 ]
@@ -65,13 +77,3 @@ strickgraph_dummy_from_rand:factory_leaf= factory_leaf( create_datagraphs, \
 
 
 
-tmpvalid = lambda: (
-                (strickgraph.strickgraph_container, meshtypes.ply_surface), \
-                )
-strickgraph_fit_to_mesh = edgetype( tmpvalid, \
-                                        "strickgraph fit for mesh", \
-                                        "it originates, it doesnt need to be "\
-                                        +"exactly fitted but the goal is to "\
-                                        +"fit it" )
-"""strickgraph can be evaluated with connected surfacethingy"""
-del( tmpvalid )

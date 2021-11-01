@@ -39,11 +39,11 @@ def main( directory_path:str, mesh_filepath:str, force:bool, dontoverwrite:bool 
     all_factoryleafs = factoryleafs_dict.values()
     all_conclusions = conclusionleaf_dict.values()
 
-    flowgraph = dagfa.create_flowgraph_for_datanodes( all_factoryleafs, \
+    flowgraph = dagfa.flowgraph.from_datanodes( all_factoryleafs, \
                                                         all_conclusions )
     wholegraph = create_datagraph( mesh_filepath )
 
-    audi.save_graph( wholegraph, directory_path, [ clop ] )
+    wholegraph.save_graph( directory_path )
 
 
 def create_datagraph( meshfilepath ):

@@ -32,6 +32,7 @@ def _call_function( mystrick, positions ):
     y = positions.yposition
     z = positions.zposition
     l = positions.edgelengthdict
+    assert set(mystrick.strickgraph.nodes()) == set(x.keys()), "adf"
     edge_to_calmlength = positions.calmlengthdict
     #lengthgraph = relaxedgelength_to_strickgraph( mystrick.strickgraph )
     ##edge_to_calmlength = lambda e: lengthgraph[e]["calmlength"]

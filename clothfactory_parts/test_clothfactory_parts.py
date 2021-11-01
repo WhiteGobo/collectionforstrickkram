@@ -5,8 +5,8 @@ import pkg_resources as pkr
 from createcloth.stitchinfo import basic_stitchdata as globalstitchinfo
 from createcloth.strickgraph.strickgraph_base import strickgraph
 from datagraph_factory.find_process_path import flowgraph
-from datagraph_factory.linear_factorybranch import create_linear_function
 from datagraph_factory import datagraph
+from datagraph_factory import complex_linear_factory_leaf
 from datagraph_factory.utils import get_all_datatypes, \
                                 list_available_edges_with_datatype 
 #from .plyford_mesh_handler import all_factoryleafs
@@ -81,7 +81,8 @@ class TestClothfactoryParts( unittest.TestCase ):
         mystitchinfo = strickgraph_stitchdata( globalstitchinfo, "knit", \
                                                     "yarnover", "bindoff" )
 
-        myfoo = create_linear_function( flowgraph, inputgraph, outputgraph, \
+        myfoo = complex_linear_factory_leaf.create_linear_function( \
+                                        flowgraph, inputgraph, outputgraph, \
                                         verbosity=1 )
         myout = myfoo( filename = myfilepathconstruct )#, \
                         #stitchinfo = mystitchinfo )
@@ -241,15 +242,10 @@ class TestClothfactoryParts( unittest.TestCase ):
         #                                                        as filepath:
         #    tmpmap = ply_2dmap.load_from( filepath )
         #tmp["maptomesh"] = tmpmap
-        from datagraph_factory.automatic_directory.filehandler import \
-                                                    save_graph, load_graph
         from datagraph_factory.automatic_directory import complete_datagraph
-        from . import meshthings
-        from . import plainknit
-        from . import strickgraph
 
         with tempfile.TemporaryDirectory() as tmpdir:
-            save_graph( tmp, tmpdir, [ meshthings, physics, plainknit, strickgraph] )
+            tmp.save_graph( tmpdir )
 
         return
         from datagraph_factory import DataRescueException

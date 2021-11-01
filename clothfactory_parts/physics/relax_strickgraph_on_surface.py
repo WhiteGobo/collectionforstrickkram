@@ -6,6 +6,13 @@ from createcloth.physicalhelper import standardthreadinfo as mythreadinfo
 
 from typing import Dict, Union
 
+_valid_map_for_strickgraph = lambda : tuple(((meshthings.ply_2dmap, \
+                                        strickgraph.strickgraph_container),))
+map_for_strickgraph: edgetype = edgetype( _valid_map_for_strickgraph, "maptostrick", __name__ )
+"""Positon of Strickgraph may be mapped with that 2dmap"""
+
+
+
 def _rsos_create_datagraphs():
     tmp = datagraph()
     #tmp.add_node( "mymesh", meshthings.ply_surface )
@@ -68,9 +75,4 @@ mesh_and_strickgraph_to_mapping_conclusion: conclusion_leaf \
 also to surfacemaps of the mesh
 """
 
-
-_valid_map_for_strickgraph = lambda : tuple(((meshthings.ply_2dmap, \
-                                        strickgraph.strickgraph_container),))
-map_for_strickgraph: edgetype = edgetype( _valid_map_for_strickgraph, "maptostrick", "" )
-"""Positon of Strickgraph may be mapped with that 2dmap"""
 

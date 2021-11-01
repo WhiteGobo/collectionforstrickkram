@@ -54,9 +54,6 @@ class ply_2dmap( datatype ):
         self.leftlength = surfmap.leftlength[-1]
         self.rightlength = surfmap.rightlength[-1]
 
-
-
-
 _valid_map_to_mesh = lambda : tuple(((ply_2dmap, ply_surface),))
-map_to_mesh = edgetype( _valid_map_to_mesh, "maptomesh", "" )
+map_to_mesh = edgetype( _valid_map_to_mesh, "maptomesh", __name__ )
 """edgetype thingy"""
