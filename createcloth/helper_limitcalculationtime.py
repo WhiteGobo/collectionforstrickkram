@@ -6,6 +6,7 @@ import multiprocessing as mp
 import time
 import os
 import logging
+import traceback
 logger = logging.getLogger( __name__ )
 
 class TimeLimitExceeded( Exception ):
@@ -14,14 +15,17 @@ class TimeLimitExceeded( Exception ):
 class NoDataProduced( Exception ):
     pass
 
-def _limit_calculation_minion( function, myqueue, argv, *args ):
+def _limit_calculation_minion( function, myqueue, argv, *args, expected_errors=[] ):
     try:
         retval = function( *args, **argv )
         myqueue.put( retval )
     except Exception as err:
-        import traceback
-        logger.error( "caught error while running fork" )
-        logger.error( "".join( traceback.format_tb(err.__traceback__)))
+        if type( err ) in expected_errors:
+            logfoo = logger.debug
+        else:
+            logfoo = logger.error
+        logfoo( "caught error while running fork" )
+        logfoo( "".join( traceback.format_tb(err.__traceback__)))
         myqueue.put( err )
 
 def limit_calctime( function, calctime,dt=5 ):
