@@ -13,36 +13,6 @@ from .datacontainer import strick_datacontainer
 #from .strickgraph_helper import separate_to_rows
 
 
-class strick_physic_forceproperties:
-    def set_positions( self, positions: Dict[ Hashable, Dict ] ):
-        realgraph = self.give_real_graph()
-        if set( positions.keys() ) != set( realgraph.nodes() ):
-            raise Exception( "set position needs dictionary with every node" )
-        _netx.set_node_attributes( self, positions )
-        elengths = dict()
-        posarrays = { node: tuple( q[c] for c in ("x", "y", "z")) \
-                            for node, q in positions.items() }
-        length_dictionary = {}
-        for e in realgraph.edges( keys=True ):
-            l = np.linalg.norm( np.subtract(posarrays[e[0]], posarrays[e[1]] ))
-            length_dictionary[e] = l
-        _netx.set_edge_attributes( self, length_dictionary, "currentlength" )
-
-
-    def set_calmlength( self, mythreadinfo ):
-        """
-        :param mythreadinfo: createcloth.physicalhelper.threadinfo
-        """
-        downstitchlength = mythreadinfo.plainknit_startstitchwidth
-        upstitchlength = mythreadinfo.plainknit_endstitchwidth
-        sidestitchlength = mythreadinfo.plainknit_stitchheight
-        lengthdict = {}
-        #realdings = self.get_real_graph
-        for e in self.edges( keys=True ):
-            lengthdict[ e ] = upstitchlength
-        _netx.set_edge_attributes( self, lengthdict, "length" )
-
-
 class strick_compare:
     def __hash__( self ):
         nodelabels = self.get_nodeattributelabel()
@@ -92,7 +62,6 @@ class alternative_stitchtype_support():
 
 class strickgraph( fromgrid.strick_fromgrid, \
                         strick_compare, alternative_stitchtype_support, \
-                        strick_physic_forceproperties, \
                         toknitmanual.strick_manualhelper ):
     """QWERQWER
 
@@ -104,15 +73,6 @@ class strickgraph( fromgrid.strick_fromgrid, \
         myinit
         """
         strick_datacontainer.__init__( self, nodeattributes, edgelabels )
-        self.supergraph = self
-
-    def subgraph( self, *args, **argv ):
-        tmpsubgraph = super().subgraph( *args, **argv )
-        tmpsubgraph.supergraph = self
-        return tmpsubgraph
-
-    #def __hash__( self ):
-    #    return strick_compare.__hash__( self )
 
 
 def get_neighbours_from( strickgraph, nodelist ):
@@ -123,50 +83,6 @@ def get_neighbours_from( strickgraph, nodelist ):
     neighbours = neighbours.difference( nodelist )
     return neighbours
 
-class stricksubgraph( strickgraph ):
-    """this class is extra for strickgraph patches"""
-    def get_rows( self, presentation_type="thread" ):
-        """Get list of graphnode-rows.
-        You can get a threadlike construct, which shows first the first one you
-        would knit.
-        You can get a machinelike construct where you get a form which 
-        corresponds to as-seen, when knitted.
-
-        :param presentation_type: 'machine' or 'thread
-        :rtype: List[ List[ Hashable ]]
-        """
-        raise Exception()
-        side_of_nodes = _netx.get_node_attributes( self, "side" )
-        all_edges = self.edges( data=True, keys=True )
-        up_edges = [ (edge[0],edge[1]) for edge in all_edges \
-                        if edge[3]["edgetype"]=="up"]
-        next_edges = [ (edge[0], edge[1]) for edge in all_edges \
-                        if edge[3]["edgetype"]=="next"]
-        left_nodes = [ node for node in self.nodes \
-                        if side_of_nodes[ node ] == "left" ]
-        right_nodes = [ node for node in self.nodes \
-                        if side_of_nodes[ node ] == "right" ]
-
-        asd =  sort_nodes_downtoup( left_nodes, right_nodes, \
-                                    next_edges, up_edges )
-        rows = []
-        currentrow = []
-        rows.append( currentrow )
-        if asd[0] in left_nodes:
-            left=True
-        else:
-            left=False
-        for node in asd:
-            if left != (node in left_nodes): #switched side
-                currentrow = []
-                rows.append( currentrow )
-                left = (node in left_nodes)
-            currentrow.append( node )
-        if presentation_type in mod_strickgraph.machine_terms:
-            rows = reverse_every_second_row( rows, \
-                                    firstside= side_of_nodes[ rows[0][0] ] )
-
-        return rows
 
 def reverse_every_second_row( rows, firstside="right" ):
     rev_i = {"right":0, "left":1}[ firstside ] #0 if right; 1 if left

@@ -1,5 +1,6 @@
 import networkx as _netx
 from .. import strickgraph as mod_strickgraph
+import itertools as it
 
 maximaldataset_per_node = set(("stitchtype", "side", "alternativestitchtypes"))
 minimaldataset_per_node = set(("stitchtype", "side"))
@@ -106,7 +107,6 @@ class strick_datacontainer():
 
     def get_rows( self, presentation_type="machine" ):
         rows = []
-        #firststitch = self.give_next_node_to( "start" )
         firststitch = self.get_startstitch()
         endstitch = self.get_endstitch()
         while firststitch != endstitch:
@@ -116,15 +116,12 @@ class strick_datacontainer():
                 break
             firststitch = self.give_next_node_to( currentrow[-1] )
         if presentation_type in mod_strickgraph.machine_terms:
-            #tmprows = [] #dont need this
-            node_side = _netx.get_node_attributes( self.__datacontainer, "side" )
+            node_side = self.get_nodeattr_side()
             for row in rows:
                 if node_side[ row[0] ] == "right":
                     pass
                 else:
                     row.reverse()
-                #tmprows.append( row )
-            #rows = tmprows
         elif presentation_type in mod_strickgraph.handknitting_terms:
             pass
         else:
@@ -132,15 +129,25 @@ class strick_datacontainer():
                             +"in handknitting or" \
                             +" machine terms. see pkg/strickgraph/constants.py")
         return rows
-        #firstrow = self.find_following_row( firststitch )
-        #subgraph = self.subgraph( set(self.nodes())-{"start", "end"})
-        #rows = separate_to_rows( subgraph, firstrow )
-        #return rows
+
+    def get_neighbours_to( self, stitchnode ):
+        """Finds all neighbours to node.
+
+        :param stitchnode: Node in the strickgraph
+        :returns: Nodelist of all neighbours
+        :rtype: List[ Hashable ]
+        """
+        edges = self.get_edges_with_labels()
+        filteredges = ( (v1, v2) for v1, v2, etype in edges \
+                        if stitchnode in (v1, v2) )
+        nodes = set( it.chain.from_iterable( filteredges ) )
+        nodes.remove( stitchnode )
+        return nodes
 
     def get_borders( self ):
         """gives the borders as lists
 
-        :todo: from a single row multiple stitches can contribute to each border
+        :todo: Must be alterated if cuts from above or below are possible
         :rtype down, up, left, right: list, list, list, list
         :return: down, up, left, right
         """
@@ -148,8 +155,32 @@ class strick_datacontainer():
 
         down = rows[0]
         up = rows[-1]
-        left = [ tmprow[0] for tmprow in rows ] #todo: instead march through
-        right = [ tmprow[-1] for tmprow in rows ] #todo: instead march through
+        left = []
+        right = []
+        for i, tmprow in enumerate(rows):
+            #for easier algorithm max and min
+            uprow = set( rows[ min( i+1, len(rows)-1 ) ] )
+            downrow = set( rows[ max( i-1, 0 ) ] )
+            j, neighs, left_tmp = -1, [], []
+            while len(uprow.intersection( neighs ))==0 \
+                            or len(downrow.intersection(neighs))==0:
+                j += 1
+                tmp = tmprow[j]
+                left_tmp.append( tmp )
+                neighs = self.get_neighbours_to( tmp )
+            if len( downrow.intersection( self.get_neighbours_to( left_tmp[0] )))==0:
+                left_tmp.reverse()
+            left.extend( left_tmp )
+            j, neighs, right_tmp = 0, [], []
+            while len(uprow.intersection( neighs ))==0 \
+                            or len(downrow.intersection(neighs))==0:
+                j -= 1
+                tmp = tmprow[j]
+                right_tmp.append( tmp )
+                neighs = self.get_neighbours_to( tmp )
+            if len( uprow.intersection( self.get_neighbours_to( right_tmp[0] )))==0:
+                right_tmp.reverse()
+            right.extend( right_tmp )
         return down, up, left, right
     
 
@@ -218,12 +249,13 @@ class strick_datacontainer():
         return row
 
     def give_next_node_to( self, node ):
-        edges = self.__datacontainer.edges( node, data=True )
-        nextedges = [ x for x in edges if x[2]["edgetype"] == "next" ]
+        edges = [ (a,b, label) for a,b,label in self.get_edges_with_labels()\
+                        if a==node ]
+        nextedges = [ x for x in edges if x[2] == "next" ]
         try:
             return nextedges[0][1]
         except IndexError as err:
-            raise Exception( edges, node )
+            raise Exception( edges,edges2, node )
 
     def get_sidemargins_indices( self, marginsize=5 ):
         rows = self.get_rows( "machine" )

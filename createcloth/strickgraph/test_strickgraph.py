@@ -125,7 +125,7 @@ class TestStringMethods( unittest.TestCase ):
         qwe = strickgraph.strickgraph(netx.parse_graphml( mygraphml ))
         self.assertEqual( asd, qwe )
 
-    @unittest.skip( "get_border isnt complete" )
+    #@unittest.skip( "get_border isnt complete" )
     def test_strickgraph_findborder( self ):
         asd = strickgraph.strickgraph.from_gridgraph( self.mygraph, \
                                                             self.firstrow, \
