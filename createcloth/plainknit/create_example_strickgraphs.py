@@ -98,8 +98,20 @@ def find_to_graph_onedifferencegraphs( maingraph, brulist, min_row_length=10 ):
 
 
 def create_stitchnumber_to_examplestrick( q ):
-    """ Im not sure """
-    from .examplestates import start, end, enddecrease,  lefteaves, righteaves, leftplane, rightplane, plain, increase, decrease
+    """Creates a mapping of a stitches_per_line via class_idarray to 
+    possible linetypes and their real stitches_per_line. The stitches-per-line
+    are saved as class_idarray. This is to compare different stitches-per-line
+    which are comparable, if they are widened or shortened.
+
+    :type q: Iterable[ Tuple[ linetype, ... ] ]
+    :param q: Possible strickgraph represented from linetypes
+    :returns: Mapping of id from stitches-per-line to possible linetypes 
+            and their real stitches-per-line
+    :rtype: Dict[ class_idarray, 
+            List[ Tuple[Iterable[linetypes], Iterable[int]] ] ]
+    """
+    from .examplestates import start, end, enddecrease,  lefteaves, righteaves,\
+            leftplane, rightplane, plain, increase, decrease
     brubru = {}
     def mysort( q ):
         linetypes, original_upedges, stitches_per_line = q
@@ -139,6 +151,8 @@ class class_idarray():
 def order_neighbouring( brubru ):
     """ Helperfunction for creation of increaser and decreaser for 
     plainknitstrick
+
+    :todo: remove this function
     """
     myergebnis = []
     tmpbib = {}
@@ -173,12 +187,6 @@ def order_neighbouring( brubru ):
                                     for i, t in enumerate(zip(upe2,upedges_out)) if abs(i-k)>2]
                             upedges_in = tuple( ue+notneardifference_rows[0] \
                                     for ue in upe2 )
-
-                            #less_graph = create_graph_from_linetypes( linetype_out, upedges_out)
-                            #if "4yo 2k 1k2tog 6k 1k2tog 2k" in less_graph.to_manual(glstinfo):
-                            #    raise Exception()
-                            #great_graph = create_graph_from_linetypes( linetype_in, upedges_in )
-
 
                             qqdiff = sum( upedges_in )-sum(upedges_out)
                             assert abs(qqdiff) <= 5, "most likely plane follows with increase, which is not covered by plain-strick"

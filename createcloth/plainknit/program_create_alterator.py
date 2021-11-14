@@ -110,6 +110,7 @@ def main( filename, alteratortype, strickgraphsize = 8, min_row_length=14, cont=
 
     increase_linetypes_collection: Iterable[ strickexample_alteration ] \
                 = tuple( order_neighbouring( brubru ) )
+    increase_linetypes_collection = _filterincrease_linetypes( increase_linetypes_collection )
 
     logger.info( "Starting creation of alterators" )
 
@@ -141,10 +142,24 @@ def main( filename, alteratortype, strickgraphsize = 8, min_row_length=14, cont=
 
     savetofile( filename, myalterator )
 
+def _filterincrease_linetypes( increase_linetypes_collection ):
+    from .examplestates import start, end, leftplane, rightplane, \
+                                    lefteaves, righteaves, \
+                                    enddecrease, plain, increase, decrease
+    increase_linetypes_collection = [ (a,b,c,d,e)\
+            for a,b,c,d,e in increase_linetypes_collection \
+            if tuple(a[0:4]) == (start, leftplane, rightplane, plain) \
+            and tuple(b[0:4]) == (start, leftplane, rightplane, plain) \
+            and e==3]
+    return increase_linetypes_collection
+
 
 
 if __name__ == "__main__":
     signal( SIGINT, sigint_handler )
     args = get_args()
-    logging.basicConfig( level=logging.INFO )
+    logging.basicConfig( level=logging.DEBUG )
+    from extrasfornetworkx import verbesserer_tools 
+    verbesserer_tools.logger.setLevel( logging.DEBUG )
+
     main( **args )

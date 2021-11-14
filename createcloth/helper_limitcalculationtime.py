@@ -15,7 +15,12 @@ class TimeLimitExceeded( Exception ):
 class NoDataProduced( Exception ):
     pass
 
-def _limit_calculation_minion( function, myqueue, argv, *args, expected_errors=[] ):
+def _limit_calculation_minion( function, myqueue, argv, *args, \
+                                expected_errors=[], loglevel=logging.WARNING):
+    logging.basicConfig( level=loglevel )
+    logger.debug( "debug" )
+    logger.info( "info" )
+    logger.warning( "warning" )
     try:
         retval = function( *args, **argv )
         myqueue.put( retval )
@@ -28,20 +33,21 @@ def _limit_calculation_minion( function, myqueue, argv, *args, expected_errors=[
         logfoo( "".join( traceback.format_tb(err.__traceback__)))
         myqueue.put( err )
 
-def limit_calctime( function, calctime, dt=.2, expected_errors=[] ):
+def limit_calctime( function, calctime, dt=.05, expected_errors=[] ):
     def limited_function( *args, **argv ):
         mp_ctx = mp.get_context( 'spawn' )
         myqueue = mp_ctx.Queue( 1 )
         mpid = mp_ctx.Process( target=_limit_calculation_minion, \
                                 args=( function, myqueue, argv, *args ), \
-                                kwargs={"expected_errors": expected_errors} )
+                                kwargs={"expected_errors": expected_errors,\
+                                "loglevel": logging.DEBUG} )
         mpid.start()
         for i in range( 0, int(calctime/dt) ):
             if myqueue.empty() and mpid.is_alive():
                 time.sleep( dt )
             else:
                 break
-        if mpid.is_alive():
+        if myqueue.empty() and mpid.is_alive():
             mpid.terminate()
             mpid.join()
             raise TimeLimitExceeded()
