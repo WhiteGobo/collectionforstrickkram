@@ -4,7 +4,7 @@ import pkg_resources as pkr
 #from .strickgraph_datatypes import strickgraph_stitchdata
 from createcloth.stitchinfo import basic_stitchdata as globalstitchinfo
 from createcloth.strickgraph.strickgraph_base import strickgraph
-from datagraph_factory.find_process_path import flowgraph
+from datagraph_factory import flowgraph
 from datagraph_factory import datagraph
 from datagraph_factory import complex_linear_factory_leaf
 from datagraph_factory.utils import get_all_datatypes, \
