@@ -95,11 +95,11 @@ def _isplain_with_upedges( linetypes, upedges:Iterable[int] ):
                     skipnext = True
 
     for linelow, lineup in zip( linetypes[:-1], linetypes[1:] ):
-        if linelow in (rightplane, leftplane) and lineup == increase:
+        if linelow in (rightplane, leftplane, righteaves, lefteaves) and lineup in (decrease, increase):
             #This is because, they have the same stitchnumbers per line as
             #if lineup is plain
             return False
-        if linelow in (rightplane, leftplane) and lineup in (decrease, enddecrease):
+        if linelow in (rightplane, leftplane, righteaves, lefteaves) and lineup in ( enddecrease,):
             #this is because you can exchange a decrease with a bigger plane
             #and still have the same stitchnumbers per line
             return False
