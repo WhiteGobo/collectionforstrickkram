@@ -1,5 +1,10 @@
-from extrasfornetworkx import multiverbesserer
-from ..strickgraph.strickgraph_base import stricksubgraph
+"""
+
+:todo: remove this thingies
+"""
+
+from extrasfornetworkx import multialterator
+from ..strickgraph.strickgraph_base import strickgraph
 import itertools
 import math
 from .verbesserer_class import strickalterator
@@ -21,7 +26,9 @@ except ModuleNotFoundError as err:
     raise err
 
 
-class strick_multiverbesserer( multiverbesserer ):
+class strick_multiverbesserer( multialterator ):
+    """Remove this
+    """
     def __init__( self, verbessererlist, name=None ):
         if isinstance( verbessererlist, multiverbesserer ):
             isintruth_a_multiverbesserer = verbessererlist
@@ -32,7 +39,10 @@ class strick_multiverbesserer( multiverbesserer ):
 
     def print_with_matplotlib( self, show = True, useoldgraph=True, \
                                                         tmpplotinfo=None ):
-        """visualize with matplot"""
+        """visualize with matplot
+        
+        :todo: overhaul this method
+        """
         import matplotlib.pyplot as plt
         from ..visualizer.graph_2d import easygraph
         nrows = math.ceil( math.sqrt(len( self.verbessererlist)+1) )
@@ -72,12 +82,15 @@ class strick_multiverbesserer( multiverbesserer ):
         axis.legend()
 
     def print_compare_to_graph_at_position( self, graph, marknode ):
-        """plot helping to understand problems"""
+        """plot helping to understand problems
+
+        :todo: overhaul this method
+        """
         tmpplotinfo = self.print_with_matplotlib( show = False )
         easygraph( graph, marked_nodes =[ marknode ], \
                             myplotinfo = tmpplotinfo )
     @classmethod
-    def from_xmlstring( cls, xmlstr: str,graph_type=stricksubgraph, name=None ):
+    def from_xmlstring( cls, xmlstr: str,graph_type=strickgraph, name=None ):
         """Create multiverbesserer from xml string"""
         multi = multiverbesserer.from_xml( xmlstr, graph_type=graph_type )
         return cls( multi, name )
@@ -86,6 +99,8 @@ class strick_multiverbesserer( multiverbesserer ):
     @classmethod
     def from_manuals( cls, pairlist, reverse=False, side="both", \
                         oldtranslatorlist=[], manual_type="machine" ):
+        """
+        """
         if side == "both":
             usedsides = ("left", "right")
         elif side == "right":
@@ -158,6 +173,6 @@ def _tryoldtranslator( translatorlist, startside, oldmanstr, newmanstr, \
 
 
 
-def strick_multiverbessererfromxml( xmlstr, graph_type=stricksubgraph, name=None ):
+def strick_multiverbessererfromxml( xmlstr, graph_type=strickgraph, name=None ):
     multi = multiverbesserer.from_xml( xmlstr, graph_type=graph_type )
     return strick_multiverbesserer( multi, name )

@@ -125,6 +125,16 @@ class TestStringMethods( unittest.TestCase ):
         qwe = strickgraph.strickgraph(netx.parse_graphml( mygraphml ))
         self.assertEqual( asd, qwe )
 
+    def test_getrows( self ):
+        """Test if method get_rows and _get_topologicalsort_of_stitches return
+        right output
+        """
+        asd = strickgraph.strickgraph.from_gridgraph( self.mygraph, \
+                                                            self.firstrow, \
+                                                            self.stitchinfo )
+        self.assertEqual( asd._get_topologicalsort_of_stitches(), [(0, 0), (0, 1), (0, 2), (0, 3), (1, 3), (1, 2), (1, 1), (1, 0), (2, 0), (2, 1), (2, 2), (2, 3), (3, 3), (3, 2), (3, 1), (3, 0)] )
+        self.assertEqual( asd.get_rows(), [[(0, 0), (0, 1), (0, 2), (0, 3)], [(1, 0), (1, 1), (1, 2), (1, 3)], [(2, 0), (2, 1), (2, 2), (2, 3)], [(3, 0), (3, 1), (3, 2), (3, 3)]] )
+
     #@unittest.skip( "get_border isnt complete" )
     def test_strickgraph_findborder( self ):
         asd = strickgraph.strickgraph.from_gridgraph( self.mygraph, \

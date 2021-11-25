@@ -15,8 +15,14 @@ class strick_datacontainer():
     :todo: isvalid should me a method which works not only for strickgraphs
     """
     def __init__( self, nodeattributes, edgelabels ):
+        """
+
+        :type nodeattributes: Dict[ Hashable, Dict ]
+        :type edgelabels: Iterable[ Tuple[ Hashable, Hashable, str ]]
+        """
         self.__datacontainer = _netx.MultiDiGraph()
         for node, data in nodeattributes.items():
+            assert data["side"] in ("left", "right"), f"side is strange: {node} {data}"
             self.__datacontainer.add_node( node, **data )
             assert minimaldataset_per_node.issubset( data.keys() ), data
             assert maximaldataset_per_node.issuperset( data.keys() ), data
@@ -31,10 +37,23 @@ class strick_datacontainer():
         return { a:b[attrname] for a,b in graph.nodes( data=True ) \
                 if attrname in b }
     def get_nodeattr_stitchtype( self ):
+        """
+
+        :rtype: Dict[ Hashable, str ]
+        """
         return self._get_nodeattr( "stitchtype" )
     def get_nodeattr_side( self ):
+        """
+
+        :rtype: Dict[ Hashable, str ]
+        """
         return self._get_nodeattr( "side" )
     def get_nodeattr_alternativestitchtype( self ):
+        """
+
+        :rtype: Dict[ Hashable, str ]
+        :todo: maybe remove alternativestitchtype
+        """
         return self._get_nodeattr( "alternativestitchtype" )
 
     def subgraph( self, nodes ):
@@ -50,6 +69,7 @@ class strick_datacontainer():
         """Needed for verbesserer
 
         :todo: rework so that start and end have data
+        :rtype: Dict[ Hashable, Tuple ]
         """
         #subgraph = self.subgraph( set(self.nodes())-{"start", "end"})
         #subgraph = self.subgraph( set(self.nodes()) )
@@ -62,6 +82,11 @@ class strick_datacontainer():
                         for node, data in nodeplusdata.items() }
 
     def get_nodes( self ):
+        """
+
+        :rtype: Iterable[ Hashable ]
+        :todo: move this to get_stitches
+        """
         return self.__datacontainer.nodes()
 
     def get_nodeattributelabel( self ):
@@ -77,7 +102,10 @@ class strick_datacontainer():
         return nodelabels
 
     def get_edges_with_labels( self ):
-        """Needed for verbesserer"""
+        """Needed for verbesserer
+        
+        :rtype: Iterable[ Tuple[ Hashable, Hashable, str ] ]
+        """
         return tuple( (e[0], e[1], e[-1]["edgetype"]) \
                         for e in self.__datacontainer.edges( data=True ) )
         #subgraph = self.subgraph( set(self.nodes())-{"start", "end"})
@@ -86,6 +114,11 @@ class strick_datacontainer():
                         for e in subgraph.edges( data=True ) )
 
     def get_startstitch( self ):
+        """
+
+        :todo: This is no permanent method. I willchange strickgraph to
+            include multiple threads.
+        """
         nodes = set( self.get_nodes() )
         nodes.difference_update( v2 \
                         for v1, v2, edgetype in self.get_edges_with_labels() \
@@ -95,6 +128,11 @@ class strick_datacontainer():
         return iter(nodes).__next__()
 
     def get_endstitch( self ):
+        """
+
+        :todo: This is no permanent method. I willchange strickgraph to
+            include multiple threads.
+        """
         nodes = set( self.get_nodes() )
         nodes.difference_update( v1 \
                         for v1, v2, edgetype in self.get_edges_with_labels() \
@@ -103,18 +141,41 @@ class strick_datacontainer():
                                     f"inedge found {nodes}"
         return iter(nodes).__next__()
 
+    
+    def _get_topologicalsort_of_stitches( self ):
+        sorted_stitches = list( _netx.topological_sort( self.__datacontainer ))
+        return sorted_stitches
 
 
     def get_rows( self, presentation_type="machine" ):
-        rows = []
-        firststitch = self.get_startstitch()
-        endstitch = self.get_endstitch()
-        while firststitch != endstitch:
-            currentrow = self.find_following_row( firststitch )
-            rows.append( currentrow )
-            if currentrow[ -1 ] == endstitch:
-                break
-            firststitch = self.give_next_node_to( currentrow[-1] )
+        """
+
+        :todo: move this a classlayer up
+        """
+        stitchside = self.get_nodeattr_side()
+        sorted_stitches = self._get_topologicalsort_of_stitches()
+        currentrow = [ sorted_stitches[0] ]
+        rows = [ currentrow ]
+        laststitch = sorted_stitches[0]
+        lastside = stitchside[ laststitch ]
+        for stitch in sorted_stitches[1:]:
+            nextside = stitchside[ stitch ]
+            if lastside == nextside:
+                currentrow.append( stitch )
+            else:
+                lastside = nextside
+                currentrow = [ stitch ]
+                rows.append( currentrow )
+        
+        #rows = []
+        #firststitch = self.get_startstitch()
+        #endstitch = self.get_endstitch()
+        #while firststitch != endstitch:
+        #    currentrow = self.find_following_row( firststitch )
+        #    rows.append( currentrow )
+        #    if currentrow[ -1 ] == endstitch:
+        #        break
+        #    firststitch = self.give_next_node_to( currentrow[-1] )
         if presentation_type in mod_strickgraph.machine_terms:
             node_side = self.get_nodeattr_side()
             for row in rows:
@@ -148,7 +209,8 @@ class strick_datacontainer():
         """gives the borders as lists
 
         :todo: Must be alterated if cuts from above or below are possible
-        :rtype down, up, left, right: list, list, list, list
+        :todo: move one class layer up
+        :rtype: Tuple[ List[Hashable],... ]
         :return: down, up, left, right
         """
         rows = self.get_rows( presentation_type="machine" )
@@ -204,12 +266,13 @@ class strick_datacontainer():
         :param maxdistance: maximum distance to nodelist
         :type maxdistance: int
         :type nodelist: Iterable[ Hashable ]
-        :rtype nodelist: Tuple[ Hashable ]
+        :returns: nodes in distance < 'maxdistance'
+        :rtype: Tuple[ Hashable,... ]
         """
         #asd = self.give_real_graph()
         helpgraph = _netx.Graph()
         helpgraph.add_nodes_from( self.get_nodes() )
-        helpgraph.add_edges_from( [e[:2] for e in self.get_edges_with_labels()] )
+        helpgraph.add_edges_from( [e[:2] for e in self.get_edges_with_labels()])
         nearthings = set( nodelist )
         for a,b in _netx.all_pairs_dijkstra_path( helpgraph,cutoff=maxdistance):
             if a in nodelist:
@@ -217,16 +280,16 @@ class strick_datacontainer():
         return tuple( nearthings )
 
     def get_startside( self ):
-        """Get startside"""
+        """Get startside
+
+        :rtype: str
+        """
         #firststitch = self.give_next_node_to( "start" )
         firststitch = self.get_startstitch()
         #endstitch = self.get_endstitch()
         firstrow = self.find_following_row( firststitch )
         nodeattr = _netx.get_node_attributes( self.__datacontainer, "side" )
-        try:
-            return nodeattr[ firstrow[0] ]
-        except Exception as err:
-            raise Exception( nodeattr, firstrow, firststitch ) from err
+        return nodeattr[ firstrow[0] ]
 
     def find_following_row( self, firstnode ):
         """return the row of this node, the start of the row will be the 
@@ -249,15 +312,30 @@ class strick_datacontainer():
         return row
 
     def give_next_node_to( self, node ):
+        """When following the thread, the next stitch.
+
+        :rtype: Hashable
+        :todo: Hash no failsafe for last stitch
+        """
         edges = [ (a,b, label) for a,b,label in self.get_edges_with_labels()\
                         if a==node ]
         nextedges = [ x for x in edges if x[2] == "next" ]
-        try:
-            return nextedges[0][1]
-        except IndexError as err:
-            raise Exception( edges,edges2, node )
+        return nextedges[0][1]
 
     def get_sidemargins_indices( self, marginsize=5 ):
+        """Returns the indices of the sidemargin. In every node a minimum
+        of 'marginsize' stitches are indexed. Also there may be more, so
+        that of every minimalsidemargin-stitch also the up and downneighbour
+        is included. 
+        E.g. if the first row has 7 stitches and second 5 there must be 2
+        additional stitches from the first row, because they are neighbours
+        to stitches in the second row.
+
+        :rtype: Tuple[ Iterable[ int ], Iterable[ int ] ]
+        :returns: Two lists of indices of sidemargins, so that up- and 
+                downneighbours are also included.
+        :todo: move one class layer up
+        """
         rows = self.get_rows( "machine" )
         fetchsize = marginsize - 1
         leftindices = [marginsize]*len(rows)
@@ -272,7 +350,8 @@ class strick_datacontainer():
                 index_leftdown = max( rows[ loweri ].index( node ) \
                                             for node in leftneighs \
                                             if node in rows[ loweri ] )
-                index_rightdown = min( rows[ loweri ].index(node)-len(rows[ loweri ]) \
+                index_rightdown = min( rows[ loweri ].index(node) \
+                                            - len(rows[ loweri ]) \
                                             for node in rightneighs \
                                             if node in rows[ loweri ] )
                 leftindices[ loweri ] = max( leftindices[ loweri ], \
@@ -283,7 +362,8 @@ class strick_datacontainer():
                 index_leftup = max( rows[ upperi ].index( node ) \
                                             for node in leftneighs \
                                             if node in rows[ upperi ] )
-                index_rightup = min( rows[ upperi ].index(node) -len(rows[ upperi ])\
+                index_rightup = min( rows[ upperi ].index(node) \
+                                            - len(rows[ upperi ])\
                                             for node in rightneighs \
                                             if node in rows[ upperi ] )
                 leftindices[ upperi ] = max( leftindices[ upperi ], \
@@ -293,7 +373,13 @@ class strick_datacontainer():
         return leftindices, rightindices
 
     def get_sidemargins( self, marginsize=5 ):
-        """Return nodes on left and right side"""
+        """Returns stitches, with their respective identifier. Returned
+        stitches correspond to the method :py:method:`get_sidemargins_indices`
+
+        :rtype: Tuple[ Iterable[ Hashable ], Iterable[ Hashable ] ]
+        :returns: right and left list of sidemargin-stitches
+        :todo: move one class layer up
+        """
         leftindices, rightindices = self.get_sidemargins_indices( marginsize )
         rows = self.get_rows( "machine" )
         leftside = [ row[ :i ] for row, i in zip( rows, leftindices ) ]
@@ -301,6 +387,14 @@ class strick_datacontainer():
         return leftside, rightside
 
     def isvalid( self ):
+        """Checks if ggraph corresponds to a valid strickgraph. Exists only
+        for programchecking reasons.
+
+        :rtype: Bool
+        :todo: use logging instead of raising exception
+        :todo: maybe remove this and instead make valid checks, when creating 
+                strickgraphs
+        """
         nextoutedges = [a for a,b,label in self.get_edges_with_labels()\
                         if label=="next" ]
         nextinedges = [b for a,b,label in self.get_edges_with_labels()\

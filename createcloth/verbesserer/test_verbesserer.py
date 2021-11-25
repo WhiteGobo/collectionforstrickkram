@@ -6,7 +6,6 @@ from ..strickgraph import strickgraph
 import networkx as netx
 from ..stitchinfo import basic_stitchdata as glstinfo
 import extrasfornetworkx
-from extrasfornetworkx import multiverbesserer
 from .multiverbesserer import strick_multiverbesserer
 from . import resourcestest as test_src
 from .verbesserer_class import strickalterator, FindError
@@ -21,9 +20,27 @@ class test_manualtoverbesserung( unittest.TestCase ):
     def setUp( self ):
         pass
 
-    @unittest.skip( "have to build this test" )
     def test_strickalterator( self ):
-        raise Exception()
+        inman = "4yo\n4k\n4k\n4bo"
+        outman = "4yo\n3k 1bo\n3k\n3bo"
+        ingraph = strickgraph.from_manual( inman, glstinfo )
+        outgraph = strickgraph.from_manual( outman, glstinfo )
+        sourcenode = (0,0)
+
+        qq = strickalterator.from_strickgraph( ingraph, outgraph, sourcenode )
+        in_nodeattributes = ingraph.get_nodeattributes()
+        in_edges = [ ( v1, v2, (label,) ) \
+                    for v1, v2, label in ingraph.get_edges_with_labels() ]
+        out_nodeattributes = outgraph.get_nodeattributes()
+        out_edges = [ ( v1, v2, (label,) ) \
+                    for v1, v2, label in outgraph.get_edges_with_labels() ]
+        repl_nodes, repl_edges = qq.replace_graph( in_nodeattributes, \
+                                                    in_edges, sourcenode )
+        newnodeattributes = { n: {"stitchtype": data[0], "side":data[1] }\
+                        for n, data in repl_nodes.items() }
+        newedges = [ (v1, v2, attr[0]) for v1, v2, attr in repl_edges ]
+        replgraph = strickgraph( newnodeattributes, newedges )
+        self.assertEqual( replgraph, outgraph)
 
     def test_multisidealterator( self ):
         """Basic test of multisidealterator
@@ -42,7 +59,7 @@ class test_manualtoverbesserung( unittest.TestCase ):
             graph1 = create_graph_from_linetypes( l1, upedges1 )
             graph2 = create_graph_from_linetypes( l2, upedges2 )
             graph1 = myalt.replace_in_graph( graph1, k )
-            self.assertEqual( graph1, graph2 )
+            self.assertEqual( graph1, graph2, msg=graph1.to_manual(glstinfo) )
 
         return
 

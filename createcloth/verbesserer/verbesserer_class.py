@@ -10,35 +10,34 @@ from . import xml_config
 import xml.etree.ElementTree as ET
 import copy
 import io
-import extrasfornetworkx
-from extrasfornetworkx import verbesserer
+import extrasfornetworkx as efn
+from extrasfornetworkx import alterator, \
+                        NoTranslationPossible
 
-from extrasfornetworkx.verbesserer_class import \
-                  replace_subgraph, WrongStartnode
-from extrasfornetworkx import verbesserer_class as graphverb
 import logging
 
 class FindError( Exception ):
     pass
 
 logger = logging.getLogger( __name__ )
-class strickalterator( extrasfornetworkx.verbesserer ):
+class strickalterator( efn.alterator ):
     nodeattributes = ( "stitchtype", "side" )
     edgeattributes = ( "edgetype", )
-    def replace_in_graph( self, graph:strickgraph, startnode, dontreplace=False ):
+    def replace_graphasdf( self, graph:strickgraph, startnode ):
         """Mainmethod. replaces in given strickgraph at given position"""
         assert graph.isvalid(), "input must be valid strickgraph"
         nodeattributes = graph.get_nodeattributes()
         edgeswithlabel = graph.get_edges_with_labels()
+        edges_with_attributes = [ (v1, v2, (label,)) for v1, v2, label in edgeswithlabel ]
         try:
-            nodes_to_remove, newnodes_data, edges_to_add \
-                    = self.create_replace_info( \
+            newnodeattributes, new_edges = self.create_replace_info( \
                                         nodeattributes, \
                                         edgeswithlabel, startnode )
-        except ( graphverb.FindError, graphverb.WrongStartnode ) as err:
-            raise FindError()
+        except efn.NoTranslationPossible as err:
+            raise FindError() from err
             logger.debug( "replace in graph failed" )
             return False
+        raise NotImplementedError()
         logger.debug( f"replace in graph found. removenodes: {nodes_to_remove}, newnodes: {newnodes_data.keys()}" )
         if dontreplace:
             return True
@@ -55,27 +54,47 @@ class strickalterator( extrasfornetworkx.verbesserer ):
                         in myduplgraph.nodes(data=True)}
         newedgelabels = [ (e[0], e[1], e[-1]["edgetype"]) \
                         for e in myduplgraph.edges(data=True) ]
+        newnodeattributes = { n: {"stitchtype": data[0], "side":data[1] }\
+                        for n, data in newnodeattributes.items() }
         return strickgraph( newnodeattributes, newedgelabels )
         assert graph.isvalid(), "replacement produced not valid strickgraph"
         return True
 
-    def isreplaceable( self, graph, startnode, nodeattributes=None, edgeswithlabel=None ):
+    def isreplaceable( self, graph, startnode, nodeattributes=None, edgeattributes=None ):
         """checks if graph is at this startnode alterateable with this 
         alterator
+        :type edgeattributes: Iterable[ Hashable, Hashable, Tuple[str,...]]
+        :type nodeattributes: Dict[ Hashable, Tuple[str, ...] ]
         :rtype: boolean
         """
         if nodeattributes is None:
             nodeattributes = graph.get_nodeattributes()
-        if edgeswithlabel is None:
-            edgeswithlabel = graph.get_edges_with_labels()
+        if edgeattributes is None:
+            edgeattributes = [ (v1, v2, (label,)) for v1, v2, label in graph.get_edges_with_labels() ]
         try:
-            nodes_to_remove, newnodes_data, edges_to_add \
-                    = self.create_replace_info( \
-                                        nodeattributes, \
-                                        edgeswithlabel, startnode )
-        except ( graphverb.FindError, graphverb.WrongStartnode ) as err:
+            used_translator = self.find_inputtranslation( nodeattributes, \
+                                    edgeattributes, startnode )
+        except NoTranslationPossible as err:
             return False
         return True
+
+    @classmethod
+    def from_strickgraph( cls, ingraph, outgraph, sourcenode ):
+        """
+
+        :type ingraph: strickgraph
+        :type outgraph: strickgraph
+        """
+        in_nodeattributes = ingraph.get_nodeattributes()
+        in_edges = [ ( v1, v2, (label,) ) \
+                    for v1, v2, label in ingraph.get_edges_with_labels() ]
+        out_nodeattributes = outgraph.get_nodeattributes()
+        out_edges = [ ( v1, v2, (label,) ) \
+                    for v1, v2, label in outgraph.get_edges_with_labels() ]
+        return cls.with_common_nodes( in_nodeattributes, in_edges, \
+                                out_nodeattributes, out_edges, \
+                                {}, sourcenode )
+
 
     @classmethod
     def from_manuals( cls, manual_old, manual_new, stitchinfo, \
@@ -104,6 +123,7 @@ class strickalterator( extrasfornetworkx.verbesserer ):
                 currently only mark information is removed and this only works \
                 via extra if function. This has to be optimised somehow \
         """
+        raise Exception( "need rework" )
         old_graph = strickgraph.from_manual( manual_old, stitchinfo, \
                                         manual_type = manual_type,\
                                         startside=startside,reverse=reverse )

@@ -14,6 +14,11 @@ XML_SIDEALTERATOR_NAME = "sidealterator"
 class SkipGeneration( Exception ):
     pass
 
+class WrongAlterationFound( Exception ):
+    def __init__( self, probleminteger, *args, **kwargs):
+        self.probleminteger = probleminteger
+        super().__init__( *args, **kwargs )
+
 class sidealterator():
     """Alterator to alterate bth sides at the same time. Giuven a line number
     the alterator will look if it can alterate given strickgraph at this line
@@ -35,7 +40,7 @@ class sidealterator():
         self.alterator_right = alterator_right
         self.rightstartindex = rightstartindex
 
-    def replace_in_graph( self, strickgraph, linenumber, row=None, nodeattributes=None, edgeswithlabel=None ):
+    def replace_in_graph( self, strickgraph, linenumber, row=None, nodeattributes=None, edgeattributes=None ):
         """mainmethod replkaces in graph at given line
 
         :raises: FindError
@@ -46,21 +51,29 @@ class sidealterator():
         startnodeleft = row[ self.leftstartindex ]
         startnoderight = row[ self.rightstartindex ]
         if nodeattributes is None:
-            nodeattributes = graph.get_nodeattributes()
-        if edgeswithlabel is None:
-            edgeswithlabel = graph.get_edges_with_labels()
+            nodeattributes = strickgraph.get_nodeattributes()
+        if edgeattributes is None:
+            edgeattributes = [ (v1, v2, (label,)) for v1, v2, label in strickgraph.get_edges_with_labels() ]
 
         logger.debug( "checking if graph ist replaceable" )
-        cond1 = self.alterator_left.isreplaceable( strickgraph, startnodeleft, nodeattributes=nodeattributes, edgeswithlabel=edgeswithlabel )
+        cond1 = self.alterator_left.isreplaceable( strickgraph, startnodeleft, nodeattributes=nodeattributes, edgeattributes=edgeattributes )
         if not cond1:
             raise FindError()
-        cond2 = self.alterator_right.isreplaceable( strickgraph,startnoderight, nodeattributes=nodeattributes, edgeswithlabel=edgeswithlabel )
+        cond2 = self.alterator_right.isreplaceable( strickgraph,startnoderight, nodeattributes=nodeattributes, edgeattributes=edgeattributes )
         if not cond2:
             raise FindError()
         logger.info( "replaceleft" )
-        strickgraph = self.alterator_left.replace_in_graph( strickgraph, startnodeleft )
+        nodesattr_repl1, edges_repl1 = self.alterator_left.replace_graph( nodeattributes, edgeattributes, startnodeleft )
+        #strickgraph = self.alterator_left.replace_in_graph( strickgraph, startnodeleft )
         logger.info( "replaceright" )
-        strickgraph = self.alterator_right.replace_in_graph( strickgraph, startnoderight )
+        nodesattr_repl2, edges_repl2 = self.alterator_right.replace_graph( nodesattr_repl1, edges_repl1, startnoderight )
+        #strickgraph = self.alterator_right.replace_in_graph( strickgraph, startnoderight )
+        edgelabels = [(v1, v2, attr[0]) for v1, v2, attr in edges_repl2 ]
+        from ..strickgraph import strickgraph
+        newnodeattributes = { n: {"stitchtype": data[0], "side":data[1] }\
+                        for n, data in nodesattr_repl2.items() }
+        newedges = [ (v1, v2, attr[0]) for v1, v2, attr in edges_repl2 ]
+        return strickgraph( newnodeattributes, newedges )
         return strickgraph
 
     @classmethod
@@ -73,18 +86,22 @@ class sidealterator():
         :type upedges_in: List[ int ]
         :type changedline_id: int
         :raises: SkipGeneration
+        :todo: remove skip_if_in_list and transplant it into multisidealterator
         """
-        great_graph = create_graph_from_linetypes( linetype_in, upedges_in )
         if skip_if_in_list is not None:
-            for i in skip_if_in_list:
+            tmp_graph = create_graph_from_linetypes( linetype_out, upedges_out)
+            for j, i in enumerate( skip_if_in_list ):
                 try:
-                    tmp_graph = create_graph_from_linetypes( linetype_out, upedges_out)
                     tmp_graph = i.replace_in_graph( tmp_graph, changedline_id )
+                    great_graph = create_graph_from_linetypes( linetype_in, upedges_in )
                     if tmp_graph == great_graph:
                         raise SkipGeneration()
-                    raise Exception( "This should never trigger" )
+                    from ..stitchinfo import basic_stitchdata as glstinfo
+                    less_graph = create_graph_from_linetypes( linetype_out, upedges_out)
+                    raise WrongAlterationFound( j, f"This was produced: {tmp_graph.to_manual(glstinfo)}", f"this should be: {great_graph.to_manual( glstinfo)}", f"from: {less_graph.to_manual(glstinfo )}" )
                 except FindError:
                     continue
+        great_graph = create_graph_from_linetypes( linetype_in, upedges_in )
         less_graph = create_graph_from_linetypes( linetype_out, upedges_out)
 
         if linetype_out[0] == linetype_in[1]:
@@ -187,13 +204,16 @@ class sidealterator():
         :todo: remove use of startnode
         """
         logger.info( f"create {cls} from graphdifference" )
-        replacement_graph1, replacement_graph2, translator \
-                                = twographs_to_replacement( \
-                                source_strickgraph, target_strickgraph, \
-                                startnode, changedline_id )
-        translator = { a:b for a, b in translator }
-        difference_graph1 =set(replacement_graph1).difference(translator.keys())
-        difference_graph2 =set(replacement_graph2).difference(translator.values())
+        nodeattr1 = source_strickgraph.get_nodeattributes()
+        edgeattr1 = [ (v1, v2, (label,)) for v1, v2, label in source_strickgraph.get_edges_with_labels() ]
+        nodeattr2 = target_strickgraph.get_nodeattributes()
+        edgeattr2 = [ (v1, v2, (label,)) for v1, v2, label in target_strickgraph.get_edges_with_labels() ]
+        translator = efn.optimize_uncommon_nodes( nodeattr1, edgeattr1, \
+                                            nodeattr2, edgeattr2, \
+                                            maximum_uncommon_nodes=20 )
+
+        difference_graph1 =set(nodeattr1).difference(translator.keys())
+        difference_graph2 =set(nodeattr2).difference(translator.values())
         logger.debug( f"difference input: {difference_graph1}" )
         logger.debug( f"difference output: {difference_graph2}" )
         leftnodes1, leftnodes2, startnode1_left, leftindex, \
@@ -222,18 +242,18 @@ class sidealterator():
                                 lefttrans )
         tmp_bordernodes1 = get_innerborder( leftnodes1, source_strickgraph )
         tmp_bordernodes2 = get_innerborder( leftnodes2, target_strickgraph )
-        oldtrans = { y:x for x,y in a.logging_information['translator oldgraph'].items()}
-        newtrans = { y:x for x,y in a.logging_information['translator newgraph'].items()}
-        orig_nodes_to_remove = [oldtrans[n] for n in a.nodes_to_remove()]
-        orig_nodes_to_add = [newtrans[n] for n in a.nodes_to_add()]
-        outsorted_oldnodes=set(orig_nodes_to_remove).intersection(tmp_bordernodes1)
-        outsorted_newnodes =set(orig_nodes_to_add).intersection(tmp_bordernodes2)
-        assert set() == outsorted_oldnodes == outsorted_newnodes, \
-                "lefttrans problem, bordernodes, cant be added or removed: "\
-                f"removed oldbordernodes: {outsorted_oldnodes} added "\
-                f"newbordernodes: {outsorted_newnodes}"
+        #oldtrans = { y:x for x,y in a.logging_information['translator oldgraph'].items()}
+        #newtrans = { y:x for x,y in a.logging_information['translator newgraph'].items()}
+        #orig_nodes_to_remove = [oldtrans[n] for n in a.nodes_to_remove()]
+        #orig_nodes_to_add = [newtrans[n] for n in a.nodes_to_add()]
+        #outsorted_oldnodes=set(orig_nodes_to_remove).intersection(tmp_bordernodes1)
+        #outsorted_newnodes =set(orig_nodes_to_add).intersection(tmp_bordernodes2)
+        #assert set() == outsorted_oldnodes == outsorted_newnodes, \
+                #"lefttrans problem, bordernodes, cant be added or removed: "\
+                #f"removed oldbordernodes: {outsorted_oldnodes} added "\
+                #f"newbordernodes: {outsorted_newnodes}"
         logger.info("create right alterator")
-        #startnode2_right = translator[ startnode1_right ]
+        startnode2_right = translator[ startnode1_right ]
         righttrans = { a:b for a, b in translator.items() if a in rightnodes1 }
         logger.debug( f"nodes1: {rightnodes1}")
         logger.debug( f"nodes2: {rightnodes2}")
@@ -242,19 +262,18 @@ class sidealterator():
                                 rightnodes1, rightnodes2, \
                                 startnode1_right, \
                                 righttrans )
-        tmp_bordernodes1 = get_innerborder( rightnodes1, source_strickgraph )
-        tmp_bordernodes2 = get_innerborder( rightnodes2, target_strickgraph )
-        oldtrans = { y:x for x,y in b.logging_information['translator oldgraph'].items()}
-        newtrans = { y:x for x,y in b.logging_information['translator newgraph'].items()}
-        orig_nodes_to_remove = [oldtrans[n] for n in b.nodes_to_remove()]
-        orig_nodes_to_add = [newtrans[n] for n in b.nodes_to_add()]
-        outsorted_oldnodes=set(orig_nodes_to_remove).intersection(tmp_bordernodes1)
-        outsorted_newnodes =set(orig_nodes_to_add).intersection(tmp_bordernodes2)
-        assert set() == outsorted_oldnodes == outsorted_newnodes, \
-                "righttrans problem, bordernodes, cant be added or removed: "\
-                f"removed oldbordernodes: {outsorted_oldnodes} added "\
-                f"newbordernodes: {outsorted_newnodes}"
-
+        #tmp_bordernodes1 = get_innerborder( rightnodes1, source_strickgraph )
+        #tmp_bordernodes2 = get_innerborder( rightnodes2, target_strickgraph )
+        #oldtrans = { y:x for x,y in b.logging_information['translator oldgraph'].items()}
+        #newtrans = { y:x for x,y in b.logging_information['translator newgraph'].items()}
+        #orig_nodes_to_remove = [oldtrans[n] for n in b.nodes_to_remove()]
+        #orig_nodes_to_add = [newtrans[n] for n in b.nodes_to_add()]
+        #outsorted_oldnodes=set(orig_nodes_to_remove).intersection(tmp_bordernodes1)
+        #outsorted_newnodes =set(orig_nodes_to_add).intersection(tmp_bordernodes2)
+        #assert set() == outsorted_oldnodes == outsorted_newnodes, \
+                #"righttrans problem, bordernodes, cant be added or removed: "\
+                #f"removed oldbordernodes: {outsorted_oldnodes} added "\
+                #f"newbordernodes: {outsorted_newnodes}"
         return cls( a, leftindex, b, rightindex )
 
 def generate_verbesserer_asdf( graph1, graph2, \
@@ -262,19 +281,15 @@ def generate_verbesserer_asdf( graph1, graph2, \
                                 startnode1, starttranslation ):
     subgraph1 = graph1.subgraph( subnodelist1 )
     subgraph2 = graph2.subgraph( subnodelist2 )
-    nodelabels1 = subgraph1.get_nodeattributes()
-    edgelabels1 = subgraph1.get_edges_with_labels()
-    nodelabels2 = subgraph2.get_nodeattributes()
-    edgelabels2 = subgraph2.get_edges_with_labels()
+    nodeattr1 = subgraph1.get_nodeattributes()
+    edgeattr1 = [ (v1, v2, (label,)) for v1,v2, label in subgraph1.get_edges_with_labels()]
+    nodeattr2 = subgraph2.get_nodeattributes()
+    edgeattr2 = [ ( v1, v2, (label,)) for v1, v2, label in subgraph2.get_edges_with_labels() ]
     from ..verbesserer.verbesserer_class import strickalterator
-    logger.debug("input for strickgraphalterator: %s, %s, %s, %s, %s " \
-            % (nodelabels1, edgelabels1, nodelabels2, edgelabels2, \
-            starttranslation ) )
-    return strickalterator.from_graph_difference(
-                                        nodelabels1, edgelabels1,\
-                                        nodelabels2, edgelabels2, \
-                                        startnode1, \
-                                        starttranslation )
+    #logger.debug("input for strickgraphalterator: %s, %s, %s, %s, %s " \
+    #        % (nodelabels1, edgelabels1, nodelabels2, edgelabels2, \
+    #        starttranslation ) )
+    return strickalterator.with_common_nodes( nodeattr1, edgeattr1, nodeattr2, edgeattr2, starttranslation, startnode1 )
 
     nodetrans1 = { n:i for i, n in enumerate( nodelabels1.keys() )}
     nodetrans2 = { n:i for i, n in enumerate( nodelabels2.keys() )}
@@ -615,6 +630,10 @@ def _multi_sidesigint_handler( signal_received, frame ):
     exit( 0 )
 
 class multi_sidealterator():
+    """Multi alteratorclass for sidealterator
+    
+    :todo:overhaul this method, when removing unused things in this directory
+    """
     def __init__( self, side_alterator_list ):
         self.side_alterator_list = side_alterator_list
 
@@ -622,8 +641,11 @@ class multi_sidealterator():
     def generate_from_linetypelist( cls, asdf, starttranslator_list=None, \
                                     skip_by_exception=False, \
                                     pipe_for_interrupt=None, \
-                                    timelimit = 300):
-        """Method for automativ creation of multialterator"""
+                                    timelimit = None):
+        """Method for automativ creation of multialterator
+
+        :todo: The way in which WrongAlterationFound is handled is very scrappy
+        """
         if starttranslator_list is not None:
             q = list( starttranslator_list )
         else:
@@ -638,7 +660,9 @@ class multi_sidealterator():
             maxlen = "?"
         i = 0
         if timelimit is not None:
-            sidealt_gen = timelimiter.limit_calctime( sidealterator.from_linetypes, 300 )
+            sidealt_gen = timelimiter.limit_calctime( \
+                                    sidealterator.from_linetypes, 900, \
+                                    expected_errors=[SkipGeneration] )
         else:
             sidealt_gen = sidealterator.from_linetypes
         for linetype_out, linetype_in, upedges_out, upedges_in, changedline_id \
@@ -646,7 +670,8 @@ class multi_sidealterator():
             i+=1
             logger.info( "alteration %i/%s with %i found alterators" \
                             %(i,maxlen, len(q)))
-            logger.debug( f"at line {changedline_id}; linetypes: {linetype_out}" )
+            logger.info( f"at line {changedline_id}; linetypes: {linetype_in} to {linetype_out}" )
+            lever = False
             try:
                 #new = sidealterator.from_linetypes( \
                 new = sidealt_gen(\
@@ -656,14 +681,37 @@ class multi_sidealterator():
                 q.append( new )
             except SkipGeneration:
                 logger.info( "already in list - skip" )
+            except WrongAlterationFound as err:
+                logger.info( "found wrong alteration. trying to circumvent" )
+                lever = True
+                insertint = err.probleminteger - 2
             except timelimiter.TimeLimitExceeded:
                 logger.info( "timelimit exceeded" )
+                raise
             except (timelimiter.NoDataProduced, Exception) as err:
                 if not skip_by_exception:
                     raise
                 else:
                     logger.info( "error, when trying to create next alterator" )
                     logger.debug( err )
+            if lever:
+                try:
+                    new = sidealt_gen(\
+                            linetype_out, linetype_in, \
+                            upedges_out, upedges_in, \
+                            changedline_id )
+                    q.insert( insertint, new )
+                except SkipGeneration:
+                    logger.info( "already in list - skip" )
+                except timelimiter.TimeLimitExceeded:
+                    logger.info( "timelimit exceeded" )
+                except (timelimiter.NoDataProduced, Exception) as err:
+                    if not skip_by_exception:
+                        raise
+                    else:
+                        logger.info( "error, when trying to create next alterator" )
+                        logger.debug( err )
+
         return cls( q )
 
     @classmethod
@@ -694,13 +742,15 @@ class multi_sidealterator():
         edgeswithlabel = graph.get_edges_with_labels()
         for alt in self.side_alterator_list:
             try:
-                graph = alt.replace_in_graph( graph, changeline, row=row, nodeattributes=nodeattributes, edgeswithlabel=edgeswithlabel )
+                graph = alt.replace_in_graph( graph, changeline, row=row, \
+                                nodeattributes=nodeattributes )
                 lever = True
                 break
             except FindError:
                 pass
         if not lever:
-            raise FindError( changeline )
+            raise FindError( "couldnt find suitable alterator "\
+                                f"at line {changeline}" )
         return graph
 
 

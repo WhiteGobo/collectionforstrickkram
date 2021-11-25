@@ -7,6 +7,7 @@ import time
 import os
 import logging
 import traceback
+import numpy as np
 logger = logging.getLogger( __name__ )
 
 class TimeLimitExceeded( Exception ):
@@ -18,9 +19,6 @@ class NoDataProduced( Exception ):
 def _limit_calculation_minion( function, myqueue, argv, *args, \
                                 expected_errors=[], loglevel=logging.WARNING):
     logging.basicConfig( level=loglevel )
-    logger.debug( "debug" )
-    logger.info( "info" )
-    logger.warning( "warning" )
     try:
         retval = function( *args, **argv )
         myqueue.put( retval )
@@ -34,23 +32,27 @@ def _limit_calculation_minion( function, myqueue, argv, *args, \
         myqueue.put( err )
 
 def limit_calctime( function, calctime, dt=.05, expected_errors=[] ):
+    loglevel = logging.getLogger().getEffectiveLevel()
     def limited_function( *args, **argv ):
         mp_ctx = mp.get_context( 'spawn' )
         myqueue = mp_ctx.Queue( 1 )
         mpid = mp_ctx.Process( target=_limit_calculation_minion, \
                                 args=( function, myqueue, argv, *args ), \
                                 kwargs={"expected_errors": expected_errors,\
-                                "loglevel": logging.DEBUG} )
+                                "loglevel": loglevel} )
         mpid.start()
-        for i in range( 0, int(calctime/dt) ):
-            if myqueue.empty() and mpid.is_alive():
-                time.sleep( dt )
-            else:
+        pasttime = 0
+        for t in np.logspace( -2, np.log(calctime)/np.log(10) ):
+            dt = t - pasttime
+            pasttime = t
+            time.sleep( dt )
+            if not mpid.is_alive():
                 break
-        if myqueue.empty() and mpid.is_alive():
+        if mpid.is_alive():
             mpid.terminate()
             mpid.join()
             raise TimeLimitExceeded()
+        #check missing myqueue.empty()
         try:
             retval = myqueue.get( block=False )
         except Exception as err:
