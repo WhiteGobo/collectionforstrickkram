@@ -56,12 +56,17 @@ class sidealterator():
             edgeattributes = [ (v1, v2, (label,)) for v1, v2, label in strickgraph.get_edges_with_labels() ]
 
         logger.debug( "checking if graph ist replaceable" )
-        cond1 = self.alterator_left.isreplaceable( strickgraph, startnodeleft, nodeattributes=nodeattributes, edgeattributes=edgeattributes )
-        if not cond1:
-            raise FindError()
-        cond2 = self.alterator_right.isreplaceable( strickgraph,startnoderight, nodeattributes=nodeattributes, edgeattributes=edgeattributes )
-        if not cond2:
-            raise FindError()
+        try:
+            self.alterator_left.find_inputtranslation( nodeattributes, edgeattributes, startnodeleft )
+            self.alterator_right.find_inputtranslation( nodeattributes, edgeattributes, startnoderight )
+        except efn.NoTranslationPossible as err:
+            raise FindError() from err
+        #cond1 = self.alterator_left.isreplaceable( strickgraph, startnodeleft, nodeattributes=nodeattributes, edgeattributes=edgeattributes )
+        #if not cond1:
+        #    raise FindError()
+        #cond2 = self.alterator_right.isreplaceable( strickgraph,startnoderight, nodeattributes=nodeattributes, edgeattributes=edgeattributes )
+        #if not cond2:
+        #    raise FindError()
         logger.info( "replaceleft" )
         nodesattr_repl1, edges_repl1 = self.alterator_left.replace_graph( nodeattributes, edgeattributes, startnodeleft )
         #strickgraph = self.alterator_left.replace_in_graph( strickgraph, startnodeleft )
@@ -231,7 +236,6 @@ class sidealterator():
         logger.debug( "rightnodes2: (l:%i) %s" %( len(rightnodes2), sorted(rightnodes2, key=mykey) ))
 
         logger.info("create left alterator")
-        #startnode2_left = translator[ startnode1_left ]
         lefttrans = { a:b for a, b in translator.items() if a in leftnodes1 }
         logger.debug( f"nodes1: {leftnodes1}")
         logger.debug( f"nodes2: {leftnodes2}")
@@ -253,7 +257,6 @@ class sidealterator():
                 #f"removed oldbordernodes: {outsorted_oldnodes} added "\
                 #f"newbordernodes: {outsorted_newnodes}"
         logger.info("create right alterator")
-        startnode2_right = translator[ startnode1_right ]
         righttrans = { a:b for a, b in translator.items() if a in rightnodes1 }
         logger.debug( f"nodes1: {rightnodes1}")
         logger.debug( f"nodes2: {rightnodes2}")
