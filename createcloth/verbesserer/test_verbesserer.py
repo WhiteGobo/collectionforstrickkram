@@ -42,6 +42,18 @@ class test_manualtoverbesserung( unittest.TestCase ):
         replgraph = strickgraph( newnodeattributes, newedges )
         self.assertEqual( replgraph, outgraph)
 
+
+
+        xmlstring = qq.toxml()
+        loadedqq = strickalterator.fromxml( xmlstring )
+        repl_nodes, repl_edges = loadedqq.replace_graph( in_nodeattributes, \
+                                                    in_edges, sourcenode )
+        newnodeattributes = { n: {"stitchtype": data[0], "side":data[1] }\
+                        for n, data in repl_nodes.items() }
+        newedges = [ (v1, v2, attr[0]) for v1, v2, attr in repl_edges ]
+        replgraph = strickgraph( newnodeattributes, newedges )
+        self.assertEqual( replgraph, outgraph)
+
     def test_multisidealterator( self ):
         """Basic test of multisidealterator
 
@@ -60,6 +72,13 @@ class test_manualtoverbesserung( unittest.TestCase ):
             graph2 = create_graph_from_linetypes( l2, upedges2 )
             graph1 = myalt.replace_in_graph( graph1, k )
             self.assertEqual( graph1, graph2, msg=graph1.to_manual(glstinfo) )
+        xmlstring = myalt.toxml()
+        newalt = multi_sidealterator.fromxml( xmlstring )
+        for l1, l2, upedges1, upedges2, k in asdf:
+            graph1 = create_graph_from_linetypes( l1, upedges1 )
+            graph2 = create_graph_from_linetypes( l2, upedges2 )
+            graph1 = newalt.replace_in_graph( graph1, k )
+            self.assertEqual( graph1, graph2, msg=f"brubru %s"%(graph1.to_manual(glstinfo)) )
 
         return
 
@@ -117,9 +136,9 @@ class test_manualtoverbesserung( unittest.TestCase ):
     def further_test_save_sidealterator( self, mysidealterator, graph1, graph2,\
                                     changedline_id):
         """Testing to(from)xml of sidealterator"""
-        safe = mysidealterator.to_xml()
+        safe = mysidealterator.toxml()
 
-        qwe2 = sidealterator.from_xml( safe )
+        qwe2 = sidealterator.fromxml( safe )
         self.assertNotEqual( graph1, graph2 )
         graph1 = qwe2.replace_in_graph( graph1, changedline_id )
         self.assertEqual( graph1, graph2 )

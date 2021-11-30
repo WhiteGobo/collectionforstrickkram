@@ -11,8 +11,6 @@ import xml.etree.ElementTree as ET
 import copy
 import io
 import extrasfornetworkx as efn
-from extrasfornetworkx import alterator, \
-                        NoTranslationPossible
 
 import logging
 
@@ -23,6 +21,18 @@ logger = logging.getLogger( __name__ )
 class strickalterator( efn.alterator ):
     nodeattributes = ( "stitchtype", "side" )
     edgeattributes = ( "edgetype", )
+    def __init__( self, nodeattributes_input, edges_input, \
+                        nodeattributes_output, edges_output, \
+                        node_edits, edge_edits, \
+                        spanningtree_nodes, spanningtree_generate_from, **kwargs ):
+        assert set( kwargs.keys() ).issubset( ("directional", ) )
+        assert kwargs.get( "directional", True ) == True
+        super().__init__( nodeattributes_input, edges_input, \
+                        nodeattributes_output, edges_output, \
+                        node_edits, edge_edits, \
+                        spanningtree_nodes, spanningtree_generate_from, 
+                        directional=True )
+
     def replace_graphasdf( self, graph:strickgraph, startnode ):
         """Mainmethod. replaces in given strickgraph at given position"""
         assert graph.isvalid(), "input must be valid strickgraph"
@@ -74,9 +84,14 @@ class strickalterator( efn.alterator ):
         try:
             used_translator = self.find_inputtranslation( nodeattributes, \
                                     edgeattributes, startnode )
-        except NoTranslationPossible as err:
+        except efn.NoTranslationPossible as err:
             return False
         return True
+
+    #@classmethod
+    #def with_common_nodes( cls, *args, **kwargs ):
+    #    assert kwargs.get( "directional", False ) == True
+    #    return super().with_common_nodes( *args, **kwargs )
 
     @classmethod
     def from_strickgraph( cls, ingraph, outgraph, sourcenode ):
@@ -93,7 +108,7 @@ class strickalterator( efn.alterator ):
                     for v1, v2, label in outgraph.get_edges_with_labels() ]
         return cls.with_common_nodes( in_nodeattributes, in_edges, \
                                 out_nodeattributes, out_edges, \
-                                {}, sourcenode )
+                                {}, sourcenode, directional=True )
 
 
     @classmethod

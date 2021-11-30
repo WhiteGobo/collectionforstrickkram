@@ -117,7 +117,7 @@ class sidealterator():
         return cls.from_graphdifference( less_graph, great_graph, startnode, changedline_id )
     
     @classmethod
-    def from_xml( cls, xmlstring ):
+    def fromxml( cls, xmlstring ):
         """from given xmlstring"""
         from extrasfornetworkx import xml_config
         ET.register_namespace( "asd", xml_config.namespace )
@@ -125,10 +125,7 @@ class sidealterator():
         ET.register_namespace( "xsi", xml_config.namespace_xsi )
 
         verbesserer_xml = ET.fromstring( xmlstring )
-        try:
-            return cls.from_xmlobject( verbesserer_xml )
-        except Exception as err:
-            raise Exception(xmlstring) from err
+        return cls.from_xmlobject( verbesserer_xml )
     @classmethod
     def from_xmlobject( cls, xml_elem ):
         """
@@ -141,30 +138,25 @@ class sidealterator():
         ET.register_namespace( "grml", xml_config.namespace_graphml )
         ET.register_namespace( "xsi", xml_config.namespace_xsi )
 
-        full_name = "{%s}%s" %( xml_config.namespace, XML_SIDEALTERATOR_NAME )
+        full_name = efn.xml_config.ersetzung
         assert full_name == xml_elem.tag, f"wrong elementtype, need {full_name}"
-        subelements = list( xml_elem )
-        rightindex, leftindex= None, None
-        rightverbesserer, leftverbesserer = None, None
-        for el in subelements:
-            if el.attrib["side"] == "right":
-                if rightindex is not None:
-                    raise Exception("doubled rightelement")
-                rightindex = int( el.attrib["index"] )
-                rightverbesserer = strickalterator.from_xmlobject( el )
-            elif el.attrib["side"] == "left":
-                if leftindex is not None:
-                    raise Exception("doubled rightelement")
-                leftindex = int( el.attrib["index"] )
-                leftverbesserer = strickalterator.from_xmlobject( el )
-            else:
-                raise Exception( "element without sidefound" )
-        if not all((leftverbesserer, leftindex, rightverbesserer, rightindex)):
-            raise Exception( "not all info found" )
-        return cls( leftverbesserer, leftindex, rightverbesserer, rightindex )
+
+        all_alterators = xml_elem.findall( efn.xml_config.ersetzung )
+        assert len( all_alterators ) == 2
+        leftright_alterators = { alt.attrib["side"]: alt \
+                                for alt in all_alterators }
+        assert leftright_alterators.keys() == {"left", "right" } 
+        leftindex = int( leftright_alterators["left"].attrib["index"] )
+        leftalt_str = ET.tostring( leftright_alterators["left"] )
+        left_verbesserer = strickalterator.fromxml( leftalt_str )
+
+        rightindex = int( leftright_alterators["right"].attrib["index"] )
+        rightalt_str = ET.tostring( leftright_alterators["right"] )
+        right_verbesserer = strickalterator.fromxml( rightalt_str )
+        return cls( left_verbesserer, leftindex, right_verbesserer, rightindex )
 
 
-    def to_xml( self, encoding ="utf-8" ):
+    def toxml( self, encoding ="utf-8" ):
         """to xmlstring
 
         :param encoding: same as xml.etree.ElementTree.tostring
@@ -189,12 +181,13 @@ class sidealterator():
         ET.register_namespace( "grml", xml_config.namespace_graphml )
         ET.register_namespace( "xsi", xml_config.namespace_xsi )
 
-        full_name = "{%s}%s" %( xml_config.namespace, XML_SIDEALTERATOR_NAME )
-        elemroot = ET.Element( full_name )
-        elemroot.append( self.alterator_left.toxmlelem() )
+        elemroot = ET.Element( efn.xml_config.ersetzung ) 
+        leftxmlstr = self.alterator_left.toxml()
+        elemroot.append( ET.fromstring( leftxmlstr ))
         elemroot[-1].attrib["side"] = "left"
         elemroot[-1].attrib["index"] = str(self.leftstartindex)
-        elemroot.append( self.alterator_right.toxmlelem() )
+        rightxmlstr = self.alterator_right.toxml()
+        elemroot.append( ET.fromstring( rightxmlstr ) )
         elemroot[-1].attrib["side"] = "right"
         elemroot[-1].attrib["index"] = str(self.rightstartindex)
         return elemroot
@@ -216,6 +209,7 @@ class sidealterator():
         translator = efn.optimize_uncommon_nodes( nodeattr1, edgeattr1, \
                                             nodeattr2, edgeattr2, \
                                             maximum_uncommon_nodes=20 )
+        assert len( translator ) > 0
 
         difference_graph1 =set(nodeattr1).difference(translator.keys())
         difference_graph2 =set(nodeattr2).difference(translator.values())
@@ -292,7 +286,7 @@ def generate_verbesserer_asdf( graph1, graph2, \
     #logger.debug("input for strickgraphalterator: %s, %s, %s, %s, %s " \
     #        % (nodelabels1, edgelabels1, nodelabels2, edgelabels2, \
     #        starttranslation ) )
-    return strickalterator.with_common_nodes( nodeattr1, edgeattr1, nodeattr2, edgeattr2, starttranslation, startnode1 )
+    return strickalterator.with_common_nodes( nodeattr1, edgeattr1, nodeattr2, edgeattr2, starttranslation, startnode1, directional=True )
 
     nodetrans1 = { n:i for i, n in enumerate( nodelabels1.keys() )}
     nodetrans2 = { n:i for i, n in enumerate( nodelabels2.keys() )}
@@ -344,6 +338,9 @@ def separate_wholegraphs_to_leftright_insulas( \
     """
 
     :raises: NoLeftRightFound
+    :todo: Rework end of this method
+    :todo: Graph splitter can fail, if graph is to thin. Sometimes it is not 
+            splitted into left-right but something else
     """
     linenodes_graph1 = [ node for node in less_graph.get_rows()[0] \
                         if node in difference_graph1 ]
@@ -385,7 +382,6 @@ def separate_wholegraphs_to_leftright_insulas( \
                         else (0,)
     qs = lambda x: sorted(x, key=mykey)
 
-
     neighbours1 = {}
     for v1, v2, label in less_graph.get_edges_with_labels():
         neighbours1.setdefault( v1, list() ).append( v2 )
@@ -409,6 +405,56 @@ def separate_wholegraphs_to_leftright_insulas( \
     lessgraphsplitter = split_graph_per_insula_in_nearestparts( 
                             [ uncommon_nodepairs1[0], uncommon_nodepairs2[0] ],\
                             less_graph )
+    splittedgraph_part1 = [ n for n, i in lessgraphsplitter.items() if i==0 ]
+    splittedgraph_part2 = [ n for n, i in lessgraphsplitter.items() if i==1 ]
+    try:
+        minrowindex1 = min(( changed_row.index(node) \
+                            for node in splittedgraph_part1 \
+                            if node in changed_row ))
+        minrowindex2 = min(( changed_row.index(node) \
+                            for node in splittedgraph_part2 \
+                            if node in changed_row ))
+    except ValueError as err:
+        raise Exception(splittedgraph_part1, splittedgraph_part2, changed_row, connected_insulas) from err
+
+    if minrowindex1 < minrowindex2:
+        leftsplittedgraph = splittedgraph_part1
+        rightsplittedgraph = splittedgraph_part2
+    else:
+        leftsplittedgraph = splittedgraph_part2
+        rightsplittedgraph = splittedgraph_part1
+
+    assert right_index < 0
+    try:
+        leftright_nodepairs = sorted( ( uncommon_nodepairs1, uncommon_nodepairs2 ),\
+            key= lambda x: min( changed_row.index(node) \
+                    for node in less_graph.get_nodes_near_nodes( x[0] ) \
+                    if node in changed_row ))
+    except ValueError as err:
+        raise Exception( uncommon_nodepairs1, uncommon_nodepairs2, changed_row ) from err
+    left1, left2 =leftright_nodepairs[0]
+    nearnodes = leftsplittedgraph
+    startnode1_left, leftindex = ( (node, index) \
+                                    for node, index in leftside_nodes\
+                                    if node in nearnodes ).__next__()
+    leftnodes1 = set(nearnodes).union( left1 )
+    leftnodes2 = set([translator[n] for n in nearnodes \
+                        if n in translator]).union( left2 )
+    right1, right2 =leftright_nodepairs[1]
+    nearnodes = rightsplittedgraph
+    startnode1_right, rightindex = ( (node, index) \
+                                    for node, index in rightside_nodes\
+                                    if node in nearnodes ).__next__()
+    rightnodes1 = set(nearnodes).union( right1 )
+    rightnodes2 = set([translator[n] for n in nearnodes \
+                        if n in translator]).union( right2 )
+    try:
+        return leftnodes1, leftnodes2, startnode1_left, leftindex, \
+                rightnodes1, rightnodes2, startnode1_right, rightindex
+    except NameError as err:
+        raise NoLeftRightFound() from err
+
+    # ???
     i = -1
     for asdf, qwer in ( uncommon_nodepairs1, uncommon_nodepairs2 ):
         i += 1
@@ -442,31 +488,53 @@ def separate_wholegraphs_to_leftright_insulas( \
     except NameError as err:
         raise NoLeftRightFound() from err
 
+class NoLeftRightFound( Exception ):
+    pass
+
 def divide_into_two_parts( connected_insulas1, neighbours1, \
                                             connected_insulas2, neighbours2,\
                                             samenode_translator ):
-    """Divide nodes and uncommon nodes to blublub
+    """Divide nodes and uncommon nodes to blublub.
+
+
+    :type connected_insulas1: Iterable[ Set[ Hashable ]]
+    :type neighbours1: Dict[ Hashable, List[Hashable] ]
+    :type connected_insulas2: Iterable[ Set[ Hashable ]]
+    :param neighbours2: Mapping of nodes to their neighbours
+    :type neighbours2: Dict[ Hashable, List[ Hashable ] ]
+    :param samenode_translator: Map from nodes1 to nodes2
+    :type samenode_translator: Dict[ Hashable, Hashable ]
+    :todo: rework inputtranslation
     """
+    assert number_insulas( neighbours1 ) == 1
+    assert number_insulas( neighbours2 ) == 1
+    assert len( samenode_translator ) > 0
     all_nodes = tuple( it.chain( neighbours1.keys(), neighbours2.keys() ) )
+    """Create mapping of nodes2 to nodes1 if possible, else to unique name
+
+    This method translates both graphs into 1 supergraph, where 
+    corresponding nodes are represented once. not corresponding nodes,
+    respectively nodes not in samenode_translator, are also represented. 
+    eg graph1: 10N graph2: 11N; 6N are in trans -> supergraph: 6+4+5=15N.
+    """
     def nextname_gen():
         for i in range( len(all_nodes) ):
             if i not in neighbours1.keys():
                 yield i
     translator = { a:i for a,i in zip(neighbours2, nextname_gen()) }
-    translator.update(  { v2: v1 for v1, v2 in samenode_translator.items() } )
+    translator.update( { v2: v1 for v1, v2 in samenode_translator.items() } )
     antitrans = { v1: v2 for v2, v1 in translator.items() }
+
     trans_neighbours2 = {translator[n]: [ translator[q] for q in neighbourlist]\
                                     for n, neighbourlist in neighbours2.items()}
     trans_connected_insulas2 = [ tuple( translator[n] for n in insula) \
                                     for insula in connected_insulas2 ]
 
     metagraph = DistanceCalculationGraph()
-    for v1, neighlist in neighbours1.items():
+    for v1, neighlist in it.chain( neighbours1.items(), trans_neighbours2.items() ):
         for v2 in neighlist:
             metagraph.add_edge( v1, v2 )
-    for v1, neighlist in trans_neighbours2.items():
-        for v2 in neighlist:
-            metagraph.add_edge( v1, v2 )
+    assert len( list(netx.connected_components( metagraph )) )==1, list(netx.connected_components( metagraph ))
 
     insulagraph = netx.Graph()
     for i, ins1 in enumerate( connected_insulas1 ):
@@ -583,10 +651,13 @@ def twographs_to_replacement( graph1, graph2, startnode, changedline_id ):
                 tuple(  repl2 ), \
                 tuple( (n1, n2) for n1, n2 in common_nodes )
     except AddedToUncommonNodes as err:
+        logger.debug( "caught exception. %s"%( err ) )
         repl1 = err.replacement_nodes_in_old
         repl2 = err.replacement_nodes_in_new
         common_nodes = err.same_nodes
         translator = { a:b for a, b in err.same_nodes }
+    assert len( translator ) > 0
+    raise Exception()
     leftnodes1, leftnodes2, startnode1_left, leftindex, \
             rightnodes1, rightnodes2, startnode1_right, rightindex \
             = separate_wholegraphs_to_leftright_insulas( \
@@ -632,12 +703,16 @@ def _multi_sidesigint_handler( signal_received, frame ):
     print( "Exiting gracefully" )
     exit( 0 )
 
-class multi_sidealterator():
+class multi_sidealterator( efn.multialterator ):
     """Multi alteratorclass for sidealterator
     
     :todo:overhaul this method, when removing unused things in this directory
+    :var alteratorlist: inherited from sidealterator
     """
     def __init__( self, side_alterator_list ):
+        #for alt in side_alterator_list:
+        #    assert type( alt ) == asdf
+        super().__init__( side_alterator_list )
         self.side_alterator_list = side_alterator_list
 
     @classmethod
@@ -675,6 +750,7 @@ class multi_sidealterator():
                             %(i,maxlen, len(q)))
             logger.info( f"at line {changedline_id}; linetypes: {linetype_in} to {linetype_out}" )
             lever = False
+            leveralreadyinlist = False
             try:
                 #new = sidealterator.from_linetypes( \
                 new = sidealt_gen(\
@@ -684,6 +760,7 @@ class multi_sidealterator():
                 q.append( new )
             except SkipGeneration:
                 logger.info( "already in list - skip" )
+                leveralreadyinlist = True
             except WrongAlterationFound as err:
                 logger.info( "found wrong alteration. trying to circumvent" )
                 lever = True
@@ -714,23 +791,9 @@ class multi_sidealterator():
                     else:
                         logger.info( "error, when trying to create next alterator" )
                         logger.debug( err )
-
         return cls( q )
 
-    @classmethod
-    def from_xml( cls, xmlstring ):
-        """from given xmlstring"""
-        from extrasfornetworkx import xml_config
-        ET.register_namespace( "asd", xml_config.namespace )
-        ET.register_namespace( "grml", xml_config.namespace_graphml )
-        ET.register_namespace( "xsi", xml_config.namespace_xsi )
-
-        verbesserer_xml = ET.fromstring( xmlstring )
-        try:
-            return cls.from_xmlobject( verbesserer_xml )
-        except Exception as err:
-            raise Exception(xmlstring) from err
-
+    #def replace_graph( self, graph, changeline ):
     def replace_in_graph( self, graph, changeline ):
         """mainmethod
 
@@ -738,6 +801,7 @@ class multi_sidealterator():
         :type graph: :py:class:`createcloth.strickgraph.strickgraph`
         :param changeline: Line to alterate
         :type changeline: int
+        :todo: rename to replace_graph
         """
         lever = False
         row = graph.get_rows()[ changeline ]
@@ -756,28 +820,24 @@ class multi_sidealterator():
                                 f"at line {changeline}" )
         return graph
 
+    @classmethod
+    def fromxml( cls, xmlstring ):
+        self = super().fromxml( xmlstring, alteratortype=sidealterator )
+        #print( self.alteratorlist )
+        #print( self.side_alterator_list )
+        return self
 
-    def toxmlelem( self ):
-        """to xml element
 
-        :rtype: xml.etree.ElementTree.Element
-        """
-        raise Exception()
-
-    def to_xml( self, encoding="utf-8" ):
-        """to xmlstring
-
-        :param encoding: same as xml.etree.ElementTree.tostring
-        :type encoding: str
-        """
-        from extrasfornetworkx import xml_config
-        ET.register_namespace( "asd", xml_config.namespace )
-        ET.register_namespace( "grml", xml_config.namespace_graphml )
-        ET.register_namespace( "xsi", xml_config.namespace_xsi )
-        elemroot = self.toxmlelem()
-        xmlbytes = ET.tostring( elemroot, encoding=encoding )
-        xmlstring = xmlbytes.decode( encoding )
-        return xmlstring
+def number_insulas( neighbours ):
+    """
+    :type neibhbours: Dict[ Hashable, Iterable[Hashable] ]
+    """
+    helpergraph = netx.Graph()
+    for v1, nlist in neighbours.items():
+        for v2 in nlist:
+            helpergraph.add_edge( v1, v2 )
+    comp_list = list( netx.connected_components( helpergraph ) )
+    return len( comp_list )
 
 def get_innerborder( sub_nodelist, graph ):
     """return border nodes within sub_nodelist"""
