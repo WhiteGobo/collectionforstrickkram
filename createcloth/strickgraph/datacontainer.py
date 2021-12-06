@@ -346,30 +346,46 @@ class strick_datacontainer():
             leftneighs = self.get_nodes_near_nodes( leftside, maxdistance=1 )
             rightneighs = self.get_nodes_near_nodes( rightside, maxdistance=1 )
             loweri, upperi = i-1, i+1
+            assert leftneighs
+            assert rightneighs
             if loweri >= 0:
-                index_leftdown = max( rows[ loweri ].index( node ) \
+                try:
+                    index_leftdown = max( rows[ loweri ].index( node ) \
                                             for node in leftneighs \
                                             if node in rows[ loweri ] )
-                index_rightdown = min( rows[ loweri ].index(node) \
+                    leftindices[ loweri ] = max( leftindices[ loweri ], \
+                                            index_leftdown )
+                except ValueError:
+                    pass 
+                    #catches if minimal border isnt far enough to be
+                    #neighbouring to upper border
+                try:
+                    index_rightdown = min( rows[ loweri ].index(node) \
                                             - len(rows[ loweri ]) \
                                             for node in rightneighs \
                                             if node in rows[ loweri ] )
-                leftindices[ loweri ] = max( leftindices[ loweri ], \
-                                            index_leftdown )
-                rightindices[ loweri ] = min( rightindices[ loweri ], \
+                    rightindices[ loweri ] = min( rightindices[ loweri ], \
                                             index_rightdown )
+                except ValueError:
+                    pass #see above
             if upperi < len(rows):
-                index_leftup = max( rows[ upperi ].index( node ) \
+                try:
+                    index_leftup = max( rows[ upperi ].index( node ) \
                                             for node in leftneighs \
                                             if node in rows[ upperi ] )
-                index_rightup = min( rows[ upperi ].index(node) \
+                    leftindices[ upperi ] = max( leftindices[ upperi ], \
+                                            index_leftup )
+                except ValueError:
+                    pass #see above
+                try:
+                    index_rightup = min( rows[ upperi ].index(node) \
                                             - len(rows[ upperi ])\
                                             for node in rightneighs \
                                             if node in rows[ upperi ] )
-                leftindices[ upperi ] = max( leftindices[ upperi ], \
-                                            index_leftup )
-                rightindices[ upperi ] = min( rightindices[ upperi ], \
+                    rightindices[ upperi ] = min( rightindices[ upperi ], \
                                             index_rightup )
+                except ValueError:
+                    pass #see above
         return leftindices, rightindices
 
     def get_sidemargins( self, marginsize=5 ):

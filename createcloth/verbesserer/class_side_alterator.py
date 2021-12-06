@@ -6,6 +6,7 @@ import networkx as netx
 import itertools as it
 import math
 from .. import helper_limitcalculationtime as timelimiter
+from ..strickgraph import strickgraph
 logger = logging.getLogger( __name__ )
 
 XML_SIDEALTERATOR_NAME = "sidealterator"
@@ -40,46 +41,38 @@ class sidealterator():
         self.alterator_right = alterator_right
         self.rightstartindex = rightstartindex
 
-    def replace_in_graph( self, strickgraph, linenumber, row=None, nodeattributes=None, edgeattributes=None ):
+    def add_exclusion_criteria_from( self, other_alterator ):
+        raise Exception( "qq" )
+
+    def replace_graph( self, *args, **kwargs ):
+        """same as replace_in_graph"""
+        return self.replace_in_graph( *args, **kwargs )
+
+    def replace_in_graph( self, mystrickgraph, linenumber, row=None, nodeattributes=None, edgeattributes=None ):
         """mainmethod replkaces in graph at given line
 
         :raises: FindError
         :param row: use this to accelerate this method
         """
         if row == None:
-            row = strickgraph.get_rows()[ linenumber ]
+            row = mystrickgraph.get_rows()[ linenumber ]
         startnodeleft = row[ self.leftstartindex ]
         startnoderight = row[ self.rightstartindex ]
         if nodeattributes is None:
-            nodeattributes = strickgraph.get_nodeattributes()
+            nodeattributes = mystrickgraph.get_nodeattributes()
         if edgeattributes is None:
-            edgeattributes = [ (v1, v2, (label,)) for v1, v2, label in strickgraph.get_edges_with_labels() ]
+            edgeattributes = [ (v1, v2, (label,)) for v1, v2, label in mystrickgraph.get_edges_with_labels() ]
 
         logger.debug( "checking if graph ist replaceable" )
-        try:
-            self.alterator_left.find_inputtranslation( nodeattributes, edgeattributes, startnodeleft )
-            self.alterator_right.find_inputtranslation( nodeattributes, edgeattributes, startnoderight )
-        except efn.NoTranslationPossible as err:
-            raise FindError() from err
-        #cond1 = self.alterator_left.isreplaceable( strickgraph, startnodeleft, nodeattributes=nodeattributes, edgeattributes=edgeattributes )
-        #if not cond1:
-        #    raise FindError()
-        #cond2 = self.alterator_right.isreplaceable( strickgraph,startnoderight, nodeattributes=nodeattributes, edgeattributes=edgeattributes )
-        #if not cond2:
-        #    raise FindError()
         logger.info( "replaceleft" )
         nodesattr_repl1, edges_repl1 = self.alterator_left.replace_graph( nodeattributes, edgeattributes, startnodeleft )
-        #strickgraph = self.alterator_left.replace_in_graph( strickgraph, startnodeleft )
         logger.info( "replaceright" )
         nodesattr_repl2, edges_repl2 = self.alterator_right.replace_graph( nodesattr_repl1, edges_repl1, startnoderight )
-        #strickgraph = self.alterator_right.replace_in_graph( strickgraph, startnoderight )
         edgelabels = [(v1, v2, attr[0]) for v1, v2, attr in edges_repl2 ]
-        from ..strickgraph import strickgraph
         newnodeattributes = { n: {"stitchtype": data[0], "side":data[1] }\
                         for n, data in nodesattr_repl2.items() }
         newedges = [ (v1, v2, attr[0]) for v1, v2, attr in edges_repl2 ]
         return strickgraph( newnodeattributes, newedges )
-        return strickgraph
 
     @classmethod
     def from_linetypes( cls, linetype_out, linetype_in, upedges_out, \
@@ -103,7 +96,7 @@ class sidealterator():
                         raise SkipGeneration()
                     from ..stitchinfo import basic_stitchdata as glstinfo
                     less_graph = create_graph_from_linetypes( linetype_out, upedges_out)
-                    raise WrongAlterationFound( j, f"This was produced: {tmp_graph.to_manual(glstinfo)}", f"this should be: {great_graph.to_manual( glstinfo)}", f"from: {less_graph.to_manual(glstinfo )}" )
+                    raise WrongAlterationFound( j )#, f"This was produced: {tmp_graph.to_manual(glstinfo)}", f"this should be: {great_graph.to_manual( glstinfo)}", f"from: {less_graph.to_manual(glstinfo )}" )
                 except FindError:
                     continue
         great_graph = create_graph_from_linetypes( linetype_in, upedges_in )
@@ -208,7 +201,7 @@ class sidealterator():
         edgeattr2 = [ (v1, v2, (label,)) for v1, v2, label in target_strickgraph.get_edges_with_labels() ]
         translator = efn.optimize_uncommon_nodes( nodeattr1, edgeattr1, \
                                             nodeattr2, edgeattr2, \
-                                            maximum_uncommon_nodes=20 )
+                                            maximum_uncommon_nodes=26 )
         assert len( translator ) > 0
 
         difference_graph1 =set(nodeattr1).difference(translator.keys())
@@ -715,6 +708,7 @@ class multi_sidealterator( efn.multialterator ):
         super().__init__( side_alterator_list )
         self.side_alterator_list = side_alterator_list
 
+
     @classmethod
     def generate_from_linetypelist( cls, asdf, starttranslator_list=None, \
                                     skip_by_exception=False, \
@@ -793,7 +787,35 @@ class multi_sidealterator( efn.multialterator ):
                         logger.debug( err )
         return cls( q )
 
-    #def replace_graph( self, graph, changeline ):
+    @classmethod
+    def generate_from_linetypelist( cls, linetypepairlists ):
+        def use_alterator( tmpalterator, linetype_out, linetype_in, \
+                                upedges_out, upedges_in, changedline_id ):
+            tmp_graph = create_graph_from_linetypes( linetype_out, upedges_out)
+            try:
+                tmpalterator.replace_in_graph( tmp_graph, changedline_id )
+            except Exception: #just to show exceptions are expected
+                raise
+            great_graph = create_graph_from_linetypes( linetype_in, upedges_in )
+            return tmp_graph == great_graph
+
+        def create_alterator( linetype_out, linetype_in, upedges_out, \
+                                upedges_in, changedline_id ):
+            return sidealterator.from_linetypes( linetype_out, linetype_in, \
+                                upedges_out, upedges_in, changedline_id )
+        q = zip( linetypepairlists, [{}]*len( linetypepairlists ) )
+        return cls.from_replacements( q,
+                    replace_function = use_alterator, \
+                    alterator_generator = create_alterator )
+
+
+    def replace_graph( self, graph, changeline ):
+        row = graph.get_rows()[ changeline ]
+        nodeattributes = graph.get_nodeattributes()
+        edgeswithlabel = graph.get_edges_with_labels()
+        return super().replace_graph( graph, changeline, row=row, \
+                                nodeattributes=nodeattributes )
+
     def replace_in_graph( self, graph, changeline ):
         """mainmethod
 
@@ -803,6 +825,7 @@ class multi_sidealterator( efn.multialterator ):
         :type changeline: int
         :todo: rename to replace_graph
         """
+        raise Exception()
         lever = False
         row = graph.get_rows()[ changeline ]
         nodeattributes = graph.get_nodeattributes()

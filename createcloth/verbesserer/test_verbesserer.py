@@ -6,7 +6,6 @@ from ..strickgraph import strickgraph
 import networkx as netx
 from ..stitchinfo import basic_stitchdata as glstinfo
 import extrasfornetworkx
-from .multiverbesserer import strick_multiverbesserer
 from . import resourcestest as test_src
 from .verbesserer_class import strickalterator, FindError
 
@@ -14,9 +13,11 @@ from ..verbesserer.class_side_alterator import sidealterator, multi_sidealterato
 
 import logging
 logger = logging.getLogger( __name__ )
-logging.basicConfig( level = logging.WARNING )
 
 class test_manualtoverbesserung( unittest.TestCase ):
+    logging.basicConfig( level = logging.DEBUG )
+    matlogger = logging.getLogger( "matplotlib" )
+    matlogger.setLevel( logging.WARNING )
     def setUp( self ):
         pass
 
@@ -63,21 +64,27 @@ class test_manualtoverbesserung( unittest.TestCase ):
         asdf = [\
                 #((start, plain, plain, plain, plain, plain, end), (start, decrease, plain, plain, plain, plain, end), (12, 12, 12, 12, 12, 12), (14, 12, 12, 12, 12, 12), 0), 
                 ((start, plain, end), (start, increase, enddecrease), (10, 10), (10, 12), 1), 
+                ((start, plain, end), (start, increase, enddecrease), (10, 10), (10, 12), 2), 
                 #((start, plain, plain, plain, plain, plain, end), (start, plain, increase, decrease, plain, plain, end), (12, 12, 12, 12, 12, 12), (12, 12, 14, 12, 12, 12), 2), 
                 #((start, plain, plain, plain, plain, plain, end), (start, plain, plain, increase, decrease, plain, end), (12, 12, 12, 12, 12, 12), (12, 12, 12, 14, 12, 12), 3),\
                         ]
         myalt = multi_sidealterator.generate_from_linetypelist( asdf )
-        for l1, l2, upedges1, upedges2, k in asdf:
+        for i, info in enumerate( asdf ):
+            print( "-"*66 )
+            l1, l2, upedges1, upedges2, k = info 
             graph1 = create_graph_from_linetypes( l1, upedges1 )
             graph2 = create_graph_from_linetypes( l2, upedges2 )
-            graph1 = myalt.replace_in_graph( graph1, k )
+            try:
+                graph1 = myalt.replace_graph( graph1, k )
+            except Exception as err:
+                raise Exception( f"couldnt replace in graph, linetypes number {i}; {info}" ) from err
             self.assertEqual( graph1, graph2, msg=graph1.to_manual(glstinfo) )
         xmlstring = myalt.toxml()
         newalt = multi_sidealterator.fromxml( xmlstring )
         for l1, l2, upedges1, upedges2, k in asdf:
             graph1 = create_graph_from_linetypes( l1, upedges1 )
             graph2 = create_graph_from_linetypes( l2, upedges2 )
-            graph1 = newalt.replace_in_graph( graph1, k )
+            graph1 = newalt.replace_graph( graph1, k )
             self.assertEqual( graph1, graph2, msg=f"brubru %s"%(graph1.to_manual(glstinfo)) )
 
         return
@@ -159,3 +166,6 @@ def create_graph_from_linetypes( linetypes, upedges, startside="right" ):
         raise err
     graph = strickgraph.from_manual( graph_man, glstinfo, manual_type="machine")
     return graph
+
+if __name__=="__main__":
+    unittest.main()
