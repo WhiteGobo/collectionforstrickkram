@@ -145,14 +145,19 @@ class class_idarray():
         asdf = np.add( self.stitches_per_line, addtuple )
         return type(self)( asdf )
     def __eq__(self, other):
-        return self.stitches_per_line == other.stitches_per_line
+        if type( self ) == type(other):
+            return self.stitches_per_line == other.stitches_per_line
+        elif type( other ) == tuple:
+            return self.stitches_per_line == other
+        else:
+            return False
 
 
 def order_neighbouring( brubru ):
     """ Helperfunction for creation of increaser and decreaser for 
     plainknitstrick
 
-    :todo: remove this function
+    :todo: tidy up this function
     """
     myergebnis = []
     tmpbib = {}
@@ -163,8 +168,10 @@ def order_neighbouring( brubru ):
             for adder in [{k:2}, {k:2,k-1:1}, {k:2,k+1:1}]:
                 newidarray = idarray + [ adder.get(i, 0) \
                                         for i in range(len(idarray)) ]
-                for linetype_out, upedges in qpartial:
-                    for linetype_in, upe2 in brubru.get( newidarray, list() ):
+                #for linetype_out, upedges in qpartial:
+                #    for linetype_in, upe2 in brubru.get( newidarray, list() ):
+                for linetype_in, upe2 in qpartial:
+                    for linetype_out, upedges in brubru.get( newidarray, list() ):
                         unsimilarity_vector = tuple( i!=j \
                                     for i,j in zip(linetype_out,linetype_in ))
                         from itertools import compress
@@ -183,12 +190,19 @@ def order_neighbouring( brubru ):
 
                             tmp = [ i \
                                     for i, t in enumerate(zip(upe2,upedges_out)) if abs(i-k)>2]
-                            notneardifference_rows = [ t[1]-t[0] \
-                                    for i, t in enumerate(zip(upe2,upedges_out)) if abs(i-k)>2]
-                            upedges_in = tuple( ue+notneardifference_rows[0] \
-                                    for ue in upe2 )
+                            notneardifference_rows = [ t[0]-t[1] \
+                                    for i, t in enumerate(zip(upedges_out,upe2)) if abs(i-k)>2]
+                            try:
+                                difference_upedges_inandout = notneardifference_rows[0]
+                            except IndexError as err:
+                                difference_upedges_inandout = upedges_out[k] - upe2[k] -2
+                                #raise Exception( notneardifference_rows, upe2, upedges_out, k ) from err
+                            upedges_in = tuple( ue + difference_upedges_inandout \
+                                                                for ue in upe2 )
 
                             qqdiff = sum( upedges_in )-sum(upedges_out)
+                            #print( upedges_out, upedges_in )
+                            #input( "continue?" )
                             assert abs(qqdiff) <= 5, "most likely plane follows with increase, which is not covered by plain-strick"
                             newneighbourtuple = (\
                                     linetype_out,

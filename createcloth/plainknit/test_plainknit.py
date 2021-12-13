@@ -3,8 +3,6 @@ from . import state
 from . import examplestates as st
 import logging
 import itertools as it
-logging.basicConfig( level=logging.WARNING )
-#logging.basicConfig( level=logging.DEBUG )
 logger = logging.getLogger( __name__ )
 import time
 from ..verbesserer.verbesserer_class import FindError
@@ -19,6 +17,8 @@ import os
 import signal
 import psutil
 import multiprocessing as mp
+
+from . import create_example_strickgraphs as ces
 
 
 def asdf( less_graph, great_graph, startnode, changedline_id, myqueue ):
@@ -55,155 +55,93 @@ class TestMeshhandlerMethods( unittest.TestCase ):
         #mip.isplain_strickgraph( strickgraph )
         pass
 
+    def test_create_examplestrickset( self ):
+        """Test for creation of example sets of a certain strickmuster.
+        Default structure of sets is Iterable[ list[linetypes], 
+        list[upedges(int)], list[stitchnumber(int)]]
 
-    @unittest.skip( "too long to test everytime should be shortend")
+        """
+        q = ces.create_example_strickset( [], 4, \
+                                        min_row_length=12 )
+        from .examplestates import start, end, leftplane, rightplane, \
+                                    lefteaves, righteaves, \
+                                    enddecrease, plain, increase, decrease
+        testq = [(start, leftplane, rightplane, end), (start, leftplane, rightplane, end), (start, leftplane, rightplane, end), (start, lefteaves, righteaves, end), (start, lefteaves, righteaves, end), (start, lefteaves, righteaves, end), (start, plain, plain, end), (start, plain, plain, enddecrease), (start, plain, increase, end), (start, plain, increase, enddecrease), (start, plain, decrease, end), (start, plain, decrease, enddecrease), (start, increase, plain, end), (start, increase, plain, enddecrease), (start, increase, increase, end), (start, increase, increase, enddecrease), (start, increase, decrease, end), (start, increase, decrease, enddecrease), (start, decrease, plain, end), (start, decrease, plain, enddecrease), (start, decrease, increase, end), (start, decrease, increase, enddecrease), (start, decrease, decrease, end), (start, decrease, decrease, enddecrease)]
+        self.assertEqual( testq, list( a[0] for a in q ) )
+
+        q = ces.create_example_strickset( [], 4, \
+                                        min_row_length=12 )
+        detailtest = [ ((start, plain, increase, end), (12, 12, 14), [12, 12, 14, 14]) ]
+        for linetypes, upedges, stitchnumber in detailtest:
+            testrow = [ a for a in q if a[0] == linetypes ][0]
+            self.assertEqual( testrow[1], upedges )
+            self.assertEqual( testrow[2], stitchnumber )
+
+    def test_order_neighbouring( self ):
+        from .examplestates import start, end, leftplane, rightplane, \
+                                    lefteaves, righteaves, \
+                                    enddecrease, plain, increase, decrease
+        #testq = [((start, leftplane, rightplane, end), (18, 15, 12), [18, 18, 15, 12]), ((start, leftplane, rightplane, end), (20, 16, 12), [20, 20, 16, 12]), ((start, leftplane, rightplane, end), (22, 17, 12), [22, 22, 17, 12]), ((start, lefteaves, righteaves, end), (12, 15, 18), [12, 15, 18, 18]), ((start, lefteaves, righteaves, end), (12, 16, 20), [12, 16, 20, 20]), ((start, lefteaves, righteaves, end), (12, 17, 22), [12, 17, 22, 22]), ((start, plain, plain, end), (12, 12, 12), [12, 12, 12, 12]), ((start, plain, plain, enddecrease), (12, 12, 12), [12, 12, 12, 10]), ((start, plain, increase, end), (12, 12, 14), [12, 12, 14, 14]), ((start, plain, increase, enddecrease), (12, 12, 14), [12, 12, 14, 12]), ((start, plain, decrease, end), (14, 14, 12), [14, 14, 12, 12]), ((start, plain, decrease, enddecrease), (14, 14, 12), [14, 14, 12, 10]), ((start, increase, plain, end), (12, 14, 14), [12, 14, 14, 14]), ((start, increase, plain, enddecrease), (12, 14, 14), [12, 14, 14, 12]), ((start, increase, increase, end), (12, 14, 16), [12, 14, 16, 16]), ((start, increase, increase, enddecrease), (12, 14, 16), [12, 14, 16, 14]), ((start, increase, decrease, end), (12, 14, 12), [12, 14, 12, 12]), ((start, increase, decrease, enddecrease), (12, 14, 12), [12, 14, 12, 10]), ((start, decrease, plain, end), (14, 12, 12), [14, 12, 12, 12]), ((start, decrease, plain, enddecrease), (14, 12, 12), [14, 12, 12, 10]), ((start, decrease, increase, end), (14, 12, 14), [14, 12, 14, 14]), ((start, decrease, increase, enddecrease), (14, 12, 14), [14, 12, 14, 12]), ((start, decrease, decrease, end), (16, 14, 12), [16, 14, 12, 12]), ((start, decrease, decrease, enddecrease), (16, 14, 12), [16, 14, 12, 10])]
+        testq = [((start, plain, increase, end), (12, 12, 14), [12, 12, 14, 14]), 
+                ((start, increase, increase, end), (12, 14, 16), [12, 14, 16, 16]),\
+                        ]
+
+        brubru = ces.create_stitchnumber_to_examplestrick( testq )
+        for linetypes, upedges, stitchnumber in testq:
+            myid = ces.class_idarray( stitchnumber )
+            self.assertTrue( myid, tuple( q-stitchnumber[0] for q in stitchnumber ) )
+            self.assertTrue( (linetypes,upedges) in brubru[ myid ] )
+            myid_tuple = tuple( q-stitchnumber[0] for q in stitchnumber )
+            self.assertTrue( (linetypes,upedges) in brubru[ myid_tuple ] )
+        asdf = ces.order_neighbouring( brubru )
+
+        test_pairs = [ ((start, plain, increase, end), (start, increase, increase, end), (12, 12, 14), (10, 12, 14), 0), ]
+        """test_pairs is dependent on testq"""
+
+        for pair in test_pairs:
+            self.assertTrue( pair in asdf)
+        for linetypes_in, linetypes_out, upedges_in, upedges_out, deviant_index\
+                                                                    in asdf:
+            #print(  linetypes_in, linetypes_out, upedges_in, upedges_out, deviant_index )
+            self.assertTrue( 0 <= sum( upedges_in )- sum( upedges_out ) <= 3 )
+
     def test_createverbesserer( self ):
-        """
-
-        :todo: shorten time to test
-        """
-        return
-        from .create_example_strickgraphs import create_example_strickset
         from ..strickgraph import strickgraph
-        strickgraphsize = 7
-        q = create_example_strickset( [], strickgraphsize, min_row_length=12 )
-        q = list(q)
-        #q2 = create_example_strickset( [], strickgraphsize, min_row_length=15 )
-        bru = dict()
-        createdgraphs = dict()
-        starttime = time.time()
-        #for linetypes, original_upedges in it.chain( q,q2 ):
-        from .create_example_strickgraphs import create_stitchnumber_to_examplestrick
-        brubru = create_stitchnumber_to_examplestrick( q )
-
-        from .create_example_strickgraphs import order_neighbouring
-        myergebnis = order_neighbouring( brubru )
-
-        from ..verbesserer.class_side_alterator import sidealterator
-        from collections import Counter
-
-        #temporary for testing please delete
-        mumu = {}
-        for linetype_out, linetype_in, upedges_out, upedges_in, changedline_id\
-                                                                in myergebnis:
-            tmplist = mumu.setdefault( (linetype_out, upedges_out, changedline_id ), list() )
-            tmplist.append( (linetype_in, upedges_in) )
-        for a,b in mumu.items():
-            if len(b) > 1:
-                linetype_out, upedges_out, changedline_id = a
-                q1 = b[0]
-                q2 = b[1]
-                raise Exception(f"""
-                linetype1: {linetype_out}, upedges_out: {upedges_out}, changed_lineid: {changedline_id}
-                ex1:
-                {q1}
-                ex2:
-                {q2}
-                """)
-
-        #endtesting
-
-        asd= Counter( (linetype_out, upedges_out, changedline_id )
-                            for linetype_out, linetype_in, upedges_out, \
-                                    upedges_in, changedline_id in myergebnis)
-        self.assertEqual( max( asd.values()), 1,msg="There are somelineconfigs"\
-                            ", that have multiple possible extend-variants: %s"\
-                            %([(a,b) for a,b in asd.items() if b > 1]))
-        asd = set( linetype_out for linetype_out, linetype_in, upedges_out, \
-                                    upedges_in, changedline_id in myergebnis)
-        qasdf = set( a[0] for a in q )
-        self.assertEqual( len( asd ), len( qasdf ), msg="There are some "
-                            "thingies, that wont be extended, %s, %i, %i" \
-                            %( qasdf.difference(asd), len(asd), len(q)))
-
-        #increase_linetypes_collection = list(myergebnis)[:10]
-        #inc_to_dec = lambda lout, lin, upout, upin, lineid: \
-        #                    lin, lout, upin, upout, lineid
-        #decrease_linetypes_collection \
-        #        = [ inc_to_dec(data) for data in increase_linetypes_collection ]
-        #increaser = multi_sidealterator.generate_from_linetypelist( \
-        #                                    increase_linetypes_collection )
-        #decreaser = multi_sidealterator.generate_from_linetypelist( \
-        #                                    decrease_linetypes_collection )
-
-        #ltypes, upedges =[ increase_linetypes_collection[4][i] for i in (0,2) ]
-
-
-
-        #myalt = multi_sidealterator.generate_from_linetypelist( myergebnis )
-        mp.set_start_method( 'spawn' )
-        myqueue = mp.Queue()
-
-        verbesserer_list = []
-        myergebnis = myergebnis[:5]
-        for linetype_out, linetype_in, upedges_out, upedges_in, changedline_id\
-                                                                in myergebnis:
-
-            #print( "-"*50 )
-            #print( len(verbesserer_list) )
-            mytime = time.time()
-            #asd = sidealterator.from_linetypes( linetype_out, linetype_in, \
-            #                    upedges_out, upedges_in, changedline_id )
-            #print( "needed time: ", mytime-time.time() )
-            #continue
-
-
-            great_graph = create_graph_from_linetypes( linetype_in, upedges_in )
-            lever = False
-            tmp_graph = create_graph_from_linetypes( linetype_out, upedges_out)
-            for i in verbesserer_list:
-                try:
-                    #i.replace_in_graph( tmp_graph, changedline_id, dontreplace=True)
-                    i.replace_in_graph( tmp_graph, changedline_id )
-                    if tmp_graph == great_graph:
-                        lever = True
-                        #print("skip to next")
-                        break
-                    tmp_graph = create_graph_from_linetypes( linetype_out, upedges_out)
-                    raise Exception( "This should never trigger" )
-                except FindError:
-                    continue
-                except Exception as err:
-                    #print("Why=")
-                    continue
-            if lever:
-                continue
-            less_graph = create_graph_from_linetypes( linetype_out, upedges_out)
-            #print( less_graph.to_manual(glstinfo).replace('\n','\\n') )
-            #print( great_graph.to_manual(glstinfo).replace('\n','\\n') )
-            #print( linetype_out, upedges_out )
-
-            if linetype_out[0] == linetype_in[1]:
-                startnode = (0,0)
-            else:
-                startnode = (len( linetype_out )-1, 0)
-
-            #print("create next verbesserer" )
-            #print( time.ctime() )
+        from ..stitchinfo import basic_stitchdata as glstinfo
+        def create_graph_from_linetypes( linetypes, upedges, startside="right" ):
+            sides = ("right", "left") if startside=="right" else ("left", "right")
+            downedges = [ None, *upedges ]
+            upedges = [ *upedges, None ]
+            iline = range(len(downedges))
+            allinfo = zip( linetypes, downedges, upedges, iline )
             try:
-                mpid = mp.Process(target=asdf, args=( less_graph, great_graph, startnode, changedline_id, myqueue ))
-                mpid.start()
-                for i in range(300):
-                    if myqueue.empty() and mpid.is_alive():
-                        time.sleep(1)
-                    elif not myqueue.empty():
-                        verbesserer_list.append( myqueue.get() )
-                        break
-                    else:
-                        break
-                    #os.waitpid( pid, os.WNOHANG )
-                if mpid.is_alive():
-                    mpid.terminate()
-                    #print("failed - needed too much time")
-                mpid.join()
-
+                graph_man = [ s.create_example_row( down, up, side=sides[i%2] ) \
+                                        for s, down, up, i in allinfo ]
             except Exception as err:
+                raise Exception( [str(a) for a in linetypes], downedges, upedges, iline ) from err
                 raise err
-                #raise Exception( less_graph.to_manual(glstinfo), great_graph.to_manual(glstinfo), startnode, changedline_id) from err
-                #print("failed")
-            #print( "needed time: ", mytime-time.time() )
+            graph = strickgraph.from_manual( graph_man, glstinfo, manual_type="machine")
+            return graph
 
-        return
+
+        from .examplestates import start, end, leftplane, rightplane, \
+                                    lefteaves, righteaves, \
+                                    enddecrease, plain, increase, decrease
+        test_pairs = [ ((start, plain, increase, end), (start, increase, increase, end), (12, 12, 14), (10, 12, 14), 0), ]
+        """See for test of test_pairs `test_order_neighbouring`"""
+
+        from ..verbesserer.class_side_alterator import multi_sidealterator
+        decreaser = multi_sidealterator.generate_from_linetypelist( test_pairs )
+
+        for linetypes_in, linetypes_out, upedges_in, upedges_out, deviant_line \
+                                                                in test_pairs:
+            for side in ( "right", "left" ):
+                brubrugraph = create_graph_from_linetypes( linetypes_in, \
+                                                upedges_in, startside=side )
+                outgraph = decreaser.replace_graph( brubrugraph, deviant_line )
+                testgraph = create_graph_from_linetypes( linetypes_out, \
+                                                upedges_out, startside=side )
+                self.assertEqual( outgraph, testgraph )
 
 
 from ..strickgraph import strickgraph
@@ -224,4 +162,6 @@ def create_graph_from_linetypes( linetypes, upedges, startside="right" ):
 
 
 if __name__ == "__main__":
+    logging.basicConfig( level=logging.WARNING )
+    #logging.basicConfig( level=logging.DEBUG )
     unittest.main()

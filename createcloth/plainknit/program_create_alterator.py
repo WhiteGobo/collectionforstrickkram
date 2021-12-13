@@ -1,7 +1,7 @@
 #!/bin/env python
-from .create_example_strickgraphs import create_example_strickset
 from ..strickgraph import strickgraph
 from ..stitchinfo import basic_stitchdata as glstinfo
+from .create_example_strickgraphs import create_example_strickset
 from .create_example_strickgraphs import create_stitchnumber_to_examplestrick
 from .create_example_strickgraphs import order_neighbouring
 from ..verbesserer.class_side_alterator import sidealterator, multi_sidealterator
@@ -45,12 +45,16 @@ def sigint_handler( signal_received, frame ):
 
 def loadfromfile( filename ):
     with open( filename, "rb" ) as myf:
-        obj = pickle.load( myf )
+        xmlstr = myf.read()
+        #obj = pickle.load( myf )
+    obj = multi_sidealterator.fromxml( xmlstr )
     return obj
 def savetofile( filename, obj ):
     logger.info( "Saving alterator to file" )
+    xmlstr = obj.toxml()
     with open( filename, "wb" ) as myf:
-        pickle.dump( obj, myf )
+        myf.write( xmlstr )
+        #pickle.dump( obj, myf )
     #with open( filename, 'w' ) as myfile:
     #    if alteratortype == 'increase':
     #        xmlstring = increaser.to_xml()
@@ -68,14 +72,14 @@ def get_args():
                         "Can be 'increase' or 'decrease'." )
     parser.add_argument( '--stricklength', '-l', type=int, default=8,
                         help="Number of lines of examplestrick" )
-    parser.add_argument( '--strickwidth', '-w', type=int, default=14,
+    parser.add_argument( '--strickwidth', '-w', type=int, default=18,
                         help="Number of minimal number of stitches per line" )
     parser.add_argument( '--continue', action=argparse.BooleanOptionalAction,\
                         help="If used, load alterator from existing file and"
                         "build extra missing alterators", dest="cont" )
-    parser.add_argument( '--skip-gen-exception', dest="skipexc", \
-                        action=argparse.BooleanOptionalAction,\
-                        help="Skips alteratorgeneration, when exception" )
+    #parser.add_argument( '--skip-gen-exception', dest="skipexc", \
+    #                    action=argparse.BooleanOptionalAction,\
+    #                    help="Skips alteratorgeneration, when exception" )
 
     args = parser.parse_args()
     assert args.alteratortype in ( 'increase', 'decrease' ), \
@@ -85,10 +89,9 @@ def get_args():
             "min_row_length": args.strickwidth, \
             "strickgraphsize": args.stricklength, \
             "cont": args.cont, \
-            "skip_exception": args.skipexc, \
             }
 
-def main( filename, alteratortype, strickgraphsize = 8, min_row_length=14, cont=False, skip_exception=False ):
+def main( filename, alteratortype, strickgraphsize = 8, min_row_length=14, cont=False ):
     """
 
     :param alteratortype: defines, what alterator is created. possible is
@@ -108,31 +111,33 @@ def main( filename, alteratortype, strickgraphsize = 8, min_row_length=14, cont=
     logger.debug( f"number strickgraphen: {len(q)}" )
     brubru = create_stitchnumber_to_examplestrick( q )
 
-    increase_linetypes_collection: Iterable[ strickexample_alteration ] \
+    decrease_linetypes_collection: Iterable[ strickexample_alteration ] \
                 = tuple( order_neighbouring( brubru ) )
-    increase_linetypes_collection = _filterincrease_linetypes( increase_linetypes_collection )
+    decrease_linetypes_collection = decrease_linetypes_collection[ :1000 ]
+
+    #increase_linetypes_collection = _filterincrease_linetypes( increase_linetypes_collection )
 
     logger.info( "Starting creation of alterators" )
 
-    extraoptions = { "skip_by_exception": skip_exception,\
-            "pipe_for_interrupt": globalpipe,\
+    extraoptions = { #"pipe_for_interrupt": globalpipe,\
             }
-    if cont:
-        try:
-            old_alterator = loadfromfile( filename )
-            extraoptions["starttranslator_list"] =old_alterator.side_alterator_list
-        except FileNotFoundError:
-            pass
+    #if cont:
+    #    try:
+    #        old_alterator = loadfromfile( filename )
+    #        extraoptions["starttranslator_list"] =old_alterator.alteratorlist
+    #    except FileNotFoundError:
+    #        pass
 
     if alteratortype == 'increase':
+        dec_to_inc = lambda lout, lin, upout, upin, lineid: \
+                            (lin, lout, upin, upout, lineid)
+        increase_linetypes_collection \
+                = [ dec_to_inc( *data ) \
+                for data in decrease_linetypes_collection ]
         increaser = multi_sidealterator.generate_from_linetypelist( \
-                increase_linetypes_collection, **extraoptions )
+                decrease_linetypes_collection, **extraoptions )
         myalterator = increaser
     elif alteratortype == 'decrease':
-        inc_to_dec = lambda lout, lin, upout, upin, lineid: (lin, lout, upin, upout, lineid)
-        decrease_linetypes_collection \
-                = [ inc_to_dec( *data ) \
-                for data in increase_linetypes_collection ]
         decreaser = multi_sidealterator.generate_from_linetypelist( \
                 decrease_linetypes_collection, **extraoptions )
         myalterator = decreaser
@@ -146,11 +151,16 @@ def _filterincrease_linetypes( increase_linetypes_collection ):
     from .examplestates import start, end, leftplane, rightplane, \
                                     lefteaves, righteaves, \
                                     enddecrease, plain, increase, decrease
+    #increase_linetypes_collection = [ (a,b,c,d,e)\
+    #        for a,b,c,d,e in increase_linetypes_collection \
+    #        if tuple(a[0:4]) == (start, leftplane, rightplane, decrease) \
+    #        and tuple(b[0:4]) == (start, leftplane, rightplane, plain) \
+    #        and e==3]
     increase_linetypes_collection = [ (a,b,c,d,e)\
             for a,b,c,d,e in increase_linetypes_collection \
-            if tuple(a[0:4]) == (start, leftplane, rightplane, plain) \
-            and tuple(b[0:4]) == (start, leftplane, rightplane, plain) \
-            and e==3]
+            if (a[3] == increase and a[2] in (rightplane, leftplane, lefteaves, righteaves))\
+            or (b[3] == increase and b[2] in (rightplane, leftplane, lefteaves, righteaves)) ]
+    raise Exception( increase_linetypes_collection )
     return increase_linetypes_collection
 
 
@@ -158,8 +168,8 @@ def _filterincrease_linetypes( increase_linetypes_collection ):
 if __name__ == "__main__":
     signal( SIGINT, sigint_handler )
     args = get_args()
-    logging.basicConfig( level=logging.DEBUG )
+    logging.basicConfig( level=logging.INFO )
     from extrasfornetworkx import verbesserer_tools 
-    verbesserer_tools.logger.setLevel( logging.DEBUG )
+    #verbesserer_tools.logger.setLevel( logging.DEBUG )
 
     main( **args )
