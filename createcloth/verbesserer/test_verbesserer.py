@@ -15,7 +15,7 @@ import logging
 logger = logging.getLogger( __name__ )
 
 class test_manualtoverbesserung( unittest.TestCase ):
-    logging.basicConfig( level = logging.DEBUG )
+    logging.basicConfig( level = logging.WARNING )
     matlogger = logging.getLogger( "matplotlib" )
     matlogger.setLevel( logging.WARNING )
     def setUp( self ):
@@ -70,7 +70,6 @@ class test_manualtoverbesserung( unittest.TestCase ):
                         ]
         myalt = multi_sidealterator.generate_from_linetypelist( asdf )
         for i, info in enumerate( asdf ):
-            print( "-"*66 )
             l1, l2, upedges1, upedges2, k = info 
             graph1 = create_graph_from_linetypes( l1, upedges1 )
             graph2 = create_graph_from_linetypes( l2, upedges2 )

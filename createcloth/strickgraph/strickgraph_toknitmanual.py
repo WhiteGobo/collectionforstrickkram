@@ -31,9 +31,11 @@ def tomanual( strickgraph, stitchinfo, manual_type="thread" ):
     :todo: rewrite to remove reversing of rows and pass on manual_type 
             to strickgraph.get_rows
     """
-    startside = strickgraph.get_startside()
+    #startside = strickgraph.get_startside()
     #rows = find_rows( strickgraph )
     rows = strickgraph.get_rows( presentation_type="thread" )
+    startnode = rows[0][0]
+    startside = strickgraph.get_nodeattr_side()[ startnode ]
     nodeattributes = strickgraph.get_nodeattr_stitchtype()
 
     text = ""

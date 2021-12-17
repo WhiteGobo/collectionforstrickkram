@@ -159,22 +159,23 @@ def order_neighbouring( brubru ):
 
     :todo: tidy up this function
     """
+    from . import examplestates as es
+    from itertools import compress
     myergebnis = []
-    tmpbib = {}
+    inthings = {}
+    outthings = {}
     for idarray, qpartial in brubru.items():
         #adding rowlength
-        from . import examplestates as es
         for k in range( len(idarray) ):
             for adder in [{k:2}, {k:2,k-1:1}, {k:2,k+1:1}]:
+                if min(adder) <0 or max(adder)>=len(idarray):
+                    continue
                 newidarray = idarray + [ adder.get(i, 0) \
                                         for i in range(len(idarray)) ]
-                #for linetype_out, upedges in qpartial:
-                #    for linetype_in, upe2 in brubru.get( newidarray, list() ):
                 for linetype_in, upe2 in qpartial:
                     for linetype_out, upedges in brubru.get( newidarray, list() ):
                         unsimilarity_vector = tuple( i!=j \
                                     for i,j in zip(linetype_out,linetype_in ))
-                        from itertools import compress
                         reduce_to_differencelines = lambda vector: tuple( \
                                     compress( range(-k,len(vector)-k), vector ))
                         q = reduce_to_differencelines( unsimilarity_vector )
@@ -184,26 +185,19 @@ def order_neighbouring( brubru ):
                             maxdiff = 0
                         if maxdiff < 2:
                             upedges_out = upedges
-                            #i-1 because its upedges not stitches in line
-                            #upedges_in = tuple( x + adder.get( i, 0 ) \
-                            #            for i, x in enumerate( upedges ) )
-
-                            tmp = [ i \
-                                    for i, t in enumerate(zip(upe2,upedges_out)) if abs(i-k)>2]
+                            tmp = [ i for i, t in enumerate(zip(upe2,upedges_out))\
+                                    if abs(i-k)>2]
                             notneardifference_rows = [ t[0]-t[1] \
-                                    for i, t in enumerate(zip(upedges_out,upe2)) if abs(i-k)>2]
+                                    for i, t in enumerate(zip(upedges_out,upe2)) \
+                                    if abs(i-k)>2]
                             try:
                                 difference_upedges_inandout = notneardifference_rows[0]
-                            except IndexError as err:
+                            except IndexError as err: #to few rows
                                 difference_upedges_inandout = upedges_out[k] - upe2[k] -2
-                                #raise Exception( notneardifference_rows, upe2, upedges_out, k ) from err
                             upedges_in = tuple( ue + difference_upedges_inandout \
                                                                 for ue in upe2 )
 
                             qqdiff = sum( upedges_in )-sum(upedges_out)
-                            #print( upedges_out, upedges_in )
-                            #input( "continue?" )
-                            assert abs(qqdiff) <= 5, "most likely plane follows with increase, which is not covered by plain-strick"
                             newneighbourtuple = (\
                                     linetype_out,
                                     linetype_in, 
@@ -211,23 +205,14 @@ def order_neighbouring( brubru ):
                                     upedges_in, 
                                     k, 
                                     )
-                            
-                            #delete this
-                            if newneighbourtuple not in myergebnis:
-                                myergebnis.append( newneighbourtuple )
-                                tmpid = (linetype_out, upedges_out, k )
-                                if tmpid in tmpbib:
-                                    a = create_graph_from_linetypes( linetype_out, upedges_out )
-                                    b1 = create_graph_from_linetypes( linetype_in, upedges_in )
-                                    m = tmpbib[ tmpid ]
-                                    b2 = create_graph_from_linetypes( m[1], m[3] )
-                                    print( a.to_manual( glstinfo ))
-                                    print("")
-                                    print( b1.to_manual( glstinfo ))
-                                    print("")
-                                    print( b2.to_manual( glstinfo ))
-                                    raise Exception( idarray, newidarray, "-"*5, newneighbourtuple,"-"*5,  tmpbib[tmpid] )
-                                else:
-                                    tmpbib[ tmpid ] = newneighbourtuple
+                            #assert abs(qqdiff) <= 3, "most likely plane follows with increase, which is not covered by plain-strick %s, %s, %s" %(str(newneighbourtuple), idarray, newidarray)
+                            tmpin = (linetype_in, idarray, k)
+                            tmpout = (linetype_out, newidarray, k)
+                            assert tmpin not in inthings
+                            assert tmpout not in outthings
+                            inthings[ tmpin ] = newneighbourtuple
+                            outthings[ tmpout ] = newneighbourtuple
+                            assert newneighbourtuple not in myergebnis
+                            myergebnis.append( newneighbourtuple )
     return myergebnis
 

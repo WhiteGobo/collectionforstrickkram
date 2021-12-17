@@ -119,6 +119,7 @@ class strick_datacontainer():
         :todo: This is no permanent method. I willchange strickgraph to
             include multiple threads.
         """
+        raise Exception()
         nodes = set( self.get_nodes() )
         nodes.difference_update( v2 \
                         for v1, v2, edgetype in self.get_edges_with_labels() \
@@ -283,9 +284,13 @@ class strick_datacontainer():
         """Get startside
 
         :rtype: str
+        :todo: remove this method
         """
         #firststitch = self.give_next_node_to( "start" )
-        firststitch = self.get_startstitch()
+        nodeattr = _netx.get_node_attributes( self.__datacontainer, "side" )
+        firstrow = self.get_rows()[0]
+        return nodeattr[ firstrow[0] ]
+        #firststitch = self.get_startstitch()
         #endstitch = self.get_endstitch()
         firstrow = self.find_following_row( firststitch )
         nodeattr = _netx.get_node_attributes( self.__datacontainer, "side" )

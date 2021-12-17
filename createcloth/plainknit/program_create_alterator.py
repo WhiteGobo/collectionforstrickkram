@@ -7,6 +7,7 @@ from .create_example_strickgraphs import order_neighbouring
 from ..verbesserer.class_side_alterator import sidealterator, multi_sidealterator
 from collections import Counter
 from . import state as st
+import itertools as it
 
 import logging
 logger = logging.getLogger( __name__ )
@@ -48,7 +49,8 @@ def loadfromfile( filename ):
         xmlstr = myf.read()
         #obj = pickle.load( myf )
     obj = multi_sidealterator.fromxml( xmlstr )
-    return obj
+    alteratorlist = obj.side_alterator_list
+    return alteratorlist
 def savetofile( filename, obj ):
     logger.info( "Saving alterator to file" )
     xmlstr = obj.toxml()
@@ -113,7 +115,22 @@ def main( filename, alteratortype, strickgraphsize = 8, min_row_length=14, cont=
 
     decrease_linetypes_collection: Iterable[ strickexample_alteration ] \
                 = tuple( order_neighbouring( brubru ) )
-    decrease_linetypes_collection = decrease_linetypes_collection[ :1000 ]
+
+    #all_linetypes = { linetypes for linetypes, upedges, stitchnumbers in q }
+    #all_linetypes_with_inc_line = list(it.chain.from_iterable( \
+            #                            ( (i, lt ) for i in range(len(lt))) \
+            #                            for lt in all_linetypes ))
+    #for linetypes_in, m1,m2,m3,k in decrease_linetypes_collection:
+    #    try:
+    #        all_linetypes_with_inc_line.remove( ( k, linetypes_in ) )
+    #    except ValueError as err:
+    #        print( k, linetypes_in )
+    #for i in all_linetypes_with_inc_line:
+    #    print( i )
+    #raise Exception()
+    #raise Exception( all_linetypes_with_inc_line )
+
+    decrease_linetypes_collection = decrease_linetypes_collection[ :2000 ]
 
     #increase_linetypes_collection = _filterincrease_linetypes( increase_linetypes_collection )
 
@@ -121,14 +138,15 @@ def main( filename, alteratortype, strickgraphsize = 8, min_row_length=14, cont=
 
     extraoptions = { #"pipe_for_interrupt": globalpipe,\
             }
-    #if cont:
-    #    try:
-    #        old_alterator = loadfromfile( filename )
-    #        extraoptions["starttranslator_list"] =old_alterator.alteratorlist
-    #    except FileNotFoundError:
-    #        pass
+    if cont:
+        try:
+            old_alteratorlist = loadfromfile( filename )
+            extraoptions["starting_side_alterator_list"] = old_alteratorlist
+        except FileNotFoundError:
+            pass
 
     if alteratortype == 'increase':
+        extraoptions[ "maximum_uncommon_nodes" ] = 33
         dec_to_inc = lambda lout, lin, upout, upin, lineid: \
                             (lin, lout, upin, upout, lineid)
         increase_linetypes_collection \
@@ -138,6 +156,7 @@ def main( filename, alteratortype, strickgraphsize = 8, min_row_length=14, cont=
                 decrease_linetypes_collection, **extraoptions )
         myalterator = increaser
     elif alteratortype == 'decrease':
+        extraoptions[ "maximum_uncommon_nodes" ] = 30
         decreaser = multi_sidealterator.generate_from_linetypelist( \
                 decrease_linetypes_collection, **extraoptions )
         myalterator = decreaser
@@ -168,7 +187,7 @@ def _filterincrease_linetypes( increase_linetypes_collection ):
 if __name__ == "__main__":
     signal( SIGINT, sigint_handler )
     args = get_args()
-    logging.basicConfig( level=logging.INFO )
+    logging.basicConfig( level=logging.DEBUG )
     from extrasfornetworkx import verbesserer_tools 
     #verbesserer_tools.logger.setLevel( logging.DEBUG )
 
