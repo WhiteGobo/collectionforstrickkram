@@ -12,12 +12,15 @@ install: #dist/$(pkgname)-$(version).tar.gz
 	pip install dist/$(pkgname)-$(version)-py3-none-any.whl --force-reinstall
 	#pip install dist/$(pkgname)-$(version).tar.gz --force-reinstall
 
+CREATEPLAINKNIT_ALTERATOR = python -m createcloth.plainknit.program_create_alterator
 
-createcloth/plainknit/plainknit_increaser.pickle:
-	python -m createcloth.plainknit.program_create_alterator $@ -l 8 -w 16 --continue --skip-gen-exception
+createcloth/plainknit/plainknit_increaser.xml: 
+	$(CREATEPLAINKNIT_ALTERATOR) $@ -l 8 -w 30 --continue
+	#python -m createcloth.plainknit.program_create_alterator $@ -l 8 -w 30 --continue
 
-createcloth/plainknit/plainknit_decreaser.pickle:
-	python -m createcloth.plainknit.program_create_alterator $@ -l 8 -w 16 --continue --skip-gen-exception --alteratortype decrease
+createcloth/plainknit/plainknit_decreaser.xml: 
+	$(CREATEPLAINKNIT_ALTERATOR) $@ -l 8 -w 26 --continue --alteratortype decrease
+	#python -m createcloth.plainknit.program_create_alterator $@ -l 8 -w 26 --continue --alteratortype decrease
 
 .PHONY: build
 build: 
@@ -36,7 +39,7 @@ test_stitchinfo:
 
 .PHONY: test
 test: #test_strickgraph test_meshhandler test_manualtoverbesserung test_plainknit
-	python -m unittest
+	python -m unittest -k createcloth
 
 test_interactive:
 	env INTERACTIVE= python -m unittest -k visualizer
@@ -85,4 +88,5 @@ myk: qq/asdf.mime.xml
 	python -m clothfactory_parts.programs.complete_datagraph qq
 
 qq/asdf.mime.xml:
+	-mkdir qq
 	python -m clothfactory_parts.programs.create_directory_strickcompleter qq/ clothfactory_parts/test/testbody_withmap.ply 
