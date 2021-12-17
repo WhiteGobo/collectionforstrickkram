@@ -1,5 +1,4 @@
 import itertools
-import networkx as netx
 from .. import strickgraph
 from datagraph_factory import datatype, factory_leaf, datagraph
 
@@ -28,11 +27,15 @@ def _create_datagraphs():
     poststatus = tmp.copy()
     return prestatus, poststatus
 def _call_function( mystrick, positions ):
+    """
+
+    :todo: revisited the adding of the lastrow to haspressure lines
+    """
     x = positions.xposition
     y = positions.yposition
     z = positions.zposition
     l = positions.edgelengthdict
-    assert set(mystrick.strickgraph.nodes()) == set(x.keys()), "adf"
+    assert set(mystrick.strickgraph.get_nodes()) == set(x.keys()), "adf"
     edge_to_calmlength = positions.calmlengthdict
     #lengthgraph = relaxedgelength_to_strickgraph( mystrick.strickgraph )
     ##edge_to_calmlength = lambda e: lengthgraph[e]["calmlength"]
@@ -78,16 +81,24 @@ def _call_function( mystrick, positions ):
         elif row_overlength[i] < -LENIENCE * lengthforextrastitch:
             haspressure.add(i)
 
+    lastrow_index = len( rows )-1
+    if lastrow_index not in haspressure and lastrow_index-1 in haspressure:
+        haspressure.add( lastrow_index )
+
     logger.debug( f"brubru \ntension: {hastension}\npressure: {haspressure}" )
     if haspressure and hastension:
+        assert len( haspressure ) > 0
+        assert len( hastension ) > 0
         return { "havetension": strickgraph.strickgraph_property_relaxed( \
                                                     tensionrows=hastension), \
                 "havepressure": strickgraph.strickgraph_property_relaxed( \
                                                     pressurerows=haspressure) }
     elif haspressure:
+        assert len( haspressure ) > 0
         return { "havepressure": strickgraph.strickgraph_property_relaxed( \
                                                     pressurerows=haspressure) }
     elif hastension:
+        assert len( hastension ) > 0
         return { "havetension": strickgraph.strickgraph_property_relaxed( \
                                                     tensionrows=hastension) }
     else:

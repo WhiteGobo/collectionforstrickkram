@@ -137,7 +137,8 @@ def getplainknit_linetypes( mystrickgraph ):
 
     :rtype: list or boolean
     """
-    stitchtypes_to_node = netx.get_node_attributes( mystrickgraph,"stitchtype")
+    stitchtypes_to_node = mystrickgraph.get_nodeattr_stitchtype()
+
     rows = mystrickgraph.get_rows()
     linetype = []
     for row in rows:

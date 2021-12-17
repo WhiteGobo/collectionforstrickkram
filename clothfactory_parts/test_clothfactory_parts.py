@@ -30,7 +30,6 @@ from . import meshthings
 import networkx as netx
 import logging
 logger = logging.getLogger( __name__ )
-logging.basicConfig( level=logging.WARNING )
 #for logname in ["datagraph_factory.linear_factorybranch", "clothfactory_parts.plainknit.factory_leaf"]:
 #    interestinglogger = logging.getLogger( logname )
 #    interestinglogger.setLevel( logging.DEBUG )
@@ -302,4 +301,5 @@ examplestrickman = "20yo\n20k\n2k 1yo 16k 1yo 2k\n2k 1yo 18k 1yo 2k\n24k\n2k 1yo
 
 
 if __name__=="__main__":
+    logging.basicConfig( level=logging.WARNING )
     unittest.main()

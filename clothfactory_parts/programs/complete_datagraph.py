@@ -5,12 +5,15 @@ import os.path
 #                                                    save_graph, load_graph
 from datagraph_factory import automatic_directory as audi
 from datagraph_factory.utils import get_all_datatypes
-from datagraph_factory.find_process_path import flowgraph
+from datagraph_factory import flowgraph
 from datagraph_factory import DataRescueException
 import clothfactory_parts
 from datagraph_factory import datagraph
 import logging
 logging.basicConfig( level= logging.DEBUG )
+for logname in ["datagraph_factory.linear_factorybranch"]:
+    logging.getLogger( logname ).setLevel( logging.DEBUG )
+    
 
 def get_args():
     parser = argparse.ArgumentParser( description='strick_datagraph_completer' )
@@ -24,12 +27,7 @@ def main( directory_path ):
     try:
         mydata = complete_data( mydata )
     except DataRescueException as err:
-        #tmp = err.datagraph
-        for key, val in err.datagraph.items():
-            if key in mydata.nodes():
-                mydata[ key ] = val
-        tmp = mydata
-        save_datagraph( mydata, directory_path )
+        save_datagraph( err.datagraph, os.path.join( directory_path, "saved" ))
         raise err
     save_datagraph( mydata, directory_path )
 
@@ -41,7 +39,7 @@ def complete_data( mydata:datagraph ):
             = get_all_datatypes( clothfactory_parts )
     all_factoryleafs = factoryleafs_dict.values()
     all_conclusions = conclusionleaf_dict.values()
-    myflowgraph = flowgraph.from_datanodes( all_factoryleafs, all_conclusions )
+    myflowgraph = flowgraph.from_factory_leafs( all_factoryleafs , all_conclusions )
     tmp = audi.complete_datagraph( myflowgraph, mydata )
     return tmp
 

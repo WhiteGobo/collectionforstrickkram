@@ -14,6 +14,8 @@ from .plain_identifier import isplain, notplainException, \
 from typing import Union, Dict
 
 from createcloth import plainknit as pk
+#ensure those are loadable
+
 from createcloth.stitchinfo import basic_stitchdata as stinfo
 
 import logging
@@ -93,6 +95,7 @@ def _rt_call_function( isrelaxed: strickgraph.strickgraph_property_relaxed, \
                         mystrickgraph: strickgraph.strickgraph_container, \
                         mymesh:meshthings.ply_surface ) \
                         -> Dict[ str, _rt_call_rtype ]:
+    assert pk.plainknit_increaser is not None
     tobeextendedrows = isrelaxed.tensionrows
     tmpstrickgraph = mystrickgraph.strickgraph
     rows = tmpstrickgraph.get_rows()
@@ -103,8 +106,21 @@ def _rt_call_function( isrelaxed: strickgraph.strickgraph_property_relaxed, \
 
     tobeadded_rows = get_longest_series( tobeextendedrows )
     logger.debug( f"add lines {tobeadded_rows} from {tobeextendedrows}")
+    oneline_worked = False
+    #for i in sorted( tobeadded_rows ):
     for i in sorted( tobeextendedrows ):
-        pk.plainknit_increaser.replace_in_graph( tmpstrickgraph, i )
+        try:
+            tmpstrickgraph = pk.plainknit_increaser.replace_graph( tmpstrickgraph, i )
+            oneline_worked = True
+        except Exception as err:
+            #logger.debug( "strickgraph at line %i is: \n%s" \
+            #        %(i, tmpstrickgraph.to_manual( stinfo ) ))
+            #raise type(err)( "couldnt increase", *err.args ) from err
+            pass
+    if not oneline_worked:
+        logger.debug( "strickgraph failed for lines: %s is: \n%s" \
+                    %(tobeadded_rows, tmpstrickgraph.to_manual( stinfo ) ))
+        raise Exception()
     logger.debug( tmpstrickgraph.to_manual( stinfo ) )
     return { "newstrickgraph": strickgraph.strickgraph_container( tmpstrickgraph ) }
 relax_tension:factory_leaf = factory_leaf( _rt_create_datagraphs, _rt_call_function, \
@@ -139,11 +155,13 @@ def _rp_create_datagraphs():
 _rp_call_rtype = Union[ strickgraph.strickgraph_container,\
                         strickgraph_property_plainknit, \
                         ]
+
 def _rp_call_function( isrelaxed: strickgraph.strickgraph_property_relaxed, \
                     isplainknit: strickgraph_property_plainknit, \
                     mystrickgraph: strickgraph.strickgraph_container, \
                     mymesh: meshthings.ply_surface )\
                     ->Dict[ str, _rp_call_rtype ]:
+    assert pk.plainknit_decreaser is not None
     tobeshortenedrows = isrelaxed.pressurerows
     tmpstrickgraph = mystrickgraph.strickgraph
     rows = tmpstrickgraph.get_rows()
@@ -155,8 +173,22 @@ def _rp_call_function( isrelaxed: strickgraph.strickgraph_property_relaxed, \
 
     toberemoved_rows = get_longest_series( tobeshortenedrows )
     logger.debug( f"remove lines {toberemoved_rows} from {tobeshortenedrows}")
-    for i in sorted( tobeshortenedrows, reverse=True): #problems with decrease last row
-        pk.plainknit_decreaser.replace_in_graph( tmpstrickgraph, i )
+    oneline_worked = False
+    #for i in sorted( toberemoved_rows, reverse=True ): #problems with decrease last row
+    for i in sorted( tobeshortenedrows, reverse=True ):
+        try: 
+            tmpstrickgraph = pk.plainknit_decreaser.replace_graph( tmpstrickgraph, i )
+            oneline_worked = True
+        except Exception as err:
+            #logger.debug( "strickgraph at line %i is: \n%s" \
+            #        %(i, tmpstrickgraph.to_manual( stinfo ) ))
+            #raise type(err)( "couldnt decrease", *err.args ) from err
+            pass
+    if not oneline_worked:
+        logger.debug( "strickgraph at lines %s is: \n%s" \
+                    %(tobeshortenedrows, tmpstrickgraph.to_manual( stinfo ) ))
+        raise Exception()
+
     logger.debug( tmpstrickgraph.to_manual( stinfo ) )
     return { "newstrickgraph": strickgraph.strickgraph_container( tmpstrickgraph ) }
 relax_pressure: factory_leaf = factory_leaf( _rp_create_datagraphs, _rp_call_function, \

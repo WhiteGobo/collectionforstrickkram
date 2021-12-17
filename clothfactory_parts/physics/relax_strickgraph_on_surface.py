@@ -32,7 +32,7 @@ def _rsos_call_function( mysurf: meshthings.ply_2dmap, \
                     inputstrickgraph: strickgraph.strickgraph_container )\
                     -> Dict[ str, strickgraph.strickgraph_spatialdata ]:
     mystrickgraph = inputstrickgraph.strickgraph
-    mystrickgraph.set_calmlength( mythreadinfo )
+    #mystrickgraph.set_calmlength( mythreadinfo )
     surfacemap = mysurf.surfacemap
     border = mystrickgraph.get_borders()
     myedges = [ e[:2] for e in mystrickgraph.get_edges_with_labels() ]
