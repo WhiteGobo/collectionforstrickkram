@@ -25,6 +25,8 @@ Welcome to Createcloth's documentation!
    howto/linetypes
    howto/visualizer
 
+   strick_as_graph/main
+
    clothfactoryparts/all
 
 Todo:
