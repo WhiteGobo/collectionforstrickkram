@@ -9,6 +9,8 @@ from .. import helper_limitcalculationtime as timelimiter
 from ..strickgraph import strickgraph
 logger = logging.getLogger( __name__ )
 from ..stitchinfo import basic_stitchdata as glstinfo
+from dataclasses import dataclass
+from typing import Iterable
 
 XML_SIDEALTERATOR_NAME = "sidealterator"
 
@@ -92,27 +94,40 @@ class sidealterator():
         :raises: SkipGeneration
         :todo: remove skip_if_in_list and transplant it into multisidealterator
         """
+        assert {"startside", "maximum_uncommon_nodes"}.issuperset( kwargs.keys() )
+        creategraph_kwargs = { a:b for a,b in kwargs.items() \
+                                            if a in ("startside")}
+        fromgraphdifference_kwargs = { a:b for a,b in kwargs.items() \
+                                            if a in ("maximum_uncommon_nodes") }
+
         if skip_if_in_list is not None:
-            tmp_graph = create_graph_from_linetypes( linetype_out, upedges_out)
+            tmp_graph = create_graph_from_linetypes( linetype_out, upedges_out, \
+                                            **creategraph_kwargs )
             for j, i in enumerate( skip_if_in_list ):
                 try:
                     tmp_graph = i.replace_in_graph( tmp_graph, changedline_id )
-                    great_graph = create_graph_from_linetypes( linetype_in, upedges_in )
+                    great_graph = create_graph_from_linetypes( linetype_in, \
+                                            upedges_in, **creategraph_kwargs )
                     if tmp_graph == great_graph:
                         raise SkipGeneration()
-                    less_graph = create_graph_from_linetypes( linetype_out, upedges_out)
+                    less_graph = create_graph_from_linetypes( linetype_out, \
+                                            upedges_out, **creategraph_kwargs )
                     raise WrongAlterationFound( j )#, f"This was produced: {tmp_graph.to_manual(glstinfo)}", f"this should be: {great_graph.to_manual( glstinfo)}", f"from: {less_graph.to_manual(glstinfo )}" )
                 except FindError:
                     continue
-        great_graph = create_graph_from_linetypes( linetype_in, upedges_in )
-        less_graph = create_graph_from_linetypes( linetype_out, upedges_out)
+        great_graph = create_graph_from_linetypes( linetype_in, upedges_in, \
+                                            **creategraph_kwargs )
+        less_graph = create_graph_from_linetypes( linetype_out, upedges_out, \
+                                            **creategraph_kwargs )
 
         if linetype_out[0] == linetype_in[1]:
             startnode = (0,0)
         else:
             startnode = (len( linetype_out )-1, 0)
 
-        return cls.from_graphdifference( less_graph, great_graph, startnode, changedline_id, **kwargs )
+        return cls.from_graphdifference( less_graph, great_graph, startnode, \
+                                            changedline_id, \
+                                            **fromgraphdifference_kwargs )
     
     @classmethod
     def fromxml( cls, xmlstring ):
@@ -217,9 +232,15 @@ class sidealterator():
         nodeattr2 = target_strickgraph.get_nodeattributes()
         edgeattr2 = [ (v1, v2, (label,)) for v1, v2, label in target_strickgraph.get_edges_with_labels() ]
         extraoptions = { "maximum_uncommon_nodes": maximum_uncommon_nodes}
-        translator = efn.optimize_uncommon_nodes( nodeattr1, edgeattr1, \
+        try:
+            translator = efn.optimize_uncommon_nodes( nodeattr1, edgeattr1, \
                                             nodeattr2, edgeattr2, \
-                                            **extraoptions )
+                                            **extraoptions, directional=True )
+        except Exception as err:
+            logger.error( "find starttranslation failed. algorithm of extrasfornetworkx doesnt work" )
+            logger.error( f"graphs for efn optimize\ngraph1: {nodeattr1}\n"\
+                    f"{edgeattr1}\ngraph2: {nodeattr2}\n{edgeattr2}" )
+            raise err
         assert len( translator ) > 0
         translator = { key: translator[key] \
                             for key in _reduce_to_biggest_connected( \
@@ -769,23 +790,51 @@ class multi_sidealterator( efn.multialterator ):
         super().__init__( side_alterator_list, **kwargs )
         self.side_alterator_list = side_alterator_list
 
+    @dataclass
+    class linetypepair:
+        """helperclass for generate_from_linetypelist input.
+        will only be used as iterable so instead iterable conforming to
+        __iter__ can be used instead
+        """
+        input_linetypelist: Iterable
+        output_linetypelist: Iterable
+        input_upedges: Iterable[ int ]
+        output_upedges: Iterable[ int ]
+        changed_line: int
+        startside: str
+        def __iter__( self ):
+            """
+            :rtype: Iterable, Iterable, Iterable[ int ], Iterable[ int ], int, str
+            """
+            yield self.input_linetypelist
+            yield self.output_linetypelist
+            yield self.input_upedges
+            yield self.output_upedges
+            yield self.changed_line
+            yield self.startside
 
     @classmethod
     def generate_from_linetypelist( cls, linetypepairlists, \
                                     starting_side_alterator_list=[], \
                                     maximum_uncommon_nodes=30 ):
         """Method for automativ creation of side_alterator
-        """
 
+        :param linetypepairlists: Input for sidealterator.from_replacement
+        :type linetypepairlists: Iterable[ cls.linetypepair ]
+        :todo: here is a short debug for not working extrafornetworkx optimize
+        """
         def use_alterator( tmpalterator, linetype_out, linetype_in, \
-                                upedges_out, upedges_in, changedline_id ):
-            tmp_graph = create_graph_from_linetypes( linetype_out, upedges_out)
+                                upedges_out, upedges_in, changedline_id, \
+                                startside, **kwargs):
+            tmp_graph = create_graph_from_linetypes( linetype_out, upedges_out, \
+                                                startside=startside, **kwargs )
             try:
                 repl_graph = tmpalterator.replace_in_graph( tmp_graph, \
                                                             changedline_id )
             except Exception as err: #just to show exceptions are expected
                 raise err
-            great_graph = create_graph_from_linetypes( linetype_in, upedges_in )
+            great_graph = create_graph_from_linetypes( linetype_in, upedges_in,\
+                                                startside=startside, **kwargs )
             #return repl_graph == great_graph
             if repl_graph == great_graph:
                 return True
@@ -802,7 +851,8 @@ class multi_sidealterator( efn.multialterator ):
                 return False
 
         def create_alterator( linetype_out, linetype_in, upedges_out, \
-                                upedges_in, changedline_id ):
+                                upedges_in, changedline_id, startside, \
+                                **kwargs_create ):
             logger.info( "in: %s" %( str(linetype_in) ) )
             logger.info( "out: %s" %( str(linetype_out) ) )
             logger.info( str((upedges_in, upedges_out, changedline_id)) )
@@ -811,7 +861,10 @@ class multi_sidealterator( efn.multialterator ):
             return sidealterator.from_linetypes( linetype_out, linetype_in, \
                                 upedges_out, upedges_in, changedline_id, \
                                 maximum_uncommon_nodes = maximum_uncommon_nodes, \
-                                )
+                                startside=startside, **kwargs_create )
+        #q = it.chain.from_iterable( ((linepair_info, { "startside":"left"}), \
+        #                        (linepair_info, { "startside":"right"})) \
+        #                        for linepair_info in linetypepairlists )
         q = zip( linetypepairlists, [{}]*len( linetypepairlists ) )
         return cls.from_replacements( q,
                     replace_function = use_alterator, \

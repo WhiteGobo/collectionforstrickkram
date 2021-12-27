@@ -68,9 +68,13 @@ class test_manualtoverbesserung( unittest.TestCase ):
                 #((start, plain, plain, plain, plain, plain, end), (start, plain, increase, decrease, plain, plain, end), (12, 12, 12, 12, 12, 12), (12, 12, 14, 12, 12, 12), 2), 
                 #((start, plain, plain, plain, plain, plain, end), (start, plain, plain, increase, decrease, plain, end), (12, 12, 12, 12, 12, 12), (12, 12, 12, 14, 12, 12), 3),\
                         ]
+        asdf = [\
+                multi_sidealterator.linetypepair((start, plain, end), (start, increase, enddecrease), (10, 10), (10, 12), 1, "right" ), 
+                multi_sidealterator.linetypepair((start, plain, end), (start, increase, enddecrease), (10, 10), (10, 12), 2, "right" ), 
+                ]
         myalt = multi_sidealterator.generate_from_linetypelist( asdf )
         for i, info in enumerate( asdf ):
-            l1, l2, upedges1, upedges2, k = info 
+            l1, l2, upedges1, upedges2, k, startside = info 
             graph1 = create_graph_from_linetypes( l1, upedges1 )
             graph2 = create_graph_from_linetypes( l2, upedges2 )
             try:
@@ -80,7 +84,7 @@ class test_manualtoverbesserung( unittest.TestCase ):
             self.assertEqual( graph1, graph2, msg=graph1.to_manual(glstinfo) )
         xmlstring = myalt.toxml()
         newalt = multi_sidealterator.fromxml( xmlstring )
-        for l1, l2, upedges1, upedges2, k in asdf:
+        for l1, l2, upedges1, upedges2, k, startside in asdf:
             graph1 = create_graph_from_linetypes( l1, upedges1 )
             graph2 = create_graph_from_linetypes( l2, upedges2 )
             graph1 = newalt.replace_graph( graph1, k )
