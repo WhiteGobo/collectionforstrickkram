@@ -5,6 +5,9 @@ import itertools as it
 maximaldataset_per_node = set(("stitchtype", "side", "alternativestitchtypes"))
 minimaldataset_per_node = set(("stitchtype", "side"))
 
+class EdgesNotFeasible( Exception ):
+    pass
+
 class strick_datacontainer():
     """Groundclass for fabric. Support for node and edges equivalent to fabric.
 
@@ -27,6 +30,8 @@ class strick_datacontainer():
             assert minimaldataset_per_node.issubset( data.keys() ), data
             assert maximaldataset_per_node.issuperset( data.keys() ), data
         for v1, v2, label in edgelabels:
+            assert all( v in nodeattributes for v in (v1, v2) ), \
+                    "edges have nodes not mentioned in nodeattributes"
             self.__datacontainer.add_edge( v1, v2, edgetype=label )
     #def __init__( self, *args, **argv ):
     #    """Use .from_gridgraph, .from_manual"""
@@ -144,17 +149,134 @@ class strick_datacontainer():
 
     
     def _get_topologicalsort_of_stitches( self ):
-        sorted_stitches = list( _netx.topological_sort( self.__datacontainer ))
+        try:
+            sorted_stitches = list( _netx.topological_sort( self.__datacontainer ))
+        except _netx.NetworkXUnfeasible as err:
+            raise EdgesNotFeasible( "There are cycles" ) from err
         return sorted_stitches
 
+    def _get_rowsort_stitches( self ):
+        edges = self.__datacontainer.edges( data=True )
+        nodetoside = self.get_nodeattr_side()
+        downneighbours = {}
+        upneighbours = {}
+        nextneighbours = {}
+        prevneighbours = {}
+        leftneighbours = {}
+        rightneighbours = {}
+        for v1, v2, data in edges:
+            if data["edgetype"] == "up":
+                downneighbours.setdefault( v2, list() ).append( v1 )
+                upneighbours.setdefault( v1, list() ).append( v2 )
+            elif data["edgetype"] == "next":
+                nextneighbours.setdefault( v1, list() ).append( v2 )
+                prevneighbours.setdefault( v2, list() ).append( v1 )
+                if all( nodetoside[v] == "right" for v in (v1, v2)):
+                    rightneighbours.setdefault( v1, list()).append( v2 )
+                    leftneighbours.setdefault( v2, list()).append( v1 )
+                elif all( nodetoside[v] == "left" for v in (v1, v2)):
+                    rightneighbours.setdefault( v2, list()).append( v1 )
+                    leftneighbours.setdefault( v1, list()).append( v2 )
+        newnext = {}
+        nextneighbours = newnext
+        def _grouptohash( hashgroup ):
+            """Creates hash from iterable. hash is same regardless of order"""
+            myhashtuples = sorted( hash(n) for n in hashgroup )
+            return hash( tuple( myhashtuples ) )
+        def _hash_nodedistribution( nodedistribution ):
+            row_bins = {}
+            for n, i in nodedistribution.items():
+                row_bins.setdefault( i, list() ).append( n )
+            tmplist = []
+            try:
+                for i in range( min(row_bins.keys()), max( row_bins.keys() )):
+                    nodelist = row_bins.get( i, list() )
+                    tmplist.append( _grouptohash( nodelist ) )
+            except Exception as err:
+                raise Exception( row_bins, nodedistribution ) from err
+            return tuple( tmplist ).__hash__()
+        filtered_nexts = { q:[v for v in mylist \
+                            if v not in upneighbours.get(q,[])]\
+                            for q, mylist in nextneighbours.items() }
+        calc_row = lambda v, val: max( it.chain( [0], \
+                ( val[q]+1 for q in downneighbours.get( v, []) ), \
+                ( val[q] for q in prevneighbours.get( v, [] ) ), \
+                ( val[q]-1 for q in upneighbours.get( v, [] ) ), \
+                ( val[q] for q in filtered_nexts.get( v, [] ) ), \
+                ))
+        def calc_lefttoright( v, val ):
+            return max( it.chain( [0], 
+                    [min( val[q] for q in downneighbours.get( v, [v]) )], \
+                    [min( val[q] for q in upneighbours.get( v, [v]) )], \
+                    ( val[q]+1 for q in leftneighbours.get( v, []) ), \
+                    ))
+        calc_next = lambda v, val: max( 0,min(it.chain( [0], \
+                ( val[q]+1 for q in downneighbours.get( v, []) ), \
+                ( val[q]+1 for q in prevneighbours.get( v, []) ), \
+                ( val[q]-1 for q in upneighbours.get( v, [] ) ), \
+                ( val[q]-1 for q in filtered_nexts.get( v, [] ) ), \
+                )))
 
-    def get_rows( self, presentation_type="machine" ):
+        nodes = list(set( it.chain( downneighbours, upneighbours, \
+                                        nextneighbours, prevneighbours)))
+        nodedistribution = { v:0 for v in nodes }
+        nodelefttoright = { v:0 for v in nodes }
+        def _hash_status( *attr ):
+            get_single = lambda node: tuple( mydict[node] for mydict in attr )
+            status = tuple( get_single(n) for n in nodes )
+            return hash( status )
+        statushash = None
+        newstatushash = _hash_status( nodedistribution, nodelefttoright )
+        for i in range( len(nodes) ):
+            statushash = newstatushash
+            nodedistribution = { v:calc_row( v, nodedistribution ) \
+                                for v in nodedistribution }
+            nodelefttoright = { v:calc_lefttoright( v, nodelefttoright ) \
+                                for v in nodelefttoright }
+            #nodedistance = { v:calc_next( v, nodedistance ) \
+                    #                    for v in nodes }
+            newstatushash = _hash_status( nodedistribution, nodelefttoright )
+            if statushash == newstatushash:
+                break
+        if statushash != newstatushash:
+            raise Exception( "Strickgraph seems broken or get_rows is" )
+        row_bins = {}
+        for n, i in nodedistribution.items():
+            row_bins.setdefault( i, list() ).append( n )
+        tmplist = []
+        for i in range( min(row_bins.keys()), 1+max( row_bins.keys() )):
+            nodelist = row_bins.get( i, list() )
+            tmplist.append( nodelist )
+        for row in tmplist:
+            row.sort( key=nodelefttoright.__getitem__ )
+        return tmplist
+
+    def get_rows( self, presentation_type="machine", lefttoright_side="right" ):
         """
 
         :todo: move this a classlayer up
+        :param lefttoright_side: determines in which direction machinecode is
+                shown
         """
         stitchside = self.get_nodeattr_side()
-        sorted_stitches = self._get_topologicalsort_of_stitches()
+        #sorted_stitches = self._get_topologicalsort_of_stitches()
+        rows = self._get_rowsort_stitches()
+        if presentation_type in mod_strickgraph.machine_terms:
+            node_side = self.get_nodeattr_side()
+            startside = node_side[ rows[0][0] ]
+            if startside != lefttoright_side:
+                for row in rows:
+                    row.reverse()
+        elif presentation_type in mod_strickgraph.handknitting_terms:
+            for i, row in enumerate( rows ):
+                if i%2 == 1:
+                    row.reverse()
+        else:
+            raise mod_strickgraph.WrongTermError("get_rows can only print "\
+                            +"in handknitting or" \
+                            +" machine terms. see pkg/strickgraph/constants.py")
+        return rows
+
         currentrow = [ sorted_stitches[0] ]
         rows = [ currentrow ]
         laststitch = sorted_stitches[0]
