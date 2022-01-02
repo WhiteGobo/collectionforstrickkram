@@ -132,8 +132,59 @@ class TestStringMethods( unittest.TestCase ):
         asd = strickgraph.strickgraph.from_gridgraph( self.mygraph, \
                                                             self.firstrow, \
                                                             self.stitchinfo )
-        self.assertEqual( asd._get_topologicalsort_of_stitches(), [(0, 0), (0, 1), (0, 2), (0, 3), (1, 3), (1, 2), (1, 1), (1, 0), (2, 0), (2, 1), (2, 2), (2, 3), (3, 3), (3, 2), (3, 1), (3, 0)] )
-        self.assertEqual( asd.get_rows(), [[(0, 0), (0, 1), (0, 2), (0, 3)], [(1, 0), (1, 1), (1, 2), (1, 3)], [(2, 0), (2, 1), (2, 2), (2, 3)], [(3, 0), (3, 1), (3, 2), (3, 3)]] )
+        self.assertEqual( asd._get_topologicalsort_of_stitches(), [(0, 0), (0, 1), (0, 2), (0, 3), (1, 3), (1, 2), (1, 1), (1, 0), (2, 0), (2, 1), (2, 2), (2, 3), (3, 3), (3, 2), (3, 1), (3, 0)], msg="simple topological sort failed" )
+        self.assertEqual( asd.get_rows(), [[(0, 0), (0, 1), (0, 2), (0, 3)], [(1, 0), (1, 1), (1, 2), (1, 3)], [(2, 0), (2, 1), (2, 2), (2, 3)], [(3, 0), (3, 1), (3, 2), (3, 3)]], msg="simple get_rows failed" )
+
+    
+        #create strickgraph 7yo;7k;3k 1bo 3k;3k skip 3k;3k skip 3k;
+        nodeattr = {}
+        edges = []
+        rowlength, number_rows = 7, 5
+        endofline=((0,6), (1,0), (2,6), (3,0), (3,4) )
+        skip_stitches = [(3,3), (4,3)]
+        bindoff_stitches = [ (2,3), (4,0),(4,1),(4,2),(4,4),(4,5),(4,6) ]
+        for i in range(number_rows):
+            for j in range( rowlength ):
+                if (i,j) in skip_stitches:
+                    continue
+                if (i,j) in bindoff_stitches:
+                    st_type = "bindoff"
+                else:
+                    st_type = {0:"yarnover", number_rows-1:"bindoff"}.get(i,"knit")
+                
+                side = { 1:"left", 0:"right" }[ i%2 ]
+                nodeattr[ (i,j) ] = { "stitchtype":st_type, "side":side }
+
+                if (i,j) not in endofline:
+                    next_stitch = (i, j+1) if i%2==0 else (i, j-1)
+                else:
+                    next_stitch = (i+1, j)
+                edges.append( ((i,j), next_stitch, "next"))
+                edges.append( ((i,j), (i+1,j), "up") )
+        edges = [(v1,v2,label) for v1, v2, label in edges \
+                if all(v in nodeattr for v in (v1,v2))]
+        asd = strickgraph.strickgraph( nodeattr, edges )
+
+        test_rows = [[(0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6)], 
+                [(1, 0), (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6)], 
+                [(2, 0), (2, 1), (2, 2), (2, 3), (2, 4), (2, 5), (2, 6)], 
+                [(3, 0), (3, 1), (3, 2), (3, 4), (3, 5), (3, 6)], 
+                [(4, 0), (4, 1), (4, 2), (4, 4), (4, 5), (4, 6)]]
+        self.assertEqual( asd.get_rows(), test_rows, msg="""
+        Fails to test, if rows are correctly assigned if, a single row isnt 
+        connected. It is instead cut in a certain height(3)
+        """ )
+        test_rows_hand = [ list(row) for row in test_rows ]
+        for i, row in enumerate( test_rows_hand ):
+            if i%2==1:
+                row.reverse()
+        self.assertEqual( asd.get_rows( presentation_type="thread"), \
+                test_rows_hand, msg="happend, when get_rows with "\
+                "presen.type thread" )
+        for row in test_rows:
+            row.reverse()
+        self.assertEqual( asd.get_rows( lefttoright_side="left"), test_rows,\
+                msg="wrong output, when get_rows with left as frontside" )
 
     #@unittest.skip( "get_border isnt complete" )
     def test_strickgraph_findborder( self ):
@@ -152,7 +203,7 @@ class TestStringMethods( unittest.TestCase ):
         testborder = ([(0, 0), (0, 1), (0, 2), (0, 3), (0, 4)], \
                         [(4, 0), (4, 1), (4, 2)], \
                         [(0, 0), (1, 0), (2, 0), (3, 0), (4, 0)], \
-                        [(0, 4), (1, 4), (2, 4), (3,2), (3,3), (3, 4), (4, 2)])
+                        [(0, 4), (1, 4), (2, 4), (3,4), (3,3), (3, 2), (4, 2)])
         self.assertEqual( borderlist, testborder )
 
     def test_frommanual( self ):

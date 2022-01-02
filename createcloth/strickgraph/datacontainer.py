@@ -1,6 +1,7 @@
 import networkx as _netx
 from .. import strickgraph as mod_strickgraph
 import itertools as it
+from . import helper_topology as topology
 
 maximaldataset_per_node = set(("stitchtype", "side", "alternativestitchtypes"))
 minimaldataset_per_node = set(("stitchtype", "side"))
@@ -29,10 +30,12 @@ class strick_datacontainer():
             self.__datacontainer.add_node( node, **data )
             assert minimaldataset_per_node.issubset( data.keys() ), data
             assert maximaldataset_per_node.issuperset( data.keys() ), data
+        errornodes = []
         for v1, v2, label in edgelabels:
-            assert all( v in nodeattributes for v in (v1, v2) ), \
-                    "edges have nodes not mentioned in nodeattributes"
+            errornodes.extend( v for v in (v1, v2) \
+                                if v not in nodeattributes )
             self.__datacontainer.add_edge( v1, v2, edgetype=label )
+        assert not errornodes, f"nodes mentioned in edges, while not mentioned in nodeattributes: {set(errornodes)}"
     #def __init__( self, *args, **argv ):
     #    """Use .from_gridgraph, .from_manual"""
     #    super().__init__( *args, **argv )
@@ -336,38 +339,29 @@ class strick_datacontainer():
         :rtype: Tuple[ List[Hashable],... ]
         :return: down, up, left, right
         """
-        rows = self.get_rows( presentation_type="machine" )
+        rows = self.get_rows()
+        edges_with_direction = self.get_edges_with_labels()
+        nodetoside = self.get_nodeattr_side()
+        border = topology.strickgraph_to_border( rows, edges_with_direction, \
+                                                                nodetoside )
+        downleft = rows[0][0]
+        dl_index = border.index( downleft )
+        downright = rows[0][-1]
+        dr_index = border.index( downright )
+        #upleft = rows[-1][0]
+        #ul_index = border.index( upleft )
+        upright = rows[-1][-1]
+        ur_index = border.index( upright )
 
-        down = rows[0]
-        up = rows[-1]
-        left = []
-        right = []
-        for i, tmprow in enumerate(rows):
-            #for easier algorithm max and min
-            uprow = set( rows[ min( i+1, len(rows)-1 ) ] )
-            downrow = set( rows[ max( i-1, 0 ) ] )
-            j, neighs, left_tmp = -1, [], []
-            while len(uprow.intersection( neighs ))==0 \
-                            or len(downrow.intersection(neighs))==0:
-                j += 1
-                tmp = tmprow[j]
-                left_tmp.append( tmp )
-                neighs = self.get_neighbours_to( tmp )
-            if len( downrow.intersection( self.get_neighbours_to( left_tmp[0] )))==0:
-                left_tmp.reverse()
-            left.extend( left_tmp )
-            j, neighs, right_tmp = 0, [], []
-            while len(uprow.intersection( neighs ))==0 \
-                            or len(downrow.intersection(neighs))==0:
-                j -= 1
-                tmp = tmprow[j]
-                right_tmp.append( tmp )
-                neighs = self.get_neighbours_to( tmp )
-            if len( uprow.intersection( self.get_neighbours_to( right_tmp[0] )))==0:
-                right_tmp.reverse()
-            right.extend( right_tmp )
+        up = border[ :ur_index+1 ]
+        right = border[ ur_index : dr_index+1 ]
+        down = border[ dr_index : dl_index+1 ]
+        left = [ *border[ dl_index: ], border[0] ]
+        down.reverse()
+        right.reverse()
+        
         return down, up, left, right
-    
+
 
     def get_connected_nodes( self, nodelist ):
         """Return nodetuples of real nodes, which are connected
@@ -567,4 +561,3 @@ class strick_datacontainer():
                         if label=="next" and b==node] for node in q6]
             raise Exception( *messages, q3, q4, qq5, qq6 )
         return all((cond1, cond2, cond3, cond4))
-
