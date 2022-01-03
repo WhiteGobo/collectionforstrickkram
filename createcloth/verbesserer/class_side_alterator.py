@@ -26,10 +26,11 @@ class WrongAlterationFound( Exception ):
         super().__init__( *args, **kwargs )
 
 class sidealterator():
-    """Alterator to alterate bth sides at the same time. Giuven a line number
+    """Alterator to alterate bth sides at the same time. Given a line number
     the alterator will look if it can alterate given strickgraph at this line
     Strickgraphs are not limitied to maximal size. There should be a limit of
     minimal width
+
     :todo: minimal width
     :todo: replace_in_graph, fromxml, toxml
     :ivar alterator_left:
@@ -746,9 +747,9 @@ def _multi_sidesigint_handler( signal_received, frame ):
 class multi_sidealterator( efn.multialterator ):
     """Multi alteratorclass for sidealterator
     
-    :todo:overhaul this method, when removing unused things in this directory
-    :var alteratorlist: inherited from sidealterator
-    :var exclusion_criteria: inherited from sidealterator
+    :todo: overhaul this method, when removing unused things in this directory
+    :ivar alteratorlist: inherited from sidealterator
+    :ivar exclusion_criteria: inherited from sidealterator
             
     """
     def __init__( self, side_alterator_list, **kwargs ):
