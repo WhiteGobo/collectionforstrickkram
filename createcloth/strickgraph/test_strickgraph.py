@@ -186,6 +186,15 @@ class TestStringMethods( unittest.TestCase ):
         self.assertEqual( asd.get_rows( lefttoright_side="left"), test_rows,\
                 msg="wrong output, when get_rows with left as frontside" )
 
+        testgraph = strickgraph.strickgraph.from_manual( "5yo\n5k\n5k\n5bo", self.stitchinfo, manual_type="machine", startside="left" )
+        #print( testgraph.get_rows() )
+        tmp = [[(0, 4), (0, 3), (0, 2), (0, 1), (0, 0)], [(1, 4), (1, 3), (1, 2), (1, 1), (1, 0)], [(2, 4), (2, 3), (2, 2), (2, 1), (2, 0)], [(3, 4), (3, 3), (3, 2), (3, 1), (3, 0)]]
+        self.assertEqual( testgraph.get_rows(), tmp, msg="small test with get rows startside left failed" )
+
+        testgraph = strickgraph.strickgraph.from_manual( "5yo\n5k\n5k\n5bo", self.stitchinfo, manual_type="machine", startside="right" )
+        tmp = [[(0, 0), (0, 1), (0, 2), (0, 3), (0, 4)], [(1, 0), (1, 1), (1, 2), (1, 3), (1, 4)], [(2, 0), (2, 1), (2, 2), (2, 3), (2, 4)], [(3, 0), (3, 1), (3, 2), (3, 3), (3, 4)]]
+        self.assertEqual( testgraph.get_rows(), tmp, msg="small test with get rows startside right failed" )
+
     #@unittest.skip( "get_border isnt complete" )
     def test_strickgraph_findborder( self ):
         asd = strickgraph.strickgraph.from_gridgraph( self.mygraph, \

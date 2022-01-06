@@ -159,6 +159,10 @@ class strick_datacontainer():
         return sorted_stitches
 
     def _get_rowsort_stitches( self ):
+        """
+
+        :todo: Should throw appropriate Exception, when cycles are found
+        """
         edges = self.__datacontainer.edges( data=True )
         nodetoside = self.get_nodeattr_side()
         downneighbours = {}
