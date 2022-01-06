@@ -12,6 +12,7 @@ from .datacontainer import strick_datacontainer
 #from . import machine_terms
 import logging
 logger = logging.getLogger( __name__ )
+from typing import Tuple
 
 
 class strick_manualhelper( strick_datacontainer ):
@@ -173,6 +174,7 @@ def stitchnodeid( rowindex, columnindex, stitchtype ):
     the naming processs can be altered, with 
     >>fromknitmanual.stitchnodeid = own_naming_function
     >>type(own_naming_function) == foo( i,j,stitchtype )
+
     :type rowindex: int
     :type columnindex: int
     :type stitchtype: str
@@ -184,7 +186,9 @@ def stitchnodeid( rowindex, columnindex, stitchtype ):
 
 def list_to_strickgraph( manual, startside, mystitchinfo ):
     """
+
     :rtype: strickgraph
+    :todo: implement this into strickgraph
     """
     from .strickgraph_base import strickgraph
     from .strickgraph_fromgrid import turn
@@ -193,7 +197,7 @@ def list_to_strickgraph( manual, startside, mystitchinfo ):
     node_edgefrom, nodeid = None, None
     #graph = strickgraph()
     #graph.add_node("start")
-    laststitch = (0,0)
+    laststitch = None#(0,0)
     nodeattributes = {}
     edgeswithlabels = []
     lastrow = []
@@ -201,9 +205,14 @@ def list_to_strickgraph( manual, startside, mystitchinfo ):
     current_side = startside
     for row in manual:
         newrow = []
-        for j in _range_depend_on_side[current_side]( len(row) ):
-            single = row[j]
-            nodeid = stitchnodeid(i,j,single)
+        tmprange = range( len(row) ) \
+                        if current_side == "right" \
+                        else range( len(row)-1, -1, -1 )
+        #for j in _range_depend_on_side[current_side]( len(row) ):
+        for j in tmprange:
+            single: str = row[j]
+            #nodeid = stitchnodeid(i,j,single)
+            nodeid: Tuple[ int, int ] = ( i, j )
             downknots = mystitchinfo.downedges[ single ]
             upknots = mystitchinfo.upedges[ single ]
             extrainfo = mystitchinfo.extraoptions[ single ]
@@ -213,7 +222,8 @@ def list_to_strickgraph( manual, startside, mystitchinfo ):
             #graph.add_node( nodeid, stitchtype=single, side=current_side, \
             #                                            **extrainfo )
 
-            if laststitch != nodeid: #else first nodewould have an edge to itsel
+            #if laststitch != nodeid: #else first nodewould have an edge to itsel
+            if laststitch is not None:
                 edgeswithlabels.append( (laststitch, nodeid, "next") )
 
             for k in range(downknots):
@@ -241,15 +251,15 @@ def list_to_strickgraph( manual, startside, mystitchinfo ):
     graph.add_edge( laststitch, "end", edgetype="next" )
     return graph
 
-_range_depend_on_side = {}
-def _range_depend_on_side_right( len_nextrow ):
-    return range( len_nextrow )
-def _range_depend_on_side_left( len_nextrow ):
-    return range( len_nextrow-1, -1, -1 )
-_range_depend_on_side.update({\
-        "right": _range_depend_on_side_right,
-        "left": _range_depend_on_side_left,
-        })
+#_range_depend_on_side = {}
+#def _range_depend_on_side_right( len_nextrow ):
+#    return range( len_nextrow )
+#def _range_depend_on_side_left( len_nextrow ):
+#    return range( len_nextrow-1, -1, -1 )
+#_range_depend_on_side.update({\
+#        "right": _range_depend_on_side_right,
+#        "left": _range_depend_on_side_left,
+#        })
 
 
 def transform_to_single_key( manual ):
