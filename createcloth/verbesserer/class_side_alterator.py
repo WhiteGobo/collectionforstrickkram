@@ -16,6 +16,8 @@ from typing import Iterable
 
 XML_SIDEALTERATOR_NAME = "sidealterator"
 
+class NoTranslationPossible( cver.NoTranslationPossible ):
+    pass
 
 class SkipGeneration( Exception ):
     pass
@@ -51,7 +53,10 @@ class sidealterator():
 
     def replace_graph( self, *args, **kwargs ):
         """same as replace_in_graph"""
-        return self.replace_in_graph( *args, **kwargs )
+        try:
+            return self.replace_in_graph( *args, **kwargs )
+        except cver.NoTranslationPossible as err:
+            raise NoTranslationPossible() from err
 
     def replace_in_graph( self, mystrickgraph, linenumber, row=None, \
                                 nodeattributes=None, edgeattributes=None ):
@@ -436,7 +441,8 @@ def create_graph_from_linetypes( linetypes, upedges, startside="right" ):
     except Exception as err:
         raise Exception( [str(a) for a in linetypes], downedges, upedges, iline, startside ) from err
         raise err
-    graph = strickgraph.from_manual( graph_man, glstinfo, manual_type="machine")
+    graph = strickgraph.from_manual( graph_man, glstinfo, \
+                                manual_type="machine", startside=startside)
     return graph
 
 
@@ -814,7 +820,7 @@ class multi_sidealterator( efn.multialterator ):
             if repl_graph == great_graph:
                 return True
             else:
-                logger.info( 
+                logger.debug( 
                         ("found wrong replacement, as existing alterator: "\
                         "input: %s, output: %s, expected: %s, "\
                         "notes in used alterator: %s" ) \
@@ -859,8 +865,11 @@ class multi_sidealterator( efn.multialterator ):
         row = graph.get_rows()[ changeline ]
         nodeattributes = graph.get_nodeattributes()
         edgeswithlabel = graph.get_edges_with_labels()
-        return super().replace_graph( graph, changeline, row=row, \
+        try:
+            return super().replace_graph( graph, changeline, row=row, \
                                 nodeattributes=nodeattributes )
+        except cver.NoTranslationPossible as err:
+            raise NoTranslationPossible() from err
 
     def replace_in_graph( self, graph, changeline ):
         """mainmethod
