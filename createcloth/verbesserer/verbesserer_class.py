@@ -21,17 +21,14 @@ logger = logging.getLogger( __name__ )
 class strickalterator( efn.alterator ):
     nodeattributes = ( "stitchtype", "side" )
     edgeattributes = ( "edgetype", )
-    def __init__( self, nodeattributes_input, edges_input, \
-                        nodeattributes_output, edges_output, \
-                        node_edits, edge_edits, \
-                        spanningtree_nodes, spanningtree_generate_from, **kwargs ):
+    def __init__( self, *args, **kwargs ):
+        """
+
+        :param args: will be passed down to alterator
+        """
         assert set( kwargs.keys() ).issubset( ("directional", ) )
         assert kwargs.get( "directional", True ) == True
-        super().__init__( nodeattributes_input, edges_input, \
-                        nodeattributes_output, edges_output, \
-                        node_edits, edge_edits, \
-                        spanningtree_nodes, spanningtree_generate_from, 
-                        directional=True )
+        super().__init__( *args, directional=True )
 
     def replace_graphasdf( self, graph:strickgraph, startnode ):
         """Mainmethod. replaces in given strickgraph at given position"""

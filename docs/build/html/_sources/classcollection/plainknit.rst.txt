@@ -6,7 +6,17 @@ Methods for everything sourrunded a plainknit-strickgraph.
 
 .. automodule:: createcloth.plainknit
    :members:
+   :undoc-members:
+   :imported-members:
+
+Used states
+-----------
+
+.. automodule:: createcloth.plainknit.rowstates
+   :members:
    :show-inheritance:
+   :undoc-members:
+
 
 Description of plainknit
 ------------------------
@@ -27,13 +37,6 @@ sides yarnover or bindoff.
    :show-inheritance:
 
 .. automodule:: createcloth.plainknit.state
-   :members:
-   :show-inheritance:
-
-Used states
------------
-
-.. automodule:: createcloth.plainknit.examplestates
    :members:
    :show-inheritance:
 

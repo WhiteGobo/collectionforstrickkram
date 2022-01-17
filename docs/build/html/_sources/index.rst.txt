@@ -19,11 +19,14 @@ Welcome to Createcloth's documentation!
    classcollection/verbesserer
    classcollection/sidealterator
    classcollection/plainknit
+   classcollection/strickclassifier
 
    howto/clothfactory
    howto/strickgraph
    howto/linetypes
    howto/visualizer
+
+   strick_as_graph/main
 
    clothfactoryparts/all
 

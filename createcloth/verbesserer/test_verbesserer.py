@@ -60,7 +60,7 @@ class test_manualtoverbesserung( unittest.TestCase ):
 
         :todo: implement toxml
         """
-        from ..plainknit.examplestates import start, plain, end, decrease, increase, enddecrease
+        from ..plainknit.rowstates import start, plain, end, decrease, increase, enddecrease
         asdf = [\
                 #((start, plain, plain, plain, plain, plain, end), (start, decrease, plain, plain, plain, plain, end), (12, 12, 12, 12, 12, 12), (14, 12, 12, 12, 12, 12), 0), 
                 ((start, plain, end), (start, increase, enddecrease), (10, 10), (10, 12), 1), 

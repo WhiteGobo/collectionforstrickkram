@@ -1,21 +1,18 @@
 from ..strickgraph import strickgraph
-from typing import Iterable, Tuple, Iterator
+from typing import Iterable, Tuple, Iterator, Dict
 import itertools as it
-from .examplestates import start, end, leftplane, rightplane, \
+from .rowstates import start, end, leftplane, rightplane, \
                                     lefteaves, righteaves, \
                                     enddecrease, plain, increase, decrease
 from .state import WrongSide, WrongDownUpEdges
 from ..stitchinfo import basic_stitchdata as glstinfo
+import math
 
 import numpy as np
 
 
 from ..strickgraph import strickgraph
 def create_graph_from_linetypes( linetypes, upedges, startside="right" ):
-    """Create graph only from linetypes
-
-    :todo: there is double?? in create_verbesserer
-    """
     sides = ("right", "left") if startside=="right" else ("left", "right")
     downedges = [ None, *upedges ]
     upedges = [ *upedges, None ]
@@ -40,9 +37,20 @@ def method1( pairlist: Iterable[ Tuple[ str, str ]], \
     myersetzer = manstomulti( pairlist, reverse = reversed, side = "both", \
                                 oldtranslatorlist = oldtranslatorlist )
 
-def create_example_strickset( verbessererlist, strickgraphsize, \
-                            min_row_length=12, startright=True ) -> Iterator:
-    """Method for creating example strickgraphs with plainknit lineidentifiers"""
+def create_example_strickset( strickgraphsize, \
+                                min_row_length=12, startright=True )-> Iterator:
+    """Method for creating example strickgraphs with plainknit lineidentifiers
+
+    :param strickgraphsize: number of rows of example
+    :type strickgrapsize: int
+    :param min_row_length: minimal length of all rows
+    :type min_row_length: int
+    :param startright: Lever if startside of first row is right
+    :type startright: bool
+    :returns: Iterator of example attribute constellation
+    :rtype: Iterator[ plainknitattributetuple ]
+    :todo: isplain will be removed
+    """
     if strickgraphsize < 3:
         raise Exception( "strickgraphsize must be at least 3" )
     available_startrows = ( start, )
@@ -52,7 +60,7 @@ def create_example_strickset( verbessererlist, strickgraphsize, \
 
     middlerows = it.repeat( available_middlerows, strickgraphsize-2 )
     possible_rowtypelist = it.product( available_startrows, *middlerows, \
-                                                        available_endrows )
+                                                available_endrows )
     from .method_isplain import isplain
     brulist = []
     graphs_to_upedges = dict()
@@ -97,7 +105,7 @@ def find_to_graph_onedifferencegraphs( maingraph, brulist, min_row_length=10 ):
         firstrowlength = maingraph_row_lengths
 
 
-def create_stitchnumber_to_examplestrick( q ):
+def create_stitchnumber_to_examplestrick( q, startside="right" ):
     """Creates a mapping of a stitches_per_line via class_idarray to 
     possible linetypes and their real stitches_per_line. The stitches-per-line
     are saved as class_idarray. This is to compare different stitches-per-line
@@ -110,13 +118,11 @@ def create_stitchnumber_to_examplestrick( q ):
     :rtype: Dict[ class_idarray, 
             List[ Tuple[Iterable[linetypes], Iterable[int]] ] ]
     """
-    from .examplestates import start, end, enddecrease,  lefteaves, righteaves,\
-            leftplane, rightplane, plain, increase, decrease
     brubru = {}
     def mysort( q ):
         linetypes, original_upedges, stitches_per_line = q
         return sum( {start:0, end:0, plain:1, increase:2, decrease:2 }\
-                    .get( line, 3 ) for line in linetypes )
+                    .get( line, 6 ) for line in linetypes )
     q = sorted( q, key=mysort )
     for linetypes, original_upedges, stitches_per_line in q:
         idarray = class_idarray( stitches_per_line )
@@ -124,7 +130,7 @@ def create_stitchnumber_to_examplestrick( q ):
         tmplist = brubru.setdefault( idarray, list() )
         tmplist.append( (linetypes, original_upedges) )
 
-        less_graph = create_graph_from_linetypes( linetypes, original_upedges )
+        #less_graph = create_graph_from_linetypes( linetypes, original_upedges, startside=startside )
     return brubru
 
 class class_idarray():
@@ -153,13 +159,82 @@ class class_idarray():
             return False
 
 
-def order_neighbouring( brubru ):
+from collections import Counter
+def normalise( v1, v2 ):
+    q = Counter( b -a for a, b in zip(v1, v2) )
+    mindiff = max( q.keys(), key=q.get )
+    norm = tuple( x - mindiff for x in v2 )
+    return norm
+
+def normalise_upedges( v1, v2, upedges2 ):
+    q = Counter( b -a for a, b in zip(v1, v2) )
+    mindiff = max( q.keys(), key=q.get )
+    norm = tuple( number_edges - mindiff for number_edges in upedges2 )
+    return norm
+
+
+def order_to_nearest_neighbours( list_of_linelength, increase=True ):
+    """
+
+    :type list_of_linelength: Iterator[ Tuple[ int,... ] ]
+    :rtype: Dict[ (int,int), Iterable[ int ] ]
+    :returns: mapping of which linelength is neighboured to which one depending
+            on linelengths and changedline. 
+            Gives only increase or decrease depending on input 'increase. 
+            linelength are described by integers
+    """
+    uniform_linelength_to_index: Dict[ uniform_linelength, int ] = {}
+    for i, linelength in enumerate( list_of_linelength ):
+        uni_ll = tuple( j-linelength[0] for j in linelength )
+        uniform_linelength_to_index.setdefault( uni_ll, list() ).append( i )
+    
+    def asdf( v1, v2, changed_line ):
+        diffarray = [ a-b for a,b in zip( v1, v2) ]
+        maximal_distance = max( abs(i-changed_line) \
+                                for i, diff in enumerate(diffarray) \
+                                if diff!=0 )
+        number_diff_lines = sum( 1 for diff in diffarray if diff!=0 )
+        absolute_difference = sum( abs(diff) for diff in diffarray )
+        return ( maximal_distance, number_diff_lines, absolute_difference )
+    nearest_indices_to_index = {}
+    for start_uni_ll, indexlist in uniform_linelength_to_index.items():
+        number_rows = len( start_uni_ll )
+        other_unill_list = list( filter( lambda x: x != start_uni_ll, \
+                            uniform_linelength_to_index.keys() ) )
+        normed_unill_list = [ normalise( start_uni_ll, ls ) \
+                            for ls in other_unill_list ]
+        for changed_line in range( number_rows ):
+            if increase:
+                onlyincrease_key = lambda unill: unill[ changed_line ] \
+                                            > start_uni_ll[ changed_line ]
+            else:
+                onlyincrease_key = lambda unill: unill[ changed_line ] \
+                                            < start_uni_ll[ changed_line ]
+            filtered_unill_list = [ unill for unill in normed_unill_list \
+                                            if onlyincrease_key(unill) ]
+            if len( filtered_unill_list ) == 0:
+                continue
+            mykey = lambda v2: asdf( start_uni_ll, v2, changed_line )
+            nearest_uni_ll = sorted( filtered_unill_list, key=mykey )[ 0 ]
+            for firstindex in indexlist:
+                secondunill = tuple( i-nearest_uni_ll[0] for i in nearest_uni_ll)
+                possible_seconds = uniform_linelength_to_index[ secondunill ]
+                nearest_indices_to_index[ (firstindex, changed_line) ] \
+                                            = possible_seconds
+    return nearest_indices_to_index
+    
+
+
+def order_neighbouring( brubru, startside ):
     """ Helperfunction for creation of increaser and decreaser for 
     plainknitstrick
 
     :todo: tidy up this function
+    :param startside: must be 'right' or 'left'
+    :type startside: str
     """
-    from . import examplestates as es
+    assert startside in ( "right", "left" )
+    from . import rowstates as es
     from itertools import compress
     myergebnis = []
     inthings = {}
@@ -198,12 +273,13 @@ def order_neighbouring( brubru ):
                                                                 for ue in upe2 )
 
                             qqdiff = sum( upedges_in )-sum(upedges_out)
-                            newneighbourtuple = (\
+                            from ..verbesserer.class_side_alterator import multi_sidealterator as multialt
+                            newneighbourtuple = multialt.linetypepair(
                                     linetype_out,
                                     linetype_in, 
                                     upedges_out, 
                                     upedges_in, 
-                                    k, 
+                                    k, startside
                                     )
                             #assert abs(qqdiff) <= 3, "most likely plane follows with increase, which is not covered by plain-strick %s, %s, %s" %(str(newneighbourtuple), idarray, newidarray)
                             tmpin = (linetype_in, idarray, k)

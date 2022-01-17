@@ -175,11 +175,12 @@ def _rp_call_function( isrelaxed: strickgraph.strickgraph_property_relaxed, \
     logger.debug( f"remove lines {toberemoved_rows} from {tobeshortenedrows}")
     oneline_worked = False
     #for i in sorted( toberemoved_rows, reverse=True ): #problems with decrease last row
-    for i in sorted( tobeshortenedrows, reverse=True ):
+    for i in sorted( tobeshortenedrows, reverse=False ):
         try: 
             tmpstrickgraph = pk.plainknit_decreaser.replace_graph( tmpstrickgraph, i )
             oneline_worked = True
         except Exception as err:
+            logger.debug( f"couldnt decrease at line {i}" )
             #logger.debug( "strickgraph at line %i is: \n%s" \
             #        %(i, tmpstrickgraph.to_manual( stinfo ) ))
             #raise type(err)( "couldnt decrease", *err.args ) from err
@@ -187,7 +188,7 @@ def _rp_call_function( isrelaxed: strickgraph.strickgraph_property_relaxed, \
     if not oneline_worked:
         logger.debug( "strickgraph at lines %s is: \n%s" \
                     %(tobeshortenedrows, tmpstrickgraph.to_manual( stinfo ) ))
-        raise Exception()
+        raise Exception( "Could decrease strickgraph anywhere" )
 
     logger.debug( tmpstrickgraph.to_manual( stinfo ) )
     return { "newstrickgraph": strickgraph.strickgraph_container( tmpstrickgraph ) }

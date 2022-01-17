@@ -3,6 +3,8 @@
 version = 0.1
 pkgname = createcloth
 
+ALTGENOPT = -l 7 -w 26 --continue -n 24 -t 300 --softtimelimit 240 --softmaximumuncommonnodes 8
+
 default: build install
 	echo "hello"
 
@@ -14,13 +16,21 @@ install: #dist/$(pkgname)-$(version).tar.gz
 
 CREATEPLAINKNIT_ALTERATOR = python -m createcloth.plainknit.program_create_alterator
 
+test_asdf:
+	$(CREATEPLAINKNIT_ALTERATOR) tmp/qq.xml $(ALTGENOPT)
+
 createcloth/plainknit/plainknit_increaser.xml: 
-	$(CREATEPLAINKNIT_ALTERATOR) $@ -l 8 -w 30 --continue
+	$(CREATEPLAINKNIT_ALTERATOR) $@ $(ALTGENOPT) --limitstart 350 --limitend 355 #--limitstart 1000 
 	#python -m createcloth.plainknit.program_create_alterator $@ -l 8 -w 30 --continue
 
 createcloth/plainknit/plainknit_decreaser.xml: 
-	$(CREATEPLAINKNIT_ALTERATOR) $@ -l 8 -w 26 --continue --alteratortype decrease
+	$(CREATEPLAINKNIT_ALTERATOR) $@ $(ALTGENOPT) --alteratortype decrease --limitstart 356  --limitend 358 #--limitstart 1000
 	#python -m createcloth.plainknit.program_create_alterator $@ -l 8 -w 26 --continue --alteratortype decrease
+
+.PHONY: testoldalt
+testoldalt:
+	$(CREATEPLAINKNIT_ALTERATOR) createcloth/plainknit/plainknit_decreaser.xml --testold --alteratortype decrease
+	$(CREATEPLAINKNIT_ALTERATOR) createcloth/plainknit/plainknit_increaser.xml --testold $(ALTGENOPT)
 
 .PHONY: build
 build: 

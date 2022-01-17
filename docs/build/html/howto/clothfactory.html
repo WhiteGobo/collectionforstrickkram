@@ -4,8 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Howto to autothingy clothes &#8212; Createcloth  documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
@@ -18,7 +17,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="How to handle Strickgraphs" href="strickgraph.html" />
-    <link rel="prev" title="Plainknit" href="../classcollection/plainknit.html" /> 
+    <link rel="prev" title="Classifier" href="../classcollection/strickclassifier.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -33,7 +32,7 @@
           <a href="strickgraph.html" title="How to handle Strickgraphs"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="../classcollection/plainknit.html" title="Plainknit"
+          <a href="../classcollection/strickclassifier.html" title="Classifier"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">Createcloth  documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Howto to autothingy clothes</a></li> 
@@ -45,7 +44,7 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="howto-to-autothingy-clothes">
+  <div class="section" id="howto-to-autothingy-clothes">
 <h1>Howto to autothingy clothes<a class="headerlink" href="#howto-to-autothingy-clothes" title="Permalink to this headline">¶</a></h1>
 <p>Clothfactory program derived from datagraph_factory to create knit pieces
 from 3d-objects.</p>
@@ -64,7 +63,7 @@ of datagraph_factory <code class="xref py py-mod docutils literal notranslate"><
 <span class="c1"># This prints the knitmanuals</span>
 </pre></div>
 </div>
-<section id="overview-other-available-and-targetted-data">
+<div class="section" id="overview-other-available-and-targetted-data">
 <h2>Overview other available and targetted data<a class="headerlink" href="#overview-other-available-and-targetted-data" title="Permalink to this headline">¶</a></h2>
 <p>As otherview i will sort to following corresponding categories:</p>
 <blockquote>
@@ -74,7 +73,7 @@ of datagraph_factory <code class="xref py py-mod docutils literal notranslate"><
 <li><p>Information about the knitting piece - variable</p></li>
 </ul>
 </div></blockquote>
-<section id="objectinfo">
+<div class="section" id="objectinfo">
 <h3>Objectinfo<a class="headerlink" href="#objectinfo" title="Permalink to this headline">¶</a></h3>
 <p>This information includes spatialdescription of the object, for that our knitting piece is made. A quick bulletpoint overview:</p>
 <blockquote>
@@ -96,8 +95,8 @@ of datagraph_factory <code class="xref py py-mod docutils literal notranslate"><
 <p>For reference i have listed all corresponding datagraphnodes: 1-5 is saved in
 <code class="xref py py-class docutils literal notranslate"><span class="pre">clothfactory.ply_surface</span></code>. There is also a connection to
 <code class="xref py py-class docutils literal notranslate"><span class="pre">clothfactory.mesh_2dmap</span></code> but im not sure how this turns out.</p>
-</section>
-<section id="yarn-and-knittinginformation">
+</div>
+<div class="section" id="yarn-and-knittinginformation">
 <h3>Yarn- and knittinginformation<a class="headerlink" href="#yarn-and-knittinginformation" title="Permalink to this headline">¶</a></h3>
 <dl class="simple">
 <dt>This information comprises:</dt><dd><ul class="simple">
@@ -109,8 +108,8 @@ of datagraph_factory <code class="xref py py-mod docutils literal notranslate"><
 <p>For further information see <a class="reference internal" href="../classcollection/stitchinfo.html#module-createcloth.stitchinfo" title="createcloth.stitchinfo"><code class="xref py py-mod docutils literal notranslate"><span class="pre">createcloth.stitchinfo</span></code></a>, <a class="reference internal" href="../classcollection/plainknit.html#module-createcloth.plainknit" title="createcloth.plainknit"><code class="xref py py-mod docutils literal notranslate"><span class="pre">createcloth.plainknit</span></code></a> and <a class="reference internal" href="../classcollection/physicalhelper.html#module-createcloth.physicalhelper" title="createcloth.physicalhelper"><code class="xref py py-mod docutils literal notranslate"><span class="pre">createcloth.physicalhelper</span></code></a>.
 The stitchinfo is stored within the datagraphnode <code class="xref py py-class docutils literal notranslate"><span class="pre">strickgraph_stitchdata</span></code>.
 The manner in which this information is stored is <em>work-in-progres</em>. So please, feel free to check in the reference, how the data is stored.</p>
-</section>
-<section id="knittingpiece">
+</div>
+<div class="section" id="knittingpiece">
 <h3>Knittingpiece<a class="headerlink" href="#knittingpiece" title="Permalink to this headline">¶</a></h3>
 <p>This is the part we want to be simulated. This information describes our Knittinpiec in detail:</p>
 <blockquote>
@@ -131,9 +130,9 @@ The manner in which this information is stored is <em>work-in-progres</em>. So p
 </dd>
 </dl>
 <p>In the datagraph this information will be saved within <code class="xref py py-class docutils literal notranslate"><span class="pre">strickgraph_container</span></code> (1), <code class="xref py py-class docutils literal notranslate"><span class="pre">clothfactory_parts.strickgraph_spatialdata</span></code> (2), <code class="xref py py-class docutils literal notranslate"><span class="pre">clothfactory_parts.strickgraph_property_relaxed</span></code> (3) annd <code class="xref py py-class docutils literal notranslate"><span class="pre">clothfactory_parts.strickgraph_property_plainknit</span></code> (4)</p>
-</section>
-</section>
-<section id="informationinput">
+</div>
+</div>
+<div class="section" id="informationinput">
 <h2>Informationinput<a class="headerlink" href="#informationinput" title="Permalink to this headline">¶</a></h2>
 <p>All the static information must be given at the start. So we need all the
 static datagraph nodes:</p>
@@ -199,8 +198,8 @@ and is in a fitting (relaxed) state. Relaxed means no tension and loose parts:</
 <span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;mesh&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmpsurf</span>
 </pre></div>
 </div>
-</section>
-<section id="automatic-completion-of-data">
+</div>
+<div class="section" id="automatic-completion-of-data">
 <h2>Automatic completion of data<a class="headerlink" href="#automatic-completion-of-data" title="Permalink to this headline">¶</a></h2>
 <p>To generate our knitting piece from the given information, we have to load the given <code class="xref py py-class docutils literal notranslate"><span class="pre">clothfactoy_leafs</span></code> from <code class="xref py py-mod docutils literal notranslate"><span class="pre">clothfactory_parts</span></code>,
 and let the algorithm magic of datagraph_factory generate our knitting_piece.</p>
@@ -240,8 +239,8 @@ documentation <code class="xref py py-mod docutils literal notranslate"><span cl
     <span class="n">save_graph</span><span class="p">(</span> <span class="n">tmp</span><span class="p">,</span> <span class="n">tmpdir</span><span class="p">,</span> <span class="p">[</span> <span class="n">meshthings</span><span class="p">,</span> <span class="n">physics</span><span class="p">,</span> <span class="n">plainknit</span><span class="p">,</span> <span class="n">strickgraph</span><span class="p">]</span> <span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="reference-for-programs">
+</div>
+<div class="section" id="reference-for-programs">
 <h2>Reference for programs<a class="headerlink" href="#reference-for-programs" title="Permalink to this headline">¶</a></h2>
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-d">
@@ -255,8 +254,8 @@ documentation <code class="xref py py-mod docutils literal notranslate"><span cl
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">clothfactory_parts.programs.create_directory_strickcompleter.</span></span><span class="sig-name descname"><span class="pre">checkdirectoryfail</span></span><a class="headerlink" href="#clothfactory_parts.programs.create_directory_strickcompleter.checkdirectoryfail" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-</section>
-</section>
+</div>
+</div>
 
 
             <div class="clearer"></div>
@@ -282,8 +281,8 @@ documentation <code class="xref py py-mod docutils literal notranslate"><span cl
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="../classcollection/plainknit.html"
-                        title="previous chapter">Plainknit</a></p>
+  <p class="topless"><a href="../classcollection/strickclassifier.html"
+                        title="previous chapter">Classifier</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="strickgraph.html"
                         title="next chapter">How to handle Strickgraphs</a></p>
@@ -321,7 +320,7 @@ documentation <code class="xref py py-mod docutils literal notranslate"><span cl
           <a href="strickgraph.html" title="How to handle Strickgraphs"
              >next</a> |</li>
         <li class="right" >
-          <a href="../classcollection/plainknit.html" title="Plainknit"
+          <a href="../classcollection/strickclassifier.html" title="Classifier"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">Createcloth  documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Howto to autothingy clothes</a></li> 
@@ -329,7 +328,7 @@ documentation <code class="xref py py-mod docutils literal notranslate"><span cl
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Richard Fechner.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
     </div>
   </body>
 </html>

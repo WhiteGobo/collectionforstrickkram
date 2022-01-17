@@ -13,6 +13,7 @@ logger = logging.getLogger( __name__ )
 from ..stitchinfo import basic_stitchdata as glstinfo
 from dataclasses import dataclass
 from typing import Iterable
+import time
 
 XML_SIDEALTERATOR_NAME = "sidealterator"
 
@@ -34,7 +35,7 @@ class sidealterator():
     minimal width
 
     :todo: minimal width
-    :todo: replace_in_graph, fromxml, toxml
+    :todo: replace_graph, fromxml, toxml
     :ivar alterator_left:
     :ivar leftstartindex:
     :ivar alterator_right:
@@ -51,14 +52,7 @@ class sidealterator():
         self.rightstartindex = rightstartindex
         self.notes = notes
 
-    def replace_graph( self, *args, **kwargs ):
-        """same as replace_in_graph"""
-        try:
-            return self.replace_in_graph( *args, **kwargs )
-        except cver.NoTranslationPossible as err:
-            raise NoTranslationPossible() from err
-
-    def replace_in_graph( self, mystrickgraph, linenumber, row=None, \
+    def replace_graph( self, mystrickgraph, linenumber, row=None, \
                                 nodeattributes=None, edgeattributes=None ):
         """mainmethod replkaces in graph at given line
 
@@ -83,10 +77,17 @@ class sidealterator():
         if edgeattributes is None:
             edgeattributes = [ (v1, v2, (label,)) for v1, v2, label in mystrickgraph.get_edges_with_labels() ]
 
-        #logger.debug( "replaceleft" )
-        nodesattr_repl1, edges_repl1 = self.alterator_left.replace_graph( nodeattributes, edgeattributes, startnodeleft )
-        #logger.debug( "replaceright" )
-        nodesattr_repl2, edges_repl2 = self.alterator_right.replace_graph( nodesattr_repl1, edges_repl1, startnoderight )
+        try:
+            #logger.debug( "replaceleft" )
+            nodesattr_repl1, edges_repl1 = self.alterator_left.replace_graph( \
+                                                nodeattributes, edgeattributes,\
+                                                startnodeleft )
+            #logger.debug( "replaceright" )
+            nodesattr_repl2, edges_repl2 = self.alterator_right.replace_graph( \
+                                                nodesattr_repl1, edges_repl1, \
+                                                startnoderight )
+        except cver.NoTranslationPossible as err:
+            raise NoTranslationPossible() from err
         #edgelabels = [(v1, v2, attr[0]) for v1, v2, attr in edges_repl2 ]
         newnodeattributes = { n: {"stitchtype": data[0], "side":data[1] }\
                         for n, data in nodesattr_repl2.items() }
@@ -146,23 +147,23 @@ class sidealterator():
                                 %( linetype_in, linetype_out, changedline_id )
 
         if skip_if_in_list is not None:
-            tmp_graph = create_graph_from_linetypes( linetype_out, upedges_out, \
+            tmp_graph = create_graph_from_linetypes( linetype_in, upedges_in, \
                                             **creategraph_kwargs )
             for j, i in enumerate( skip_if_in_list ):
                 try:
-                    tmp_graph = i.replace_in_graph( tmp_graph, changedline_id )
-                    great_graph = create_graph_from_linetypes( linetype_in, \
-                                            upedges_in, **creategraph_kwargs )
+                    tmp_graph = i.replace_graph( tmp_graph, changedline_id )
+                    great_graph = create_graph_from_linetypes( linetype_out, \
+                                            upedges_out, **creategraph_kwargs )
                     if tmp_graph == great_graph:
                         raise SkipGeneration()
-                    less_graph = create_graph_from_linetypes( linetype_out, \
-                                            upedges_out, **creategraph_kwargs )
+                    less_graph = create_graph_from_linetypes( linetype_in, \
+                                            upedges_in, **creategraph_kwargs )
                     raise WrongAlterationFound( j )#, f"This was produced: {tmp_graph.to_manual(glstinfo)}", f"this should be: {great_graph.to_manual( glstinfo)}", f"from: {less_graph.to_manual(glstinfo )}" )
                 except FindError:
                     continue
-        great_graph = create_graph_from_linetypes( linetype_in, upedges_in, \
+        less_graph = create_graph_from_linetypes( linetype_in, upedges_in, \
                                             **creategraph_kwargs )
-        less_graph = create_graph_from_linetypes( linetype_out, upedges_out, \
+        great_graph = create_graph_from_linetypes( linetype_out, upedges_out, \
                                             **creategraph_kwargs )
 
         return cls.from_graphdifference( less_graph, great_graph, \
@@ -266,7 +267,7 @@ class sidealterator():
     def from_graphdifference( cls, source_strickgraph, target_strickgraph, \
                                         changedline_id, \
                                         maximum_uncommon_nodes = 10, \
-                                        timelimit = None, soft_timelimit=None, \
+                                        timelimit = None, soft_timelimit=0, \
                                         soft_maximum_uncommon_nodes=None, \
                                         **extraargs ):
         """Uses twographs with alterated line
@@ -294,31 +295,48 @@ class sidealterator():
         edgeattr1 = [ (v1, v2, (label,)) for v1, v2, label in source_strickgraph.get_edges_with_labels() ]
         nodeattr2 = target_strickgraph.get_nodeattributes()
         edgeattr2 = [ (v1, v2, (label,)) for v1, v2, label in target_strickgraph.get_edges_with_labels() ]
-        translator = None
-        if soft_timelimit is not None and soft_maximum_uncommon_nodes is not None:
-            extraoptions = { "timelimit": soft_timelimit, 
-                    "maximum_uncommon_nodes": soft_maximum_uncommon_nodes
-                    }
-            try:
-                translator = efn.optimize_uncommon_nodes( nodeattr1, edgeattr1, \
-                                                nodeattr2, edgeattr2, \
-                                                **extraoptions, directional=True )
-            except Exception as err:
-                pass
-        if translator is None:
-            extraoptions = { "maximum_uncommon_nodes": maximum_uncommon_nodes}
-            if timelimit is not None:
-                extraoptions[ "timelimit" ] = timelimit
-            try:
-                translator = efn.optimize_uncommon_nodes( nodeattr1, edgeattr1, \
-                                                nodeattr2, edgeattr2, \
-                                                **extraoptions, directional=True )
-            except Exception as err:
-                logger.error( "find starttranslation failed. algorithm of extrasfornetworkx doesnt work" )
-                logger.error( f"graphs for efn optimize\ngraph1: {nodeattr1}\n"\
-                        f"{edgeattr1}\ngraph2: {nodeattr2}\n{edgeattr2}" )
-                raise err
+        #if soft_timelimit is not None and soft_maximum_uncommon_nodes is not None:
+            #extraoptions = { "timelimit": soft_timelimit, 
+            #        "maximum_uncommon_nodes": soft_maximum_uncommon_nodes
+            #        }
+        extraoptions = {}
+        if timelimit is not None:
+            extraoptions[ "timelimit" ] = timelimit
+        starttime = time.time()
+        trans_gen = efn.optimize_uncommon_nodes( nodeattr1, edgeattr1, \
+                                            nodeattr2, edgeattr2, \
+                                            **extraoptions, directional=True )
+        minimum_common_nodes = max( len(nodeattr1)-maximum_uncommon_nodes,\
+                                    len(nodeattr2)-maximum_uncommon_nodes )
+        if soft_maximum_uncommon_nodes is not None:
+            soft_minimum_common_nodes = max( \
+                                len(nodeattr1)-soft_maximum_uncommon_nodes, \
+                                len(nodeattr2)-soft_maximum_uncommon_nodes )
+
+        translator = {}
+        try:
+            for next_translator in trans_gen:
+                if len(translator) < len(next_translator):
+                    translator = next_translator
+                if soft_maximum_uncommon_nodes is not None:
+                    cond1 = len(translator) <= soft_minimum_common_nodes
+                else:
+                    cond1 = False
+                cond2 = time.time() - starttime > soft_timelimit
+                cond3 = len(translator) >= minimum_common_nodes
+                if timelimit is not None:
+                    cond4 = time.time() - starttime > timelimit
+                else:
+                    cond4 = False
+                if cond1 or all((cond2, cond3)) or cond4:
+                    break
+        except Exception as err:
+            logger.error( "find starttranslation failed. algorithm of extrasfornetworkx doesnt work" )
+            logger.error( f"graphs for efn optimize\ngraph1: {nodeattr1}\n"\
+                    f"{edgeattr1}\ngraph2: {nodeattr2}\n{edgeattr2}" )
+            raise Exception() from err
         assert len( translator ) > 0
+        logger.info( f"translator with uncommon nodes: {max(len(nodeattr1), len(nodeattr2))- len(translator)}")
         if max(len(nodeattr1), len(nodeattr2)) - len( translator ) > maximum_uncommon_nodes:
             raise cmultiver.SkipAlteration()
         translator = { key: translator[key] \
@@ -804,17 +822,20 @@ class multi_sidealterator( efn.multialterator ):
         :type linetypepairlists: Iterable[ cls.linetypepair ]
         :todo: here is a short debug for not working extrafornetworkx optimize
         """
-        def use_alterator( tmpalterator, linetype_out, linetype_in, \
-                                upedges_out, upedges_in, changedline_id, \
+        def use_alterator( tmpalterator, linetype_in, linetype_out, \
+                                upedges_in, upedges_out, changedline_id, \
                                 startside, **kwargs_alterate):
-            tmp_graph = create_graph_from_linetypes( linetype_out, upedges_out, \
+            #logger.debug( "test alterator for %s" %(
+            #        cls.linetypepair( linetype_in, linetype_out, upedges_in, \
+            #                upedges_out, changedline_id, startside ) ))
+            tmp_graph = create_graph_from_linetypes( linetype_in, upedges_in, \
                                         startside=startside, **kwargs_alterate )
             try:
-                repl_graph = tmpalterator.replace_in_graph( tmp_graph, \
+                repl_graph = tmpalterator.replace_graph( tmp_graph, \
                                         changedline_id )
             except (cver.ExcludeAssertion, cver.NoTranslationPossible, cver.MultipleTranslationFound): #just to show exceptions are expected
                 raise
-            great_graph = create_graph_from_linetypes( linetype_in, upedges_in,\
+            great_graph = create_graph_from_linetypes( linetype_out, upedges_out,\
                                         startside=startside, **kwargs_alterate )
             #return repl_graph == great_graph
             if repl_graph == great_graph:
@@ -830,13 +851,8 @@ class multi_sidealterator( efn.multialterator ):
                         tmpalterator.notes )
                         )
                 return False
-
-        gen_extraoptions = {}
-        if soft_timelimit is not None and soft_maximum_uncommon_nodes is not None:
-            gen_extraoptions["soft_timelimit"] = soft_timelimit
-            gen_extraoptions["soft_maximum_uncommon_nodes"] = soft_maximum_uncommon_nodes
-        def create_alterator( linetype_out, linetype_in, upedges_out, \
-                                upedges_in, changedline_id, startside, \
+        def create_alterator( linetype_in, linetype_out, upedges_in, \
+                                upedges_out, changedline_id, startside, \
                                 **kwargs_create ):
             logger.info( "in: %s" %( str(linetype_in) ) )
             logger.info( "out: %s" %( str(linetype_out) ) )
@@ -845,14 +861,22 @@ class multi_sidealterator( efn.multialterator ):
                     %( str(linetype_in), str(linetype_out) )
             if timelimit is not None:
                 kwargs_create[ "timelimit" ] = timelimit
-            return sidealterator.from_linetypes( linetype_out, linetype_in, \
+            try:
+                return sidealterator.from_linetypes( linetype_out, linetype_in, \
                                 upedges_out, upedges_in, changedline_id, \
                                 maximum_uncommon_nodes = maximum_uncommon_nodes, \
                                 startside=startside, **gen_extraoptions, \
                                 **kwargs_create )
+            except Exception:
+                raise cmultiver.SkipAlteration()
+
         #q = it.chain.from_iterable( ((linepair_info, { "startside":"left"}), \
         #                        (linepair_info, { "startside":"right"})) \
         #                        for linepair_info in linetypepairlists )
+        gen_extraoptions = {}
+        if soft_timelimit is not None and soft_maximum_uncommon_nodes is not None:
+            gen_extraoptions["soft_timelimit"] = soft_timelimit
+            gen_extraoptions["soft_maximum_uncommon_nodes"] = soft_maximum_uncommon_nodes
         q = zip( linetypepairlists, [{}]*len( linetypepairlists ) )
         return cls.from_replacements( q,
                     replace_function = use_alterator, \
@@ -862,6 +886,14 @@ class multi_sidealterator( efn.multialterator ):
 
 
     def replace_graph( self, graph, changeline ):
+        """Replace in given Strickgraph at given line. Gives back new
+        strickgraph with replaced parts. Raises 'NoTranslationPossible'
+        if replacement is not possible
+
+        :raises: NoTranslationPossible
+        :returns: Strickgraph with replaced parts
+        :rtype: strickgraph
+        """
         row = graph.get_rows()[ changeline ]
         nodeattributes = graph.get_nodeattributes()
         edgeswithlabel = graph.get_edges_with_labels()
@@ -870,33 +902,6 @@ class multi_sidealterator( efn.multialterator ):
                                 nodeattributes=nodeattributes )
         except cver.NoTranslationPossible as err:
             raise NoTranslationPossible() from err
-
-    def replace_in_graph( self, graph, changeline ):
-        """mainmethod
-
-        :param graph: Graph to alterate
-        :type graph: :py:class:`createcloth.strickgraph.strickgraph`
-        :param changeline: Line to alterate
-        :type changeline: int
-        :todo: rename to replace_graph
-        """
-        raise Exception()
-        lever = False
-        row = graph.get_rows()[ changeline ]
-        nodeattributes = graph.get_nodeattributes()
-        edgeswithlabel = graph.get_edges_with_labels()
-        for alt in self.side_alterator_list:
-            try:
-                graph = alt.replace_in_graph( graph, changeline, row=row, \
-                                nodeattributes=nodeattributes )
-                lever = True
-                break
-            except FindError:
-                pass
-        if not lever:
-            raise FindError( "couldnt find suitable alterator "\
-                                f"at line {changeline}" )
-        return graph
 
     @classmethod
     def fromxml( cls, xmlstring ):

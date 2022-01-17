@@ -1,8 +1,7 @@
-"""
-:todo: tidy up all the methods that arent used anymore
+"""All used alterators
+
 """
 
-from .verbesserer_class import strickalterator
-from .verbesserer_class import FindError
-
-#from .manualtoverbesserung import _start_at_marked
+from .class_side_alterator import multi_sidealterator, \
+                                    NoTranslationPossible, \
+                                    sidealterator

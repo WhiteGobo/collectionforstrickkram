@@ -1,4 +1,4 @@
-from .examplestates import start, end, leftplane, rightplane, \
+from .rowstates import start, end, leftplane, rightplane, \
                     lefteaves, righteaves, enddecrease, \
                     plain, increase, decrease
 from typing import Iterable
@@ -9,7 +9,12 @@ def isplain_strickgraph( strickgraph ):
 
 
 def isplain( linetypes, upedges:Iterable[int]=None ):
-    """method for identify plainknit"""
+    """method for identify plainknit
+
+    :param linetypes: List of linetypes of strickgraph, which is to be identified
+    :type linetypes: Iterable
+    :todo: Remove this method
+    """
     if upedges is not None:
         return _isplain_with_upedges( linetypes, upedges )
     else:
