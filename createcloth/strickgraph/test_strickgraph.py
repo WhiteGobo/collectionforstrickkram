@@ -130,11 +130,40 @@ class TestStringMethods( unittest.TestCase ):
         right output
         """
         asd = strickgraph.strickgraph.from_gridgraph( self.mygraph, \
-                                                            self.firstrow, \
-                                                            self.stitchinfo )
-        self.assertEqual( asd._get_topologicalsort_of_stitches(), [(0, 0), (0, 1), (0, 2), (0, 3), (1, 3), (1, 2), (1, 1), (1, 0), (2, 0), (2, 1), (2, 2), (2, 3), (3, 3), (3, 2), (3, 1), (3, 0)], msg="simple topological sort failed" )
-        self.assertEqual( asd.get_rows(), [[(0, 0), (0, 1), (0, 2), (0, 3)], [(1, 0), (1, 1), (1, 2), (1, 3)], [(2, 0), (2, 1), (2, 2), (2, 3)], [(3, 0), (3, 1), (3, 2), (3, 3)]], msg="simple get_rows failed" )
+                            self.firstrow, self.stitchinfo, startside="right" )
+        
+        myedges = [(a,b) for a,b,c in asd.get_edges_with_labels() if c=="next"]
+        testedges = [((0, 0), (0, 1)), ((0, 1), (0, 2)), ((0, 2), (0, 3)), \
+                ((0, 3), (1, 3)), ((1, 3), (1, 2)), ((1, 2), (1, 1)), \
+                ((1, 1), (1, 0)), ((1, 0), (2, 0)), ((2, 0), (2, 1)), \
+                ((2, 1), (2, 2)), ((2, 2), (2, 3)), ((2, 3), (3, 3)), \
+                ((3, 3), (3, 2)), ((3, 2), (3, 1)), ((3, 1), (3, 0))]
+        self.assertEqual( myedges, testedges, msg="prerequisite failed. "
+                        "edges are unexpected" )
 
+        testtopsort = [(0, 0), (0, 1), (0, 2), (0, 3), (1, 3), (1, 2), \
+                        (1, 1), (1, 0), (2, 0), (2, 1), (2, 2), (2, 3), \
+                        (3, 3), (3, 2), (3, 1), (3, 0)]
+        self.assertEqual( asd._get_topologicalsort_of_stitches(), \
+                        testtopsort, msg="simple topological sort failed" )
+        testrow_same = [[(0, 0), (0, 1), (0, 2), (0, 3)], \
+                        [(1, 0), (1, 1), (1, 2), (1, 3)], \
+                        [(2, 0), (2, 1), (2, 2), (2, 3)], \
+                        [(3, 0), (3, 1), (3, 2), (3, 3)]]
+        testrow_diff = [[(0, 3), (0, 2), (0, 1), (0, 0)], \
+                        [(1, 3), (1, 2), (1, 1), (1, 0)], \
+                        [(2, 3), (2, 2), (2, 1), (2, 0)], \
+                        [(3, 3), (3, 2), (3, 1), (3, 0)]]
+        self.assertEqual( asd.get_rows( lefttoright_side="left"), testrow_diff, msg="simple get_rows failed" )
+        self.assertEqual( asd.get_rows( lefttoright_side="right"), testrow_same, msg="simple get_rows failed" )
+
+        asd = strickgraph.strickgraph.from_gridgraph( self.mygraph, \
+                            self.firstrow, self.stitchinfo, startside="left" )
+        myedges = [(a,b) for a,b,c in asd.get_edges_with_labels() if c=="next"]
+        self.assertEqual( myedges, testedges, msg="prerequisite failed. "
+                        "edges are unexpected" )
+        self.assertEqual( asd.get_rows( lefttoright_side="left"), testrow_same, msg="simple get_rows failed" )
+        self.assertEqual( asd.get_rows( lefttoright_side="right"), testrow_diff, msg="simple get_rows failed" )
     
         #create strickgraph 7yo;7k;3k 1bo 3k;3k skip 3k;3k skip 3k;
         nodeattr = {}
@@ -189,7 +218,12 @@ class TestStringMethods( unittest.TestCase ):
         testgraph = strickgraph.strickgraph.from_manual( "5yo\n5k\n5k\n5bo", self.stitchinfo, manual_type="machine", startside="left" )
         #print( testgraph.get_rows() )
         tmp = [[(0, 4), (0, 3), (0, 2), (0, 1), (0, 0)], [(1, 4), (1, 3), (1, 2), (1, 1), (1, 0)], [(2, 4), (2, 3), (2, 2), (2, 1), (2, 0)], [(3, 4), (3, 3), (3, 2), (3, 1), (3, 0)]]
-        self.assertEqual( testgraph.get_rows(), tmp, msg="small test with get rows startside left failed" )
+        try:
+            self.assertEqual( testgraph.get_rows(), tmp, msg="small test with get rows startside left failed" )
+        except Exception as err:
+            asdedgetype = testgraph.get_edges_with_labels()
+            raise Exception( asdedgetype ) from err
+
 
         testgraph = strickgraph.strickgraph.from_manual( "5yo\n5k\n5k\n5bo", self.stitchinfo, manual_type="machine", startside="right" )
         tmp = [[(0, 0), (0, 1), (0, 2), (0, 3), (0, 4)], [(1, 0), (1, 1), (1, 2), (1, 3), (1, 4)], [(2, 0), (2, 1), (2, 2), (2, 3), (2, 4)], [(3, 0), (3, 1), (3, 2), (3, 3), (3, 4)]]

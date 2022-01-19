@@ -269,11 +269,7 @@ class strick_datacontainer():
         #sorted_stitches = self._get_topologicalsort_of_stitches()
         rows = self._get_rowsort_stitches()
         if presentation_type in mod_strickgraph.machine_terms:
-            node_side = self.get_nodeattr_side()
-            startside = node_side[ rows[0][0] ]
-            if startside != lefttoright_side:
-                for row in rows:
-                    row.reverse()
+            pass
         elif presentation_type in mod_strickgraph.handknitting_terms:
             for i, row in enumerate( rows ):
                 if i%2 == 1:
@@ -282,6 +278,14 @@ class strick_datacontainer():
             raise mod_strickgraph.WrongTermError("get_rows can only print "\
                             +"in handknitting or" \
                             +" machine terms. see pkg/strickgraph/constants.py")
+        node_side = self.get_nodeattr_side()
+        startside = node_side[ rows[0][0] ]
+        if startside == "left":
+            for row in rows:
+                row.reverse()
+        if startside != lefttoright_side:
+            for row in rows:
+                row.reverse()
         return rows
 
         currentrow = [ sorted_stitches[0] ]
