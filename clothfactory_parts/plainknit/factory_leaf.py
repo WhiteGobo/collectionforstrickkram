@@ -21,45 +21,45 @@ from createcloth.stitchinfo import basic_stitchdata as stinfo
 import logging
 logger = logging.getLogger( __name__ )
 
+class test_if_strickgraph_is_plainknit( factory_leaf ):
+    def generate_datagraphs( self ):
+        tmp = datagraph()
+        tmp.add_node( "mystrick", strickgraph.strickgraph_container )
+        prestatus = tmp.copy()
+        tmp.add_node( "isplainknit", strickgraph_property_plainknit )
+        tmp.add_node( "isnotplainknit", strickgraph_property_plainknit )
+        tmp.add_edge( "mystrick", "isplainknit", strickgraph_isplainknit )
+        tmp.add_edge( "mystrick", "isnotplainknit", strickgraph_isnotplainknit )
+        poststatus = tmp.copy()
+        return prestatus, poststatus
+    _sip_call_rtype = Union[ strickgraph_property_plainknit, \
+                            strickgraph_property_plainknit ]
+    def call_function( self, mystrick: strickgraph.strickgraph_container ) \
+                            -> Dict[ str, _sip_call_rtype ]:
+        """Tests if Strickgraph corresponds to plainknit
 
-def _sip_create_datagraphs():
-    tmp = datagraph()
-    tmp.add_node( "mystrick", strickgraph.strickgraph_container )
-    prestatus = tmp.copy()
-    tmp.add_node( "isplainknit", strickgraph_property_plainknit )
-    tmp.add_node( "isnotplainknit", strickgraph_property_plainknit )
-    tmp.add_edge( "mystrick", "isplainknit", strickgraph_isplainknit )
-    tmp.add_edge( "mystrick", "isnotplainknit", strickgraph_isnotplainknit )
-    poststatus = tmp.copy()
-    return prestatus, poststatus
-_sip_call_rtype = Union[ strickgraph_property_plainknit, \
-                        strickgraph_property_plainknit ]
-def _sip_call_function( mystrick: strickgraph.strickgraph_container ) \
-                        -> Dict[ str, _sip_call_rtype ]:
-    """Tests if Strickgraph corresponds to plainknit
+        :todo: use method from createcloth.plainknit to identify
+        :return: data[isplainknit'] if strick is plain
+                else data[isnotplainknit']
+        """
+        mystrickgraph = mystrick.strickgraph
 
-    :todo: use method from createcloth.plainknit to identify
-    :return: data[isplainknit'] if strick is plain
-            else data[isnotplainknit']
-    """
-    mystrickgraph = mystrick.strickgraph
+        #if rows_are_plainstrick( mystrickgraph.get_rows(), stitchtype ):
+        #if a:
+        try:
+            linetypes = getplainknit_linetypes( mystrickgraph )
+            return { "isplainknit": strickgraph_property_plainknit( linetypes ) }
+        except notplainException as err:
+            return { "isnotplainknit": strickgraph_property_plainknit( err.args ) }
+        if isplain( mystrickgraph ):
+            return { "isplainknit": strickgraph_property_plainknit() }
+        else:
+            return { "isnotplainknit": strickgraph_property_plainknit() }
 
-    #if rows_are_plainstrick( mystrickgraph.get_rows(), stitchtype ):
-    #if a:
-    try:
-        linetypes = getplainknit_linetypes( mystrickgraph )
-        return { "isplainknit": strickgraph_property_plainknit( linetypes ) }
-    except notplainException as err:
-        return { "isnotplainknit": strickgraph_property_plainknit( err.args ) }
-    if isplain( mystrickgraph ):
-        return { "isplainknit": strickgraph_property_plainknit() }
-    else:
-        return { "isnotplainknit": strickgraph_property_plainknit() }
-
-test_if_strickgraph_is_plainknit: factory_leaf = factory_leaf( \
-                                        _sip_create_datagraphs, \
-                                        _sip_call_function, \
-                                        name =__name__+"test plainknit" )
+#test_if_strickgraph_is_plainknit: factory_leaf = factory_leaf( \
+        #                                        _sip_create_datagraphs, \
+        #                                        _sip_call_function, \
+        #                                        name =__name__+"test plainknit" )
 """Factoryleaf for creation of datagraphleaf 'isplainknit'
 
 .. autofunction:: _sip_create_datagraphs
@@ -67,133 +67,134 @@ test_if_strickgraph_is_plainknit: factory_leaf = factory_leaf( \
 """
 
 
+class relax_tension( factory_leaf ):
+    def generate_datagraphs( self ):
+        tmp = datagraph()
+        tmp.add_node( "mystrickgraph", strickgraph.strickgraph_container )
+        tmp.add_node( "mymesh", meshthings.ply_surface )
+        tmp.add_node( "isrelaxed", strickgraph.strickgraph_property_relaxed )
+        tmp.add_node( "isplainknit", strickgraph_property_plainknit )
+        tmp.add_edge( "mystrickgraph", "isrelaxed", \
+                        strickgraph.springs_of_strickgraph_have_tension )
+        tmp.add_edge( "mystrickgraph", "isplainknit", strickgraph_isplainknit )
+        tmp.add_edge( "mystrickgraph", "mymesh", meshthings.strickgraph_fit_to_mesh )
+        prestatus = tmp.copy()
+        tmp.remove_node( "mystrickgraph" )
+        tmp.remove_node( "isplainknit" )
+        tmp.remove_node( "isrelaxed" )
+        tmp.add_node( "newstrickgraph", strickgraph.strickgraph_container )
+        tmp.add_node( "new_isplainknit", strickgraph_property_plainknit )
+        tmp.add_edge( "newstrickgraph", "new_isplainknit", strickgraph_isplainknit )
+        tmp.add_edge( "newstrickgraph", "mymesh", meshthings.strickgraph_fit_to_mesh )
+        poststatus = tmp.copy()
+        return prestatus, poststatus
+    _rt_call_rtype = Union[ strickgraph.strickgraph_container, \
+                            strickgraph_property_plainknit ]
+    def call_function( self, isrelaxed: strickgraph.strickgraph_property_relaxed, \
+                            isplainknit: strickgraph_property_plainknit, \
+                            mystrickgraph: strickgraph.strickgraph_container, \
+                            mymesh:meshthings.ply_surface ) \
+                            -> Dict[ str, _rt_call_rtype ]:
+        assert pk.plainknit_increaser is not None
+        tobeextendedrows = isrelaxed.tensionrows
+        tmpstrickgraph = mystrickgraph.strickgraph
+        rows = tmpstrickgraph.get_rows()
+        if len(rows)-1 in tobeextendedrows:
+            tobeextendedrows.add( len(rows)-2 )
+        if 0 in tobeextendedrows:
+            tobeextendedrows.add( 1 )
 
-def _rt_create_datagraphs():
-    tmp = datagraph()
-    tmp.add_node( "mystrickgraph", strickgraph.strickgraph_container )
-    tmp.add_node( "mymesh", meshthings.ply_surface )
-    tmp.add_node( "isrelaxed", strickgraph.strickgraph_property_relaxed )
-    tmp.add_node( "isplainknit", strickgraph_property_plainknit )
-    tmp.add_edge( "mystrickgraph", "isrelaxed", \
-                    strickgraph.springs_of_strickgraph_have_tension )
-    tmp.add_edge( "mystrickgraph", "isplainknit", strickgraph_isplainknit )
-    tmp.add_edge( "mystrickgraph", "mymesh", meshthings.strickgraph_fit_to_mesh )
-    prestatus = tmp.copy()
-    tmp.remove_node( "mystrickgraph" )
-    tmp.remove_node( "isplainknit" )
-    tmp.remove_node( "isrelaxed" )
-    tmp.add_node( "newstrickgraph", strickgraph.strickgraph_container )
-    tmp.add_node( "new_isplainknit", strickgraph_property_plainknit )
-    tmp.add_edge( "newstrickgraph", "new_isplainknit", strickgraph_isplainknit )
-    tmp.add_edge( "newstrickgraph", "mymesh", meshthings.strickgraph_fit_to_mesh )
-    poststatus = tmp.copy()
-    return prestatus, poststatus
-_rt_call_rtype = Union[ strickgraph.strickgraph_container, \
-                        strickgraph_property_plainknit ]
-def _rt_call_function( isrelaxed: strickgraph.strickgraph_property_relaxed, \
-                        isplainknit: strickgraph_property_plainknit, \
-                        mystrickgraph: strickgraph.strickgraph_container, \
-                        mymesh:meshthings.ply_surface ) \
-                        -> Dict[ str, _rt_call_rtype ]:
-    assert pk.plainknit_increaser is not None
-    tobeextendedrows = isrelaxed.tensionrows
-    tmpstrickgraph = mystrickgraph.strickgraph
-    rows = tmpstrickgraph.get_rows()
-    if len(rows)-1 in tobeextendedrows:
-        tobeextendedrows.add( len(rows)-2 )
-    if 0 in tobeextendedrows:
-        tobeextendedrows.add( 1 )
-
-    tobeadded_rows = get_longest_series( tobeextendedrows )
-    logger.debug( f"add lines {tobeadded_rows} from {tobeextendedrows}")
-    oneline_worked = False
-    #for i in sorted( tobeadded_rows ):
-    for i in sorted( tobeextendedrows ):
-        try:
-            tmpstrickgraph = pk.plainknit_increaser.replace_graph( tmpstrickgraph, i )
-            oneline_worked = True
-        except Exception as err:
-            #logger.debug( "strickgraph at line %i is: \n%s" \
-            #        %(i, tmpstrickgraph.to_manual( stinfo ) ))
-            #raise type(err)( "couldnt increase", *err.args ) from err
-            pass
-    if not oneline_worked:
-        logger.debug( "strickgraph failed for lines: %s is: \n%s" \
-                    %(tobeadded_rows, tmpstrickgraph.to_manual( stinfo ) ))
-        raise Exception()
-    logger.debug( tmpstrickgraph.to_manual( stinfo ) )
-    return { "newstrickgraph": strickgraph.strickgraph_container( tmpstrickgraph ) }
-relax_tension:factory_leaf = factory_leaf( _rt_create_datagraphs, _rt_call_function, \
-                            name = __name__+".improve strickgraph tension" )
+        tobeadded_rows = get_longest_series( tobeextendedrows )
+        logger.debug( f"add lines {tobeadded_rows} from {tobeextendedrows}")
+        oneline_worked = False
+        #for i in sorted( tobeadded_rows ):
+        for i in sorted( tobeextendedrows ):
+            try:
+                tmpstrickgraph = pk.plainknit_increaser.replace_graph( tmpstrickgraph, i )
+                oneline_worked = True
+            except Exception as err:
+                #logger.debug( "strickgraph at line %i is: \n%s" \
+                #        %(i, tmpstrickgraph.to_manual( stinfo ) ))
+                #raise type(err)( "couldnt increase", *err.args ) from err
+                pass
+        if not oneline_worked:
+            logger.debug( "strickgraph failed for lines: %s is: \n%s" \
+                        %(tobeadded_rows, tmpstrickgraph.to_manual( stinfo ) ))
+            raise Exception()
+        logger.debug( tmpstrickgraph.to_manual( stinfo ) )
+        return { "newstrickgraph": strickgraph.strickgraph_container( tmpstrickgraph ) }
+#relax_tension:factory_leaf = factory_leaf( _rt_create_datagraphs, _rt_call_function, \
+        #                            name = __name__+".improve strickgraph tension" )
 """factoryleaf for relaxing tension in line via insertion
 
 .. autofunction:: _rt_create_datagraphs
 .. autofunction:: _rt_call_function
 """
 
+class relax_pressure( factory_leaf ):
+    def generate_datagraphs( self ):
+        tmp = datagraph()
+        tmp.add_node( "mystrickgraph", strickgraph.strickgraph_container )
+        tmp.add_node( "mymesh", meshthings.ply_surface )
+        tmp.add_node( "isrelaxed", strickgraph.strickgraph_property_relaxed )
+        tmp.add_node( "isplainknit", strickgraph_property_plainknit )
+        tmp.add_edge( "mystrickgraph", "isrelaxed", \
+                        strickgraph.springs_of_strickgraph_have_pressure )
+        tmp.add_edge( "mystrickgraph", "isplainknit", strickgraph_isplainknit )
+        tmp.add_edge( "mystrickgraph", "mymesh", meshthings.strickgraph_fit_to_mesh )
+        prestatus = tmp.copy()
+        tmp.remove_node( "mystrickgraph" )
+        tmp.remove_node( "isplainknit" )
+        tmp.remove_node( "isrelaxed" )
+        tmp.add_node( "newstrickgraph", strickgraph.strickgraph_container )
+        tmp.add_node( "new_isplainknit", strickgraph_property_plainknit )
+        tmp.add_edge( "newstrickgraph", "new_isplainknit", strickgraph_isplainknit )
+        tmp.add_edge( "newstrickgraph", "mymesh", meshthings.strickgraph_fit_to_mesh )
+        poststatus = tmp.copy()
+        return prestatus, poststatus
+    _rp_call_rtype = Union[ strickgraph.strickgraph_container,\
+                            strickgraph_property_plainknit, \
+                            ]
 
-def _rp_create_datagraphs():
-    tmp = datagraph()
-    tmp.add_node( "mystrickgraph", strickgraph.strickgraph_container )
-    tmp.add_node( "mymesh", meshthings.ply_surface )
-    tmp.add_node( "isrelaxed", strickgraph.strickgraph_property_relaxed )
-    tmp.add_node( "isplainknit", strickgraph_property_plainknit )
-    tmp.add_edge( "mystrickgraph", "isrelaxed", \
-                    strickgraph.springs_of_strickgraph_have_pressure )
-    tmp.add_edge( "mystrickgraph", "isplainknit", strickgraph_isplainknit )
-    tmp.add_edge( "mystrickgraph", "mymesh", meshthings.strickgraph_fit_to_mesh )
-    prestatus = tmp.copy()
-    tmp.remove_node( "mystrickgraph" )
-    tmp.remove_node( "isplainknit" )
-    tmp.remove_node( "isrelaxed" )
-    tmp.add_node( "newstrickgraph", strickgraph.strickgraph_container )
-    tmp.add_node( "new_isplainknit", strickgraph_property_plainknit )
-    tmp.add_edge( "newstrickgraph", "new_isplainknit", strickgraph_isplainknit )
-    tmp.add_edge( "newstrickgraph", "mymesh", meshthings.strickgraph_fit_to_mesh )
-    poststatus = tmp.copy()
-    return prestatus, poststatus
-_rp_call_rtype = Union[ strickgraph.strickgraph_container,\
-                        strickgraph_property_plainknit, \
-                        ]
+    def call_function( self, isrelaxed: strickgraph.strickgraph_property_relaxed, \
+                        isplainknit: strickgraph_property_plainknit, \
+                        mystrickgraph: strickgraph.strickgraph_container, \
+                        mymesh: meshthings.ply_surface )\
+                        ->Dict[ str, _rp_call_rtype ]:
+        assert pk.plainknit_decreaser is not None
+        tobeshortenedrows = isrelaxed.pressurerows
+        print( isrelaxed )
+        tmpstrickgraph = mystrickgraph.strickgraph
+        rows = tmpstrickgraph.get_rows()
+        if len(rows)-1 in tobeshortenedrows:
+            tobeshortenedrows.add( len(rows)-2 )
+        if 0 in tobeshortenedrows:
+            tobeshortenedrows.add( 1 )
+        #newstrickgraph = mystrickgraph.copy()
 
-def _rp_call_function( isrelaxed: strickgraph.strickgraph_property_relaxed, \
-                    isplainknit: strickgraph_property_plainknit, \
-                    mystrickgraph: strickgraph.strickgraph_container, \
-                    mymesh: meshthings.ply_surface )\
-                    ->Dict[ str, _rp_call_rtype ]:
-    assert pk.plainknit_decreaser is not None
-    tobeshortenedrows = isrelaxed.pressurerows
-    tmpstrickgraph = mystrickgraph.strickgraph
-    rows = tmpstrickgraph.get_rows()
-    if len(rows)-1 in tobeshortenedrows:
-        tobeshortenedrows.add( len(rows)-2 )
-    if 0 in tobeshortenedrows:
-        tobeshortenedrows.add( 1 )
-    #newstrickgraph = mystrickgraph.copy()
+        toberemoved_rows = get_longest_series( tobeshortenedrows )
+        logger.debug( f"remove lines {toberemoved_rows} from {tobeshortenedrows}")
+        oneline_worked = False
+        #for i in sorted( toberemoved_rows, reverse=True ): #problems with decrease last row
+        for i in sorted( tobeshortenedrows, reverse=False ):
+            try: 
+                tmpstrickgraph = pk.plainknit_decreaser.replace_graph( tmpstrickgraph, i )
+                oneline_worked = True
+            except Exception as err:
+                logger.debug( f"couldnt decrease at line {i}" )
+                #logger.debug( "strickgraph at line %i is: \n%s" \
+                #        %(i, tmpstrickgraph.to_manual( stinfo ) ))
+                #raise type(err)( "couldnt decrease", *err.args ) from err
+                pass
+        if not oneline_worked:
+            logger.debug( "strickgraph at lines %s is: \n%s" \
+                        %(tobeshortenedrows, tmpstrickgraph.to_manual( stinfo ) ))
+            raise Exception( "Could decrease strickgraph anywhere" )
 
-    toberemoved_rows = get_longest_series( tobeshortenedrows )
-    logger.debug( f"remove lines {toberemoved_rows} from {tobeshortenedrows}")
-    oneline_worked = False
-    #for i in sorted( toberemoved_rows, reverse=True ): #problems with decrease last row
-    for i in sorted( tobeshortenedrows, reverse=False ):
-        try: 
-            tmpstrickgraph = pk.plainknit_decreaser.replace_graph( tmpstrickgraph, i )
-            oneline_worked = True
-        except Exception as err:
-            logger.debug( f"couldnt decrease at line {i}" )
-            #logger.debug( "strickgraph at line %i is: \n%s" \
-            #        %(i, tmpstrickgraph.to_manual( stinfo ) ))
-            #raise type(err)( "couldnt decrease", *err.args ) from err
-            pass
-    if not oneline_worked:
-        logger.debug( "strickgraph at lines %s is: \n%s" \
-                    %(tobeshortenedrows, tmpstrickgraph.to_manual( stinfo ) ))
-        raise Exception( "Could decrease strickgraph anywhere" )
-
-    logger.debug( tmpstrickgraph.to_manual( stinfo ) )
-    return { "newstrickgraph": strickgraph.strickgraph_container( tmpstrickgraph ) }
-relax_pressure: factory_leaf = factory_leaf( _rp_create_datagraphs, _rp_call_function, \
-                            name = __name__ + ".improvestrickgraph pressure")
+        logger.debug( tmpstrickgraph.to_manual( stinfo ) )
+        return { "newstrickgraph": strickgraph.strickgraph_container( tmpstrickgraph ) }
+#relax_pressure: factory_leaf = factory_leaf( _rp_create_datagraphs, _rp_call_function, \
+        #                            name = __name__ + ".improvestrickgraph pressure")
 """relax pressure via removein stitches.
 
 .. autofunction:: _rp_call_function

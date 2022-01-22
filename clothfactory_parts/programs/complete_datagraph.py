@@ -40,6 +40,7 @@ def complete_data( mydata:datagraph ):
     all_factoryleafs = factoryleafs_dict.values()
     all_conclusions = conclusionleaf_dict.values()
     myflowgraph = flowgraph.from_factory_leafs( all_factoryleafs , all_conclusions )
+    #raise Exception( myflowgraph.get_all_used_factoryleafs(), myflowgraph.get_all_datastates() )
     tmp = audi.complete_datagraph( myflowgraph, mydata )
     return tmp
 
