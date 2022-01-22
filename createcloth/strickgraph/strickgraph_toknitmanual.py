@@ -34,32 +34,67 @@ def tomanual( strickgraph, stitchinfo, manual_type="thread" ):
     """
     #startside = strickgraph.get_startside()
     #rows = find_rows( strickgraph )
+    stitchsymbol = stitchinfo.stitchsymbol
     rows = strickgraph.get_rows( presentation_type="thread" )
     startnode = rows[0][0]
     startside = strickgraph.get_nodeattr_side()[ startnode ]
     nodeattributes = strickgraph.get_nodeattr_stitchtype()
+    stitchtypes = strickgraph.get_nodeattr_stitchtype()
 
-    text = ""
+    threads = strickgraph.get_threads()
+    qwe = strickgraph.get_previous_stitches()
+
+    find_thread_to = lambda stitch: ( i for i, stitches in enumerate(threads) \
+                                    if stitch in stitches ).__next__()
+    current_thread = find_thread_to( startnode )
+
+    commandlist = []
     for tmprow in rows:
-        newline = transform_rowtomanualline( tmprow, nodeattributes, stitchinfo)
-        text = text + newline + "\n"
+        for s in tmprow:
+            if current_thread != None:
+                if s in threads[ current_thread ]:
+                    commandlist.append( stitchtypes[ s ] )
+                    if s == threads[ current_thread ][-1]:
+                        current_thread = None
+                else:
+                    raise NotImplementedError( "multiple threads not implemented" )
+            else:
+                raise NotImplementedError( "multiple threads not implemented" )
+        commandlist.append( "\n" )
 
-    text_matrix = [ x.split() for x in text.splitlines() ]
-    if startside=="left":
-        _reverse_every_row( text_matrix )
+    shortened_commands = []
+    shortened_commands.append( [ 1, commandlist[0] ] )
+    for com in commandlist[ 1: ]:
+        if shortened_commands[ -1 ][ 1 ] == com:
+            shortened_commands[ -1 ][0] += 1
+        else:
+            shortened_commands.append( [1, com] )
+    def to_symbol( n, c ):
+        if c != "\n":
+            return "".join( (str(n), stitchsymbol.get( c,c ) ))
+        else:
+            return "\n"*n
+    shortened_commands = [ to_symbol( n, c ) for n, c in shortened_commands ]
+    row_commands = [[]]
+    for c in shortened_commands:
+        if c != "\n":
+            row_commands[-1].append( c )
+        else:
+            row_commands.append([])
 
     if manual_type == "machine":
-        _reverse_every_second_row( text_matrix )
-    text_list = [ " ".join(x) for x in text_matrix ]
-    text = "\n".join(text_list)
-    return text
-    
-def _reverse_every_row( manual ):
-    for i in range( int(len(manual)) ):
-        manual[ i ].reverse()
-def _reverse_every_second_row( manual ):
-    for i in range( int(len(manual)/2) ):
-        manual[ 2*i+1 ].reverse()
+        for i, row in enumerate( row_commands ):
+            if startside=="right":
+                if i%2==1:
+                    row.reverse()
+            else:
+                if i%2==0:
+                    row.reverse()
+    if len( row_commands[-1] )==0:
+        row_commands.pop()
+    row_commands = [ " ".join(row) for row in row_commands ]
+    manual = "\n".join( row_commands )
+    return manual
 
 character_dictionary={}
 #character_dictionary.update( stitchinfo.symbol )

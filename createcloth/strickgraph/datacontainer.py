@@ -158,6 +158,31 @@ class strick_datacontainer():
             raise EdgesNotFeasible( "There are cycles" ) from err
         return sorted_stitches
 
+    def get_threads( self ):
+        """Return every different thread as list of stitches. Threads mean the 
+        order in which, the stitches can be knitted and the thread shows, where
+        the real thread goes to next and doesnt come back.
+
+        :returns: List of thread as stitchlist
+        :rtype: Iterable[ Iterable[ Hashable ] ]
+        """
+        edges = self.__datacontainer.edges( data=True )
+        nextedges = { a:[b] for a,b, data in edges \
+                        if data["edgetype"] == "next"}
+        threadgraph = _netx.DiGraph( nextedges )
+
+        sorted_stitches = list( _netx.topological_sort( threadgraph ) )
+        threads = _netx.connected_components( _netx.Graph(threadgraph) )
+        threads = [ sorted(t, key=sorted_stitches.index ) for t in threads ]
+        return threads
+
+    def get_previous_stitches( self ):
+        edges = self.__datacontainer.edges()
+        prev = {}
+        for a,b in edges:
+            prev.setdefault( b, list() ).append( a )
+        return prev
+
     def _get_rowsort_stitches( self ):
         """
 
