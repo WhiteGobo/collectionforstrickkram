@@ -20,11 +20,11 @@ test_asdf:
 	$(CREATEPLAINKNIT_ALTERATOR) tmp/qq.xml $(ALTGENOPT)
 
 createcloth/plainknit/plainknit_increaser.xml: 
-	$(CREATEPLAINKNIT_ALTERATOR) $@ $(ALTGENOPT) --limitstart 350 --limitend 355 #--limitstart 1000 
+	$(CREATEPLAINKNIT_ALTERATOR) $@ $(ALTGENOPT) --limitend 2000 --limitstart 1000 
 	#python -m createcloth.plainknit.program_create_alterator $@ -l 8 -w 30 --continue
 
 createcloth/plainknit/plainknit_decreaser.xml: 
-	$(CREATEPLAINKNIT_ALTERATOR) $@ $(ALTGENOPT) --alteratortype decrease --limitstart 356  --limitend 358 #--limitstart 1000
+	$(CREATEPLAINKNIT_ALTERATOR) $@ $(ALTGENOPT) --alteratortype decrease --limitstart 1000 --limitend 2000
 	#python -m createcloth.plainknit.program_create_alterator $@ -l 8 -w 26 --continue --alteratortype decrease
 
 .PHONY: testoldalt
