@@ -217,13 +217,9 @@ class TestStringMethods( unittest.TestCase ):
 
         testgraph = strickgraph.strickgraph.from_manual( "5yo\n5k\n5k\n5bo", self.stitchinfo, manual_type="machine", startside="left" )
         #print( testgraph.get_rows() )
-        tmp = [[(0, 4), (0, 3), (0, 2), (0, 1), (0, 0)], [(1, 4), (1, 3), (1, 2), (1, 1), (1, 0)], [(2, 4), (2, 3), (2, 2), (2, 1), (2, 0)], [(3, 4), (3, 3), (3, 2), (3, 1), (3, 0)]]
-        try:
-            self.assertEqual( testgraph.get_rows(), tmp, msg="small test with get rows startside left failed" )
-        except Exception as err:
-            asdedgetype = testgraph.get_edges_with_labels()
-            raise Exception( asdedgetype ) from err
-
+        tmp = [[(0, 0), (0, 1), (0, 2), (0, 3), (0, 4)], [(1, 0), (1, 1), (1, 2), (1, 3), (1, 4)], [(2, 0), (2, 1), (2, 2), (2, 3), (2, 4)], [(3, 0), (3, 1), (3, 2), (3, 3), (3, 4)]]
+        self.assertEqual( testgraph.get_rows(), tmp, \
+                        msg="small test with get rows startside left failed" )
 
         testgraph = strickgraph.strickgraph.from_manual( "5yo\n5k\n5k\n5bo", self.stitchinfo, manual_type="machine", startside="right" )
         tmp = [[(0, 0), (0, 1), (0, 2), (0, 3), (0, 4)], [(1, 0), (1, 1), (1, 2), (1, 3), (1, 4)], [(2, 0), (2, 1), (2, 2), (2, 3), (2, 4)], [(3, 0), (3, 1), (3, 2), (3, 3), (3, 4)]]
