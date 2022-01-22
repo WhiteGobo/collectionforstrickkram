@@ -2,6 +2,6 @@
 
 """
 
-from .class_side_alterator import multi_sidealterator, \
-                                    NoTranslationPossible, \
+from .class_side_alterator import NoTranslationPossible, \
                                     sidealterator
+from .class_multi_sidealterator import multi_sidealterator

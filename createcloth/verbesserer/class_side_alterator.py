@@ -1,8 +1,9 @@
-from .verbesserer_class import FindError
+from .verbesserer_class import FindError, strickalterator
 import xml.etree.ElementTree as ET
 import logging
 import extrasfornetworkx as efn
 from extrasfornetworkx import class_verbesserer as cver
+from extrasfornetworkx import xml_config
 from extrasfornetworkx import class_multiverbesserer as cmultiver
 import networkx as netx
 import itertools as it
@@ -10,6 +11,7 @@ import math
 from .. import helper_limitcalculationtime as timelimiter
 from ..strickgraph import strickgraph
 logger = logging.getLogger( __name__ )
+from ..strickgraph import strickgraph
 from ..stitchinfo import basic_stitchdata as glstinfo
 from dataclasses import dataclass
 from typing import Iterable
@@ -21,6 +23,9 @@ class NoTranslationPossible( cver.NoTranslationPossible ):
     pass
 
 class SkipGeneration( Exception ):
+    pass
+
+class NoLeftRightFound( Exception ):
     pass
 
 class WrongAlterationFound( Exception ):
@@ -75,7 +80,8 @@ class sidealterator():
         if nodeattributes is None:
             nodeattributes = mystrickgraph.get_nodeattributes()
         if edgeattributes is None:
-            edgeattributes = [ (v1, v2, (label,)) for v1, v2, label in mystrickgraph.get_edges_with_labels() ]
+            edgeattributes = [ (v1, v2, (label,)) for v1, v2, label \
+                                    in mystrickgraph.get_edges_with_labels() ]
 
         try:
             #logger.debug( "replaceleft" )
@@ -94,16 +100,21 @@ class sidealterator():
         newedges = [ (v1, v2, attr[0]) for v1, v2, attr in edges_repl2 ]
         try:
             return strickgraph( newnodeattributes, newedges )
-        except Exception:
-            newnodeinfo_left = { node: attr for node, attr in nodesattr_repl1.items() if node not in nodeattributes }
-            newnodeinfo_right = { node: attr for node, attr in nodesattr_repl2.items() if node not in nodesattr_repl1 }
+        except Exception as err:
+            newnodeinfo_left = { node: attr \
+                                    for node, attr in nodesattr_repl1.items() \
+                                    if node not in nodeattributes }
+            newnodeinfo_right = { node: attr \
+                                    for node, attr in nodesattr_repl2.items() \
+                                    if node not in nodesattr_repl1 }
             newedgeinfo_left = [ e for e in edges_repl1 if e not in edgeattributes ]
             newedgeinfo_right = [ e for e in edges_repl2 if e not in edges_repl1 ]
             removed_nodes_left = [ n for n in nodeattributes \
                                     if n not in nodesattr_repl1 ]
             removed_nodes_right = [ n for n in nodesattr_repl1 \
                                     if n not in nodesattr_repl2 ]
-            removed_edges_left = [ e for e in edgeattributes if e not in edges_repl1 ]
+            removed_edges_left = [ e for e in edgeattributes \
+                                    if e not in edges_repl1 ]
             removed_edges_right = [ e for e in edges_repl1 if e not in edges_repl2 ]
             logger.debug( f"leftalteration nodeedits {self.alterator_left.node_edits}" )
             logger.debug( f"leftalteration edgeedits {self.alterator_left.edge_edits}" )
@@ -136,7 +147,9 @@ class sidealterator():
         :raises: SkipGeneration
         :todo: remove skip_if_in_list and transplant it into multisidealterator
         """
-        assert {"startside", "maximum_uncommon_nodes", "timelimit", "soft_maximum_uncommon_nodes", "soft_timelimit"}.issuperset( kwargs.keys() )
+        assert {"startside", "maximum_uncommon_nodes", "timelimit", \
+                "soft_maximum_uncommon_nodes", "soft_timelimit"}\
+                .issuperset( kwargs.keys() )
         creategraph_kwargs = { a:b for a,b in kwargs.items() \
                                             if a in ("startside")}
         fromgraphdifference_kwargs = { a:b for a,b in kwargs.items() \
@@ -158,7 +171,7 @@ class sidealterator():
                         raise SkipGeneration()
                     less_graph = create_graph_from_linetypes( linetype_in, \
                                             upedges_in, **creategraph_kwargs )
-                    raise WrongAlterationFound( j )#, f"This was produced: {tmp_graph.to_manual(glstinfo)}", f"this should be: {great_graph.to_manual( glstinfo)}", f"from: {less_graph.to_manual(glstinfo )}" )
+                    raise WrongAlterationFound( j )
                 except FindError:
                     continue
         less_graph = create_graph_from_linetypes( linetype_in, upedges_in, \
@@ -177,7 +190,6 @@ class sidealterator():
         :param xmlstring: String with all info 
         :type xmlstring: str
         """
-        from extrasfornetworkx import xml_config
         ET.register_namespace( "asd", xml_config.namespace )
         ET.register_namespace( "grml", xml_config.namespace_graphml )
         ET.register_namespace( "xsi", xml_config.namespace_xsi )
@@ -192,7 +204,6 @@ class sidealterator():
         :todo: raise custom exceptions
         """
         from ..verbesserer.verbesserer_class import strickalterator
-        from extrasfornetworkx import xml_config
         ET.register_namespace( "asd", xml_config.namespace )
         ET.register_namespace( "grml", xml_config.namespace_graphml )
         ET.register_namespace( "xsi", xml_config.namespace_xsi )
@@ -227,7 +238,6 @@ class sidealterator():
         :param encoding: same as xml.etree.ElementTree.tostring
         :type encoding: str
         """
-        from extrasfornetworkx import xml_config
         ET.register_namespace( "asd", xml_config.namespace )
         ET.register_namespace( "grml", xml_config.namespace_graphml )
         ET.register_namespace( "xsi", xml_config.namespace_xsi )
@@ -246,7 +256,6 @@ class sidealterator():
 
         :rtype: xml.etree.ElementTree.Element
         """
-        from extrasfornetworkx import xml_config
         ET.register_namespace( "asd", xml_config.namespace )
         ET.register_namespace( "grml", xml_config.namespace_graphml )
         ET.register_namespace( "xsi", xml_config.namespace_xsi )
@@ -292,13 +301,12 @@ class sidealterator():
         """
         logger.info( f"create {cls} from graphdifference" )
         nodeattr1 = source_strickgraph.get_nodeattributes()
-        edgeattr1 = [ (v1, v2, (label,)) for v1, v2, label in source_strickgraph.get_edges_with_labels() ]
+        edgeattr1 = [ (v1, v2, (label,)) \
+                        for v1, v2, label \
+                        in source_strickgraph.get_edges_with_labels() ]
         nodeattr2 = target_strickgraph.get_nodeattributes()
-        edgeattr2 = [ (v1, v2, (label,)) for v1, v2, label in target_strickgraph.get_edges_with_labels() ]
-        #if soft_timelimit is not None and soft_maximum_uncommon_nodes is not None:
-            #extraoptions = { "timelimit": soft_timelimit, 
-            #        "maximum_uncommon_nodes": soft_maximum_uncommon_nodes
-            #        }
+        edgeattr2 = [ (v1, v2, (label,)) for v1, v2, label \
+                        in target_strickgraph.get_edges_with_labels() ]
         extraoptions = {}
         if timelimit is not None:
             extraoptions[ "timelimit" ] = timelimit
@@ -331,13 +339,16 @@ class sidealterator():
                 if cond1 or all((cond2, cond3)) or cond4:
                     break
         except Exception as err:
-            logger.error( "find starttranslation failed. algorithm of extrasfornetworkx doesnt work" )
-            logger.error( f"graphs for efn optimize\ngraph1: {nodeattr1}\n"\
-                    f"{edgeattr1}\ngraph2: {nodeattr2}\n{edgeattr2}" )
+            logger.error( "find starttranslation failed. algorithm of "\
+                            "extrasfornetworkx doesnt work"\
+                            f"graphs for efn optimize\ngraph1: {nodeattr1}\n"\
+                            f"{edgeattr1}\ngraph2: {nodeattr2}\n{edgeattr2}" )
             raise Exception() from err
         assert len( translator ) > 0
-        logger.info( f"translator with uncommon nodes: {max(len(nodeattr1), len(nodeattr2))- len(translator)}")
-        if max(len(nodeattr1), len(nodeattr2)) - len( translator ) > maximum_uncommon_nodes:
+        logger.info( f"translator with uncommon nodes: "\
+                    f"{max(len(nodeattr1),len(nodeattr2))- len(translator)}")
+        if max(len(nodeattr1), len(nodeattr2)) - len( translator ) \
+                > maximum_uncommon_nodes:
             raise cmultiver.SkipAlteration()
         translator = { key: translator[key] \
                             for key in _reduce_to_biggest_connected( \
@@ -349,7 +360,7 @@ class sidealterator():
         logger.debug( f"difference output: {difference_graph2}" )
         leftnodes1, leftnodes2, startnode1_left, leftindex, \
                 rightnodes1, rightnodes2, startnode1_right, rightindex \
-                = separate_wholegraphs_to_leftright_insulas( \
+                = _separate_wholegraphs_to_leftright_insulas( \
                         difference_graph1, difference_graph2, translator, \
                         source_strickgraph, target_strickgraph, changedline_id )
         assert len([ i for i in leftnodes1 if i in rightnodes1 ]) == 0
@@ -357,10 +368,14 @@ class sidealterator():
                         else (x,) if type(x)==int \
                         else (0,)
         logger.debug( f"startnodes l/r: {startnode1_right}, {startnode1_left}" )
-        logger.debug( "leftnodes1: (l:%i) %s" %( len(leftnodes1), sorted(leftnodes1, key=mykey) ))
-        logger.debug( "leftnodes2: (l:%i) %s" %( len(leftnodes2), sorted(leftnodes2, key=mykey) ))
-        logger.debug( "rightnodes1: (l:%i) %s" %( len(rightnodes1), sorted(rightnodes1, key=mykey) ))
-        logger.debug( "rightnodes2: (l:%i) %s" %( len(rightnodes2), sorted(rightnodes2, key=mykey) ))
+        logger.debug( "leftnodes1: (l:%i) %s" %( len(leftnodes1), \
+                                sorted(leftnodes1, key=mykey) ))
+        logger.debug( "leftnodes2: (l:%i) %s" %( len(leftnodes2), \
+                                sorted(leftnodes2, key=mykey) ))
+        logger.debug( "rightnodes1: (l:%i) %s" %( len(rightnodes1), \
+                                sorted(rightnodes1, key=mykey) ))
+        logger.debug( "rightnodes2: (l:%i) %s" %( len(rightnodes2), \
+                                sorted(rightnodes2, key=mykey) ))
 
         logger.info("create left alterator")
         lefttrans = { a:b for a, b in translator.items() if a in leftnodes1 }
@@ -371,18 +386,8 @@ class sidealterator():
                                 leftnodes1, leftnodes2, \
                                 startnode1_left,
                                 lefttrans )
-        tmp_bordernodes1 = get_innerborder( leftnodes1, source_strickgraph )
-        tmp_bordernodes2 = get_innerborder( leftnodes2, target_strickgraph )
-        #oldtrans = { y:x for x,y in a.logging_information['translator oldgraph'].items()}
-        #newtrans = { y:x for x,y in a.logging_information['translator newgraph'].items()}
-        #orig_nodes_to_remove = [oldtrans[n] for n in a.nodes_to_remove()]
-        #orig_nodes_to_add = [newtrans[n] for n in a.nodes_to_add()]
-        #outsorted_oldnodes=set(orig_nodes_to_remove).intersection(tmp_bordernodes1)
-        #outsorted_newnodes =set(orig_nodes_to_add).intersection(tmp_bordernodes2)
-        #assert set() == outsorted_oldnodes == outsorted_newnodes, \
-                #"lefttrans problem, bordernodes, cant be added or removed: "\
-                #f"removed oldbordernodes: {outsorted_oldnodes} added "\
-                #f"newbordernodes: {outsorted_newnodes}"
+        tmp_bordernodes1 = _get_innerborder( leftnodes1, source_strickgraph )
+        tmp_bordernodes2 = _get_innerborder( leftnodes2, target_strickgraph )
         logger.info("create right alterator")
         righttrans = { a:b for a, b in translator.items() if a in rightnodes1 }
         logger.debug( f"nodes1: {rightnodes1}")
@@ -392,18 +397,6 @@ class sidealterator():
                                 rightnodes1, rightnodes2, \
                                 startnode1_right, \
                                 righttrans )
-        #tmp_bordernodes1 = get_innerborder( rightnodes1, source_strickgraph )
-        #tmp_bordernodes2 = get_innerborder( rightnodes2, target_strickgraph )
-        #oldtrans = { y:x for x,y in b.logging_information['translator oldgraph'].items()}
-        #newtrans = { y:x for x,y in b.logging_information['translator newgraph'].items()}
-        #orig_nodes_to_remove = [oldtrans[n] for n in b.nodes_to_remove()]
-        #orig_nodes_to_add = [newtrans[n] for n in b.nodes_to_add()]
-        #outsorted_oldnodes=set(orig_nodes_to_remove).intersection(tmp_bordernodes1)
-        #outsorted_newnodes =set(orig_nodes_to_add).intersection(tmp_bordernodes2)
-        #assert set() == outsorted_oldnodes == outsorted_newnodes, \
-                #"righttrans problem, bordernodes, cant be added or removed: "\
-                #f"removed oldbordernodes: {outsorted_oldnodes} added "\
-                #f"newbordernodes: {outsorted_newnodes}"
         return cls( a, leftindex, b, rightindex, **extraargs )
 
 def _generate_verbesserer_asdf( graph1, graph2, \
@@ -412,13 +405,11 @@ def _generate_verbesserer_asdf( graph1, graph2, \
     subgraph1 = graph1.subgraph( subnodelist1 )
     subgraph2 = graph2.subgraph( subnodelist2 )
     nodeattr1 = subgraph1.get_nodeattributes()
-    edgeattr1 = [ (v1, v2, (label,)) for v1,v2, label in subgraph1.get_edges_with_labels()]
+    edgeattr1 = [ (v1, v2, (label,)) for v1,v2, label \
+                    in subgraph1.get_edges_with_labels()]
     nodeattr2 = subgraph2.get_nodeattributes()
-    edgeattr2 = [ ( v1, v2, (label,)) for v1, v2, label in subgraph2.get_edges_with_labels() ]
-    from ..verbesserer.verbesserer_class import strickalterator
-    #logger.debug("input for strickgraphalterator: %s, %s, %s, %s, %s " \
-    #        % (nodelabels1, edgelabels1, nodelabels2, edgelabels2, \
-    #        starttranslation ) )
+    edgeattr2 = [ ( v1, v2, (label,)) for v1, v2, label \
+                    in subgraph2.get_edges_with_labels() ]
     try:
         return strickalterator.with_common_nodes( nodeattr1, edgeattr1, \
                                             nodeattr2, edgeattr2, \
@@ -445,8 +436,6 @@ def _reduce_to_biggest_connected( filter_nodes, edges ):
 
     return max_insula
 
-from ..strickgraph import strickgraph
-from ..stitchinfo import basic_stitchdata as glstinfo
 def create_graph_from_linetypes( linetypes, upedges, startside="right" ):
     sides = ("right", "left") if startside=="right" else ("left", "right")
     downedges = [ None, *upedges ]
@@ -464,7 +453,7 @@ def create_graph_from_linetypes( linetypes, upedges, startside="right" ):
     return graph
 
 
-def separate_wholegraphs_to_leftright_insulas( \
+def _separate_wholegraphs_to_leftright_insulas( \
                         difference_graph1, difference_graph2, translator, \
                         less_graph, great_graph, changedline_id ):
     """
@@ -522,7 +511,7 @@ def separate_wholegraphs_to_leftright_insulas( \
     try:
         uncommon_nodepairs1, uncommon_nodepairs2, splittedgraph_part1, _, \
                 splittedgraph_part2, _\
-                    = divide_into_two_parts( connected_insulas, neighbours1, \
+                    = _divide_into_two_parts( connected_insulas, neighbours1, \
                                             connected_insulas2, neighbours2,\
                                             translator )
     except IndexError as err:
@@ -584,10 +573,7 @@ def separate_wholegraphs_to_leftright_insulas( \
     except NameError as err:
         raise NoLeftRightFound() from err
 
-class NoLeftRightFound( Exception ):
-    pass
-
-def divide_into_two_parts( connected_insulas1, neighbours1, \
+def _divide_into_two_parts( connected_insulas1, neighbours1, \
                                             connected_insulas2, neighbours2,\
                                             samenode_translator ):
     """Divide nodes and uncommon nodes to blublub.
@@ -604,10 +590,10 @@ def divide_into_two_parts( connected_insulas1, neighbours1, \
     """
     assert set(it.chain.from_iterable( neighbours1.values() )) == neighbours1.keys()
     assert set(it.chain.from_iterable( neighbours2.values() )) == neighbours2.keys()
-    assert number_insulas( neighbours1 ) == 1
-    assert number_insulas( neighbours2 ) == 1
-    assert number_insulas( neighbours1, samenode_translator.keys() ) == 1, "wrong translation cant be ruled out"
-    assert number_insulas( neighbours2, samenode_translator.values() ) == 1, "wrong translation cant be ruled out"
+    assert _number_insulas( neighbours1 ) == 1
+    assert _number_insulas( neighbours2 ) == 1
+    assert _number_insulas( neighbours1, samenode_translator.keys() ) == 1, "wrong translation cant be ruled out"
+    assert _number_insulas( neighbours2, samenode_translator.values() ) == 1, "wrong translation cant be ruled out"
     assert len( samenode_translator ) > 0
     all_nodes = tuple( it.chain( neighbours1.keys(), neighbours2.keys() ) )
     """Create mapping of nodes2 to nodes1 if possible, else to unique name
@@ -699,7 +685,7 @@ def divide_into_two_parts( connected_insulas1, neighbours1, \
 
 
 
-    metagraph = DistanceCalculationGraph()
+    metagraph = _DistanceCalculationGraph()
     for v1, neighlist in it.chain( neighbours1.items(), trans_neighbours2.items() ):
         for v2 in neighlist:
             metagraph.add_edge( v1, v2 )
@@ -747,7 +733,7 @@ def divide_into_two_parts( connected_insulas1, neighbours1, \
                         ( antitrans.get( n, n ) for n in nodelist ) )
     return uncommon_nodespair1, uncommon_nodespair2
 
-class DistanceCalculationGraph( netx.Graph ):
+class _DistanceCalculationGraph( netx.Graph ):
     def calc_distance( self, nodelist1, nodelist2 ):
         nodelist1 = tuple(nodelist1)
         nodelist2 = tuple(nodelist2)
@@ -768,145 +754,6 @@ def _multi_sidesigint_handler( signal_received, frame ):
     print( "Exiting gracefully" )
     exit( 0 )
 
-class multi_sidealterator( efn.multialterator ):
-    """Multi alteratorclass for sidealterator
-    
-    :todo: overhaul this method, when removing unused things in this directory
-    :ivar alteratorlist: inherited from sidealterator
-    :ivar exclusion_criteria: inherited from sidealterator
-            
-    """
-    def __init__( self, side_alterator_list, **kwargs ):
-        """
-
-        :param kwargs: will passed down to parent.__init__
-        """
-        #for alt in side_alterator_list:
-        #    assert type( alt ) == asdf
-        super().__init__( side_alterator_list, **kwargs )
-        self.side_alterator_list = side_alterator_list
-
-    @dataclass
-    class linetypepair:
-        """helperclass for generate_from_linetypelist input.
-        will only be used as iterable so instead iterable conforming to
-        __iter__ can be used instead
-        """
-        input_linetypelist: Iterable
-        output_linetypelist: Iterable
-        input_upedges: Iterable[ int ]
-        output_upedges: Iterable[ int ]
-        changed_line: int
-        startside: str
-        def __iter__( self ):
-            """
-            :rtype: Iterable, Iterable, Iterable[ int ], Iterable[ int ], int, str
-            """
-            yield self.input_linetypelist
-            yield self.output_linetypelist
-            yield self.input_upedges
-            yield self.output_upedges
-            yield self.changed_line
-            yield self.startside
-
-    @classmethod
-    def generate_from_linetypelist( cls, linetypepairlists, \
-                                    starting_side_alterator_list=[], \
-                                    maximum_uncommon_nodes=30, timelimit=None,\
-                                    soft_timelimit=None, \
-                                    soft_maximum_uncommon_nodes=None,
-                                    **kwargs ):
-        """Method for automativ creation of side_alterator
-
-        :param linetypepairlists: Input for sidealterator.from_replacement
-        :type linetypepairlists: Iterable[ cls.linetypepair ]
-        :todo: here is a short debug for not working extrafornetworkx optimize
-        """
-        def use_alterator( tmpalterator, linetype_in, linetype_out, \
-                                upedges_in, upedges_out, changedline_id, \
-                                startside, **kwargs_alterate):
-            #logger.debug( "test alterator for %s" %(
-            #        cls.linetypepair( linetype_in, linetype_out, upedges_in, \
-            #                upedges_out, changedline_id, startside ) ))
-            tmp_graph = create_graph_from_linetypes( linetype_in, upedges_in, \
-                                        startside=startside, **kwargs_alterate )
-            try:
-                repl_graph = tmpalterator.replace_graph( tmp_graph, \
-                                        changedline_id )
-            except (cver.ExcludeAssertion, cver.NoTranslationPossible, cver.MultipleTranslationFound): #just to show exceptions are expected
-                raise
-            great_graph = create_graph_from_linetypes( linetype_out, upedges_out,\
-                                        startside=startside, **kwargs_alterate )
-            #return repl_graph == great_graph
-            if repl_graph == great_graph:
-                return True
-            else:
-                logger.debug( 
-                        ("found wrong replacement, as existing alterator: "\
-                        "input: %s, output: %s, expected: %s, "\
-                        "notes in used alterator: %s" ) \
-                        %( tmp_graph.to_manual( glstinfo ).replace("\n",";"), \
-                        repl_graph.to_manual( glstinfo ).replace("\n",";"), \
-                        great_graph.to_manual( glstinfo ).replace("\n",";"), \
-                        tmpalterator.notes )
-                        )
-                return False
-        def create_alterator( linetype_in, linetype_out, upedges_in, \
-                                upedges_out, changedline_id, startside, \
-                                **kwargs_create ):
-            logger.info( "in: %s" %( str(linetype_in) ) )
-            logger.info( "out: %s" %( str(linetype_out) ) )
-            logger.info( str((upedges_in, upedges_out, changedline_id)) )
-            notes = "generatedfrom:in: %s, out: %s"\
-                    %( str(linetype_in), str(linetype_out) )
-            if timelimit is not None:
-                kwargs_create[ "timelimit" ] = timelimit
-            try:
-                return sidealterator.from_linetypes( linetype_out, linetype_in, \
-                                upedges_out, upedges_in, changedline_id, \
-                                maximum_uncommon_nodes = maximum_uncommon_nodes, \
-                                startside=startside, **gen_extraoptions, \
-                                **kwargs_create )
-            except Exception:
-                raise cmultiver.SkipAlteration()
-
-        #q = it.chain.from_iterable( ((linepair_info, { "startside":"left"}), \
-        #                        (linepair_info, { "startside":"right"})) \
-        #                        for linepair_info in linetypepairlists )
-        gen_extraoptions = {}
-        if soft_timelimit is not None and soft_maximum_uncommon_nodes is not None:
-            gen_extraoptions["soft_timelimit"] = soft_timelimit
-            gen_extraoptions["soft_maximum_uncommon_nodes"] = soft_maximum_uncommon_nodes
-        q = zip( linetypepairlists, [{}]*len( linetypepairlists ) )
-        return cls.from_replacements( q,
-                    replace_function = use_alterator, \
-                    alterator_generator = create_alterator, \
-                    starting_generatorlist = starting_side_alterator_list, \
-                    **kwargs )
-
-
-    def replace_graph( self, graph, changeline ):
-        """Replace in given Strickgraph at given line. Gives back new
-        strickgraph with replaced parts. Raises 'NoTranslationPossible'
-        if replacement is not possible
-
-        :raises: NoTranslationPossible
-        :returns: Strickgraph with replaced parts
-        :rtype: strickgraph
-        """
-        row = graph.get_rows()[ changeline ]
-        nodeattributes = graph.get_nodeattributes()
-        edgeswithlabel = graph.get_edges_with_labels()
-        try:
-            return super().replace_graph( graph, changeline, row=row, \
-                                nodeattributes=nodeattributes )
-        except cver.NoTranslationPossible as err:
-            raise NoTranslationPossible() from err
-
-    @classmethod
-    def fromxml( cls, xmlstring ):
-        self = super().fromxml( xmlstring, alteratortype=sidealterator )
-        return self
 
 def _get_insulas( neighbours, filter_nodes=None ):
     """
@@ -926,7 +773,7 @@ def _get_insulas( neighbours, filter_nodes=None ):
     comp_list = list( netx.connected_components( helpergraph ) )
     return comp_list
 
-def number_insulas( neighbours, filter_nodes=None ):
+def _number_insulas( neighbours, filter_nodes=None ):
     """
     :type neibhbours: Dict[ Hashable, Iterable[Hashable] ]
     """
@@ -944,7 +791,7 @@ def number_insulas( neighbours, filter_nodes=None ):
     comp_list = list( netx.connected_components( helpergraph ) )
     return len( comp_list )
 
-def get_innerborder( sub_nodelist, graph ):
+def _get_innerborder( sub_nodelist, graph ):
     """return border nodes within sub_nodelist"""
     neighbours = {}
     for v1, v2, label in graph.get_edges_with_labels():

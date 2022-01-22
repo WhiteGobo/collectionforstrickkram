@@ -1,5 +1,5 @@
 #!/bin/env python
-from .class_side_alterator import sidealterator, multi_sidealterator
+from .class_multi_sidealterator import multi_sidealterator
 
 import logging
 logger = logging.getLogger( __name__ )

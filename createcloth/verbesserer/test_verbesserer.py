@@ -9,7 +9,8 @@ import extrasfornetworkx
 from . import resourcestest as test_src
 from .verbesserer_class import strickalterator, FindError
 
-from ..verbesserer.class_side_alterator import sidealterator, multi_sidealterator
+from ..verbesserer.class_side_alterator import sidealterator
+from .class_multi_sidealterator import multi_sidealterator
 
 import logging
 logger = logging.getLogger( __name__ )
