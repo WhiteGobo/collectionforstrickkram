@@ -1,9 +1,8 @@
 Sidealterator
 =============
 
-.. autoclass:: createcloth.verbesserer.class_side_alterator.sidealterator
+.. automodule:: createcloth.verbesserer.class_side_alterator
    :members:
 
-.. autoclass:: createcloth.verbesserer.class_side_alterator.multi_sidealterator
+.. automodule:: createcloth.verbesserer.class_multi_sidealterator
    :members:
-   :show-inheritance:

@@ -16,7 +16,6 @@ Welcome to Createcloth's documentation!
    classcollection/physicalhelper
    classcollection/meshhandler
    classcollection/visualizer
-   classcollection/verbesserer
    classcollection/sidealterator
    classcollection/plainknit
 

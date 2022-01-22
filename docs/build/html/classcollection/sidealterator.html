@@ -17,7 +17,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Plainknit" href="plainknit.html" />
-    <link rel="prev" title="Strickgraph Utils" href="verbesserer.html" /> 
+    <link rel="prev" title="Visualization" href="visualizer.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -32,7 +32,7 @@
           <a href="plainknit.html" title="Plainknit"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="verbesserer.html" title="Strickgraph Utils"
+          <a href="visualizer.html" title="Visualization"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">Createcloth  documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Sidealterator</a></li> 
@@ -44,8 +44,28 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="sidealterator">
-<h1>Sidealterator<a class="headerlink" href="#sidealterator" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-createcloth.verbesserer.class_side_alterator">
+<span id="sidealterator"></span><h1>Sidealterator<a class="headerlink" href="#module-createcloth.verbesserer.class_side_alterator" title="Permalink to this headline">¶</a></h1>
+<dl class="py exception">
+<dt class="sig sig-object py" id="createcloth.verbesserer.class_side_alterator.NoLeftRightFound">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">createcloth.verbesserer.class_side_alterator.</span></span><span class="sig-name descname"><span class="pre">NoLeftRightFound</span></span><a class="headerlink" href="#createcloth.verbesserer.class_side_alterator.NoLeftRightFound" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="createcloth.verbesserer.class_side_alterator.NoTranslationPossible">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">createcloth.verbesserer.class_side_alterator.</span></span><span class="sig-name descname"><span class="pre">NoTranslationPossible</span></span><a class="headerlink" href="#createcloth.verbesserer.class_side_alterator.NoTranslationPossible" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="createcloth.verbesserer.class_side_alterator.SkipGeneration">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">createcloth.verbesserer.class_side_alterator.</span></span><span class="sig-name descname"><span class="pre">SkipGeneration</span></span><a class="headerlink" href="#createcloth.verbesserer.class_side_alterator.SkipGeneration" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="createcloth.verbesserer.class_side_alterator.WrongAlterationFound">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">createcloth.verbesserer.class_side_alterator.</span></span><span class="sig-name descname"><span class="pre">WrongAlterationFound</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">probleminteger</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.verbesserer.class_side_alterator.WrongAlterationFound" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="createcloth.verbesserer.class_side_alterator.sidealterator">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">createcloth.verbesserer.class_side_alterator.</span></span><span class="sig-name descname"><span class="pre">sidealterator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alterator_left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leftstartindex</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alterator_right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rightstartindex</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">notes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.verbesserer.class_side_alterator.sidealterator" title="Permalink to this definition">¶</a></dt>
@@ -181,11 +201,10 @@ mystrickgraph.get_edges_with_labels()</p></li>
 
 </dd></dl>
 
-<dl class="py class">
-<dt class="sig sig-object py" id="createcloth.verbesserer.class_side_alterator.multi_sidealterator">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">createcloth.verbesserer.class_side_alterator.</span></span><span class="sig-name descname"><span class="pre">multi_sidealterator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">side_alterator_list</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.verbesserer.class_side_alterator.multi_sidealterator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">extrasfornetworkx.class_multiverbesserer.multialterator</span></code></p>
-<p>Multi alteratorclass for sidealterator</p>
+<span class="target" id="module-createcloth.verbesserer.class_multi_sidealterator"></span><dl class="py class">
+<dt class="sig sig-object py" id="createcloth.verbesserer.class_multi_sidealterator.multi_sidealterator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">createcloth.verbesserer.class_multi_sidealterator.</span></span><span class="sig-name descname"><span class="pre">multi_sidealterator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">side_alterator_list</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.verbesserer.class_multi_sidealterator.multi_sidealterator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multi alteratorclass for sidealterator</p>
 <dl class="field-list simple">
 <dt class="field-odd">Todo</dt>
 <dd class="field-odd"><p>overhaul this method, when removing unused things in this directory</p>
@@ -198,8 +217,8 @@ mystrickgraph.get_edges_with_labels()</p></li>
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="createcloth.verbesserer.class_side_alterator.multi_sidealterator.fromxml">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fromxml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xmlstring</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.verbesserer.class_side_alterator.multi_sidealterator.fromxml" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="createcloth.verbesserer.class_multi_sidealterator.multi_sidealterator.fromxml">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fromxml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xmlstring</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.verbesserer.class_multi_sidealterator.multi_sidealterator.fromxml" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load multialterator from xml-string</p>
 <dl class="field-list simple">
 <dt class="field-odd">Todo</dt>
@@ -209,8 +228,8 @@ mystrickgraph.get_edges_with_labels()</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="createcloth.verbesserer.class_side_alterator.multi_sidealterator.generate_from_linetypelist">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">generate_from_linetypelist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">linetypepairlists</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">starting_side_alterator_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maximum_uncommon_nodes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timelimit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">soft_timelimit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">soft_maximum_uncommon_nodes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.verbesserer.class_side_alterator.multi_sidealterator.generate_from_linetypelist" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="createcloth.verbesserer.class_multi_sidealterator.multi_sidealterator.generate_from_linetypelist">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">generate_from_linetypelist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">linetypepairlists</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">starting_side_alterator_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maximum_uncommon_nodes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timelimit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">soft_timelimit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">soft_maximum_uncommon_nodes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.verbesserer.class_multi_sidealterator.multi_sidealterator.generate_from_linetypelist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method for automativ creation of side_alterator</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -223,17 +242,16 @@ mystrickgraph.get_edges_with_labels()</p></li>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="createcloth.verbesserer.class_side_alterator.multi_sidealterator.linetypepair">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">linetypepair</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_linetypelist</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_linetypelist</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_upedges</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_upedges</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">changed_line</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startside</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.verbesserer.class_side_alterator.multi_sidealterator.linetypepair" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>helperclass for generate_from_linetypelist input.
+<dt class="sig sig-object py" id="createcloth.verbesserer.class_multi_sidealterator.multi_sidealterator.linetypepair">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">linetypepair</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_linetypelist</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_linetypelist</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_upedges</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_upedges</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">changed_line</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startside</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.verbesserer.class_multi_sidealterator.multi_sidealterator.linetypepair" title="Permalink to this definition">¶</a></dt>
+<dd><p>helperclass for generate_from_linetypelist input.
 will only be used as iterable so instead iterable conforming to
 __iter__ can be used instead</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="createcloth.verbesserer.class_side_alterator.multi_sidealterator.replace_graph">
-<span class="sig-name descname"><span class="pre">replace_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">changeline</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.verbesserer.class_side_alterator.multi_sidealterator.replace_graph" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="createcloth.verbesserer.class_multi_sidealterator.multi_sidealterator.replace_graph">
+<span class="sig-name descname"><span class="pre">replace_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">changeline</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.verbesserer.class_multi_sidealterator.multi_sidealterator.replace_graph" title="Permalink to this definition">¶</a></dt>
 <dd><p>Replace in given Strickgraph at given line. Gives back new
 strickgraph with replaced parts. Raises ‘NoTranslationPossible’
 if replacement is not possible</p>
@@ -261,12 +279,16 @@ if replacement is not possible</p>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="verbesserer.html"
-                        title="previous chapter">Strickgraph Utils</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="plainknit.html"
-                        title="next chapter">Plainknit</a></p>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="visualizer.html"
+                          title="previous chapter">Visualization</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="plainknit.html"
+                          title="next chapter">Plainknit</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -301,7 +323,7 @@ if replacement is not possible</p>
           <a href="plainknit.html" title="Plainknit"
              >next</a> |</li>
         <li class="right" >
-          <a href="verbesserer.html" title="Strickgraph Utils"
+          <a href="visualizer.html" title="Visualization"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">Createcloth  documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Sidealterator</a></li> 
@@ -309,7 +331,7 @@ if replacement is not possible</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Richard Fechner.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
 </html>

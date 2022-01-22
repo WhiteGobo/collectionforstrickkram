@@ -16,7 +16,7 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Classifier" href="strickclassifier.html" />
+    <link rel="next" title="Howto to autothingy clothes" href="../howto/clothfactory.html" />
     <link rel="prev" title="Sidealterator" href="sidealterator.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -29,7 +29,7 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="strickclassifier.html" title="Classifier"
+          <a href="../howto/clothfactory.html" title="Howto to autothingy clothes"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="sidealterator.html" title="Sidealterator"
@@ -73,8 +73,13 @@ and arte to be identified my strings.</p>
 <dd class="field-odd"><p>objects may be more intuitive, than strings. maybe this should be
 further inspected</p>
 </dd>
-<dt class="field-even">cvar rowstates</dt>
-<dd class="field-even"><p>set of all possible attributes for single rows</p>
+<dt class="field-even">todo</dt>
+<dd class="field-even"><p>add own multisidealteratorclass inside this package, which augment
+the alterator with a from_attributes_of_plainknit-generator. Remove
+this generator from baseclass from createcloth.verbesserer</p>
+</dd>
+<dt class="field-odd">cvar rowstates</dt>
+<dd class="field-odd"><p>set of all possible attributes for single rows</p>
 </dd>
 </dl>
 <dl class="py function">
@@ -142,13 +147,13 @@ to plainknit</p></li>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="createcloth.plainknit.plainknit_decreaser">
-<span class="sig-prename descclassname"><span class="pre">createcloth.plainknit.</span></span><span class="sig-name descname"><span class="pre">plainknit_decreaser</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="sidealterator.html#createcloth.verbesserer.class_side_alterator.multi_sidealterator" title="createcloth.verbesserer.class_side_alterator.multi_sidealterator"><span class="pre">createcloth.verbesserer.class_side_alterator.multi_sidealterator</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;createcloth.verbesserer.class_side_alterator.multi_sidealterator</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#createcloth.plainknit.plainknit_decreaser" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">createcloth.plainknit.</span></span><span class="sig-name descname"><span class="pre">plainknit_decreaser</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#createcloth.plainknit.plainknit_decreaser" title="Permalink to this definition">¶</a></dt>
 <dd><p>decreaser from file as described in ‘.plainknit_decreaser_file.xml’</p>
 </dd></dl>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="createcloth.plainknit.plainknit_increaser">
-<span class="sig-prename descclassname"><span class="pre">createcloth.plainknit.</span></span><span class="sig-name descname"><span class="pre">plainknit_increaser</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="sidealterator.html#createcloth.verbesserer.class_side_alterator.multi_sidealterator" title="createcloth.verbesserer.class_side_alterator.multi_sidealterator"><span class="pre">createcloth.verbesserer.class_side_alterator.multi_sidealterator</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;createcloth.verbesserer.class_side_alterator.multi_sidealterator</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#createcloth.plainknit.plainknit_increaser" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">createcloth.plainknit.</span></span><span class="sig-name descname"><span class="pre">plainknit_increaser</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#createcloth.plainknit.plainknit_increaser" title="Permalink to this definition">¶</a></dt>
 <dd><p>increaser from file as in ‘.plainknit_increaser_file.xml’</p>
 </dd></dl>
 
@@ -494,12 +499,6 @@ List[ Tuple[Iterable[linetypes], Iterable[int]] ] ]</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="createcloth.plainknit.create_example_strickgraphs.method1">
-<span class="sig-prename descclassname"><span class="pre">createcloth.plainknit.create_example_strickgraphs.</span></span><span class="sig-name descname"><span class="pre">method1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pairlist</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">side</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'both'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oldtranlatorlist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.plainknit.create_example_strickgraphs.method1" title="Permalink to this definition">¶</a></dt>
-<dd><p>???</p>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="createcloth.plainknit.create_example_strickgraphs.order_neighbouring">
 <span class="sig-prename descclassname"><span class="pre">createcloth.plainknit.create_example_strickgraphs.</span></span><span class="sig-name descname"><span class="pre">order_neighbouring</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">brubru</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startside</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.plainknit.create_example_strickgraphs.order_neighbouring" title="Permalink to this definition">¶</a></dt>
 <dd><p>Helperfunction for creation of increaser and decreaser for 
@@ -551,8 +550,9 @@ linelength are described by integers</p>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#">Plainknit</a><ul>
 <li><a class="reference internal" href="#module-createcloth.plainknit.rowstates">Used states</a></li>
 <li><a class="reference internal" href="#description-of-plainknit">Description of plainknit</a></li>
@@ -561,12 +561,17 @@ linelength are described by integers</p>
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="sidealterator.html"
-                        title="previous chapter">Sidealterator</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="strickclassifier.html"
-                        title="next chapter">Classifier</a></p>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="sidealterator.html"
+                          title="previous chapter">Sidealterator</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="../howto/clothfactory.html"
+                          title="next chapter">Howto to autothingy clothes</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -598,7 +603,7 @@ linelength are described by integers</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="strickclassifier.html" title="Classifier"
+          <a href="../howto/clothfactory.html" title="Howto to autothingy clothes"
              >next</a> |</li>
         <li class="right" >
           <a href="sidealterator.html" title="Sidealterator"
@@ -609,7 +614,7 @@ linelength are described by integers</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Richard Fechner.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
 </html>

@@ -3,7 +3,6 @@ Plainknit
 
 Methods for everything sourrunded a plainknit-strickgraph. 
 
-
 .. automodule:: createcloth.plainknit
    :members:
    :undoc-members:

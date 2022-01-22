@@ -229,9 +229,11 @@ documentation :py:mod:`datagraph_factory` or in the testmethod
 Reference for programs
 ----------------------
 
-.. program:: create_directory_strickcompleter
+.. todo::
 
-   ASDF myprogram AAAAAAAAAAA
+   make a program reference for directory_strickcompleter
+
+.. program:: create_directory_strickcompleter
 
 .. option:: -d <directory>
 
