@@ -19,6 +19,9 @@ and arte to be identified my strings.
 
 :todo: objects may be more intuitive, than strings. maybe this should be
         further inspected
+:todo: add own multisidealteratorclass inside this package, which augment
+        the alterator with a from_attributes_of_plainknit-generator. Remove
+        this generator from baseclass from createcloth.verbesserer
 
 :cvar rowstates: set of all possible attributes for single rows
 """
@@ -28,18 +31,21 @@ and arte to be identified my strings.
 
 from . import rowstates
 
-startsides = {"left", "right" }
+startsides = { "left", "right" }
 """possible values for 'startside'-attribute"""
 
 #upedges: Iterable[ int ]
 
+attributes = { "upedges", "startside", "linetypes" }
+
 from .class_identifier import create_graph_from_linetypes
 from .class_identifier import plainknit_strickgraph_identifier_a as plainknit_strickgraph_identifier
+from .create_example_strickgraphs import create_example_strickset
 
 from .method_isplain import isplain
 
-from ..verbesserer import class_side_alterator as _csa
 def _load_alterator( filename ):
+    from ..verbesserer import class_multi_sidealterator as _csa
     import pkg_resources
     try:
         abs_filename = pkg_resources.resource_filename( __name__, filename )
@@ -49,12 +55,9 @@ def _load_alterator( filename ):
     except Exception as err:
         return None
 
-plainknit_increaser: _csa.multi_sidealterator \
-                    = _load_alterator( "plainknit_increaser.xml" )
+plainknit_increaser = _load_alterator( "plainknit_increaser.xml" )
 """increaser from file as in '.plainknit_increaser_file.xml'"""
 
-plainknit_decreaser: _csa.multi_sidealterator \
-                    = _load_alterator( "plainknit_decreaser.xml" )
+plainknit_decreaser = _load_alterator( "plainknit_decreaser.xml" )
 """decreaser from file as described in '.plainknit_decreaser_file.xml'"""
 
-from .create_example_strickgraphs import create_example_strickset

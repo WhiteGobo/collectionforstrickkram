@@ -29,14 +29,6 @@ def create_graph_from_linetypes( linetypes, upedges, startside="right" ):
 
 
 
-def method1( pairlist: Iterable[ Tuple[ str, str ]], \
-                                    side="both", reverse=False,
-                                    oldtranlatorlist = [] ):
-    """ ??? """
-
-    myersetzer = manstomulti( pairlist, reverse = reversed, side = "both", \
-                                oldtranslatorlist = oldtranslatorlist )
-
 def create_example_strickset( strickgraphsize, \
                                 min_row_length=12, startright=True )-> Iterator:
     """Method for creating example strickgraphs with plainknit lineidentifiers
@@ -273,7 +265,7 @@ def order_neighbouring( brubru, startside ):
                                                                 for ue in upe2 )
 
                             qqdiff = sum( upedges_in )-sum(upedges_out)
-                            from ..verbesserer.class_side_alterator import multi_sidealterator as multialt
+                            from ..verbesserer import multi_sidealterator as multialt
                             newneighbourtuple = multialt.linetypepair(
                                     linetype_out,
                                     linetype_in, 

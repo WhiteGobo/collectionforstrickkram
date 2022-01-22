@@ -5,7 +5,7 @@ import logging
 #import itertools as it
 logger = logging.getLogger( __name__ )
 #import time
-from ..verbesserer.class_side_alterator import multi_sidealterator
+from ..verbesserer import multi_sidealterator
 from ..stitchinfo import basic_stitchdata as glstinfo
 
 from . import create_example_strickgraphs as ces

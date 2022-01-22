@@ -1,5 +1,8 @@
 from . import method_isplain as mip
 from . import create_example_strickgraphs as ces
+from .rowstates import start, end, leftplane, rightplane, \
+                    lefteaves, righteaves, enddecrease, \
+                    plain, increase, decrease
 
 from ..strickgraph import strickgraph
 from ..stitchinfo import basic_stitchdata as glstinfo
@@ -33,9 +36,6 @@ def create_graph_from_linetypes( linetypes, upedges, startside="right" ):
     return graph
 
 
-from .rowstates import start, end, leftplane, rightplane, \
-                    lefteaves, righteaves, enddecrease, \
-                    plain, increase, decrease
 def plainknit_strickgraph_identifier_a( target_strickgraph ):
     """Identifier of strickgraph as plainknit
 

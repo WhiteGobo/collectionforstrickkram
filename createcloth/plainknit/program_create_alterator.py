@@ -5,13 +5,14 @@ from .create_example_strickgraphs import create_example_strickset
 from .create_example_strickgraphs import create_stitchnumber_to_examplestrick
 from .create_example_strickgraphs import order_neighbouring
 from .create_example_strickgraphs import order_to_nearest_neighbours, normalise_upedges
-from ..verbesserer.class_side_alterator import sidealterator, multi_sidealterator, NoTranslationPossible
-from ..verbesserer.class_side_alterator import multi_sidealterator as multialt
+from ..verbesserer import sidealterator, NoTranslationPossible
+from ..verbesserer import multi_sidealterator as multialt
 from collections import Counter
 from . import state as st
 import itertools as it
 from typing import Iterable
 from . import rowstates as est
+from .class_identifier import create_graph_from_linetypes
 
 import logging
 logger = logging.getLogger( __name__ )
@@ -43,7 +44,7 @@ def sigint_handler( signal_received, frame ):
     except Exception:
         exit(0)
     if len(alteratorlist) > 0:
-        myalt = multi_sidealterator( alteratorlist )
+        myalt = multialt( alteratorlist )
         savetofile( filename_for_sigint, myalt )
     print( "Exiting gracefully" )
     exit( 0 )
@@ -52,7 +53,7 @@ def loadfromfile( filename ):
     with open( filename, "rb" ) as myf:
         xmlstr = myf.read()
         #obj = pickle.load( myf )
-    obj = multi_sidealterator.fromxml( xmlstr )
+    obj = multialt.fromxml( xmlstr )
     alteratorlist = obj.side_alterator_list
     exclusioncriteria = obj.exclusion_criteria
     return alteratorlist, exclusioncriteria, obj
@@ -237,6 +238,41 @@ def main( filename, alteratortype, maximum_uncommon_nodes, timelimit, \
 
     extraoptions = { #"pipe_for_interrupt": globalpipe,\
             }
+    if cont:
+        try:
+            with open( filename, "rb" ) as myf:
+                xmlstr = myf.read()
+                #obj = pickle.load( myf )
+            myalt = multialt.fromxml( xmlstr )
+        except FileNotFoundError:
+            myalt = multialt( [] )
+    else:
+        myalt = multialt( [] )
+
+    if False:
+        qarray = []
+        import time
+        t0 = time.time()
+        i = 0
+        for input_linetypelist, output_linetypelist, input_upedges, output_upedges, changed_line, startside in increase_linetypes_collection:
+            print( f"\ntestnext {i}: ", time.time()-t0 )
+            print( input_linetypelist, output_linetypelist, input_upedges, output_upedges, changed_line, startside )
+            i += 1
+            source_graph = create_graph_from_linetypes( input_linetypelist, input_upedges, startside )
+            target_graph = create_graph_from_linetypes( output_linetypelist, output_upedges, startside )
+            try:
+                q = myalt.test_replace( target_graph, source_graph, changed_line )
+            except myalt.MultireplacementProducesWrongAlteration as err:
+                brubru = myalt.replace_graph( source_graph, changed_line )
+                raise Exception( brubru.to_manual( glstinfo), target_graph.to_manual(glstinfo) ) from err
+                produces_wrong = err.produces_wrong
+                produces_correct = list( err.produces_correct )
+                print( produces_wrong, produces_correct )
+
+            #raise Exception( input_linetypelist, output_linetypelist, input_upedges, output_upedges, changed_line, startside, q )
+            qarray.append( q )
+        raise Exception( qarray )
+
     if cont or testoldalt:
         old_alterator = None
         try:
@@ -256,22 +292,22 @@ def main( filename, alteratortype, maximum_uncommon_nodes, timelimit, \
         extraoptions[ "soft_maximum_uncommon_nodes"] = soft_maximum_uncommon_nodes
     extraoptions[ "maximum_uncommon_nodes" ] = maximum_uncommon_nodes
 
-    increaser = multi_sidealterator.generate_from_linetypelist( \
+    increaser = multialt.generate_from_linetypelist( \
                 increase_linetypes_collection, **extraoptions )
     myalterator = increaser
     savetofile( filename, myalterator )
     return
     if alteratortype == 'increase':
         inc_to_dec = lambda lout, lin, upout, upin, lineid, side: \
-                            multi_sidealterator.linetypepair(lin, lout, upin, upout, lineid, side)
+                            multialt.linetypepair(lin, lout, upin, upout, lineid, side)
         decrease_linetypes_collection \
                 = [ inc_to_dec( *data ) \
                 for data in increase_linetypes_collection ]
-        decreaser = multi_sidealterator.generate_from_linetypelist( \
+        decreaser = multialt.generate_from_linetypelist( \
                 decrease_linetypes_collection, **extraoptions )
         myalterator = decreaser
     elif alteratortype == 'decrease':
-        increaser = multi_sidealterator.generate_from_linetypelist( \
+        increaser = multialt.generate_from_linetypelist( \
                 increase_linetypes_collection, **extraoptions )
         myalterator = increaser
     else:

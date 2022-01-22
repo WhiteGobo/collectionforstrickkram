@@ -8,6 +8,14 @@ class WrongSide( Exception ):
 class WrongDownUpEdges( Exception ):
     pass
 
+def range_inf( lower=0, add=1 ):
+    i = int( lower )
+    add = int(add)
+    while True:
+        yield i
+        i += add
+
+
 class rowstate():
     """Rowstate to identify plainknit rows"""
     def __init__( self, name:str, identifier, updowndifference=None, \
@@ -20,9 +28,10 @@ class rowstate():
         elif type( updowndifference ) == int:
             self._updowndifference = (updowndifference, )
         elif type( updowndifference ) == str:
-            q = { "positive":range(3, 6), "negative":range(-3,-6,-1)}
+            #q = { "positive":range(3, 6), "negative":range(-3,-6,-1)}
+            q = { "positive":range_inf( 3 ), "negative":range_inf(-3, add=-1)}
             try:
-                self._updowndifference = tuple(q[updowndifference])
+                self._updowndifference = tuple( a for a,b in zip(q[updowndifference],range(3)))
             except KeyError as err:
                 raise KeyError( "string updowndifference must be one" \
                                 + f"of these: {tuple(q.keys())}" ) from err
