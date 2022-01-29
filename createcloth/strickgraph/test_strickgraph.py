@@ -247,7 +247,7 @@ class TestStringMethods( unittest.TestCase ):
 
     def test_frommanual( self ):
         testmanual = "3yo\n2k yo 1k\n2k, 1k2tog\n3bo\n"
-        testmanual_uni = "3yo\n2k 1yo 1k\n2k 1k2tog\n3bo\n"
+        testmanual_uni = "3yo\n2k yo k\n2k k2tog\n3bo\n"
         asd = strickgraph.strickgraph.from_manual( testmanual, self.stitchinfo )
         manual = asd.to_manual( self.stitchinfo )
         manual = tuple( "".join( x.split() ) for x in manual.splitlines() )
@@ -261,28 +261,30 @@ class TestStringMethods( unittest.TestCase ):
             testmanual = "4yo\n2k 1yo 1k\n2k, 1k2tog, 1k\n4bo\n"
             strickgraph.strickgraph.from_manual( testmanual, self.stitchinfo )
         self.assertRaises( BrokenManual, testbrokenmanual )
-
-        testmanual = [x.split() for x in \
-                            "4yo\n2k yo 2k\n2k 1k2tog 1k\n4bo\n".splitlines()]
+        testmanual = "4yo\n2k yo 2k\n2k k2tog k\n4bo\n"
         asd = strickgraph.strickgraph.from_manual( testmanual, self.stitchinfo )
         manual = asd.to_manual( self.stitchinfo )
         manual = [ x.split() for x in manual.splitlines() ]
         testmanual = [x.split() for x \
-                        in "4yo\n2k 1yo 2k\n2k 1k2tog 1k\n4bo\n".splitlines()]
+                        in "4yo\n2k yo 2k\n2k k2tog k\n4bo\n".splitlines()]
         #this removes the spaces and tabs
         for i in range(len(testmanual)):
             self.assertEqual( "".join(manual[i]), "".join(testmanual[i]) )
 
 
-        testmanual = "2yo\n k p\n k p\n 2bo\n"
+        testmanual = "2yo\n 1k 1p\n k p\n 2bo\n"
         asd = strickgraph.strickgraph.from_manual( testmanual, self.stitchinfo )
         manual = asd.to_manual( self.stitchinfo )
         manual = [ x.split() for x in manual.splitlines() ]
         testmanual = [x.split() for x \
-                        in "2yo\n 1k 1p\n 1k 1p\n 2bo\n".splitlines()]
+                        in "2yo\n k p\n k p\n 2bo\n".splitlines()]
         #this removes the spaces and tabs
         for i in range(len(testmanual)):
             self.assertEqual( "".join(manual[i]), "".join(testmanual[i]) )
+
+        asd = create_testgraph_with_chasm()
+        manual = asd.to_manual( self.stitchinfo )
+        qwe = strickgraph.strickgraph.from_manual( manual, self.stitchinfo )
 
     def test_manualtype_machine_and_thread( self ):
         testmanual = "2yo\n k p\n k p\n 2bo\n"
@@ -304,6 +306,37 @@ class TestStringMethods( unittest.TestCase ):
         asd = strickgraph.strickgraph.from_manual( testmanual, self.stitchinfo, manual_type="machine", startside="left" )
         self.assertEqual( set(asd.neighbors((1,1))), {(2,1)} )
 
+
+
+def create_testgraph_with_chasm():
+    #create strickgraph 7yo;7k;3k 1bo 3k;3k skip 3k;3k skip 3k;
+    nodeattr = {}
+    edges = []
+    rowlength, number_rows = 7, 5
+    endofline=((0,6), (1,0), (2,6), (3,0), (3,4) )
+    skip_stitches = [(3,3), (4,3)]
+    bindoff_stitches = [ (2,3), (4,0),(4,1),(4,2),(4,4),(4,5),(4,6) ]
+    for i in range(number_rows):
+        for j in range( rowlength ):
+            if (i,j) in skip_stitches:
+                continue
+            if (i,j) in bindoff_stitches:
+                st_type = "bindoff"
+            else:
+                st_type = {0:"yarnover", number_rows-1:"bindoff"}.get(i,"knit")
+            
+            side = { 1:"left", 0:"right" }[ i%2 ]
+            nodeattr[ (i,j) ] = { "stitchtype":st_type, "side":side }
+
+            if (i,j) not in endofline:
+                next_stitch = (i, j+1) if i%2==0 else (i, j-1)
+            else:
+                next_stitch = (i+1, j)
+            edges.append( ((i,j), next_stitch, "next"))
+            edges.append( ((i,j), (i+1,j), "up") )
+    edges = [(v1,v2,label) for v1, v2, label in edges \
+            if all(v in nodeattr for v in (v1,v2))]
+    return strickgraph.strickgraph( nodeattr, edges )
 
 
 if __name__=="__main__":

@@ -23,7 +23,7 @@ class TestMeshhandlerMethods( unittest.TestCase ):
         genstrick = plainknit.create_graph_from_linetypes(
                                 linetype_list, upedges, startside=startside )
         self.assertEqual( genstrick.to_manual( glstinfo ), \
-                        "12yo\n12k\n2k 1yo 8k 1yo 2k\n14bo" )
+                        "12yo\n12k\n2k yo 8k yo 2k\n14bo" )
         attributes = plainknit.plainknit_strickgraph_identifier( genstrick )
         self.assertEqual( attributes[ "startside" ], startside )
         self.assertEqual( tuple(attributes[ "upedges" ]), upedges )
