@@ -581,19 +581,20 @@ def _find_requisites_for_stitches( upedges, nextedges, threads, stitchside, \
     :type lefttoright_rows: Iterable[ Hashable ]
             "knitted_stitches": set(),
     """
-    stitch_needednooses: dict[Hashable, list] = {}
-    stitch_neededstitches: dict[ Hashable, list] = {}
-    stitch_neededthread: dict[ Hashable, int ] = {}
+    all_stitches = stitchside.keys()
+    stitch_needednooses: dict[Hashable, list] = { s:list() for s in all_stitches }
+    stitch_neededstitches: dict[ Hashable, list] = { s:[] for s in all_stitches }
+    stitch_neededthread: dict[ Hashable, int ] = { s:None for s in all_stitches }
     for i, e in enumerate( upedges ):
         st1, st2 = e
-        stitch_needednooses.setdefault( st2, [list(),list(),None] )[0].append( i )
+        stitch_needednooses.setdefault( st2, list() ).append( i )
     for st1, st2 in nextedges:
-        stitch_needednooses.setdefault( st2, [list(),list(),None] )[1].append(st1)
+        #stitch_needednooses.setdefault( st2, [list(),list(),None] )[1].append(st1)
         stitch_neededstitches.setdefault( st2, [] ).append( st1 )
     for ithread, thread_stitches in enumerate( threads ):
         for st in thread_stitches:
             stitch_neededthread[ st ] = ithread
-            stitch_needednooses.setdefault( st, [list(),list(),None] )[2] = ithread
+            #stitch_needednooses.setdefault( st, [list(),list(),None] )[2] = ithread
 
     stitch_position = {}
     for i, row in enumerate( lefttoright_rows ):
@@ -605,11 +606,10 @@ def _find_requisites_for_stitches( upedges, nextedges, threads, stitchside, \
         noose_ordering[ i ] = tuple( stitch_position[x][1] for x in (st1, st2) )
 
     #sorting needednooses for single stitches
-    for st, req in stitch_needednooses.items():
-        nooselist, _, _ = req
+    for st, nooselist in stitch_needednooses.items():
         extra_options = { "reverse": stitchside[st] == "left" }
-        req[0] = sorted( nooselist, key=noose_ordering.get, **extra_options )
-
+        nooselist = sorted( nooselist, key=noose_ordering.get, **extra_options )
+        stitch_needednooses[ st ] = tuple( nooselist )
 
     return stitch_needednooses, stitch_neededstitches, stitch_neededthread
 
@@ -647,7 +647,9 @@ def create_knit_commandarray( strickgraph ):
     dict_threads = { i:stitch_list for i, stitch_list in enumerate( threads )}
 
     myknitter = machine_knitter_producer()
-    options = {"stitches_with_requirements": stitch_needednooses,
+    options = {"stitches_needednooses": stitch_needednooses,
+            "stitch_neededstitches": stitch_neededstitches,
+            "stitch_neededthread": stitch_neededthread,
             "stitch_to_generated_nooses": stitch_generatenooses, 
             "threads": dict_threads,
             "rows": rows,
@@ -748,7 +750,9 @@ from collections.abc import Mapping
 import copy
 @dataclass
 class machine_knitter_producer_status( Mapping ):
-    stitches_with_requirements: dict
+    stitches_needednooses: dict
+    stitch_neededstitches: dict
+    stitch_neededthread: dict
     stitch_to_generated_nooses: dict
     threads: dict
     rows: list
@@ -758,6 +762,7 @@ class machine_knitter_producer_status( Mapping ):
     working_needle: tuple = tuple()
     saved_singlenooses: frozenset = frozenset()
     current_thread: int = 0
+    used_nooses: tuple = tuple()
     def __getitem__( self, attr ):
         return copy.deepcopy( self.__dict__[attr] )
     def __iter__( self ):
@@ -793,10 +798,13 @@ class machine_knitter_producer_commands:
         return machine_knitter_producer_status( **info )
 
     def knitable_stitch( self, status ):
+        raise Exception()
         knitted_stitches, saving_needle, working_needle, saved_singlenooses, \
                 current_thread = status
         for st, req in self.stitches_with_requirements.items():
-            working_needle_req, predecessors, thread = req
+            working_needle_req,_,_ = req
+            thread = status.stitch_neededthread[st]
+            predecessors = status.stitch_neededstitches[st]
             if st not in knitted_stitches:
                 if knitted_stitches.issuperset( predecessors ) \
                             and thread == current_thread:
@@ -816,8 +824,9 @@ class machine_knitter_producer_commands:
         if stitchname is None:
             stitchname = ( n for n in namegen() if n not in info["stitchtype"] )
             info["stitchtype"][stitchname] = stitchtype
-        working_needle_req, predecessors, thread \
-                            = info["stitches_with_requirements"][ stitchname ]
+        working_needle_req = info["stitches_needednooses"][ stitchname ]
+        thread = info["stitch_neededthread"][stitchname]
+        predecessors = info["stitch_neededstitches"][stitchname]
         if info["knitted_stitches"].issuperset( predecessors )\
                             and thread == info["current_thread"]:
             if all( r==info["working_needle"][i] for i,r in enumerate( working_needle_req ) ):
@@ -832,7 +841,7 @@ class machine_knitter_producer_commands:
             raise ValueError()
         return machine_knitter_producer_status( **info )
 
-    def save_noose( self, status ):
+    def save_noose( self, status, noose_id ):
         """
 
         :raises: IndexError
@@ -842,6 +851,7 @@ class machine_knitter_producer_commands:
             info["saved_singlenooses"] = info["saved_singlenooses"] \
                                         .union(info["working_needle"][:1])
             info["working_needle"] = info["working_needle"][ 1: ]
+            info["used_nooses"] = info["used_nooses"] + ( noose_id, )
         except IndexError:
             raise
         return machine_knitter_producer_status( **info )
@@ -869,6 +879,12 @@ class command_valid:
         return comstring in ["switch_thread", "knit", "load_noose", \
                             "save_noose", "turn"]
 
+def ladder():
+    i=0
+    while True:
+        yield i
+        i += 1
+
 class machine_knitter_producer( machine_knitter_producer_commands ):
     def __init__( self ):
         self.valid_commands = command_valid()
@@ -881,7 +897,8 @@ class machine_knitter_producer( machine_knitter_producer_commands ):
         elif command=="knit":
             return self.knit_stitch( status, *command_args )
         elif command=="save_noose":
-            return self.save_noose( status )
+            noose_id = command_args[0]
+            return self.save_noose( status, noose_id )
         elif command=="load_noose":
             noose = command_args[0]
             return self.load_noose( status, noose )
@@ -890,8 +907,9 @@ class machine_knitter_producer( machine_knitter_producer_commands ):
             return self.change_thread( status, thread )
 
     def _find_knitable_stitch( self, status ):
-        for st, req in status.stitches_with_requirements.items():
-            working_needle_req, predecessors, thread = req
+        for st, working_needle_req in status.stitches_needednooses.items():
+            thread = status.stitch_neededthread[st]
+            predecessors = status.stitch_neededstitches[st]
             if st not in status.knitted_stitches:
                 if status.knitted_stitches.issuperset( predecessors ) \
                             and thread == status.current_thread:
@@ -910,7 +928,9 @@ class machine_knitter_producer( machine_knitter_producer_commands ):
         for noose in status.saved_singlenooses:
             yield ("load_noose", noose), 1
         if len( status.working_needle ) > 0:
-            yield ("save_noose",), 2
+            inoose = (i for i in ladder() if i not in status.used_nooses).__next__()
+            assert type(inoose) == int
+            yield ( "save_noose", inoose ), 2
         for i in status.threads:
             if i != status.current_thread:
                 yield ( "switch_thread", i ), 1
@@ -930,7 +950,7 @@ class machine_knitter_producer( machine_knitter_producer_commands ):
         missing_stitches_rows = [ missing_stitches.intersection(row) \
                             for row in first.rows ]
         row_to_need_noose = lambda row: it.chain.from_iterable( \
-                            first.stitches_with_requirements[st][0] \
+                            first.stitches_needednooses[st] \
                             for st in row )
         missing_nooses_rows = [[ no for no in row_to_need_noose(row) \
                                 if no not in first.working_needle ] \
