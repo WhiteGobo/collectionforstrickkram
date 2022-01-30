@@ -60,6 +60,7 @@ def Astar( source, targets ):
         openSet.remove( currentnode )
 
         startdistance = traveled_pathlength[ currentnode ]
+        #print( currentnode, nextnodekey( currentnode) )
         for neigh, extradistance, edgetype in currentnode.neighbours():
             tentative_finallength = startdistance + extradistance
             if traveled_pathlength.get( neigh, _infty ) > tentative_finallength:
@@ -73,4 +74,5 @@ def Astar( source, targets ):
                 predicted_pathlength[ neigh ] = tentative_finallength \
                                                 + min_distance
                 openSet.add( neigh )
+        #input()
     raise ValueError( "No Path found" )

@@ -19,7 +19,7 @@ from itertools import zip_longest
 
 class strick_manualhelper( strick_datacontainer ):
     def to_manual( self, stitchinfo, manual_type="machine" ):
-        statuses, commands = create_knit_commandarray( self )
+        statuses, commands = create_knit_commandarray( self, stitchinfo )
         stitchtypes = self.get_nodeattr_stitchtype()
         startside = self.get_startside()
         rows = [[]]
@@ -69,8 +69,38 @@ class strick_manualhelper( strick_datacontainer ):
     @classmethod
     def from_manual( cls, manual, stitchinfo, manual_type="machine", \
                                         startside="right", reverse=False ):
-        return frommanual( manual, stitchinfo, manual_type, \
-                                    startside, reverse=reverse )
+        manual = transform_manual_to_listform( manual )
+        mystitchinfo = stitchinfo
+        if manual_type in mod_strickgraph.handknitting_terms:
+            _reverse_every_second_row( manual )
+        elif manual_type in mod_strickgraph.machine_terms:
+            pass
+        else:
+            raise Exception( "dont knot manual_type %s" %(manual_type) )
+
+        if reverse:
+            _reverse_every_row( manual )
+        manual = transform_to_single_key( manual )
+        manual = symbol_to_stitchid( manual, mystitchinfo )
+        commands = []
+        first=True
+        for row in manual:
+            if first:
+                first = False
+            else:
+                commands.append( ("turn",) )
+            for st_type in row:
+                commands.append(("knit", st_type))
+        mymachine = machine_knitter_producer_commands( stitchinfo )
+        status = machine_knitter_producer_status()
+        for com in commands:
+            try:
+                status = mymachine.execute( status, *com )
+            except ValueError as err:
+                raise BrokenManual() from err
+
+        mystrickgraph = list_to_strickgraph( manual, startside, mystitchinfo )
+        return mystrickgraph
 
 
 def create_manual_commands( rows, stitchtypes, threads, previous, upedges, stitchside ):
@@ -364,7 +394,6 @@ def find_rows( strickgraph ):
 class BrokenManual( Exception ):
     pass
 
-
 def frommanual( manual, stitchinfo, manual_type="machine", startside="right", \
                 reverse=False ):
     """helper method for reation of strick from manual"""
@@ -623,7 +652,7 @@ def _find_generated_nooses( upedges, threads ):
             stitch_generatenooses.setdefault( st, list() )
     return stitch_generatenooses
 
-def create_knit_commandarray( strickgraph ):
+def create_knit_commandarray( strickgraph, stitchinfo ):
     """
 
     :todo: nooseordering works only, if nooses, dont skip rows
@@ -646,7 +675,7 @@ def create_knit_commandarray( strickgraph ):
                                                     stitchside, rows )
     dict_threads = { i:stitch_list for i, stitch_list in enumerate( threads )}
 
-    myknitter = machine_knitter_producer( stitch_needednooses, stitch_neededstitches, stitch_neededthread, dict_threads, rows )
+    myknitter = machine_knitter_producer( stitch_needednooses, stitch_neededstitches, stitch_neededthread, dict_threads, rows, stitchinfo )
     options = {
             "stitch_to_generated_nooses": stitch_generatenooses, 
             "stitchtype": stitches,
@@ -741,19 +770,19 @@ class abstract_machine( ABC ):
         """
         pass
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from collections.abc import Mapping
 import copy
 @dataclass
 class machine_knitter_producer_status( Mapping ):
-    stitch_to_generated_nooses: dict
-    stitchtype: dict
+    stitch_to_generated_nooses: dict = field( default_factory=dict )
+    stitchtype: dict = field( default_factory=dict )
     knitted_stitches: frozenset = frozenset()
     saving_needle: tuple = tuple()
     working_needle: tuple = tuple()
     saved_singlenooses: frozenset = frozenset()
     current_thread: int = 0
-    used_nooses: tuple = tuple()
+    used_nooses: dict = field( default_factory=dict)
     def __getitem__( self, attr ):
         return copy.deepcopy( self.__dict__[attr] )
     def __iter__( self ):
@@ -763,7 +792,8 @@ class machine_knitter_producer_status( Mapping ):
         return len( self.__dict() )
     def __hash__( self ):
         sorted_knitted = tuple( sorted( self.knitted_stitches, key=hash ) )
-        sorted_nooses = tuple( sorted( self.saved_singlenooses, key=hash ))
+        nooses = ( self.used_nooses[n_id] for n_id in self.saved_singlenooses )
+        sorted_nooses = tuple( sorted( nooses, key=hash ))
         return hash( (sorted_knitted, self.saving_needle, \
                         self.working_needle, sorted_nooses, \
                         self.current_thread ))
@@ -782,6 +812,32 @@ class machine_knitter_producer_status( Mapping ):
 
 
 class machine_knitter_producer_commands:
+    def __init__( self, stitchinfo ):
+        self.valid_commands = command_valid()
+        self.stitchinfo = stitchinfo
+
+    def execute( self, status, command, *command_args ):
+        if ( command, *command_args ) not in self.valid_commands:
+            raise ValueError( "command not valid" )
+        if command=="turn":
+            return self.turn_needles( status )
+        elif command=="knit":
+            extraoptions = {}
+            if len( command_args ) >= 2:
+                stitchname = command_args[1]
+                new_nooses = status.stitch_to_generated_nooses[ stitchname ]
+                extraoptions = { "generated_noose_ids": new_nooses }
+            return self.knit_stitch( status, *command_args, **extraoptions )
+        elif command=="save_noose":
+            noose_id = command_args[0]
+            return self.save_noose( status, noose_id )
+        elif command=="load_noose":
+            noose = command_args[0]
+            return self.load_noose( status, noose )
+        elif command=="switch_thread":
+            thread = command_args[0]
+            return self.change_thread( status, thread )
+
     def turn_needles( self, status ):
         info = dict(status)
         info["working_needle"], info["saving_needle"] \
@@ -795,6 +851,7 @@ class machine_knitter_producer_commands:
         :type generated_noose_ids: Iterable
         :param generated_noose_ids:
         :todo: stitchtyype to number nooses must be added somehow
+        :raises: ValueError
         """
         info = dict( status )
         def namegen():
@@ -802,22 +859,27 @@ class machine_knitter_producer_commands:
             while True:
                 yield str(i)
                 i+=1
-        if stitchname is None:
-            raise Exception()
-            stitchname = ( n for n in namegen() if n not in info["stitchtype"] )
+        if stitchname is not None and stitchname in info["stitchtype"]:
+            if info["stitchtype"][stitchname] != stitchtype:
+                raise ValueError("wrong stitchtype to already defined stitch")
+        elif stitchname is None:
+            stitchname = ( n for n in namegen() \
+                            if n not in info["stitchtype"] ).__next__()
             info["stitchtype"][stitchname] = stitchtype
         if generated_noose_ids is None:
-            raise NotImplementedError()
+            #allsources = list(it.chain( status.working_needle, \
+            #                status.saving_needle, status.used_nooses.values()))
+            #myladder = ( i for i in ladder() if i not in allsources )
+            generated_noose_ids = [ (stitchname, i) \
+                                for i in range(self.stitchinfo.upedges[stitchtype]) ]
             #generated_noose_ids = info["stitch_to_generated_nooses"][ stitchname ]
         #thread = info["stitch_neededthread"][stitchname]
-        #predecessors = info["stitch_neededstitches"][stitchname]
-        working_needle_req = self.stitches_needednooses[ stitchname ]
-        number_needed_nooses = len(working_needle_req)
         #stitchtype to number of nooses
+        number_needed_nooses = self.stitchinfo.downedges[stitchtype]
         #if info["knitted_stitches"].issuperset( predecessors )\
         #                    and thread == info["current_thread"]:
         #if all( r==info["working_needle"][i] for i,r in enumerate( working_needle_req ) ):
-        #assert len(generated_noose_ids) == stitchinfo[stitchtype]["upedges"]
+        assert len(generated_noose_ids) == self.stitchinfo.upedges[stitchtype]
         if len( info["working_needle"] ) >= number_needed_nooses:
             info["working_needle"] = info["working_needle"][ number_needed_nooses: ]
             info["knitted_stitches"] = info["knitted_stitches"]\
@@ -826,7 +888,7 @@ class machine_knitter_producer_commands:
             #for new_noose in generated_noose_ids:
             #    info["saving_needle"] = (new_noose,) + info["saving_needle"]
         else:
-            raise Exception()
+            raise ValueError( "not enough nooses for stitch" )
         return machine_knitter_producer_status( **info )
 
     def save_noose( self, status, noose_id ):
@@ -839,12 +901,14 @@ class machine_knitter_producer_commands:
         info = dict(status)
         assert len( info["working_needle"] ) >= 1
         info["saved_singlenooses"] = info["saved_singlenooses"] \
-                                    .union(info["working_needle"][:1])
+                                    .union([noose_id])
         noose = info["working_needle"][ 0 ]
         info["working_needle"] = info["working_needle"][ 1: ]
-        #noosedict = dict(info["used_nooses"])
-        #noosedict[ "noose_id" ] = noose
-        info["used_nooses"] = info["used_nooses"] + ( noose_id, )
+        noosedict = dict(info["used_nooses"])
+        assert noose_id not in noosedict
+        noosedict[ noose_id ] = noose
+        info["used_nooses"] = noosedict
+        #info["used_nooses"] = info["used_nooses"] + ( noose_id, )
         return machine_knitter_producer_status( **info )
 
     def load_noose( self, status, noose_id ):
@@ -854,11 +918,14 @@ class machine_knitter_producer_commands:
         :todo: see save_noose
         """
         info = dict( status )
-        assert noose in info["saved_singlenooses"]
-        #noosedict = dict(info["used_nooses"])
-        #noose = noosedict.pop( noose_id )
+        noosedict = dict(info["used_nooses"])
+        try:
+            noose = noosedict[ noose_id ]
+            assert noose_id in info["saved_singlenooses"]
+        except Exception as err:
+            raise Exception( noosedict, info["saved_singlenooses"] )
         info[ "saved_singlenooses" ] = info[ "saved_singlenooses" ]-{noose_id}
-        info["saving_needle"] = (noose_id,) + info["saving_needle"]
+        info["saving_needle"] = (noose,) + info["saving_needle"]
         return machine_knitter_producer_status( **info )
 
     def change_thread( self, status, thread ):
@@ -881,33 +948,14 @@ def ladder():
 
 class machine_knitter_producer( machine_knitter_producer_commands ):
     def __init__( self, stitches_needednooses, stitch_neededstitches, \
-                            stitch_neededthread, thread_to_stitch, rows ):
-        self.valid_commands = command_valid()
+                            stitch_neededthread, thread_to_stitch, rows, \
+                            stitchinfo ):
+        super().__init__( stitchinfo )
         self.stitches_needednooses = stitches_needednooses
         self.stitch_neededthread = stitch_neededthread
         self.stitch_neededstitches = stitch_neededstitches
         self.thread_to_stitch = thread_to_stitch
         self.rows = rows
-
-    def execute( self, status, command, *command_args ):
-        if ( command, *command_args ) not in self.valid_commands:
-            raise ValueError( "command not valid" )
-        if command=="turn":
-            return self.turn_needles( status )
-        elif command=="knit":
-            stitchname = command_args[1]
-            new_nooses = status.stitch_to_generated_nooses[ stitchname ]
-            return self.knit_stitch( status, *command_args, \
-                    generated_noose_ids = new_nooses)
-        elif command=="save_noose":
-            noose_id = command_args[0]
-            return self.save_noose( status, noose_id )
-        elif command=="load_noose":
-            noose = command_args[0]
-            return self.load_noose( status, noose )
-        elif command=="switch_thread":
-            thread = command_args[0]
-            return self.change_thread( status, thread )
 
     def _find_knitable_stitch( self, status ):
         for st, working_needle_req in self.stitches_needednooses.items():
@@ -928,12 +976,11 @@ class machine_knitter_producer( machine_knitter_producer_commands ):
         for st in self._find_knitable_stitch( status ):
             st_type = status.stitchtype[st]
             yield ("knit", st_type, st), 1
-        for noose in status.saved_singlenooses:
-            yield ("load_noose", noose), 1
+        for noose_id in status.saved_singlenooses:
+            yield ("load_noose", noose_id), 1
         if len( status.working_needle ) > 0:
-            inoose = (i for i in ladder() if i not in status.used_nooses).__next__()
-            assert type(inoose) == int
-            yield ( "save_noose", inoose ), 2
+            noose_id = (i for i in ladder() if i not in status.used_nooses).__next__()
+            yield ( "save_noose", noose_id ), 2
         #for i in status.threads:
         for i in self.thread_to_stitch:
             if i != status.current_thread:
