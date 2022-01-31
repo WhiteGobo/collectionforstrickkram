@@ -491,6 +491,11 @@ include multiple threads.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="createcloth.strickgraph.datacontainer.strick_datacontainer.get_previous_stitches">
+<span class="sig-name descname"><span class="pre">get_previous_stitches</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.strickgraph.datacontainer.strick_datacontainer.get_previous_stitches" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="createcloth.strickgraph.datacontainer.strick_datacontainer.get_rows">
 <span class="sig-name descname"><span class="pre">get_rows</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">presentation_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'machine'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lefttoright_side</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'right'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.strickgraph.datacontainer.strick_datacontainer.get_rows" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
@@ -567,6 +572,22 @@ downneighbours are also included.</p>
 <dt class="field-odd">Todo</dt>
 <dd class="field-odd"><p>This is no permanent method. I willchange strickgraph to
 include multiple threads.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="createcloth.strickgraph.datacontainer.strick_datacontainer.get_threads">
+<span class="sig-name descname"><span class="pre">get_threads</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.strickgraph.datacontainer.strick_datacontainer.get_threads" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return every different thread as list of stitches. Threads mean the 
+order in which, the stitches can be knitted and the thread shows, where
+the real thread goes to next and doesnt come back.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>List of thread as stitchlist</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Iterable[ Iterable[ Hashable ] ]</p>
 </dd>
 </dl>
 </dd></dl>
