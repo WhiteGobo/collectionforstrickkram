@@ -24,9 +24,18 @@ import copy
 
 class class_special_commands( Container ):
     """Class for identifying special commands inside the manual"""
-    def __getitem__( self, x ):
+    def __init__( self, stitchinfo ):
+        self.stitchinfo = stitchinfo
+
+    def __getitem__( self, x, side="right" ):
         if not self.__contains__( x ):
             raise KeyError( f"{x} isnt contained")
+        stitchmatch = regex.match( r"(?P<stitchtype>\S+)", x )
+        if stitchmatch:
+            stitchtype = stitchmatch[0]
+            if stitchtype in self.stitchinfo.stitchsymbol:
+                return ( "knit", stitchtype, side )
+
         mymatch = regex.match( r"(?P<com>\S+)(?P<val>\d+)", x )
         if mymatch["com"] == "switch":
             return ( "switch_thread", int(mymatch["val"]))
@@ -38,21 +47,85 @@ class class_special_commands( Container ):
 
     def __contains__( self, x ):
         try:
-            mymatch = regex.match( r"(?P<command>\S+)(?P<qq>\d+)", x )
+            stitchmatch = regex.match( r"(?P<stitchtype>\S+)", x )
         except TypeError:
             return False
-        if not mymatch:
+        if not stitchmatch:
             return False
+        elif stitchmatch.span()[1] == len(x):
+            stitchdict = stitchmatch.groupdict()
+            if stitchdict["stitchtype"] in self.stitchinfo.stitchsymbol:
+                return True
+        mymatch = regex.match( r"(?P<command>\S+)(?P<qq>\d+)", x )
         if mymatch.span()[1] < len(x):
             return False
         asddict = mymatch.groupdict()
         return asddict[ "command" ] in [ "switch", "tunnel", "load" ]
 
-    def get( self, x, default=None ):
+    def get( self, x, default=None, **kwargs ):
         if self.__contains__( x ):
-            self.__getitem__( x )
+            return self.__getitem__( x, **kwargs )
         else:
             return default
+
+    def reverse( self, x ):
+        return class_special_commands_reversed( self.stitchinfo )
+
+class class_special_commands_reversed( Container ):
+    def __init__( self, stitchinfo ):
+        self.stitchinfo = stitchinfo
+        self.noose_int = 0
+        self.nooses = {}
+
+    def get( self, x, default=None ):
+        if self.__contains__( x ):
+            return self.__getitem__( x, **kwargs )
+        else:
+            return default
+
+    def __getitem__( self, x ):
+        if not self.__contains__( x ):
+            raise KeyError( x)
+        if x[0] == "turn":
+            raise Exception( "cant meaningfully translate command 'turn'. "
+                                "Use a new row instead" )
+        if x[0] == "save_noose":
+            noose_int = self.noose_int
+            self.noose_int += 1
+            self.nooses[ x[1] ] = noose_int
+            return "tunnel%i" %(noose_int)
+        elif x[0] == "load_noose":
+            return "load%i" %( nooses[ x[1] ] )
+        elif x[0] == "knit":
+            return x[1]
+        elif x[0] == "switch_thread":
+            return "switch%i"%( x[1] )
+
+    def __contains__( self, x ):
+        try:
+            commands = tuple( x )
+        except Exception:
+            return False
+        if commands[0] not in ["save_noose", "turn", "load_noose", "knit", "switch_thread" ]:
+            return False
+        if commands[0] == "turn":
+            return len( commands) == 1
+        if commands[0] == "knit":
+            if len( commands ) not in range( 2, 5 ):
+                return False
+            cond1 = commands[1] in self.stitchinfo.stitchsymbol
+            cond2 = True if len(commands) < 3 \
+                    else commands[2] in ["left", "right"]
+            cond3 = True #if len(commands) < 4 else commands[3] #check if valid as name
+            return all( (cond1, cond2, cond3) )
+        if commands[0] in ["save_noose", "load_noose", "switch_thread" ]:
+            if len( commands ) !=2:
+                return False
+            return type( commands[1] ) == int
+        return False
+
+    def reverse( self, x ):
+        return class_special_commands_reversed( self.stitchinfo )
 
 
 
@@ -64,21 +137,12 @@ class strick_manualhelper( strick_datacontainer ):
         rows = [[]]
         nooses = {}
         noose_int = 0
+        spec_commands = class_special_commands_reversed( stitchinfo )
         for c in commands:
-            if c[0] == "save_noose":
-                nooses[ c[1] ] = noose_int
-                rows[-1].append( "tunnel%i" %(noose_int) )
-                noose_int += 1
-            elif c[0] == "load_noose":
-                rows[-1].append( "load%i" %( nooses[c[1]] ) )
-            elif c[0] == "turn":
+            if c[0] == "turn":
                 rows.append([])
-            elif c[0] == "knit":
-                rows[-1].append( c[1] )
-            elif c[0] == "switch_thread":
-                rows[-1].append( "switch%i"%(c[1] ) )
             else:
-                raise Exception( c )
+                rows[-1].append( spec_commands[ c ] )
 
         asd: list[list[list[int, str]]] \
                 = shorten_command_array( rows, stitchinfo.stitchsymbol )
@@ -116,7 +180,7 @@ class strick_manualhelper( strick_datacontainer ):
         commands = []
         first=True
         sidelist = ["right", "left"] if startside=="right" else ["left", "right"]
-        special_commands = class_special_commands()
+        special_commands = class_special_commands( stitchinfo)
         for i, row in enumerate( manual ):
             tmpside = sidelist[ i%2 ]
             if first:
@@ -124,18 +188,15 @@ class strick_manualhelper( strick_datacontainer ):
             else:
                 commands.append( ("turn",) )
             for manual_command in row:
-                if manual_command in special_commands:
-                    commands.append( special_commands[ manual_command ] )
-                else:
-                    st_type = manual_command
-                    commands.append(("knit", st_type, tmpside ))
+                commands.append( special_commands\
+                            .__getitem__( manual_command, side=tmpside ))
         mymachine = machine_knitter_producer_commands( stitchinfo )
         status = strickgraph_creation_status()
         for com in commands:
             try:
                 status = mymachine.execute( status, *com )
             except ValueError as err:
-                raise BrokenManual() from err
+                raise BrokenManual( com ) from err
         mystrickgraph2 = cls( status.stricknodes, status.strickedges )
         return mystrickgraph2
 
@@ -166,7 +227,7 @@ class BrokenManual( Exception ):
 def symbol_to_stitchid( manual, mystitchinfo ):
     #namedict = { mystitchinfo.symbol[x]:x for x in mystitchinfo.symbol }
     namedict = mystitchinfo.stitchsymbol_to_stitchid
-    special_commands = class_special_commands()
+    special_commands = class_special_commands( mystitchinfo )
     for i in range( len(manual)):
         assert all( x in namedict or x in special_commands \
                         for x in manual[i]), (i,manual)
@@ -624,9 +685,9 @@ class machine_knitter_producer( machine_knitter_producer_commands ):
         yield ("turn",), 1
         for st in self._find_knitable_stitch( status ):
             st_type = status.stitchtype[st]
-            yield ("knit", st_type, "left", st ), 1
+            yield ( "knit", st_type, "left", st ), 1
         for noose_id in status.saved_singlenooses:
-            yield ("load_noose", noose_id), 1
+            yield ( "load_noose", noose_id ), 1
         if len( status.working_needle ) > 0:
             noose_id = (i for i in ladder() if i not in status.used_nooses).__next__()
             yield ( "save_noose", noose_id ), 2
