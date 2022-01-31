@@ -1,5 +1,6 @@
 """
 main function here is tomanual
+
 :todo: support for load_stitchinfo. support seems not complete because example
         character_dictionary
 """
@@ -16,6 +17,10 @@ import logging
 logger = logging.getLogger( __name__ )
 from typing import Tuple
 from itertools import zip_longest
+
+from dataclasses import dataclass, field
+from collections.abc import Mapping
+import copy
 
 class class_special_commands( Container ):
     """Class for identifying special commands inside the manual"""
@@ -88,14 +93,6 @@ class strick_manualhelper( strick_datacontainer ):
         row_commands = [ " ".join(row) for row in row_commands ]
         manual = "\n".join( row_commands )
         return manual
-        raise Exception( rows, asd, manual )
-        return manual
-
-
-        return asd
-
-        raise Exception( "everything worked:)" )
-        return tomanual( self, stitchinfo, manual_type)
 
     @classmethod
     def from_manual( cls, manual, stitchinfo, manual_type="machine", \
@@ -142,94 +139,6 @@ class strick_manualhelper( strick_datacontainer ):
         mystrickgraph2 = cls( status.stricknodes, status.strickedges )
         return mystrickgraph2
 
-        mystrickgraph = list_to_strickgraph( manual, startside, mystitchinfo )
-        print( "-"*55 )
-        print( mystrickgraph2.get_nodeattr_side() )
-        print( mystrickgraph.get_nodeattr_side() )
-        return mystrickgraph
-
-
-def create_manual_commands( rows, stitchtypes, threads, previous, upedges, stitchside ):
-    """
-    
-    :type threads: Sequence[ Hashable ]
-    :param threads: List of sequences of stitches, ordered by next-edges as
-            threads
-    :type previous: Mapping[ Hashable, Iterable[ Hashable ] ]
-    :param previous: maps every stitch onto list of stitches, that must be
-            prdouced beforehand
-    :type stitchtypes: Mapping[ Hashable, stitchtype ]
-    :param stitchtypes: Stitchtypes for every stitch-id
-    :type rows: stitches ordered in rows
-    """
-    raise Exception( "obsolete" )
-    find_thread_to = lambda stitch: ( i for i, stitches in enumerate(threads) \
-                                    if stitch in stitches ).__next__()
-    irow = 0 #index of current row
-    iline = 0 #index of current stitch in current row
-    current_thread = find_thread_to( rows[ irow ][ iline ] )
-    tunnel_snake = []
-    visited = []
-    current_anchors, next_anchors = [], []
-    hastunnels = set()
-    tunnelindex = 0
-    while len( visited ) < sum( len(l) for l in rows ):
-        current_row = rows[ irow ]
-        try:
-            current_stitch = current_row[ iline ]
-        except IndexError:
-            yield "\n"
-            irow += 1
-            iline = 0
-            current_anchors, next_anchors = next_anchors, []
-            current_anchors.sort( rows[ irow ].index )
-            continue
-        if current_stitch in visited:
-            yield "skip"
-            iline += 1
-        elif all( (current_stitch in threads[ current_thread ], \
-                all( s in visited for s in previous.get( current_stitch, [])),\
-                ) ):
-            yield stitchtypes[ current_stitch ]
-            assert current_stitch not in visited
-            visited.append( current_stitch )
-            next_anchors.extend( upedges[ current_stitch ] )
-            iline += 1
-            if current_stitch == threads[ current_thread ][-1]:
-                if len( visited ) == sum( len(row) for row in rows ):
-                    return
-                else:
-                    current_thread, irow, iline = tunnel_snake.pop( 0 )
-                    yield ("jump", (irow, current_thread) )
-                    #jump to end of previous line
-                    assert irow != 0
-                    irow -= 1
-                    iline = len( rows[ irow ])
-        elif all(( current_stitch not in threads[ current_thread ], \
-                all( s not in visited for s in previous.get( current_stitch, []))\
-                )):
-            yield "skip"
-            iline += 1
-        elif all(( current_stitch not in threads[ current_thread ], \
-                any( s in visited for s in previous.get( current_stitch, [])),\
-                )):
-            tunnelthread = find_thread_to( current_stitch )
-            for downstitch in downedges[ current_stitch ]:
-                yield ( "tunnel", tunnelthread, tunnelindex )
-                hastunnel.setdefault( downstitch, [] ).append( tunnelindex )
-                tunnelindex += 1
-            iline += 1
-            if not [ threadi for threadi, _,_ in tunnel_snake \
-                                if threadi == tunnelthread ]:
-                tunnel_snake.append( (tunnelthread, irow, iline ) )
-        else:
-            raise Exception( current_stitch,threads[ current_thread ], \
-                    visited, previous.get( current_stitch, [] ),
-                    current_stitch in threads[ current_thread ], \
-                    all( s in visited for s in previous.get( current_stitch, [])),\
-                    )
-
-
 
 def shorten_command_array( rows, command_to_symbol ):
     shortened_commands = []
@@ -249,226 +158,9 @@ def shorten_command_array( rows, command_to_symbol ):
 
     return shortened_commands
 
-    
-
-    def to_symbol( n, c ):
-        if c != "\n":
-            return "".join( (str(n), stitchsymbol.get( c,c ) ))
-        else:
-            return "\n"*n
-    shortened_commands = [ to_symbol( n, c ) for n, c in shortened_commands ]
-    row_commands = [[]]
-    for c in shortened_commands:
-        if c != "\n":
-            row_commands[-1].append( c )
-        else:
-            row_commands.append([])
-
-
-def tomanual( strickgraph, stitchinfo, manual_type="thread" ):
-    """text a manual for the given complete strickgraph
-
-    :todo: rewrite algorithms for-loops. Because, they are shit
-    """
-    #startside = strickgraph.get_startside()
-    #rows = find_rows( strickgraph )
-    stitchsymbol = stitchinfo.stitchsymbol
-    rows = strickgraph.get_rows( presentation_type="thread" )
-    startnode = rows[0][0]
-    startside = strickgraph.get_nodeattr_side()[ startnode ]
-    nodeattributes = strickgraph.get_nodeattr_stitchtype()
-    stitchtypes = strickgraph.get_nodeattr_stitchtype()
-
-
-    threads = strickgraph.get_threads()
-    previous = strickgraph.get_previous_stitches()
-
-
-    qq = create_manual_commands( rows, stitchtypes, threads, previous )
-    raise Exception( list(qq) )
-
-    find_thread_to = lambda stitch: ( i for i, stitches in enumerate(threads) \
-                                    if stitch in stitches ).__next__()
-    current_thread = find_thread_to( startnode )
-
-    visited = []
-    is_not_visited = lambda x: x not in visited
-    commandlist = []
-    tunnel_anchors = []
-    j=-1
-    for i in range( len(threads)*len(rows)):
-        if current_thread == None:
-            break
-        j += 1
-        tmprow = rows[ j ]
-        for s in filter( is_not_visited, tmprow ):
-            if current_thread != None:
-                if s in threads[ current_thread ] and all( tmps in visited \
-                                            for tmps in previous.get(s,[]) ):
-                    visited.append( s )
-                    commandlist.append( stitchtypes[ s ] )
-                    if s == threads[ current_thread ][-1]:
-                        if tunnel_anchors:
-                            current_thread, j = tunnel_anchors.pop(0)
-                            j = j-1
-                            raise Exception( "brubru" )
-                            break
-                        else:
-                            current_thread = None
-                elif any( tmps in visited for tmps in previous.get(s,[]) ):
-                    commandlist.append( ( "tunnel", find_thread_to(s) ) )
-                    alter_thread = find_thread_to(s)
-                    if [ x for x in tunnel_anchors if x[0]==alter_thread ]:
-                        pass
-                    else:
-                        tunnel_anchors.append( ( alter_thread, j ) )
-                elif s not in threads[ current_thread ]:
-                    continue
-                elif s in threads[ current_thread ] and \
-                        any( tmps not in visited for tmps in previous.get(s,[])):
-                    print( "threads: ", threads )
-                    print( "current stitch: ", s )
-                    print( "thread: ", current_thread, threads[current_thread] )
-                    print( "prev: ", previous.get(s, []))
-                    print( "visited: ", visited )
-                    raise NotImplementedError( "First make next thread as far "\
-                            "as possible before coming back to this" )
-                else:
-                    raise NotImplementedError( "something previous is not ..." )
-            else:
-                raise NotImplementedError( "multiple threads not implemented" )
-        commandlist.append( "\n" )
-    raise Exception( commandlist )
-
-    shortened_commands = []
-    shortened_commands.append( [ 1, commandlist[0] ] )
-    for com in commandlist[ 1: ]:
-        if shortened_commands[ -1 ][ 1 ] == com:
-            shortened_commands[ -1 ][0] += 1
-        else:
-            shortened_commands.append( [1, com] )
-    def to_symbol( n, c ):
-        if c != "\n":
-            return "".join( (str(n), stitchsymbol.get( c,c ) ))
-        else:
-            return "\n"*n
-    shortened_commands = [ to_symbol( n, c ) for n, c in shortened_commands ]
-    row_commands = [[]]
-    for c in shortened_commands:
-        if c != "\n":
-            row_commands[-1].append( c )
-        else:
-            row_commands.append([])
-
-    if manual_type == "machine":
-        for i, row in enumerate( row_commands ):
-            if startside=="right":
-                if i%2==1:
-                    row.reverse()
-            else:
-                if i%2==0:
-                    row.reverse()
-    if len( row_commands[-1] )==0:
-        row_commands.pop()
-    row_commands = [ " ".join(row) for row in row_commands ]
-    manual = "\n".join( row_commands )
-    return manual
-
-character_dictionary={}
-#character_dictionary.update( stitchinfo.symbol )
-def transform_rowtomanualline( row, stitchtypes_dictionary, stitchinfo ):
-    """
-
-    :todo: strange use of global variable, has to be revisted
-    """
-    character_dictionary.update( stitchinfo.stitchsymbol ) #ensure up-to-date
-    mycharacter_dictionary = character_dictionary
-
-    line = ""
-    lastcharacter = stitchtypes_dictionary[ row.pop(0) ]
-    times = 1
-    if len(row) > 0:
-        for node in row:
-            newcharacter = stitchtypes_dictionary[ node ]
-            if lastcharacter == newcharacter:
-                times = times + 1
-            else:
-                line = _transrtm_addline( line, times, lastcharacter, \
-                                                mycharacter_dictionary )
-                times = 1
-                lastcharacter = newcharacter
-    line = _transrtm_addline( line, times, lastcharacter, \
-                                                mycharacter_dictionary )
-    return line
-
-
-def _transrtm_addline( line, times, lastcharacter, mycharacter_dictionary ):
-    line = line + " %d%s"%( times, mycharacter_dictionary[ lastcharacter ] )
-    return line
-
-
-def find_rows( strickgraph ):
-    alledges = netx.get_edge_attributes( strickgraph, "edgetype" )
-
-    nextrowedges = netx.get_edge_attributes( strickgraph, "breakline" )
-    nextrowedges = [ (x,y) for (x,y,infos) in nextrowedges ]
-
-    tmpedges = list( alledges )
-    tmpedges = [ x for x in tmpedges if alledges[x]=="next" ]
-    tmpdict = { x:y for (x,y, infos) in tmpedges }
-
-    rows = []
-    currentrow = []
-    visited = set()
-    rows.append( currentrow )
-    tmpnode = "start"
-    nextnode = tmpdict[ tmpnode ]
-    while nextnode !="end":
-        if (tmpnode, nextnode) in nextrowedges:
-            currentrow = []
-            rows.append( currentrow )
-        currentrow.append( nextnode )
-        if nextnode in visited:
-            raise Exception("loop found", rows, nextnode)
-        visited.add( nextnode )
-        tmpnode = nextnode
-        nextnode = tmpdict[ tmpnode ]
-    return rows
-
-
 
 class BrokenManual( Exception ):
     pass
-
-def frommanual( manual, stitchinfo, manual_type="machine", startside="right", \
-                reverse=False ):
-    """helper method for reation of strick from manual"""
-    manual = transform_manual_to_listform( manual )
-    mystitchinfo = stitchinfo
-    if manual_type in mod_strickgraph.handknitting_terms:
-        revi = 1 if startside=="right" else 0
-        for i in range( len(manual) ):
-            if i == revi:
-                manual[ i ].reverse()
-    elif manual_type in mod_strickgraph.machine_terms:
-        pass
-    else:
-        raise Exception( "dont knot manual_type %s" %(manual_type) )
-
-    if reverse:
-        _reverse_every_row( manual )
-    manual = transform_to_single_key( manual )
-    manual = symbol_to_stitchid( manual, mystitchinfo )
-    mystrickgraph = list_to_strickgraph( manual, startside, mystitchinfo )
-    return mystrickgraph
-
-def _reverse_every_row( manual ):
-    for i in range( len(manual) ):
-        manual[ i ].reverse()
-
-def _reverse_every_second_row( manual ):
-    for i in range( int(len(manual)/2) ):
-        manual[ 2*i+1 ].reverse()
 
 
 def symbol_to_stitchid( manual, mystitchinfo ):
@@ -484,99 +176,6 @@ def symbol_to_stitchid( manual, mystitchinfo ):
             raise KeyError("manual contains keys, that are not supported", \
                                                 mystitchinfo.stitchsymbol ) from err
     return manual
-
-def stitchnodeid( rowindex, columnindex, stitchtype ):
-    """
-    sets the name of the nodes
-    the naming processs can be altered, with 
-    >>fromknitmanual.stitchnodeid = own_naming_function
-    >>type(own_naming_function) == foo( i,j,stitchtype )
-
-    :type rowindex: int
-    :type columnindex: int
-    :type stitchtype: str
-    :param stitchtype: stitchtype corresponding to load_stitchinfo.types
-                    practicly the name of the stitch, eg 'knit' or 'purl'
-                    no abbrevation
-    """
-    return ( rowindex, columnindex )
-
-def list_to_strickgraph( manual, startside, mystitchinfo ):
-    """
-
-    :rtype: strickgraph
-    :todo: implement this into strickgraph
-    """
-    from .strickgraph_base import strickgraph
-    from .strickgraph_fromgrid import turn
-    downknots, upknots = None, None
-    i,j = None, None
-    node_edgefrom, nodeid = None, None
-    #graph = strickgraph()
-    #graph.add_node("start")
-    laststitch = None#(0,0)
-    nodeattributes = {}
-    edgeswithlabels = []
-    lastrow = []
-    i = 0
-    current_side = startside
-    for row in manual:
-        newrow = []
-        tmprange = range( len(row) ) \
-                        if current_side == "right" \
-                        else range( len(row)-1, -1, -1 )
-        #for j in _range_depend_on_side[current_side]( len(row) ):
-        for j in tmprange:
-            single: str = row[j]
-            #nodeid = stitchnodeid(i,j,single)
-            nodeid: Tuple[ int, int ] = ( i, j )
-            downknots = mystitchinfo.downedges[ single ]
-            upknots = mystitchinfo.upedges[ single ]
-            extrainfo = mystitchinfo.extraoptions[ single ]
-            nodeattributes[ nodeid ] = {"stitchtype":single,"side":current_side}
-            nodeattributes[ nodeid ].update( extrainfo )
-
-            #graph.add_node( nodeid, stitchtype=single, side=current_side, \
-            #                                            **extrainfo )
-
-            #if laststitch != nodeid: #else first nodewould have an edge to itsel
-            if laststitch is not None:
-                edgeswithlabels.append( (laststitch, nodeid, "next") )
-
-            for k in range(downknots):
-                try:
-                    node_edgefrom = lastrow.pop()
-                except IndexError as err:
-                    err.args = (*err.args, ("in row %d the downedges doesnt "\
-                                    +"match the upedges of the last row")%(i))
-                    raise BrokenManual( *err.args )
-                edgeswithlabels.append( (node_edgefrom, nodeid, "up") )
-                #graph.add_edge( node_edgefrom, nodeid, edgetype="up" )
-            for k in range( upknots ):
-                newrow.append( nodeid )
-            laststitch = nodeid
-        if len(lastrow) > 0:
-            raise BrokenManual(("in row %d the downedges doesnt "\
-                                    +"match the upedges of the last row")%(i))
-        lastrow = newrow
-        i = i+1
-        current_side = turn(current_side)
-    return strickgraph( nodeattributes, edgeswithlabels )
-
-    raise Exception()
-    graph.add_node( "end" )
-    graph.add_edge( laststitch, "end", edgetype="next" )
-    return graph
-
-#_range_depend_on_side = {}
-#def _range_depend_on_side_right( len_nextrow ):
-#    return range( len_nextrow )
-#def _range_depend_on_side_left( len_nextrow ):
-#    return range( len_nextrow-1, -1, -1 )
-#_range_depend_on_side.update({\
-#        "right": _range_depend_on_side_right,
-#        "left": _range_depend_on_side_left,
-#        })
 
 
 def transform_to_single_key( manual ):
@@ -634,22 +233,6 @@ def _trans_manual_listtolist( manual ):
         return manual
     raise BrokenManual( "manual type cannot be interpreted" )
 transformdict.update({ list: _trans_manual_listtolist })
-
-
-def asdf():
-    stitch = str
-    stitches: Iterable[ stitch ]
-    predecessors: dict[ stitch, Iterable[ stitch ]]
-
-    upedges: Sequence[ Tuple[ stitch, stitch ] ]
-    upedges_from = { e[0]:i for i, e in enumerate( upedges ) }
-    downedges_from = { e[1]:i for i, e in enumerate( upedges ) }
-
-    holder_nooses = []
-    saved_tunnels = []
-    next_nooses = []
-
-    raise Exception( "to be continued" )
 
 
 from . import method_Astar #import Astar, TargetUnreachable
@@ -777,7 +360,6 @@ class abs_knitter_status( ABC ):
     def __eq__( self, other ):
         pass
 
-
 class costfunction( ABC ):
     """Inputs of sorted, as example ints"""
     @abstractmethod
@@ -822,9 +404,6 @@ class abstract_machine( ABC ):
         """
         pass
 
-from dataclasses import dataclass, field
-from collections.abc import Mapping
-import copy
 @dataclass
 class machine_knitter_producer_status( Mapping ):
     stitch_to_generated_nooses: dict = field( default_factory=dict )
@@ -934,18 +513,9 @@ class machine_knitter_producer_commands:
                             if n not in info["stitchtype"] ).__next__()
             info["stitchtype"][stitchname] = stitchtype
         if generated_noose_ids is None:
-            #allsources = list(it.chain( status.working_needle, \
-            #                status.saving_needle, status.used_nooses.values()))
-            #myladder = ( i for i in ladder() if i not in allsources )
             generated_noose_ids = [ (stitchname, i) \
                                 for i in range(self.stitchinfo.upedges[stitchtype]) ]
-            #generated_noose_ids = info["stitch_to_generated_nooses"][ stitchname ]
-        #thread = info["stitch_neededthread"][stitchname]
-        #stitchtype to number of nooses
         number_needed_nooses = self.stitchinfo.downedges[stitchtype]
-        #if info["knitted_stitches"].issuperset( predecessors )\
-        #                    and thread == info["current_thread"]:
-        #if all( r==info["working_needle"][i] for i,r in enumerate( working_needle_req ) ):
         assert len(generated_noose_ids) == self.stitchinfo.upedges[stitchtype]
         if len( info["working_needle"] ) >= number_needed_nooses:
             used_nooses = tuple(info["working_needle"][ :number_needed_nooses ])
@@ -958,7 +528,6 @@ class machine_knitter_producer_commands:
                     + (stitchname,)
             for new_noose in generated_noose_ids:
                 info["noose_to_stitch"][ new_noose ] = stitchname
-            #    info["saving_needle"] = (new_noose,) + info["saving_needle"]
         else:
             raise ValueError( "not enough nooses for stitch" )
         if "stricknodes" in info:
@@ -1002,11 +571,8 @@ class machine_knitter_producer_commands:
         """
         info = dict( status )
         noosedict = dict(info["used_nooses"])
-        try:
-            noose = noosedict[ noose_id ]
-            assert noose_id in info["saved_singlenooses"]
-        except Exception as err:
-            raise Exception( noosedict, info["saved_singlenooses"] )
+        noose = noosedict[ noose_id ]
+        assert noose_id in info["saved_singlenooses"]
         info[ "saved_singlenooses" ] = info[ "saved_singlenooses" ]-{noose_id}
         info["saving_needle"] = (noose,) + info["saving_needle"]
         return type(status)( **info )
