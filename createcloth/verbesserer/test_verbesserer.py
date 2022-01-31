@@ -27,7 +27,7 @@ class test_manualtoverbesserung( unittest.TestCase ):
         outman = "4yo\n3k 1bo\n3k\n3bo"
         ingraph = strickgraph.from_manual( inman, glstinfo )
         outgraph = strickgraph.from_manual( outman, glstinfo )
-        sourcenode = (0,0)
+        sourcenode = "0"
 
         qq = strickalterator.from_strickgraph( ingraph, outgraph, sourcenode )
         in_nodeattributes = ingraph.get_nodeattributes()

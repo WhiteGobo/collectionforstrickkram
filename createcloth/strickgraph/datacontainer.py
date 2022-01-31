@@ -21,7 +21,9 @@ class strick_datacontainer():
     def __init__( self, nodeattributes, edgelabels ):
         """
 
+        :param nodeattributes:
         :type nodeattributes: Dict[ Hashable, Dict ]
+        :param edgelabels:
         :type edgelabels: Iterable[ Tuple[ Hashable, Hashable, str ]]
         """
         self.__datacontainer = _netx.MultiDiGraph()

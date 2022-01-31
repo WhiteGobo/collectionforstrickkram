@@ -217,12 +217,17 @@ class TestStringMethods( unittest.TestCase ):
 
         testgraph = strickgraph.strickgraph.from_manual( "5yo\n5k\n5k\n5bo", self.stitchinfo, manual_type="machine", startside="left" )
         #print( testgraph.get_rows() )
-        tmp = [[(0, 0), (0, 1), (0, 2), (0, 3), (0, 4)], [(1, 0), (1, 1), (1, 2), (1, 3), (1, 4)], [(2, 0), (2, 1), (2, 2), (2, 3), (2, 4)], [(3, 0), (3, 1), (3, 2), (3, 3), (3, 4)]]
+        tmp = [['4', '3', '2', '1', '0'], ['5', '6', '7', '8', '9'],\
+                ['14', '13', '12', '11', '10'], ['15', '16', '17', '18', '19']]
+
         self.assertEqual( testgraph.get_rows(), tmp, \
                         msg="small test with get rows startside left failed" )
 
         testgraph = strickgraph.strickgraph.from_manual( "5yo\n5k\n5k\n5bo", self.stitchinfo, manual_type="machine", startside="right" )
-        tmp = [[(0, 0), (0, 1), (0, 2), (0, 3), (0, 4)], [(1, 0), (1, 1), (1, 2), (1, 3), (1, 4)], [(2, 0), (2, 1), (2, 2), (2, 3), (2, 4)], [(3, 0), (3, 1), (3, 2), (3, 3), (3, 4)]]
+        #tmp = [[(0, 0), (0, 1), (0, 2), (0, 3), (0, 4)], [(1, 0), (1, 1), (1, 2), (1, 3), (1, 4)], [(2, 0), (2, 1), (2, 2), (2, 3), (2, 4)], [(3, 0), (3, 1), (3, 2), (3, 3), (3, 4)]]
+        tmp = [['0', '1', '2', '3', '4'], ['9', '8', '7', '6', '5'],\
+                ['10', '11', '12', '13', '14'], ['19', '18', '17', '16', '15']]
+
         self.assertEqual( testgraph.get_rows(), tmp, msg="small test with get rows startside right failed" )
 
     #@unittest.skip( "get_border isnt complete" )
@@ -239,10 +244,8 @@ class TestStringMethods( unittest.TestCase ):
         testmanual = "5yo\n5k\n5k\n3k 2bo\n3bo"
         asd = strickgraph.strickgraph.from_manual( testmanual, self.stitchinfo )
         borderlist = tuple( asd.get_borders() )
-        testborder = ([(0, 0), (0, 1), (0, 2), (0, 3), (0, 4)], \
-                        [(4, 0), (4, 1), (4, 2)], \
-                        [(0, 0), (1, 0), (2, 0), (3, 0), (4, 0)], \
-                        [(0, 4), (1, 4), (2, 4), (3,4), (3,3), (3, 2), (4, 2)])
+        rows = asd.get_rows()
+        testborder = (rows[0], rows[-1], [ r[0] for r in rows ], [r[-1] for r in rows])
         self.assertEqual( borderlist, testborder )
 
     def test_frommanual( self ):
@@ -256,7 +259,6 @@ class TestStringMethods( unittest.TestCase ):
         #this removes the spaces and tabs
         import networkx as netx
         self.assertEqual( manual, testmanual_uni )
-        #return
 
         def testbrokenmanual():
             testmanual = "4yo\n2k 1yo 1k\n2k, 1k2tog, 1k\n4bo\n"
@@ -283,20 +285,25 @@ class TestStringMethods( unittest.TestCase ):
         for i in range(len(testmanual)):
             self.assertEqual( "".join(manual[i]), "".join(testmanual[i]) )
 
-        return
         asd = create_testgraph_with_chasm()
         manual = asd.to_manual( self.stitchinfo )
         qwe = strickgraph.strickgraph.from_manual( manual, self.stitchinfo )
+        testmanual = qwe.to_manual( self.stitchinfo )
+        self.assertEqual( manual, testmanual )
 
     def test_manualtype_machine_and_thread( self ):
         testmanual = "2yo\n k p\n k p\n 2bo\n"
         asd = strickgraph.strickgraph.from_manual( testmanual, self.stitchinfo, manual_type="machine" )
         attr = asd.get_nodeattr_stitchtype()
-        self.assertEqual( attr[(1,0)], attr[(2,0)] )
+        a = asd.get_rows()[1][0]
+        b = asd.get_rows()[2][0]
+        self.assertEqual( attr[a], attr[b] )
 
         asd2 = strickgraph.strickgraph.from_manual( testmanual, self.stitchinfo, manual_type="thread" )
         attr = asd2.get_nodeattr_stitchtype()
-        self.assertEqual( attr[(1,0)], attr[(2,1)] )
+        a = asd.get_rows()[1][0]
+        b = asd.get_rows()[2][1]
+        self.assertEqual( attr[a], attr[b] )
 
     @unittest.skip( "This method needs a rehaul" )
     def test_manual_withstartside( self ):
