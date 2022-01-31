@@ -139,6 +139,10 @@ class TestMeshhandlerMethods( unittest.TestCase ):
             self.assertTrue( 0 <= sum( upedges_in )- sum( upedges_out ) <= 3 )
 
     def test_createverbesserer( self ):
+        """
+
+        :todo: This failed randomly??? (31.jan)
+        """
         rs = plainknit.rowstates
         linetypes_in = (rs.start, rs.plain, rs.increase, rs.end)
         linetypes_out = (rs.start, rs.increase, rs.increase, rs.end)
