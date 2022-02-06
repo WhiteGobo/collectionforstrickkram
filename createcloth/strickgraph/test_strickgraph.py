@@ -245,7 +245,8 @@ class TestStringMethods( unittest.TestCase ):
         asd = strickgraph.strickgraph.from_manual( testmanual, self.stitchinfo )
         borderlist = tuple( asd.get_borders() )
         rows = asd.get_rows()
-        testborder = (rows[0], rows[-1], [ r[0] for r in rows ], [r[-1] for r in rows])
+        rightborder = [ rows[i][j] for i,j in [(0,-1), (1,-1), (2,-1), (3,-1), (3,-2), (3,-3), (4,-1)]]
+        testborder = (rows[0], rows[-1], [ r[0] for r in rows ], rightborder)
         self.assertEqual( borderlist, testborder )
 
     def test_frommanual( self ):
@@ -287,6 +288,7 @@ class TestStringMethods( unittest.TestCase ):
 
         asd = create_testgraph_with_chasm()
         manual = asd.to_manual( self.stitchinfo )
+        print( manual )
         qwe = strickgraph.strickgraph.from_manual( manual, self.stitchinfo )
         testmanual = qwe.to_manual( self.stitchinfo )
         self.assertEqual( manual, testmanual )
