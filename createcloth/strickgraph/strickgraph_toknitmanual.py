@@ -1,13 +1,15 @@
-"""
-main function here is tomanual
+"""Methods and implementations of strickgraphs and manuals are contained
+in this module. 
 
-:todo: support for load_stitchinfo. support seems not complete because example
-        character_dictionary
+:todo: Check if 'strickcode-machine' can be used in other modules.
+:todo: The machine-code-generator doesnt concerns itself with left and 
+        right side, when it knits stitches.
 """
 import networkx as netx
 import regex
 import itertools as it
 from collections.abc import Container
+from collections import Counter
 
 from .. import strickgraph as mod_strickgraph
 from .datacontainer import strick_datacontainer
@@ -23,7 +25,15 @@ from collections.abc import Mapping
 import copy
 
 class class_special_commands( Container ):
-    """Class for identifying special commands inside the manual"""
+    """Class for identifying special commands inside the manual.
+    Contains and maps all given stitchsymbols from stitchinfo. Also
+    supports the commands 'tunnel%i', 'load%i', 'switch%i' and 'turn'.
+    'turn' specifies a knitdirection change or rather the next line 
+    (maps to '\\n'). 'switch%i' specifies the change of the used thread 
+    to threadnumber i (maps to 'switch_thread'). 'tunnel%i' means the given
+    noose must be hold on a different needle and should be returned at 'load%i'
+    (maps to 'save_noose' and 'load_noose').
+    """
     def __init__( self, stitchinfo ):
         self.stitchinfo = stitchinfo
 
@@ -35,8 +45,10 @@ class class_special_commands( Container ):
             stitchtype = stitchmatch[0]
             if stitchtype in self.stitchinfo.stitchsymbol:
                 return ( "knit", stitchtype, side )
+            elif stitchtype == "\n":
+                return ( "turn", )
 
-        mymatch = regex.match( r"(?P<com>\S+)(?P<val>\d+)", x )
+        mymatch = regex.match( r"(?P<com>\D+)(?P<val>\d+)", x )
         if mymatch["com"] == "switch":
             return ( "switch_thread", int(mymatch["val"]))
         elif mymatch["com"] == "tunnel":
@@ -46,18 +58,24 @@ class class_special_commands( Container ):
         raise Exception( "oops something went wrong, strange input", x )
 
     def __contains__( self, x ):
-        try:
+        """See for help for regex in:
+        https://docs.python.org/3/howto/regex.html
+        """
+        try: #match first word
             stitchmatch = regex.match( r"(?P<stitchtype>\S+)", x )
         except TypeError:
             return False
         if not stitchmatch:
             return False
-        elif stitchmatch.span()[1] == len(x):
+        elif stitchmatch.span()[1] == len(x): #match spans over whole word
             stitchdict = stitchmatch.groupdict()
             if stitchdict["stitchtype"] in self.stitchinfo.stitchsymbol:
                 return True
-        mymatch = regex.match( r"(?P<command>\S+)(?P<qq>\d+)", x )
-        if mymatch.span()[1] < len(x):
+            elif stitchdict["stitchtype"] == "\n":
+                return True
+        #match first part(nondigit) and second part(digit) in 'command' and 'qq'
+        mymatch = regex.match( r"(?P<command>\D+)(?P<qq>\d+)", x )
+        if mymatch.span()[1] < len(x): #match spans over part of word
             return False
         asddict = mymatch.groupdict()
         return asddict[ "command" ] in [ "switch", "tunnel", "load" ]
@@ -69,9 +87,15 @@ class class_special_commands( Container ):
             return default
 
     def reverse( self, x ):
+        """Returns Comap as class class_special_commands_reversed.
+
+        :returns: Comap ( x = Map[ Comap[x] ] )
+        :rtype: class_special_commands_reversed
+        """
         return class_special_commands_reversed( self.stitchinfo )
 
 class class_special_commands_reversed( Container ):
+    """Comap to class_special_commands. See there for further information"""
     def __init__( self, stitchinfo ):
         self.stitchinfo = stitchinfo
         self.noose_int = 0
@@ -87,15 +111,16 @@ class class_special_commands_reversed( Container ):
         if not self.__contains__( x ):
             raise KeyError( x)
         if x[0] == "turn":
-            raise Exception( "cant meaningfully translate command 'turn'. "
-                                "Use a new row instead" )
-        if x[0] == "save_noose":
+            return "\n"
+            #raise Exception( "cant meaningfully translate command 'turn'. "
+            #                        "Use a new row instead" )
+        elif x[0] == "save_noose":
             noose_int = self.noose_int
             self.noose_int += 1
             self.nooses[ x[1] ] = noose_int
             return "tunnel%i" %(noose_int)
         elif x[0] == "load_noose":
-            return "load%i" %( nooses[ x[1] ] )
+            return "load%i" %( self.nooses[ x[1] ] )
         elif x[0] == "knit":
             return x[1]
         elif x[0] == "switch_thread":
@@ -125,18 +150,25 @@ class class_special_commands_reversed( Container ):
         return False
 
     def reverse( self, x ):
+        """Returns Comap as class class_special_commands.
+
+        :returns: Comap ( x = Map[ Comap[x] ] )
+        :rtype: class_special_commands
+        """
         return class_special_commands_reversed( self.stitchinfo )
 
 
 
 class strick_manualhelper( strick_datacontainer ):
+    """
+
+    :todo: Change this to abstractclass with inheritance of other abstractclass
+    """
     def to_manual( self, stitchinfo, manual_type="machine" ):
         statuses, commands = create_knit_commandarray( self, stitchinfo )
         stitchtypes = self.get_nodeattr_stitchtype()
         startside = self.get_startside()
         rows = [[]]
-        nooses = {}
-        noose_int = 0
         spec_commands = class_special_commands_reversed( stitchinfo )
         for c in commands:
             if c[0] == "turn":
@@ -145,13 +177,14 @@ class strick_manualhelper( strick_datacontainer ):
                 rows[-1].append( spec_commands[ c ] )
 
         asd: list[list[list[int, str]]] \
-                = shorten_command_array( rows, stitchinfo.stitchsymbol )
+                = _shorten_command_array( rows, stitchinfo.stitchsymbol )
 
         if manual_type == "machine":
             for i, row in enumerate( asd ):
                 qi = 1 if startside=="right" else 0
                 if i%2==qi:
                     row.reverse()
+
         row_commands =[["".join( str(a) for a in com if a != 1) \
                         for com in row] for row in asd]
         row_commands = [ " ".join(row) for row in row_commands ]
@@ -161,12 +194,15 @@ class strick_manualhelper( strick_datacontainer ):
     @classmethod
     def from_manual( cls, manual, stitchinfo, manual_type="machine", \
                                         startside="right", reverse=False ):
+        """Generator of this class via a manual in string form.
+
+        """
         manual = transform_manual_to_listform( manual )
         mystitchinfo = stitchinfo
         if manual_type in mod_strickgraph.machine_terms:
             revi = 1 if startside=="right" else 0
             for i in range( len(manual) ):
-                if i == revi:
+                if i%2 == revi:
                     manual[ i ].reverse()
         elif manual_type in mod_strickgraph.handknitting_terms:
             pass
@@ -191,7 +227,7 @@ class strick_manualhelper( strick_datacontainer ):
                 commands.append( special_commands\
                             .__getitem__( manual_command, side=tmpside ))
         mymachine = machine_knitter_producer_commands( stitchinfo )
-        status = strickgraph_creation_status()
+        status = strickgraph_creation_status( startside )
         for com in commands:
             try:
                 status = mymachine.execute( status, *com )
@@ -201,7 +237,11 @@ class strick_manualhelper( strick_datacontainer ):
         return mystrickgraph2
 
 
-def shorten_command_array( rows, command_to_symbol ):
+def _shorten_command_array( rows, command_to_symbol ):
+    """Shortens manual with stitchsymbols instead of stitchnames. 
+    Also repeating stitchtypes are cumulated to 
+    '%i%s' %( number_of_stitches, stitchsymbol )
+    """
     shortened_commands = []
     for row in rows:
         short_row = []
@@ -221,16 +261,26 @@ def shorten_command_array( rows, command_to_symbol ):
 
 
 class BrokenManual( Exception ):
+    """Given Manual is not usable.
+
+    :todo: give detailed information what may be the cause
+    """
     pass
 
 
 def symbol_to_stitchid( manual, mystitchinfo ):
+    """
+
+    :todo: remove this method
+    """
     #namedict = { mystitchinfo.symbol[x]:x for x in mystitchinfo.symbol }
     namedict = mystitchinfo.stitchsymbol_to_stitchid
     special_commands = class_special_commands( mystitchinfo )
     for i in range( len(manual)):
         assert all( x in namedict or x in special_commands \
-                        for x in manual[i]), (i,manual)
+                        for x in manual[i]), \
+                        [ x for x in manual[i] \
+                        if x not in namedict and x not in special_commands ]
         try:
             manual[i] = [ namedict.get(x,x) for x in manual[i] ]
         except KeyError as err:
@@ -240,6 +290,10 @@ def symbol_to_stitchid( manual, mystitchinfo ):
 
 
 def transform_to_single_key( manual ):
+    """
+
+    :todo: Cut away this method
+    """
     newmanual = []
     for i in range(len(manual)):
         newline = []
@@ -258,11 +312,16 @@ def transform_to_single_key( manual ):
 
 
 def transform_manual_to_listform( manual ):
+    """
+
+    :todo: Cut away this method
+    """
     return transformdict[type(manual)]( manual )
 
 transformdict = {}
 def _trans_manual_texttolist( manual ):
     """
+
     :todo: maybe transport different layouts to other function
     """
     manual = manual.replace( ",", " " )
@@ -284,8 +343,7 @@ def _trans_manual_texttolist( manual ):
 transformdict.update({ str: _trans_manual_texttolist })
 
 def _trans_manual_listtolist( manual ):
-    """
-    check if itis a nested list or a list of strings (like a stream)
+    """check if itis a nested list or a list of strings (like a stream)
     """
     if isinstance( manual[0], list):
         return manual
@@ -305,7 +363,7 @@ def _find_requisites_for_stitches( upedges, nextedges, threads, stitchside, \
     :param lefttoright_rows: from strickgraph.get_rows(
                 presentation_type='machine', lefttoright_side='right' )
     :type lefttoright_rows: Iterable[ Hashable ]
-            "knitted_stitches": set(),
+                "knitted_stitches": set(),
     """
     all_stitches = stitchside.keys()
     stitch_needednooses: dict[Hashable, list] = { s:list() for s in all_stitches }
@@ -314,6 +372,7 @@ def _find_requisites_for_stitches( upedges, nextedges, threads, stitchside, \
     for i, e in enumerate( upedges ):
         st1, st2 = e
         stitch_needednooses.setdefault( st2, list() ).append( i )
+        stitch_neededstitches.setdefault( st2, [] ).append( st1 )
     for st1, st2 in nextedges:
         #stitch_needednooses.setdefault( st2, [list(),list(),None] )[1].append(st1)
         stitch_neededstitches.setdefault( st2, [] ).append( st1 )
@@ -340,6 +399,16 @@ def _find_requisites_for_stitches( upedges, nextedges, threads, stitchside, \
     return stitch_needednooses, stitch_neededstitches, stitch_neededthread
 
 def _find_generated_nooses( upedges, threads ):
+    """Generate all generatable nooses and saves them in a dict.
+    The produced dictionary maps the stitches to a list of nooses
+
+    :param upedges: Upedges as iterable
+    :type upedges: Iterable[ Tuple[ Hashable, Hashable] ]
+    :param threads: 
+    :type threads: Sequence[ Sequence[ Hashable ] ]
+    :returns: Dictionary that maps the stitches to all generated nooses
+    :rtype: Mapping[ Hashable, Sequence[ Hashable ] ]
+    """
     stitch_generatenooses = {}
     for i, e in enumerate( upedges ):
         st1, st2 = e
@@ -352,6 +421,8 @@ def _find_generated_nooses( upedges, threads ):
 def create_knit_commandarray( strickgraph, stitchinfo ):
     """
 
+    :returns: A list of commands, with which the Strickgraph can be generated
+    :rtype: Sequence[ Iterable[ str ] ]
     :todo: nooseordering works only, if nooses, dont skip rows
     :todo: nooseordering is not uniformly ordered from left to right but
             instead leaf to right for left-knitted stitches and viceversa
@@ -365,6 +436,7 @@ def create_knit_commandarray( strickgraph, stitchinfo ):
     threads = strickgraph.get_threads()
     rows = strickgraph.get_rows( presentation_type='machine', \
                                                     lefttoright_side='right' )
+    startside = stitchside[ rows[0][0] ]
 
     stitch_generatenooses = _find_generated_nooses( upedges, threads )
     stitch_needednooses, stitch_neededstitches, stitch_neededthread \
@@ -372,16 +444,17 @@ def create_knit_commandarray( strickgraph, stitchinfo ):
                                                     stitchside, rows )
     dict_threads = { i:stitch_list for i, stitch_list in enumerate( threads )}
 
-    myknitter = machine_knitter_producer( stitch_needednooses, stitch_neededstitches, stitch_neededthread, dict_threads, rows, stitchinfo )
+    myknitter = machine_knitter_producer( stitch_needednooses, stitch_neededstitches, stitch_neededthread, dict_threads, rows, stitchinfo, stitchside )
     options = {
+            #"knit_direction": startside
             "stitch_to_generated_nooses": stitch_generatenooses, 
             "stitchtype": stitches,
             }
-    source_status = machine_knitter_producer_status( **options, 
+    source_status = machine_knitter_producer_status( startside, **options, 
                             knitted_stitches=frozenset(), current_thread=0 )
-    target_statuses = [ machine_knitter_producer_status( **options, \
-                            knitted_stitches=frozenset(stitches), current_thread=i )\
-                            for i in dict_threads ]
+    target_statuses = [ machine_knitter_producer_status( side, **options, \
+                            knitted_stitches=frozenset(stitches), current_thread=it )\
+                            for it, side in it.product(dict_threads, ("left", "right")) ]
     class pathnode:
         knitter = myknitter
         def __init__( self, status ):
@@ -394,7 +467,10 @@ def create_knit_commandarray( strickgraph, stitchinfo ):
                 newstatus = self.knitter.execute( self.status, *command )
                 yield cls( newstatus ), cost, command
         def __eq__( self, other ):
-            return self.status == other.status
+            try:
+                return self.status == other.status
+            except Exception:
+                raise Exception( self, other )
         def __hash__( self ):
             return hash( self.status )
         def __repr__( self ):
@@ -467,6 +543,7 @@ class abstract_machine( ABC ):
 
 @dataclass
 class machine_knitter_producer_status( Mapping ):
+    knit_direction: str
     stitch_to_generated_nooses: dict = field( default_factory=dict )
     stitchtype: dict = field( default_factory=dict )
     knitted_stitches: frozenset = frozenset()
@@ -498,13 +575,14 @@ class machine_knitter_producer_status( Mapping ):
             cond3 = self.working_needle == other.working_needle
             cond4 = self.saved_singlenooses == other.saved_singlenooses
             cond5 = self.current_thread == other.current_thread
+            cond6 = self.knit_direction == other.knit_direction
         except AttributeError:
             return False
-        return all(( cond1, cond2, cond3, cond4, cond5 ))
+        return all(( cond1, cond2, cond3, cond4, cond5, cond6 ))
     def get_attributes( self ):
         return copy.deepcopy( self.__dict__ )
 
-class strickgraph_creation_status(machine_knitter_producer_status):
+class strickgraph_creation_status( machine_knitter_producer_status ):
     def __init__( self, *args, stricknodes = None, strickedges=None, **kwargs ):
         super().__init__( *args, **kwargs )
         if stricknodes is not None and strickedges is not None:
@@ -549,6 +627,7 @@ class machine_knitter_producer_commands:
         info = dict(status)
         info["working_needle"], info["saving_needle"] \
                 = info["saving_needle"], info["working_needle"]
+        info["knit_direction"] = {"left":"right", "right":"left" }[info["knit_direction"]]
         return type(status)( **info )
 
     def knit_stitch( self, status, stitchtype, stitchside, stitchname=None, \
@@ -618,8 +697,10 @@ class machine_knitter_producer_commands:
         noose = info["working_needle"][ 0 ]
         info["working_needle"] = info["working_needle"][ 1: ]
         noosedict = dict(info["used_nooses"])
-        assert noose_id not in noosedict
+        assert noose == noosedict.get( noose_id, noose )
+        #assert noose not in noosedict.values()
         noosedict[ noose_id ] = noose
+        assert Counter( noosedict.values() )[ noose ] == 1
         info["used_nooses"] = noosedict
         #info["used_nooses"] = info["used_nooses"] + ( noose_id, )
         return type(status)( **info )
@@ -632,7 +713,10 @@ class machine_knitter_producer_commands:
         """
         info = dict( status )
         noosedict = dict(info["used_nooses"])
-        noose = noosedict[ noose_id ]
+        try:
+            noose = noosedict[ noose_id ]
+        except Exception as err:
+            raise Exception( noosedict ) from err
         assert noose_id in info["saved_singlenooses"]
         info[ "saved_singlenooses" ] = info[ "saved_singlenooses" ]-{noose_id}
         info["saving_needle"] = (noose,) + info["saving_needle"]
@@ -645,25 +729,32 @@ class machine_knitter_producer_commands:
 
 
 class command_valid:
+    """
+
+    :todo: remove this
+    """
     def __contains__( self, command ):
         comstring = command[0]
         return comstring in ["switch_thread", "knit", "load_noose", \
                             "save_noose", "turn"]
 
-def ladder():
-    i=0
-    while True:
-        yield i
-        i += 1
 
 class machine_knitter_producer( machine_knitter_producer_commands ):
+    """Extends machine_knitter for use in Pathfinding algorithm.
+    Needs some more information about the strickgraph to be generated
+    """
     def __init__( self, stitches_needednooses, stitch_neededstitches, \
                             stitch_neededthread, thread_to_stitch, rows, \
-                            stitchinfo ):
+                            stitchinfo, stitch_side ):
         super().__init__( stitchinfo )
         self.stitches_needednooses = stitches_needednooses
+        tmp = ( it.product([st], no_list ) \
+                for st, no_list in self.stitches_needednooses.items() )
+        self.noose_to_stitch = { no:st \
+                for st, no in it.chain.from_iterable(tmp)}
         self.stitch_neededthread = stitch_neededthread
         self.stitch_neededstitches = stitch_neededstitches
+        self.stitch_side = stitch_side
         self.thread_to_stitch = thread_to_stitch
         self.rows = rows
 
@@ -671,9 +762,11 @@ class machine_knitter_producer( machine_knitter_producer_commands ):
         for st, working_needle_req in self.stitches_needednooses.items():
             thread = self.stitch_neededthread[st]
             predecessors = self.stitch_neededstitches[st]
+            side = self.stitch_side.get( st, status.knit_direction )
             if st not in status.knitted_stitches:
                 if status.knitted_stitches.issuperset( predecessors ) \
-                            and thread == status.current_thread:
+                            and thread == status.current_thread \
+                            and side == status.knit_direction:
                     try:
                         if all( r==status.working_needle[i] \
                                 for i,r in enumerate( working_needle_req ) ):
@@ -681,22 +774,90 @@ class machine_knitter_producer( machine_knitter_producer_commands ):
                     except IndexError:
                         pass
 
+    def _feasible_to_load_noose( self, status, noose_id ):
+        conds = []
+
+        noose = status.used_nooses[ noose_id ]
+        stitch_from_noose = self.noose_to_stitch[ noose ]
+        try:
+            after_this_knitable = self.noose_to_stitch[ status.saving_needle[0] ]
+            conds.append( stitch_from_noose \
+                    in self.stitch_neededstitches[after_this_knitable] )
+        except IndexError:
+            pass
+        need_stitches = self.stitch_neededstitches[ stitch_from_noose ]
+
+        noose_to_nooseid = { b:a for a,b in status.used_nooses.items() }
+        needed_nooses_loadable = lambda stitch: \
+                        all((noose_to_nooseid.get(n,None) in status.saved_singlenooses \
+                        for n in self.stitches_needednooses[stitch] ))
+        next_row_knitable = all( st in status.knitted_stitches \
+                        or needed_nooses_loadable( st ) \
+                        for st in need_stitches )
+        conds.append( next_row_knitable )
+
+        needed_thread = self.stitch_neededthread[ stitch_from_noose ]
+        side = self.stitch_side.get( stitch_from_noose, status.knit_direction )
+
+        conds.append( needed_thread == status.current_thread )
+        conds.append( side != status.knit_direction ) #next row correct side
+        #if all( conds ):
+        #    print( need_stitches, self.stitch_neededstitches[ stitch_from_noose ])
+        return all( conds )
+
     def possible_commands( self, status ):
-        yield ("turn",), 1
+        """
+
+        :todo: knitting should only be possible, if the side is correct
+        :todo: also this only generates left stitches
+        """
+        for noose_id in status.saved_singlenooses:
+            if self._feasible_to_load_noose( status, noose_id ):
+                yield ( "load_noose", noose_id ), 0.9
+                #return #break if load is possible
+        no_knitable_stitch = True
         for st in self._find_knitable_stitch( status ):
             st_type = status.stitchtype[st]
+            logger.info( "knit machine code generator doesnt concerns itself with left and right stitches" )
             yield ( "knit", st_type, "left", st ), 1
-        for noose_id in status.saved_singlenooses:
-            yield ( "load_noose", noose_id ), 1
+            no_knitable_stitch = False
+        if len( status.working_needle ) == 0 and no_knitable_stitch:
+            yield ("turn",), 1
+        if len( status.working_needle ) == 0 and no_knitable_stitch:
+            #predecessors = self.stitch_neededstitches[st]
+            for i in self.thread_to_stitch:
+                #if status.knitted_stitches.issuperset( predecessors ) \
+                #thread = self.stitch_neededthread[st]
+                knitable_st = [ st for st in self.thread_to_stitch[i] \
+                                if all( pred in status.knitted_stitches \
+                                for pred in self.stitch_neededstitches[st]) ]
+                if i != status.current_thread and knitable_st:
+                    yield ( "switch_thread", i ), 5
+
+        def ladder():
+            i=0
+            while True:
+                yield i
+                i += 1
         if len( status.working_needle ) > 0:
-            noose_id = (i for i in ladder() if i not in status.used_nooses).__next__()
-            yield ( "save_noose", noose_id ), 2
-        #for i in status.threads:
-        for i in self.thread_to_stitch:
-            if i != status.current_thread:
-                yield ( "switch_thread", i ), 1
+            saved_noose = status.working_needle[ 0 ]
+            if saved_noose in status.used_nooses.values():
+                noose_id = ( a for a,b in status.used_nooses.items() \
+                            if b==saved_noose ).__next__()
+            else:
+                noose_id = (i for i in ladder() \
+                            if i not in status.used_nooses).__next__()
+            stitch_from_noose = ( st \
+                            for st, nlist in self.stitches_needednooses.items()\
+                            if saved_noose in nlist ).__next__()
+            needed_thread = self.stitch_neededthread[ stitch_from_noose ]
+            if needed_thread != status.current_thread:
+                yield ( "save_noose", noose_id ), 2
 
     def minimal_distance( self, first, second ):
+        """Gives a minimal number of work commands to create the strickgraph
+
+        """
         if first.knitted_stitches.difference( second.knitted_stitches ):
             raise method_Astar.TargetUnreachable()
 
@@ -716,8 +877,10 @@ class machine_knitter_producer( machine_knitter_producer_commands ):
         missing_nooses_rows = [ row for row in missing_nooses_rows \
                                 if len(row) > 0 ]
         switch_thread_cost = 0 if first.current_thread == second.current_thread \
-                                else 1
-        noose_switching_cost = abs( len(first.saved_singlenooses) \
+                                else 5
+        noose_switching_cost = 0.9*abs( len(first.saved_singlenooses) \
                                 - len(second.saved_singlenooses))
-        return len( missing_stitches ) + switch_thread_cost + noose_switching_cost \
-                + 2*len( missing_threads ) + len(missing_nooses_rows)
+        return len( missing_stitches ) + switch_thread_cost \
+                + noose_switching_cost \
+                + 5*len( missing_threads ) \
+                + len(missing_nooses_rows)

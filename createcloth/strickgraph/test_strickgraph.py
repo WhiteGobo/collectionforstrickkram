@@ -288,7 +288,6 @@ class TestStringMethods( unittest.TestCase ):
 
         asd = create_testgraph_with_chasm()
         manual = asd.to_manual( self.stitchinfo )
-        print( manual )
         qwe = strickgraph.strickgraph.from_manual( manual, self.stitchinfo )
         testmanual = qwe.to_manual( self.stitchinfo )
         self.assertEqual( manual, testmanual )

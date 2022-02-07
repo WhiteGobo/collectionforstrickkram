@@ -4,49 +4,81 @@ import unittest
 from .. import chasm_identifier
 from ..strickgraph import strickgraph
 from ..stitchinfo import basic_stitchdata as glstinfo
+from . import method_reducedvalidset as mrvs
 
 import logging
 logger = logging.getLogger( __name__ )
+from . import method_generate_example as mge
 
 class TestChasmidentifier( unittest.TestCase ):
-    def test_classifychasm( self ):
+    def test_tmp( self ):
+        """This fails, because graph is not plain"""
         return
-        mystrick = create_testgraph_with_chasm()
-        raise Exception( mystrick.to_manual( glstinfo ) )
-        #print( mystrick.to_manual(glstinfo) )
-        chasm_identifier.classify( mystrick )
+        myman = "20yo\n20k\n20k\n8k 4bo 8k\n8k switch1 8k\n8k switch1 8k\n8k switch1 8k\n8bo switch0 8bo"
+        mystrick = strickgraph.from_manual( myman, glstinfo )
+        mystrick.get_borders()
+
+    def test_classifychasm( self ):
+        myman = "20yo\n20k\n8k 4bo 8k\n8k switch1 8k\n8k switch0 8k\n8k switch1 8k\n8bo switch0 8bo"
+        mystrick = strickgraph.from_manual( myman, glstinfo )
+        props = chasm_identifier.classify( mystrick )
+        self.assertEqual( props.crack_height, 4 )
+        self.assertEqual( props.crack_arrays, ('plain', 'plain', 'plain', 'top') )
+        self.assertEqual( props.crack_width, 4 )
+        self.assertEqual( len(props.leftside), 4 )
+        self.assertEqual( len(props.rightside), 4 )
+        self.assertEqual( len(props.bottom), 6)
+        #print( dict(props) )
+
+    def test_createexample_chasm( self ):
+        props = {'crack_height': 4, 'crack_width': 4,\
+                'crack_arrays': ('plain', 'plain', 'plain', 'top'), \
+                #'leftside': [['115', '114', '113', '112'], ['100', '101', '102', '103', '104'], ['83', '82', '81', '80', '79'], ['68', '69', '70', '71', '72']], \
+                #'rightside': [['116', '117', '118', '119'], ['99', '98', '97', '96', '95'], ['84', '85', '86', '87', '88'], ['67', '66', '65', '64', '63']], \
+                #'bottom': ['47', '48', '49', '50', '51', '52'], \
+                }
+
+        mystrick = mge.generate_example( **props, height=7, width=20 )
+        myman = "20yo\n20k\n8k 4bo 8k\n8k switch1 8k\n8k switch0 8k\n8k switch1 8k\n8bo switch0 8bo"
+        myman ="20yo\n20k\n8k 4bo 8k\ntunnel7 tunnel6 tunnel5 tunnel4 tunnel3 tunnel2 tunnel1 tunnel0 8k\n8k\n8k\n8bo\nload7 load6 load5 load4 load3 load2 load1 load0 switch1\n8k\n8k\n8k\n8bo"
+
+        mystricktest = strickgraph.from_manual( myman, glstinfo )
+        print( mystricktest.to_manual( glstinfo ))
+        #self.assertEqual( mystrick, mystricktest )
+
+    def test_create_chasm_verbesserer( self ):
+        props1 = {'crack_height': 4, 'crack_width': 4,\
+                'crack_arrays': ('plain', 'plain', 'plain', 'top'), \
+                'height': 7, 'width': 20 }
+        props2 = {'crack_height': 4, 'crack_width': 4,\
+                'crack_arrays': ('plain', 'plain', 'decrease', 'top'), \
+                'height': 7, 'width': 20 }
+        difference_line = 5
+        #myalt = chasm_alterator.from_difference( difference_line, props1, props2 )
+        mystrick1 = mge.generate_example( **props1 )
+        #alt_strick = myalt.asdf( mystrick1 )
+        mystrick2 = mge.generate_example( **props2 )
+        #self.assertEqual( alt_strick, mystrick2 )
 
 
+    def test_create_reduced_valid_properties( self ):
+        height = 7
+        width = 20
+        myid = mrvs.reduced_simple_chasms( height, width )
+        reduced_properties = list( myid )
+        props = [{'crack_height': 4, 'crack_width': 4, #'height': 7, 'width':20,\
+                'crack_arrays': ('plain', 'plain', 'plain', 'top')},\
+                {'crack_height': 4, 'crack_width': 4, #'height': 7, 'width': 20,\
+                'crack_arrays': ('plain', 'plain', 'decrease', 'top') }, \
+                ]
+        #print( reduced_properties )
+        for p in props:
+            self.assertTrue( p in reduced_properties  )
 
-def create_testgraph_with_chasm():
-    #create strickgraph 7yo;7k;3k 1bo 3k;3k skip 3k;3k skip 3k;
-    nodeattr = {}
-    edges = []
-    rowlength, number_rows = 7, 5
-    endofline=((0,6), (1,0), (2,6), (3,0), (3,4) )
-    skip_stitches = [(3,3), (4,3)]
-    bindoff_stitches = [ (2,3), (4,0),(4,1),(4,2),(4,4),(4,5),(4,6) ]
-    for i in range(number_rows):
-        for j in range( rowlength ):
-            if (i,j) in skip_stitches:
-                continue
-            if (i,j) in bindoff_stitches:
-                st_type = "bindoff"
-            else:
-                st_type = {0:"yarnover", number_rows-1:"bindoff"}.get(i,"knit")
-            
-            side = { 1:"left", 0:"right" }[ i%2 ]
-            nodeattr[ (i,j) ] = { "stitchtype":st_type, "side":side }
+#chasm_properties(crack_height=4, 
+#        crack_arrays=('increase', 'increase', 'decrease', 'top'), 
+#        crack_width=11, leftside=None, rightside=None, bottom=None), 
 
-            if (i,j) not in endofline:
-                next_stitch = (i, j+1) if i%2==0 else (i, j-1)
-            else:
-                next_stitch = (i+1, j)
-            edges.append( ((i,j), next_stitch, "next"))
-            edges.append( ((i,j), (i+1,j), "up") )
-    edges = [(v1,v2,label) for v1, v2, label in edges \
-            if all(v in nodeattr for v in (v1,v2))]
-    return strickgraph( nodeattr, edges )
 
 if __name__ == "__main__":
     logging.basicConfig( level=logging.WARNING )
