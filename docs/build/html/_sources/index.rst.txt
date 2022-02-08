@@ -12,6 +12,7 @@ Welcome to Createcloth's documentation!
 
 
    classcollection/strickgraph
+   classcollection/manuals
    classcollection/stitchinfo
    classcollection/physicalhelper
    classcollection/meshhandler
@@ -36,10 +37,6 @@ Todo:
 .. todo::
 
    making for intersphinx inventoryfile of datagraphfactory, see source/conf.py
-
-.. todo::
-
-   getting todo to work
 
 
 Indices and tables

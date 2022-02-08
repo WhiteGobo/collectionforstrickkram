@@ -3,6 +3,11 @@ Plainknit
 
 Methods for everything sourrunded a plainknit-strickgraph. 
 
+.. todo::
+
+   Make plainknit identifier as loadable class. 
+   Also create identifier-absstractclass
+
 .. automodule:: createcloth.plainknit
    :members:
    :undoc-members:

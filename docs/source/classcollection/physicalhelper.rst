@@ -7,6 +7,16 @@ Physical properties
 Everything, that has something to do with physical properties is touched by 
 this module. This should range from properties, used in simulations, till optimal length of an row of the knitting piece.
 
+.. todo::
+   
+   Try to unify the way in which extra information about physicalproperties
+   is handled. For example give an abstractclass for accessing generated
+   information.
+
+.. todo::
+
+   make a table of contents of available extra information here
+
 Threadinfo
 ----------
 

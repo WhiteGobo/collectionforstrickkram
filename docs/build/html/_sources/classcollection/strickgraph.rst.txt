@@ -63,7 +63,8 @@ We can create an virtual object reperenting this knitpiece via
 
    from createcloth.stitchinfo import basic_stitchinfo
    manual = "4bo\n3k 1k2tog\n5yo"
-   knitpiece = strickgraph.from_manual( manual, basic_stitchinfo )
+   knitpiece = strickgraph.from_manual( manual, basic_stitchinfo, \
+                                        manual_type="hand" )
 
 Note, that we need a 
 :py:class:`translationpiece for every stitch<createcloth.stitchinfo>`. 
@@ -81,6 +82,12 @@ the strickgraph.
 We have different things we must discuss here, as startingside 'right' or 
 'left'. And also the difference of, written-as-you-knit(handknitting) and
 written-as-you-see(machineknitting) must be further described.
+
+.. todo::
+
+   i plan on using for handknitting-terms and machine-knitting terms conatiners
+   (see collections.abc.Container for more information). So this might 
+   change in the future
 
 Abstract strickgraph generation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -118,8 +125,20 @@ also we need general information(*basic_stitchdata*) about our knitpiece. Eg:
 
         asd = strickgraph.from_gridgraph( graph, firstrow, basic_stitchdata )
 
+.. todo::
+
+   Strickgraphgeneration from graphs might fail because of various reasons.
+   It might be nice to have a what-has-gone-wrong guide somewhere.
+
 Handling the strickgraph
 ------------------------
+
+.. todo::
+
+   I plan on making a abstract class for graphs, mainly because of 
+   graphalteration. This abstract class then will be used for strickgraphs.
+   Eventual more methods that are abstractable will then be listed here.
+
 
 all nodes and information
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -220,6 +239,7 @@ strickgraph references
    :members:
    :undoc-members:
    :show-inheritance:
+   :noindex:
 
 .. autoclass:: createcloth.strickgraph.datacontainer.strick_datacontainer
    :members:

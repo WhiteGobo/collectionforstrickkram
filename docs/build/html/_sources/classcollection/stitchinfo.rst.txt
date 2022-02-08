@@ -37,6 +37,18 @@ See for example a declaration of a stitchtype in
 		downedges="1"
 	/>
 
+Comment on stitchcharts
+-----------------------
+
+Currently in manuals there are some special commands like tunnel and load. 
+These special commands should be explained further in the chapter with 
+manual-strickgraph-thingies.
+
+.. todo:
+
+   make somekind of chapter for special commands anywhere and link it here
+
+These special commands may be implemented in stitchinfo in the future.
 
 python-implementation of stitchdata
 -----------------------------------
@@ -78,6 +90,10 @@ They are accessed via
 :py:data:`stitchdatacontainer.strickstitch<createcloth.stitchinfo.load_stitchinfo.stitchdatacontainer.strickstitch>`, 
 :py:data:`stitchdatacontainer.strickstart<createcloth.stitchinfo.load_stitchinfo.stitchdatacontainer.strickstart>` and
 :py:data:`stitchdatacontainer.strickend<createcloth.stitchinfo.load_stitchinfo.stitchdatacontainer.strickend>`.
+
+.. todo::
+
+   Redo stitchdatacontainer with the help of collections.abc.Container
 
 Declaration via xmlfile
 -----------------------

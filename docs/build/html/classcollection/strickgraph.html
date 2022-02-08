@@ -16,7 +16,7 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Stitchinfo" href="stitchinfo.html" />
+    <link rel="next" title="Manuals for Strickgraph" href="manuals.html" />
     <link rel="prev" title="Welcome to Createcloth’s documentation!" href="../index.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -29,7 +29,7 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="stitchinfo.html" title="Stitchinfo"
+          <a href="manuals.html" title="Manuals for Strickgraph"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="../index.html" title="Welcome to Createcloth’s documentation!"
@@ -95,7 +95,8 @@ bottom to top.</p>
 <code class="xref py py-meth docutils literal notranslate"><span class="pre">Strickgraph</span> <span class="pre">from</span> <span class="pre">manual</span></code>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">createcloth.stitchinfo</span> <span class="kn">import</span> <span class="n">basic_stitchinfo</span>
 <span class="n">manual</span> <span class="o">=</span> <span class="s2">&quot;4bo</span><span class="se">\n</span><span class="s2">3k 1k2tog</span><span class="se">\n</span><span class="s2">5yo&quot;</span>
-<span class="n">knitpiece</span> <span class="o">=</span> <span class="n">strickgraph</span><span class="o">.</span><span class="n">from_manual</span><span class="p">(</span> <span class="n">manual</span><span class="p">,</span> <span class="n">basic_stitchinfo</span> <span class="p">)</span>
+<span class="n">knitpiece</span> <span class="o">=</span> <span class="n">strickgraph</span><span class="o">.</span><span class="n">from_manual</span><span class="p">(</span> <span class="n">manual</span><span class="p">,</span> <span class="n">basic_stitchinfo</span><span class="p">,</span> \
+                                     <span class="n">manual_type</span><span class="o">=</span><span class="s2">&quot;hand&quot;</span> <span class="p">)</span>
 </pre></div>
 </div>
 <p>Note, that we need a
@@ -113,6 +114,12 @@ references instead of here described</p>
 <p>We have different things we must discuss here, as startingside ‘right’ or
 ‘left’. And also the difference of, written-as-you-knit(handknitting) and
 written-as-you-see(machineknitting) must be further described.</p>
+<div class="admonition-todo admonition" id="id3">
+<p class="admonition-title">Todo</p>
+<p>i plan on using for handknitting-terms and machine-knitting terms conatiners
+(see collections.abc.Container for more information). So this might
+change in the future</p>
+</div>
 </div>
 <div class="section" id="abstract-strickgraph-generation">
 <h3>Abstract strickgraph generation<a class="headerlink" href="#abstract-strickgraph-generation" title="Permalink to this headline">¶</a></h3>
@@ -139,10 +146,21 @@ also we need general information(<em>basic_stitchdata</em>) about our knitpiece.
 <span class="n">asd</span> <span class="o">=</span> <span class="n">strickgraph</span><span class="o">.</span><span class="n">from_gridgraph</span><span class="p">(</span> <span class="n">graph</span><span class="p">,</span> <span class="n">firstrow</span><span class="p">,</span> <span class="n">basic_stitchdata</span> <span class="p">)</span>
 </pre></div>
 </div>
+<div class="admonition-todo admonition" id="id4">
+<p class="admonition-title">Todo</p>
+<p>Strickgraphgeneration from graphs might fail because of various reasons.
+It might be nice to have a what-has-gone-wrong guide somewhere.</p>
+</div>
 </div>
 </div>
 <div class="section" id="handling-the-strickgraph">
 <h2>Handling the strickgraph<a class="headerlink" href="#handling-the-strickgraph" title="Permalink to this headline">¶</a></h2>
+<div class="admonition-todo admonition" id="id5">
+<p class="admonition-title">Todo</p>
+<p>I plan on making a abstract class for graphs, mainly because of
+graphalteration. This abstract class then will be used for strickgraphs.
+Eventual more methods that are abstractable will then be listed here.</p>
+</div>
 <div class="section" id="all-nodes-and-information">
 <h3>all nodes and information<a class="headerlink" href="#all-nodes-and-information" title="Permalink to this headline">¶</a></h3>
 <p>As mentioned the strickgraph is at its core a graph. This means every
@@ -209,7 +227,7 @@ the start and end of each row.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="createcloth.strickgraph.strickgraph_base.strickgraph">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">createcloth.strickgraph.strickgraph_base.</span></span><span class="sig-name descname"><span class="pre">strickgraph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nodeattributes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edgelabels</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">argv</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.strickgraph.strickgraph_base.strickgraph" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#createcloth.strickgraph.strickgraph_fromgrid.strick_fromgrid" title="createcloth.strickgraph.strickgraph_fromgrid.strick_fromgrid"><code class="xref py py-class docutils literal notranslate"><span class="pre">createcloth.strickgraph.strickgraph_fromgrid.strick_fromgrid</span></code></a>, <a class="reference internal" href="#createcloth.strickgraph.strickgraph_base.strick_compare" title="createcloth.strickgraph.strickgraph_base.strick_compare"><code class="xref py py-class docutils literal notranslate"><span class="pre">createcloth.strickgraph.strickgraph_base.strick_compare</span></code></a>, <a class="reference internal" href="#createcloth.strickgraph.strickgraph_base.alternative_stitchtype_support" title="createcloth.strickgraph.strickgraph_base.alternative_stitchtype_support"><code class="xref py py-class docutils literal notranslate"><span class="pre">createcloth.strickgraph.strickgraph_base.alternative_stitchtype_support</span></code></a>, <a class="reference internal" href="#createcloth.strickgraph.strickgraph_toknitmanual.strick_manualhelper" title="createcloth.strickgraph.strickgraph_toknitmanual.strick_manualhelper"><code class="xref py py-class docutils literal notranslate"><span class="pre">createcloth.strickgraph.strickgraph_toknitmanual.strick_manualhelper</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#createcloth.strickgraph.strickgraph_fromgrid.strick_fromgrid" title="createcloth.strickgraph.strickgraph_fromgrid.strick_fromgrid"><code class="xref py py-class docutils literal notranslate"><span class="pre">createcloth.strickgraph.strickgraph_fromgrid.strick_fromgrid</span></code></a>, <a class="reference internal" href="#createcloth.strickgraph.strickgraph_base.strick_compare" title="createcloth.strickgraph.strickgraph_base.strick_compare"><code class="xref py py-class docutils literal notranslate"><span class="pre">createcloth.strickgraph.strickgraph_base.strick_compare</span></code></a>, <a class="reference internal" href="#createcloth.strickgraph.strickgraph_base.alternative_stitchtype_support" title="createcloth.strickgraph.strickgraph_base.alternative_stitchtype_support"><code class="xref py py-class docutils literal notranslate"><span class="pre">createcloth.strickgraph.strickgraph_base.alternative_stitchtype_support</span></code></a>, <a class="reference internal" href="manuals.html#createcloth.strickgraph.strickgraph_toknitmanual.strick_manualhelper" title="createcloth.strickgraph.strickgraph_toknitmanual.strick_manualhelper"><code class="xref py py-class docutils literal notranslate"><span class="pre">createcloth.strickgraph.strickgraph_toknitmanual.strick_manualhelper</span></code></a></p>
 <p>QWERQWER</p>
 <p>asdf
 this is something</p>
@@ -285,18 +303,44 @@ alternative stitchtype</p>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="createcloth.strickgraph.strickgraph_toknitmanual.strick_manualhelper">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">createcloth.strickgraph.strickgraph_toknitmanual.</span></span><span class="sig-name descname"><span class="pre">strick_manualhelper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nodeattributes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edgelabels</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.strickgraph.strickgraph_toknitmanual.strick_manualhelper" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">createcloth.strickgraph.strickgraph_toknitmanual.</span></span><span class="sig-name descname"><span class="pre">strick_manualhelper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nodeattributes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edgelabels</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>Bases: <a class="reference internal" href="#createcloth.strickgraph.datacontainer.strick_datacontainer" title="createcloth.strickgraph.datacontainer.strick_datacontainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">createcloth.strickgraph.datacontainer.strick_datacontainer</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Todo</dt>
+<dd class="field-odd"><p>Change this to abstractclass with inheritance of other abstractclass</p>
+</dd>
+</dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="createcloth.strickgraph.strickgraph_toknitmanual.strick_manualhelper.from_manual">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_manual</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">manual</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stitchinfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">manual_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'machine'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startside</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'right'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.strickgraph.strickgraph_toknitmanual.strick_manualhelper.from_manual" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_manual</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">manual</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stitchinfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">manual_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'machine'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startside</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'right'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>Generator of this class via a manual in string form.</p>
+</dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="createcloth.strickgraph.strickgraph_toknitmanual.strick_manualhelper.to_manual">
-<span class="sig-name descname"><span class="pre">to_manual</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stitchinfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">manual_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'machine'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.strickgraph.strickgraph_toknitmanual.strick_manualhelper.to_manual" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">to_manual</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stitchinfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">manual_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'machine'</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>Generates manual for this strickgraph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stitchinfo</strong> – </p></li>
+<li><p><strong>manual_type</strong> – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Rtype stitchinfo</dt>
+<dd class="field-even"><p></p></dd>
+<dt class="field-odd">Rtype manual_type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>manual</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -513,7 +557,7 @@ shown</p>
 <dt class="sig sig-object py" id="createcloth.strickgraph.datacontainer.strick_datacontainer.get_sidemargins">
 <span class="sig-name descname"><span class="pre">get_sidemargins</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">marginsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.strickgraph.datacontainer.strick_datacontainer.get_sidemargins" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns stitches, with their respective identifier. Returned
-stitches correspond to the method <a href="#id3"><span class="problematic" id="id4">:py:method:`get_sidemargins_indices`</span></a></p>
+stitches correspond to the method <a href="#id6"><span class="problematic" id="id7">:py:method:`get_sidemargins_indices`</span></a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>Tuple[ Iterable[ Hashable ], Iterable[ Hashable ] ]</p>
@@ -674,8 +718,8 @@ strickgraphs</p>
   </div>
   <div>
     <h4>Next topic</h4>
-    <p class="topless"><a href="stitchinfo.html"
-                          title="next chapter">Stitchinfo</a></p>
+    <p class="topless"><a href="manuals.html"
+                          title="next chapter">Manuals for Strickgraph</a></p>
   </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
@@ -708,7 +752,7 @@ strickgraphs</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="stitchinfo.html" title="Stitchinfo"
+          <a href="manuals.html" title="Manuals for Strickgraph"
              >next</a> |</li>
         <li class="right" >
           <a href="../index.html" title="Welcome to Createcloth’s documentation!"

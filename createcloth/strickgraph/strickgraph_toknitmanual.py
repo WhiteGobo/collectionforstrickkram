@@ -165,6 +165,15 @@ class strick_manualhelper( strick_datacontainer ):
     :todo: Change this to abstractclass with inheritance of other abstractclass
     """
     def to_manual( self, stitchinfo, manual_type="machine" ):
+        """Generates manual for this strickgraph.
+
+        :param stitchinfo:
+        :rtype stitchinfo:
+        :param manual_type:
+        :rtype manual_type: str
+        :returns: manual
+        :rtype: str
+        """
         statuses, commands = create_knit_commandarray( self, stitchinfo )
         stitchtypes = self.get_nodeattr_stitchtype()
         startside = self.get_startside()
