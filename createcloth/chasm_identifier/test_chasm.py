@@ -43,8 +43,20 @@ class TestChasmidentifier( unittest.TestCase ):
         myman ="20yo\n20k\n8k 4bo 8k\ntunnel7 tunnel6 tunnel5 tunnel4 tunnel3 tunnel2 tunnel1 tunnel0 8k\n8k\n8k\n8bo\nload7 load6 load5 load4 load3 load2 load1 load0 switch1\n8k\n8k\n8k\n8bo"
 
         mystricktest = strickgraph.from_manual( myman, glstinfo )
-        print( mystricktest.to_manual( glstinfo ))
+        man = mystricktest.to_manual( glstinfo )
+        mystricktest2 = strickgraph.from_manual( myman, glstinfo )
+        man2 = mystricktest2.to_manual( glstinfo )
+        self.assertEqual( man, man2 )
         #self.assertEqual( mystrick, mystricktest )
+
+    def test_locate_thingies( self ):
+        myman ="20yo\n20k\n8k 4bo 8k\ntunnel7 tunnel6 tunnel5 tunnel4 tunnel3 tunnel2 tunnel1 tunnel0 8k\n8k\n8k\n8bo\nload7 load6 load5 load4 load3 load2 load1 load0 switch1\n8k\n8k\n8k\n8bo"
+        mystrick = strickgraph.from_manual( myman, glstinfo )
+        props = chasm_identifier.classify( mystrick )
+        #print( props )
+        #print( props.leftside[-3] )
+        #print( mystrick.get_rows()[-1])
+
 
     def test_create_chasm_verbesserer( self ):
         props1 = {'crack_height': 4, 'crack_width': 4,\
