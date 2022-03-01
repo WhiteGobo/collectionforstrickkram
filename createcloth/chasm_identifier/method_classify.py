@@ -2,15 +2,29 @@ import networkx as netx
 from collections.abc import Container, Mapping
 
 from dataclasses import dataclass, field
+from typing import Hashable
+Node = Hashable
 @dataclass
 class chasm_properties( Mapping ):
+    """asdf
+
+    :cvar crack_height: Integer how manyy rows chasm is deep
+    :cvar crack_dwidth: List with per difference in every row. Top-down
+    :cvar crack_arrays: List of identifier for every row. Top-down
+    :cvar crack_width: Width at bottom. namely how many bindoffs there are.
+    :cvar leftside: Nodelist from every floor of the leftside of the crack. 
+            Nodes in 1 floor are ordered from crack outwards.
+    :cvar rightside: Nodelist from every floor of the rightside of the crack. 
+            Nodes in 1 floor are ordered from crack outwards.
+    :cvar bottom: all nodes from bottom of crack, from left to right
+    """
     crack_height: int
     crack_arrays: list
     crack_width: int
     crack_dwidth: list
-    leftside: list = None #field( default_factory=list )
-    rightside: list = None #field( default_factory=list )
-    bottom: list = None #field( default_factory=list )
+    leftside: list[ list[ Node ]] = None #field( default_factory=list )
+    rightside: list[ list[ Node ]] = None #field( default_factory=list )
+    bottom: list[ Node ] = None #field( default_factory=list )
     def __iter__( self ):
         return iter( self.__dict__ )
     def __getitem__( self, x ):
@@ -71,10 +85,11 @@ class line_identifier( Container ):
             cond2 = set( plainafter ) == { "knit" }
             return all( cond1, cond2 )
         cond1 = x[0] == "knit"
-        cond2 = x[1] in [ "knit", "decrease", "increase" ]
+        cond2 = x[1] in [ "knit", "k2tog", "yarnover" ]
         ll = x[ 2: 2+self.needed_spacing ]
         cond3 = set(ll) == {"knit"}
         return all((cond1, cond2, cond3))
+
     def __getitem__( self, x ):
         x = list( x )
         assert self.__contains__( x ), x
@@ -82,9 +97,9 @@ class line_identifier( Container ):
             return "top"
         elif x[1] == "knit":
             return "plain"
-        elif x[1] == "decrease":
+        elif x[1] == "k2tog":
             return "decrease"
-        elif x[1] == "increase":
+        elif x[1] == "yarnover":
             return "increase"
         raise Exception( "oops  something went wrong" )
     def get( self, x, default=None ):

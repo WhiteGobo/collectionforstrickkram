@@ -9,6 +9,7 @@ from . import method_reducedvalidset as mrvs
 import logging
 logger = logging.getLogger( __name__ )
 from . import method_generate_example as mge
+from . import class_chasm_alterator as cca
 
 class TestChasmidentifier( unittest.TestCase ):
     def test_tmp( self ):
@@ -50,12 +51,18 @@ class TestChasmidentifier( unittest.TestCase ):
         #self.assertEqual( mystrick, mystricktest )
 
     def test_locate_thingies( self ):
+        """This is a test how you can locate ceratin stitches of the chasm.
+        But im not sure what exactly will be tested here. See it more as
+        a guide:)
+
+        """
         myman ="20yo\n20k\n8k 4bo 8k\ntunnel7 tunnel6 tunnel5 tunnel4 tunnel3 tunnel2 tunnel1 tunnel0 8k\n8k\n8k\n8bo\nload7 load6 load5 load4 load3 load2 load1 load0 switch1\n8k\n8k\n8k\n8bo"
         mystrick = strickgraph.from_manual( myman, glstinfo )
         props = chasm_identifier.classify( mystrick )
         #print( props )
         #print( props.leftside[-3] )
         #print( mystrick.get_rows()[-1])
+        props.leftside
 
 
     def test_create_chasm_verbesserer( self ):
@@ -65,12 +72,19 @@ class TestChasmidentifier( unittest.TestCase ):
         props2 = {'crack_height': 4, 'crack_width': 4,\
                 'crack_arrays': ('plain', 'plain', 'decrease', 'top'), \
                 'height': 7, 'width': 20 }
-        difference_line = 5
-        #myalt = chasm_alterator.from_difference( difference_line, props1, props2 )
+        difference_line = 4
         mystrick1 = mge.generate_example( **props1 )
-        #alt_strick = myalt.asdf( mystrick1 )
         mystrick2 = mge.generate_example( **props2 )
-        #self.assertEqual( alt_strick, mystrick2 )
+        myalt = cca.chasm_alterator.from_graphdifference( mystrick1, mystrick2,difference_line, maximum_uncommon_nodes=20, \
+                                    timelimit=30, soft_timelimit=0, \
+                                    soft_maximum_uncommon_nodes=10 )
+        alt_strick = myalt.replace_graph( mystrick1, difference_line )
+        self.assertEqual( alt_strick, mystrick2 )
+
+        xmlstring = myalt.to_xml()
+        load_alt = cca.chasm_alterator.from_xml( xmlstring )
+        new_alt_strick = load_alt.replace_graph( mystrick1, difference_line )
+        self.assertEqual( new_alt_strick, mystrick2 )
 
 
     def test_create_reduced_valid_properties( self ):
