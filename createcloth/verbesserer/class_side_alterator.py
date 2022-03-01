@@ -40,7 +40,7 @@ class sidealterator():
     minimal width
 
     :todo: minimal width
-    :todo: replace_graph, fromxml, toxml
+    :todo: replace_graph, from_xml, to_xml
     :ivar alterator_left:
     :ivar leftstartindex:
     :ivar alterator_right:
@@ -184,7 +184,7 @@ class sidealterator():
                                             **fromgraphdifference_kwargs )
     
     @classmethod
-    def fromxml( cls, xmlstring ):
+    def from_xml( cls, xmlstring ):
         """from given xmlstring
 
         :param xmlstring: String with all info 
@@ -223,16 +223,16 @@ class sidealterator():
         assert leftright_alterators.keys() == {"left", "right" } 
         leftindex = int( leftright_alterators["left"].attrib["index"] )
         leftalt_str = ET.tostring( leftright_alterators["left"] )
-        left_verbesserer = strickalterator.fromxml( leftalt_str )
+        left_verbesserer = strickalterator.from_xml( leftalt_str )
 
         rightindex = int( leftright_alterators["right"].attrib["index"] )
         rightalt_str = ET.tostring( leftright_alterators["right"] )
-        right_verbesserer = strickalterator.fromxml( rightalt_str )
+        right_verbesserer = strickalterator.from_xml( rightalt_str )
         return cls( left_verbesserer, leftindex, right_verbesserer, rightindex, \
                                                         **extraoptions )
 
 
-    def toxml( self, encoding ="utf-8" ):
+    def to_xml( self, encoding ="utf-8" ):
         """to xmlstring
 
         :param encoding: same as xml.etree.ElementTree.tostring
@@ -261,11 +261,11 @@ class sidealterator():
         ET.register_namespace( "xsi", xml_config.namespace_xsi )
 
         elemroot = ET.Element( efn.xml_config.ersetzung ) 
-        leftxmlstr = self.alterator_left.toxml()
+        leftxmlstr = self.alterator_left.to_xml()
         elemroot.append( ET.fromstring( leftxmlstr ))
         elemroot[-1].attrib["side"] = "left"
         elemroot[-1].attrib["index"] = str(self.leftstartindex)
-        rightxmlstr = self.alterator_right.toxml()
+        rightxmlstr = self.alterator_right.to_xml()
         elemroot.append( ET.fromstring( rightxmlstr ) )
         elemroot[-1].attrib["side"] = "right"
         elemroot[-1].attrib["index"] = str(self.rightstartindex)
@@ -386,8 +386,8 @@ class sidealterator():
                                 leftnodes1, leftnodes2, \
                                 startnode1_left,
                                 lefttrans )
-        tmp_bordernodes1 = _get_innerborder( leftnodes1, source_strickgraph )
-        tmp_bordernodes2 = _get_innerborder( leftnodes2, target_strickgraph )
+        #tmp_bordernodes1 = _get_innerborder( leftnodes1, source_strickgraph )
+        #tmp_bordernodes2 = _get_innerborder( leftnodes2, target_strickgraph )
         logger.info("create right alterator")
         righttrans = { a:b for a, b in translator.items() if a in rightnodes1 }
         logger.debug( f"nodes1: {rightnodes1}")

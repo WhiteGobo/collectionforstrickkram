@@ -156,6 +156,6 @@ class multi_sidealterator( efn.multialterator ):
             raise NoTranslationPossible() from err
 
     @classmethod
-    def fromxml( cls, xmlstring ):
-        self = super().fromxml( xmlstring, alteratortype=_csa.sidealterator )
+    def from_xml( cls, xmlstring ):
+        self = super().from_xml( xmlstring, alteratortype=_csa.sidealterator )
         return self

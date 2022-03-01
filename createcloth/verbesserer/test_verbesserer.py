@@ -46,8 +46,8 @@ class test_manualtoverbesserung( unittest.TestCase ):
 
 
 
-        xmlstring = qq.toxml()
-        loadedqq = strickalterator.fromxml( xmlstring )
+        xmlstring = qq.to_xml()
+        loadedqq = strickalterator.from_xml( xmlstring )
         repl_nodes, repl_edges = loadedqq.replace_graph( in_nodeattributes, \
                                                     in_edges, sourcenode )
         newnodeattributes = { n: {"stitchtype": data[0], "side":data[1] }\
@@ -59,7 +59,7 @@ class test_manualtoverbesserung( unittest.TestCase ):
     def test_multisidealterator( self ):
         """Basic test of multisidealterator
 
-        :todo: implement toxml
+        :todo: implement to_xml
         """
         from ..plainknit.rowstates import start, plain, end, decrease, increase, enddecrease
         asdf = [\
@@ -83,8 +83,8 @@ class test_manualtoverbesserung( unittest.TestCase ):
             except Exception as err:
                 raise Exception( f"couldnt replace in graph, linetypes number {i}; {info}" ) from err
             self.assertEqual( graph1, graph2, msg=graph1.to_manual(glstinfo) )
-        xmlstring = myalt.toxml()
-        newalt = multi_sidealterator.fromxml( xmlstring )
+        xmlstring = myalt.to_xml()
+        newalt = multi_sidealterator.from_xml( xmlstring )
         for l1, l2, upedges1, upedges2, k, startside in asdf:
             graph1 = create_graph_from_linetypes( l1, upedges1 )
             graph2 = create_graph_from_linetypes( l2, upedges2 )
@@ -147,9 +147,9 @@ class test_manualtoverbesserung( unittest.TestCase ):
     def further_test_save_sidealterator( self, mysidealterator, graph1, graph2,\
                                     changedline_id):
         """Testing to(from)xml of sidealterator"""
-        safe = mysidealterator.toxml()
+        safe = mysidealterator.to_xml()
 
-        qwe2 = sidealterator.fromxml( safe )
+        qwe2 = sidealterator.from_xml( safe )
         self.assertNotEqual( graph1, graph2 )
         graph1 = qwe2.replace_in_graph( graph1, changedline_id )
         self.assertEqual( graph1, graph2 )
