@@ -27,8 +27,12 @@ class strick_datacontainer():
         :type edgelabels: Iterable[ Tuple[ Hashable, Hashable, str ]]
         """
         self.__datacontainer = _netx.MultiDiGraph()
+        
         for node, data in nodeattributes.items():
-            assert data["side"] in ("left", "right"), f"side is strange: {node} {data}"
+            try:
+                assert data["side"] in ("left", "right"), f"side is strange: {node} {data}"
+            except TypeError as err:
+                raise TypeError( "nodeattributes must be mappable" ) from err
             self.__datacontainer.add_node( node, **data )
             assert minimaldataset_per_node.issubset( data.keys() ), data
             assert maximaldataset_per_node.issuperset( data.keys() ), data
@@ -404,6 +408,7 @@ class strick_datacontainer():
         :param nodelist: List of nodes of this graph to check
         :type nodelist: Hashable
         :rtype: Iterable
+        :todo: remove this from this method and create utilmodule if needed
         """
         #asd = self.give_real_graph()
         helpgraph = _netx.Graph()
