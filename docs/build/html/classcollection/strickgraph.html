@@ -46,8 +46,10 @@
             
   <div class="section" id="strickgraph">
 <h1>Strickgraph<a class="headerlink" href="#strickgraph" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="description-of-knitpieces-in-manualform">
-<h2>Description of knitpieces in manualform<a class="headerlink" href="#description-of-knitpieces-in-manualform" title="Permalink to this headline">¶</a></h2>
+<h3>Description of knitpieces in manualform<a class="headerlink" href="#description-of-knitpieces-in-manualform" title="Permalink to this headline">¶</a></h3>
 <p>Here we will introduce an implementation of a knitting piece via software,
 with all capabilities, you would ever desire:)</p>
 <p>The implementation will be called
@@ -64,14 +66,14 @@ The common representation is as knitting manuals in different styles:</p>
 </ul>
 </div></blockquote>
 <div class="section" id="machine-knitting-matrices">
-<h3>Machine knitting matrices<a class="headerlink" href="#machine-knitting-matrices" title="Permalink to this headline">¶</a></h3>
+<h4>Machine knitting matrices<a class="headerlink" href="#machine-knitting-matrices" title="Permalink to this headline">¶</a></h4>
 <div class="admonition-todo admonition" id="id1">
 <p class="admonition-title">Todo</p>
 <p>implement machine matrice thingies</p>
 </div>
 </div>
 <div class="section" id="hand-knitting-charts">
-<h3>Hand knitting charts<a class="headerlink" href="#hand-knitting-charts" title="Permalink to this headline">¶</a></h3>
+<h4>Hand knitting charts<a class="headerlink" href="#hand-knitting-charts" title="Permalink to this headline">¶</a></h4>
 <p>Hand knitting charts are used for row to row implementations, so that
 you as knitter can knit-as-read.</p>
 <p>The implementation
@@ -122,7 +124,7 @@ change in the future</p>
 </div>
 </div>
 <div class="section" id="abstract-strickgraph-generation">
-<h3>Abstract strickgraph generation<a class="headerlink" href="#abstract-strickgraph-generation" title="Permalink to this headline">¶</a></h3>
+<h4>Abstract strickgraph generation<a class="headerlink" href="#abstract-strickgraph-generation" title="Permalink to this headline">¶</a></h4>
 <p>Also you can generate a strickgraph with the help of a <cite>graph&lt;networkx.Graph&gt;</cite>.
 This is a more abstract generation, but represents the innerstate of our
 strickgraph.</p>
@@ -153,16 +155,15 @@ It might be nice to have a what-has-gone-wrong guide somewhere.</p>
 </div>
 </div>
 </div>
-<div class="section" id="handling-the-strickgraph">
-<h2>Handling the strickgraph<a class="headerlink" href="#handling-the-strickgraph" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="handling-strickgraphs">
+<h2>Handling strickgraphs<a class="headerlink" href="#handling-strickgraphs" title="Permalink to this headline">¶</a></h2>
 <div class="admonition-todo admonition" id="id5">
 <p class="admonition-title">Todo</p>
 <p>I plan on making a abstract class for graphs, mainly because of
 graphalteration. This abstract class then will be used for strickgraphs.
 Eventual more methods that are abstractable will then be listed here.</p>
 </div>
-<div class="section" id="all-nodes-and-information">
-<h3>all nodes and information<a class="headerlink" href="#all-nodes-and-information" title="Permalink to this headline">¶</a></h3>
 <p>As mentioned the strickgraph is at its core a graph. This means every
 stitch is represented via a node and every connection between stitch is
 represented via an edge.</p>
@@ -175,40 +176,27 @@ represented via an edge.</p>
 <span class="n">strickgraph</span><span class="o">.</span><span class="n">get_nodeattr_alternativestitchtype</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="rows">
-<h3>Rows<a class="headerlink" href="#rows" title="Permalink to this headline">¶</a></h3>
 <p>We can get get rows via <code class="xref py py-meth docutils literal notranslate"><span class="pre">get_rows()</span></code></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">strickgraph</span><span class="o">.</span><span class="n">get_rows</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="border">
-<h3>border<a class="headerlink" href="#border" title="Permalink to this headline">¶</a></h3>
 <p>We can get a border of the strickgraph. The border should be the outer ost stitch
 of the strickgraph. That means, if a line (not the last one) just begins with
 ending some columns(eg per bindoffs) you have those stitches as border
 of the knitpiece.</p>
 <p>Currently the border is just the first and last row, and every stitch at
 the start and end of each row.</p>
-</div>
-<div class="section" id="sidemargins">
-<h3>sidemargins<a class="headerlink" href="#sidemargins" title="Permalink to this headline">¶</a></h3>
 <p>The first x-stitches and x-last stitches of each row.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">strickgraph</span><span class="o">.</span><span class="n">get_sidemargins</span>
 <span class="n">strickgraph</span><span class="o">.</span><span class="n">get_sidemargins_indices</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="special-stitches">
-<h3>special stitches<a class="headerlink" href="#special-stitches" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">strickgraph</span><span class="o">.</span><span class="n">get_startstitch</span>
 <span class="n">strickgraph</span><span class="o">.</span><span class="n">get_endstitch</span>
 <span class="n">strickgraph</span><span class="o">.</span><span class="n">get_nodes_near_nodes</span>
 <span class="n">strickgraph</span><span class="o">.</span><span class="n">get_nodes</span>
 <span class="n">strickgraph</span><span class="o">.</span><span class="n">get_next_node_to</span>
 </pre></div>
-</div>
 </div>
 </div>
 <div class="section" id="clothfactory-parts">
@@ -222,8 +210,8 @@ the start and end of each row.</p>
 </dd>
 </dl>
 </div>
-<div class="section" id="strickgraph-references">
-<h2>strickgraph references<a class="headerlink" href="#strickgraph-references" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="createcloth.strickgraph.strickgraph_base.strickgraph">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">createcloth.strickgraph.strickgraph_base.</span></span><span class="sig-name descname"><span class="pre">strickgraph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nodeattributes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edgelabels</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">argv</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.strickgraph.strickgraph_base.strickgraph" title="Permalink to this definition">¶</a></dt>
@@ -690,22 +678,18 @@ strickgraphs</p>
     <h3><a href="../index.html">Table of Contents</a></h3>
     <ul>
 <li><a class="reference internal" href="#">Strickgraph</a><ul>
+<li><a class="reference internal" href="#description">Description</a><ul>
 <li><a class="reference internal" href="#description-of-knitpieces-in-manualform">Description of knitpieces in manualform</a><ul>
 <li><a class="reference internal" href="#machine-knitting-matrices">Machine knitting matrices</a></li>
 <li><a class="reference internal" href="#hand-knitting-charts">Hand knitting charts</a></li>
 <li><a class="reference internal" href="#abstract-strickgraph-generation">Abstract strickgraph generation</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#handling-the-strickgraph">Handling the strickgraph</a><ul>
-<li><a class="reference internal" href="#all-nodes-and-information">all nodes and information</a></li>
-<li><a class="reference internal" href="#rows">Rows</a></li>
-<li><a class="reference internal" href="#border">border</a></li>
-<li><a class="reference internal" href="#sidemargins">sidemargins</a></li>
-<li><a class="reference internal" href="#special-stitches">special stitches</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#handling-strickgraphs">Handling strickgraphs</a></li>
 <li><a class="reference internal" href="#clothfactory-parts">clothfactory-parts</a></li>
-<li><a class="reference internal" href="#strickgraph-references">strickgraph references</a></li>
+<li><a class="reference internal" href="#references">References</a></li>
 </ul>
 </li>
 </ul>

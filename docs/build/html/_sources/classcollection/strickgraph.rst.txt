@@ -1,4 +1,7 @@
 Strickgraph
+***********
+
+Description
 ===========
 
 Description of knitpieces in manualform
@@ -130,8 +133,8 @@ also we need general information(*basic_stitchdata*) about our knitpiece. Eg:
    Strickgraphgeneration from graphs might fail because of various reasons.
    It might be nice to have a what-has-gone-wrong guide somewhere.
 
-Handling the strickgraph
-------------------------
+Handling strickgraphs
+=====================
 
 .. todo::
 
@@ -203,7 +206,7 @@ special stitches
 
 
 clothfactory-parts
-------------------
+==================
 
 To the Strickgraph coresponding factoryleafs are 
         * :py:class:`clothfactory_parts.strickgraph.strickgraph.datatypes.strickgraph_container`
@@ -211,8 +214,8 @@ To the Strickgraph coresponding factoryleafs are
         * :py:data:`clothfactory_parts.plainknit.factory_leaf.relax_pressure`
 
 
-strickgraph references
-----------------------
+References
+==========
 
 
 .. autoclass:: createcloth.strickgraph.strickgraph_base.strickgraph

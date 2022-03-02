@@ -16,8 +16,8 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Plainknit" href="plainknit.html" />
-    <link rel="prev" title="Visualization" href="visualizer.html" /> 
+    <link rel="next" title="Howto to autothingy clothes" href="../howto/clothfactory.html" />
+    <link rel="prev" title="Chasms" href="../identifier/chasms.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -29,10 +29,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="plainknit.html" title="Plainknit"
+          <a href="../howto/clothfactory.html" title="Howto to autothingy clothes"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="visualizer.html" title="Visualization"
+          <a href="../identifier/chasms.html" title="Chasms"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">Createcloth  documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Sidealterator</a></li> 
@@ -78,7 +78,7 @@ minimal width</p>
 <dd class="field-odd"><p>minimal width</p>
 </dd>
 <dt class="field-even">Todo</dt>
-<dd class="field-even"><p>replace_graph, fromxml, toxml</p>
+<dd class="field-even"><p>replace_graph, from_xml, to_xml</p>
 </dd>
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
@@ -96,8 +96,8 @@ minimal width</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>source_strickgraph</strong> (<a class="reference internal" href="strickgraph.html#createcloth.strickgraph.strickgraph_base.strickgraph" title="createcloth.strickgraph.strickgraph_base.strickgraph"><em>strickgraph</em></a>) – </p></li>
-<li><p><strong>target_strickgraph</strong> (<a class="reference internal" href="strickgraph.html#createcloth.strickgraph.strickgraph_base.strickgraph" title="createcloth.strickgraph.strickgraph_base.strickgraph"><em>strickgraph</em></a>) – </p></li>
+<li><p><strong>source_strickgraph</strong> (<a class="reference internal" href="../strickgraph/strickgraph.html#createcloth.strickgraph.strickgraph_base.strickgraph" title="createcloth.strickgraph.strickgraph_base.strickgraph"><em>strickgraph</em></a>) – </p></li>
+<li><p><strong>target_strickgraph</strong> (<a class="reference internal" href="../strickgraph/strickgraph.html#createcloth.strickgraph.strickgraph_base.strickgraph" title="createcloth.strickgraph.strickgraph_base.strickgraph"><em>strickgraph</em></a>) – </p></li>
 <li><p><strong>changedline_id</strong> (<em>int</em>) – linenumber of targeted alteration</p></li>
 <li><p><strong>maximum_uncommon_nodes</strong> (<em>int</em>) – </p></li>
 <li><p><strong>timelimit</strong> (<em>int</em>) – Timelimit in secondes for algorithm to 
@@ -131,6 +131,17 @@ extrasfornetworkx.optimize_uncommon_nodes</p></li>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="createcloth.verbesserer.class_side_alterator.sidealterator.from_xml">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_xml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xmlstring</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.verbesserer.class_side_alterator.sidealterator.from_xml" title="Permalink to this definition">¶</a></dt>
+<dd><p>from given xmlstring</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>xmlstring</strong> (<em>str</em>) – String with all info</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="createcloth.verbesserer.class_side_alterator.sidealterator.from_xmlobject">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_xmlobject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xml_elem</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.verbesserer.class_side_alterator.sidealterator.from_xmlobject" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
@@ -144,24 +155,13 @@ extrasfornetworkx.optimize_uncommon_nodes</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="createcloth.verbesserer.class_side_alterator.sidealterator.fromxml">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fromxml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xmlstring</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.verbesserer.class_side_alterator.sidealterator.fromxml" title="Permalink to this definition">¶</a></dt>
-<dd><p>from given xmlstring</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>xmlstring</strong> (<em>str</em>) – String with all info</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="createcloth.verbesserer.class_side_alterator.sidealterator.replace_graph">
 <span class="sig-name descname"><span class="pre">replace_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mystrickgraph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linenumber</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">row</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodeattributes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edgeattributes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.verbesserer.class_side_alterator.sidealterator.replace_graph" title="Permalink to this definition">¶</a></dt>
 <dd><p>mainmethod replkaces in graph at given line</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>mystrickgraph</strong> (<a class="reference internal" href="strickgraph.html#createcloth.strickgraph.strickgraph_base.strickgraph" title="createcloth.strickgraph.strickgraph_base.strickgraph"><em>strickgraph</em></a>) – </p></li>
+<li><p><strong>mystrickgraph</strong> (<a class="reference internal" href="../strickgraph/strickgraph.html#createcloth.strickgraph.strickgraph_base.strickgraph" title="createcloth.strickgraph.strickgraph_base.strickgraph"><em>strickgraph</em></a>) – </p></li>
 <li><p><strong>linenumber</strong> (<em>int</em>) – line in which alteration will be used</p></li>
 <li><p><strong>row</strong> – optimization. same as mystrickgraph.get_rows()[linenumber]</p></li>
 <li><p><strong>nodeattributes</strong> – optimization. same as 
@@ -178,8 +178,8 @@ mystrickgraph.get_edges_with_labels()</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="createcloth.verbesserer.class_side_alterator.sidealterator.toxml">
-<span class="sig-name descname"><span class="pre">toxml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'utf-8'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.verbesserer.class_side_alterator.sidealterator.toxml" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="createcloth.verbesserer.class_side_alterator.sidealterator.to_xml">
+<span class="sig-name descname"><span class="pre">to_xml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'utf-8'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.verbesserer.class_side_alterator.sidealterator.to_xml" title="Permalink to this definition">¶</a></dt>
 <dd><p>to xmlstring</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -217,8 +217,8 @@ mystrickgraph.get_edges_with_labels()</p></li>
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="createcloth.verbesserer.class_multi_sidealterator.multi_sidealterator.fromxml">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fromxml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xmlstring</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.verbesserer.class_multi_sidealterator.multi_sidealterator.fromxml" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="createcloth.verbesserer.class_multi_sidealterator.multi_sidealterator.from_xml">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_xml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xmlstring</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#createcloth.verbesserer.class_multi_sidealterator.multi_sidealterator.from_xml" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load multialterator from xml-string</p>
 <dl class="field-list simple">
 <dt class="field-odd">Todo</dt>
@@ -263,7 +263,7 @@ if replacement is not possible</p>
 <dd class="field-even"><p>Strickgraph with replaced parts</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="strickgraph.html#createcloth.strickgraph.strickgraph_base.strickgraph" title="createcloth.strickgraph.strickgraph_base.strickgraph">strickgraph</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="../strickgraph/strickgraph.html#createcloth.strickgraph.strickgraph_base.strickgraph" title="createcloth.strickgraph.strickgraph_base.strickgraph">strickgraph</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -281,13 +281,13 @@ if replacement is not possible</p>
         <div class="sphinxsidebarwrapper">
   <div>
     <h4>Previous topic</h4>
-    <p class="topless"><a href="visualizer.html"
-                          title="previous chapter">Visualization</a></p>
+    <p class="topless"><a href="../identifier/chasms.html"
+                          title="previous chapter">Chasms</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
-    <p class="topless"><a href="plainknit.html"
-                          title="next chapter">Plainknit</a></p>
+    <p class="topless"><a href="../howto/clothfactory.html"
+                          title="next chapter">Howto to autothingy clothes</a></p>
   </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
@@ -320,10 +320,10 @@ if replacement is not possible</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="plainknit.html" title="Plainknit"
+          <a href="../howto/clothfactory.html" title="Howto to autothingy clothes"
              >next</a> |</li>
         <li class="right" >
-          <a href="visualizer.html" title="Visualization"
+          <a href="../identifier/chasms.html" title="Chasms"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">Createcloth  documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Sidealterator</a></li> 
