@@ -14,14 +14,17 @@ class identifier( ABC ):
     
     @abstractmethod
     def classify( mystrickgraph: strickgraph ) -> Mapping[ Hashable, object ]:
+        """asdf"""
         pass
 
     @abstractmethod
     def create_strickgraph( attributes: Mapping[ Hashable, object ] )\
                                     -> strickgraph:
+        """asdf"""
         pass
 
     @abstractmethod
     def find_path( input_attributes: Mapping, output_attributes: Mapping )\
                                     -> Callable:#[ strickgraph, strickgraph ]:
+        """asdf"""
         pass
